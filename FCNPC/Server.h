@@ -21,7 +21,7 @@ class CServer
 		CServer();
 		~CServer();
 
-		BYTE Initialize();
+		BYTE Initialize(eSAMPVersion sampVersion);
 
 		CPlayerManager		*GetPlayerManager() { return m_pPlayerManager; };
 		CNodeManager		*GetNodeManager() { return m_pNodeManager; };

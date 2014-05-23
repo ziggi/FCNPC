@@ -13,6 +13,8 @@
 
 extern CServer			*pServer;
 extern CSAMPRPCParams	*pCreateNPCParams;
+extern void				**ppPluginData;
+extern logprintf_t			logprintf;
 
 // Functions
 CreateNPC_RPC_t					CSAMPFunctions::pfn__CreateNPC_RPC = NULL;
@@ -23,6 +25,9 @@ CPlayer__EnterVehicle_t			CSAMPFunctions::pfn__CPlayer__EnterVehicle = NULL;
 CPlayer__ExitVehicle_t			CSAMPFunctions::pfn__CPlayer__ExitVehicle = NULL;
 CConfig__GetValueAsInteger_t	CSAMPFunctions::pfn__CConfig__GetValueAsInteger = NULL;
 GetVehicleModelInfo_t			CSAMPFunctions::pfn__GetVehicleModelInfo = NULL;
+GetNetGame_t					CSAMPFunctions::pfn__GetNetGame = NULL;
+GetConsole_t					CSAMPFunctions::pfn__GetConsole = NULL;
+GetRakServer_t					CSAMPFunctions::pfn__GetRakServer = NULL;
 
 void CSAMPFunctions::Initialize()
 {
@@ -40,10 +45,17 @@ void CSAMPFunctions::Initialize()
 	pfn__GetVehicleModelInfo = (GetVehicleModelInfo_t)(CAddress::FUNC_GetVehicleModelInfo);
 }
 
+void CSAMPFunctions::PreInitialize()
+{
+	pfn__GetNetGame = (GetNetGame_t)(ppPluginData[PLUGIN_DATA_NETGAME]);
+	pfn__GetConsole = (GetConsole_t)(ppPluginData[PLUGIN_DATA_CONFIG]);
+	pfn__GetRakServer = (GetRakServer_t)(ppPluginData[PLUGIN_DATA_RAKPEER]);
+}
+
 int CSAMPFunctions::GetFreePlayerSlot()
 {
 	// Get the playerpool interface
-	CSAMPServer *pSAMPServer = *(CSAMPServer **)CAddress::VAR_ServerPtr;
+	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 	CSAMPPlayerPool *pPlayerPool = pSAMPServer->pPlayerPool;
 	// Loop through all the players
 	for(int i = (GetMaxPlayers() - 1); i != 0; i--)
@@ -71,7 +83,7 @@ int CSAMPFunctions::NewPlayer(char *szName)
 	pCreateNPCParams->WriteString(szName, strlen(szName));
 	pCreateNPCParams->Write<int>(iAuthentication);
 	// Get the RakPeer pointer
-	CSAMPRakPeer *pRakPeer = *(CSAMPRakPeer **)(CAddress::VAR_RakPeerPtr);
+	CSAMPRakPeer *pRakPeer = (CSAMPRakPeer *)(CAddress::VAR_RakPeerPtr);
 	// Create a fake player system address
 	CSAMPSystemAddress systemAddress;
 	systemAddress.uiSystemAddress = 0x0100007F; // Localhost
@@ -92,14 +104,14 @@ int CSAMPFunctions::NewPlayer(char *szName)
 void CSAMPFunctions::DeletePlayer(int iPlayerId)
 {
 	// Call the function
-	CSAMPServer *pSAMPServer = *(CSAMPServer **)CAddress::VAR_ServerPtr;
+	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 	pfn__CPlayerPool__DeletePlayer(pSAMPServer->pPlayerPool, iPlayerId, 0);
 }
 
 void CSAMPFunctions::SpawnPlayer(int iPlayerId)
 {
 	// Get the player pointer
-	CSAMPServer *pSAMPServer = *(CSAMPServer **)CAddress::VAR_ServerPtr;
+	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 	// Call the function
 	pfn__CPlayer__SpawnForWorld(pSAMPServer->pPlayerPool->pPlayer[iPlayerId]);	
 }
@@ -107,7 +119,7 @@ void CSAMPFunctions::SpawnPlayer(int iPlayerId)
 void CSAMPFunctions::KillPlayer(int iPlayerId, int iKillerId, int iWeapon)
 {
 	// Get the player pointer
-	CSAMPServer *pSAMPServer = *(CSAMPServer **)CAddress::VAR_ServerPtr;
+	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 	// Call the function
 	pfn__CPlayer__Kill(pSAMPServer->pPlayerPool->pPlayer[iPlayerId], iKillerId, iWeapon);	
 }
@@ -115,7 +127,7 @@ void CSAMPFunctions::KillPlayer(int iPlayerId, int iKillerId, int iWeapon)
 void CSAMPFunctions::PlayerEnterVehicle(int iPlayerId, int iVehicleId, int iSeatId)
 {
 	// Get the player pointer
-	CSAMPServer *pSAMPServer = *(CSAMPServer **)CAddress::VAR_ServerPtr;
+	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 	// Call the function
 	pfn__CPlayer__EnterVehicle(pSAMPServer->pPlayerPool->pPlayer[iPlayerId], iVehicleId, iSeatId);	
 }
@@ -123,7 +135,7 @@ void CSAMPFunctions::PlayerEnterVehicle(int iPlayerId, int iVehicleId, int iSeat
 void CSAMPFunctions::PlayerExitVehicle(int iPlayerId, int iVehicleId)
 {
 	// Get the player pointer
-	CSAMPServer *pSAMPServer = *(CSAMPServer **)CAddress::VAR_ServerPtr;
+	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 	// Call the function
 	pfn__CPlayer__ExitVehicle(pSAMPServer->pPlayerPool->pPlayer[iPlayerId], iVehicleId);	
 }
@@ -137,13 +149,14 @@ CVector3 *CSAMPFunctions::GetVehicleModelInfo(int iModelId, int iInfoType)
 int CSAMPFunctions::GetMaxPlayers()
 {
 	// Call the function
-	void *pConfig = *(void **)CAddress::VAR_ConfigPtr;
+	void *pConfig = (void *)CAddress::VAR_ConfigPtr;
 	return pfn__CConfig__GetValueAsInteger(pConfig, "maxplayers");
 }
 
 int CSAMPFunctions::GetMaxNPC()
 {
 	// Call the function
-	void *pConfig = *(void **)CAddress::VAR_ConfigPtr;
+	void *pConfig = (void *)CAddress::VAR_ConfigPtr;
 	return pfn__CConfig__GetValueAsInteger(pConfig, "maxnpc");
 }
+

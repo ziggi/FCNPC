@@ -20,7 +20,7 @@ int STDCALL CFilterScriptPool__OnPlayerGiveDamage(int iPlayerId, int iDamagerId,
 	if(pServer->GetPlayerManager()->IsPlayerConnected(iDamagerId))
 		pServer->GetPlayerManager()->GetAt(iDamagerId)->ProcessDamage(iPlayerId, fHealthLoss, iWeapon, iBodypart);
 
-	CSAMPServer *pSAMPServer = *(CSAMPServer **)CAddress::VAR_ServerPtr;
+	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 	cell ret = 0;
 	// Call it for all the filterscripts
 	for(int i = 0; i < MAX_FILTERSCRIPTS; i++)

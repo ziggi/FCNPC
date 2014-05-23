@@ -23,10 +23,10 @@
 #define SAMP_NETVERSION		0x0FCF
 #define INVALID_ENTITY_ID	(0xFFFF)
 #define SAFE_DELETE(ptr)	if(ptr) { delete ptr; ptr = NULL; } 
-#define SAFE_RELEASE(ptr)	if(ptr) { ptr->Release(); } 
+#define SAFE_RELEASE(ptr)	if(ptr) { ptr->Release(); ptr = NULL; } 
 #define PAD(a, b)			char a[b]
-
-#define PLUGIN_DATA_NETGAME		255
+// Plugin exports
+#define PLUGIN_DATA_NETGAME		225
 #define PLUGIN_DATA_CONFIG		228
 #define PLUGIN_DATA_RAKPEER		226
 

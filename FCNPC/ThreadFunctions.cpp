@@ -23,7 +23,7 @@ void CThreadFunctions::DamageThread(void *pThread)
 		CUtils::FCNPCSleep(5);
 
 	// Get the playerpool pointer
-	CSAMPServer *pSAMPServer = *(CSAMPServer **)CAddress::VAR_ServerPtr;
+	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 	CSAMPPlayerPool *pPlayerPool = pSAMPServer->pPlayerPool;
 	// Are we still alive ?
 	while(bServerInit)

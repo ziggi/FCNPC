@@ -53,9 +53,6 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 			FUNC_CreateNPC_RPC								=	0x48C150; 
  		
 			VAR_ServerAuthentication						=	0x4F2380;
-			VAR_ServerPtr									=	0x4F238C; 
-			VAR_ConfigPtr									=	0x4F2390;
-			VAR_RakPeerPtr                                  =   0x4F24E4;
 #else
 			// Credits to Lorenc_
 			CALLBACK_CFilterScriptPool__OnPlayerGiveDamage  = 0x80B1343; 
@@ -69,9 +66,6 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 			FUNC_CConfig__GetValueAsInteger                 = 0x809EEE0; 
 			FUNC_GetVehicleModelInfo                        = 0x80D3220; 
 
-			VAR_ServerPtr                                   = 0x819C128; 
-			VAR_ConfigPtr                                   = 0x819C124; 
-			VAR_RakPeerPtr                                  = 0x819C268; 
 			VAR_ServerAuthentication                        = 0x819C108; 
 #endif
 			break;
@@ -90,12 +84,12 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 			FUNC_CConfig__GetValueAsInteger                 = 0x809EEE0; 
 			FUNC_GetVehicleModelInfo                        = 0x80D3220; 
 
-			VAR_ServerPtr                                   = 0x819B5C8; 
-			VAR_ConfigPtr                                   = 0x819B5C4; 
-			VAR_RakPeerPtr                                  = 0x819B708; 
 			VAR_ServerAuthentication                        = 0x819B5A8; 
 			break;
 		}
 #endif
 	}
+	VAR_ServerPtr									=	CSAMPFunctions::GetNetGame(); 
+	VAR_ConfigPtr									=	CSAMPFunctions::GetConsole();
+	VAR_RakPeerPtr                                  =   CSAMPFunctions::GetRakServer();
 }

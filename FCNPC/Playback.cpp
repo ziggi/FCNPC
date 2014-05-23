@@ -125,7 +125,7 @@ bool CPlayback::Process(CPlayer *pPlayer)
 				return false;
 
 			// Get the vehicle interface
-			CSAMPServer *pSAMPServer = *(CSAMPServer **)CAddress::VAR_ServerPtr;
+			CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 			CSAMPVehicle *pVehicle = pSAMPServer->pVehiclePool->pVehicle[pPlayer->GetVehicleId()];
 			// Set the data
 			pVehicle->vecPosition = vehicleSyncData.vecPosition;

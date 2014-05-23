@@ -17,6 +17,7 @@ extern void			*pAMXFunctions;
 CServer				*pServer;
 bool				bServerInit = false;
 DWORD				dwStartTick;
+eSAMPVersion		sampVersion = SAMP_VERSION_UNKNOWN;
 
 PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports() 
 {
@@ -51,21 +52,36 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 		logprintf("Failed. (Cant create server instance)");
 		return false;
 	}
-	// Initialize the server
-	BYTE byteError = 0;
-	if((byteError = pServer->Initialize()) != 0)
+	// Detect samp server version
+#ifdef _WIN32
+	if (*(DWORD *)0x45A1B0 == 0x24748B56) 
+	{ 
+		sampVersion = SAMP_VERSION_03Z_R2; 
+		logprintf("SAMP Server version 0.3z R2-2 (Windows) detected. Initializing ..."); 
+	} 
+	else
 	{
-		// Get the error
-		char szError[64];
-		CUtils::GetPluginError(byteError, szError);
-		logprintf("Failed. (Error: %s)", szError);
+		logprintf("Unknown samp server version. FCNPC only supports 0.3z versions");
 		return false;
 	}
-	// Initialize the starting tick
-	dwStartTick = GetTickCount();
+#else
+	if(*(DWORD *)0x80A7577 == 0x01F4FB81)
+	{
+		sampVersion = SAMP_VERSION_03Z_R2;
+		logprintf("SAMP Server version 0.3z R2-2 (Linux) detected. Initializing ...");
+	}
+	else if(*(DWORD *)0x80A7577 == 0x03E8FB81)
+	{
+		sampVersion = SAMP_VERSION_03Z_R2_1000P;
+		logprintf("SAMP Server version 0.3z R2-2 1000p (Linux) detected. Initializing ...");
+	}
+	else
+	{
+		logprintf("Unknown samp server version. FCNPC only supports 0.3z versions");
+		return false;
+	}
+#endif
 
-	logprintf("FCNPC Loaded.");
-	logprintf("");
 	return true;
 }
 
@@ -163,7 +179,23 @@ AMX_NATIVE_INFO PluginNatives[ ] =
 
 PLUGIN_EXPORT int PLUGIN_CALL AmxLoad(AMX *pAMX) 
 {
-
+	if(!bServerInit)
+	{
+		// Initialize the server
+		BYTE byteError = 0;
+		if((byteError = pServer->Initialize(sampVersion)) != 0)
+		{
+			// Get the error
+			char szError[64];
+			CUtils::GetPluginError(byteError, szError);
+			logprintf("Failed. (Error: %s)", szError);
+			exit(0);
+		}
+		// Initialize the starting tick
+		dwStartTick = GetTickCount();
+		// Set the initialized flag
+		bServerInit = true;
+	}
 	// Register the AMX
 	CCallbackManager::RegisterAMX(pAMX);
 	// Register the plugin natives for the amx instance
@@ -179,8 +211,6 @@ PLUGIN_EXPORT int PLUGIN_CALL AmxUnload(AMX *pAMX)
 
 PLUGIN_EXPORT void PLUGIN_CALL ProcessTick() 
 {
-	// Set the initialized flag
-	bServerInit = true;
 	// Check if we need to process
 	if((GetTickCount() - dwStartTick) >= 5)
 	{

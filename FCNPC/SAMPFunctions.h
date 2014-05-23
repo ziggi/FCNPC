@@ -14,6 +14,9 @@
 
 // Functions definitions
 typedef void ( *CreateNPC_RPC_t)(CSAMPRPCParams *pRPCParams);
+typedef int  ( *GetNetGame_t)();
+typedef int  ( *GetConsole_t)();
+typedef int  ( *GetRakServer_t)();
 #ifdef _WIN32
 typedef void (__thiscall *CPlayerPool__DeletePlayer_t)(void *pPlayerPool, int iPlayerId, int iReason);
 typedef void (__thiscall *CPlayer__SpawnForWorld_t)(void *pPlayer);
@@ -35,6 +38,7 @@ class CSAMPFunctions
 {
 	public:
 		static void		Initialize();
+		static void		PreInitialize();
 
 		static int		GetFreePlayerSlot();
 		static int		NewPlayer(char *szName);
@@ -46,6 +50,9 @@ class CSAMPFunctions
 		static CVector3	*GetVehicleModelInfo(int iModelId, int iInfoType);
 		static int		GetMaxPlayers();
 		static int		GetMaxNPC();
+		static int		GetNetGame() { return pfn__GetNetGame(); }
+		static int		GetConsole() { return pfn__GetConsole(); }
+		static int		GetRakServer() { return pfn__GetRakServer(); }
 
 		// Functions
 		static CreateNPC_RPC_t					pfn__CreateNPC_RPC;
@@ -56,6 +63,9 @@ class CSAMPFunctions
 		static CPlayer__ExitVehicle_t			pfn__CPlayer__ExitVehicle;
 		static CConfig__GetValueAsInteger_t		pfn__CConfig__GetValueAsInteger;
 		static GetVehicleModelInfo_t			pfn__GetVehicleModelInfo;
+		static GetNetGame_t						pfn__GetNetGame;
+		static GetConsole_t						pfn__GetConsole;
+		static GetRakServer_t					pfn__GetRakServer;
 
 };
 

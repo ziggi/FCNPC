@@ -71,7 +71,7 @@ bool CPlayer::Setup()
 		return false;
 
 	// Get the player interface
-	CSAMPServer *pSAMPServer = *(CSAMPServer **)CAddress::VAR_ServerPtr;
+	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 	m_pInterface = pSAMPServer->pPlayerPool->pPlayer[m_playerId]; 
 	// Validate the interface
 	if(!m_pInterface)
@@ -231,7 +231,7 @@ void CPlayer::Update(int iState)
 			return;
 
 		// Get the player vehicle interface
-		CSAMPServer *pSAMPServer = *(CSAMPServer **)CAddress::VAR_ServerPtr;
+		CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 		CSAMPVehicle *pVehicle = pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId]; 
 		// Set the player sync vehicle id
 		m_pInterface->vehicleSyncData.wVehicleId = m_pInterface->wVehicleId;
@@ -265,7 +265,7 @@ void CPlayer::Update(int iState)
 			return;
 
 		// Get the player vehicle interface
-		CSAMPServer *pSAMPServer = *(CSAMPServer **)CAddress::VAR_ServerPtr;
+		CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 		CSAMPVehicle *pVehicle = pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId]; 
 		// Set the player position to the vehicle position
 		SetPosition(pVehicle->vecPosition);
@@ -550,7 +550,7 @@ void CPlayer::Process()
 			BYTE byteWeapon = -1;
 			if(m_iLastDamager != INVALID_ENTITY_ID)
 			{
-				CSAMPServer *pSAMPServer = *(CSAMPServer **)CAddress::VAR_ServerPtr;
+				CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 				byteWeapon = pSAMPServer->pPlayerPool->pPlayer[m_iLastDamager]->syncData.byteWeapon; 
 			}
 			// Kill the player
@@ -570,7 +570,7 @@ void CPlayer::Process()
 				return;
 
 			// Get the player vehicle interface
-			CSAMPServer *pSAMPServer = *(CSAMPServer **)(CAddress::VAR_ServerPtr);
+			CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 			CSAMPVehicle *pVehicle = pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId];
 			// Get the vehicle position
 			CVector3 vecPosition;
@@ -648,7 +648,7 @@ void CPlayer::Process()
 			// Reset the player state
 			SetState(PLAYER_STATE_ONFOOT);
 			// Get the vehicle position
-			CSAMPServer *pSAMPServer = *(CSAMPServer **)CAddress::VAR_ServerPtr;
+			CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 			CVector3 vecVehiclePos = pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId]->vecPosition;
 			// Get the seat position
 			CVector3 *pvecSeat = CSAMPFunctions::GetVehicleModelInfo(pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId]->iModelId, 
@@ -675,7 +675,7 @@ void CPlayer::SetPosition(CVector3 vecPosition)
 	if(GetState() == PLAYER_STATE_DRIVER && m_pInterface->wVehicleId != INVALID_ENTITY_ID)
 	{
 		// Get the player vehicle interface
-		CSAMPServer *pSAMPServer = *(CSAMPServer **)CAddress::VAR_ServerPtr;
+		CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 		CSAMPVehicle *pVehicle = pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId]; 
 		// Get the player vehicle position
 		pVehicle->vecPosition = vecPosition;
@@ -690,7 +690,7 @@ void CPlayer::GetPosition(CVector3 *pvecPosition)
 	if((GetState() == PLAYER_STATE_DRIVER ||  GetState() == PLAYER_STATE_PASSENGER) && m_pInterface->wVehicleId != INVALID_ENTITY_ID)
 	{
 		// Get the player vehicle interface
-		CSAMPServer *pSAMPServer = *(CSAMPServer **)CAddress::VAR_ServerPtr;
+		CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 		CSAMPVehicle *pVehicle = pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId]; 
 		// Get the player vehicle position
 		*pvecPosition = pVehicle->vecPosition;
@@ -705,7 +705,7 @@ void CPlayer::SetQuaternion(CVector3 vecQuaternion, float fAngle)
 	if(GetState() == PLAYER_STATE_DRIVER && m_pInterface->wVehicleId != INVALID_ENTITY_ID)
 	{
 		// Get the player vehicle interface
-		CSAMPServer *pSAMPServer = *(CSAMPServer **)CAddress::VAR_ServerPtr;
+		CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 		CSAMPVehicle *pVehicle = pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId]; 
 		// Set the player vehicle quaternion 
 		pVehicle->vecQuaternion = vecQuaternion;
@@ -722,7 +722,7 @@ void CPlayer::GetQuaternion(CVector3 *pvecQuaternion, float *pfAngle)
 	if((GetState() == PLAYER_STATE_DRIVER ||  GetState() == PLAYER_STATE_PASSENGER) && m_pInterface->wVehicleId != INVALID_ENTITY_ID)
 	{
 		// Get the player vehicle interface
-		CSAMPServer *pSAMPServer = *(CSAMPServer **)CAddress::VAR_ServerPtr;
+		CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 		CSAMPVehicle *pVehicle = pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId]; 
 		// Get the player vehicle quaternion 
 		*pvecQuaternion = pVehicle->vecQuaternion;
@@ -744,7 +744,7 @@ void CPlayer::SetAngle(float fAngle)
 	if(GetState() == PLAYER_STATE_DRIVER && m_pInterface->wVehicleId != INVALID_ENTITY_ID)
 	{
 		// Get the player vehicle interface
-		CSAMPServer *pSAMPServer = *(CSAMPServer **)CAddress::VAR_ServerPtr;
+		CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 		CSAMPVehicle *pVehicle = pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId];
 		// Set the vehicle angle
 		pVehicle->vecQuaternion.fZ = CMath::AngleToQuaternion(fAngle);
@@ -836,7 +836,7 @@ void CPlayer::SetVelocity(CVector3 vecVelocity)
 	if(GetState() == PLAYER_STATE_DRIVER && m_pInterface->wVehicleId != INVALID_ENTITY_ID)
 	{
 		// Get the player vehicle interface
-		CSAMPServer *pSAMPServer = *(CSAMPServer **)CAddress::VAR_ServerPtr;
+		CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 		CSAMPVehicle *pVehicle = pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId];
 		// Set the player vehicle velocity 
 		pVehicle->vecVelocity = vecVelocity;
@@ -851,7 +851,7 @@ void CPlayer::GetVelocity(CVector3 *pvecVelocity)
 	if((GetState() == PLAYER_STATE_DRIVER ||  GetState() == PLAYER_STATE_PASSENGER) && m_pInterface->wVehicleId != INVALID_ENTITY_ID)
 	{
 		// Get the player vehicle interface
-		CSAMPServer *pSAMPServer = *(CSAMPServer **)CAddress::VAR_ServerPtr;
+		CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 		CSAMPVehicle *pVehicle = pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId]; 
 		// Get the player vehicle position
 		*pvecVelocity = pVehicle->vecVelocity;
@@ -1078,7 +1078,7 @@ bool CPlayer::EnterVehicle(int iVehicleId, int iSeatId, int iType)
 		iType = MOVE_TYPE_RUN;
 
 	// Validate the vehicle
-	CSAMPServer *pSAMPServer = *(CSAMPServer **)CAddress::VAR_ServerPtr;
+	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 	if(!pSAMPServer->pVehiclePool->pVehicle[iVehicleId])
 		return false;
 
@@ -1120,7 +1120,7 @@ bool CPlayer::ExitVehicle()
 		return false;
 
 	// Validate the player vehicle
-	CSAMPServer *pSAMPServer = *(CSAMPServer **)CAddress::VAR_ServerPtr;
+	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 	if(!pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId])
 		return false;
 
@@ -1144,7 +1144,7 @@ bool CPlayer::PutInVehicle(int iVehicleId, int iSeatId)
 		return false;
 
 	// Validate the vehicle
-	CSAMPServer *pSAMPServer = *(CSAMPServer **)CAddress::VAR_ServerPtr;
+	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 	if(!pSAMPServer->pVehiclePool->pVehicle[iVehicleId])
 		return false;
 
@@ -1167,7 +1167,7 @@ bool CPlayer::RemoveFromVehicle()
 		return false;
 
 	// Validate the player vehicle
-	CSAMPServer *pSAMPServer = *(CSAMPServer **)CAddress::VAR_ServerPtr;
+	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 	if(!pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId])
 		return false;
 

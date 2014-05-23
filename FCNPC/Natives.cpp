@@ -11,7 +11,6 @@
 #include "Main.h"
 
 extern CServer					*pServer;
-extern logprintf_t				logprintf;
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_Create(AMX *amx, cell *params)
 {

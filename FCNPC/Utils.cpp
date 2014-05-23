@@ -39,10 +39,6 @@ void CUtils::GetPluginError(BYTE byteError, char *szError)
 			strcpy(szError, "Failed to create RPCParams instance");
 			break;
 
-		case 6:
-			strcpy(szError, "Unknown samp server version. FCNPC only supports 0.3z versions");
-			break;
-
 		default:
 			strcpy(szError, "");
 			break;
