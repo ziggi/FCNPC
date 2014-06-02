@@ -1077,3 +1077,25 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_InitZMap(AMX *amx, cell *params)
 	// Try to initialize the ZMap
 	return (cell)pServer->GetZMap()->Initialize();
 }
+
+cell AMX_NATIVE_CALL CNatives::FCNPC_ProcessDamage(AMX *amx, cell *params)
+{
+	// Get the parameters
+	int iPlayerId = (int)params[1];
+	int iDamagerId = (int)params[2];
+	float fHealthLoss = amx_ctof(params[3]);
+	int iWeapon = (int)params[4];
+	int iBodypart = (int)params[5];
+	// Validate the player id
+	if(!pServer->GetPlayerManager()->IsPlayerConnected(iDamagerId))
+		return 0;
+
+	// Validate the damager id
+	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
+	if(!pSAMPServer->pPlayerPool->bIsPlayerConnected[iPlayerId])
+		return 0;
+
+	// Process damage
+	pServer->GetPlayerManager()->GetAt(iDamagerId)->ProcessDamage(iPlayerId, fHealthLoss, iWeapon, iBodypart);
+	return 1;
+}

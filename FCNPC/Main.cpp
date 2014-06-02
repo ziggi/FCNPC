@@ -99,6 +99,7 @@ AMX_NATIVE_INFO PluginNatives[ ] =
 {
 	{ "FCNPC_SetUpdateRate", CNatives::FCNPC_SetUpdateRate},
 	{ "FCNPC_InitZMap", CNatives::FCNPC_InitZMap},
+	{ "FCNPC_ProcessDamage", CNatives::FCNPC_ProcessDamage},
 	
 	{ "FCNPC_Create", CNatives::FCNPC_Create},
 	{ "FCNPC_Destroy", CNatives::FCNPC_Destroy},

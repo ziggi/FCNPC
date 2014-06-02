@@ -60,7 +60,7 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 			FUNC_CPlayerPool__DeletePlayer                  = 0x80CE070; 
 			FUNC_CreateNPC_RPC                              = 0x80AE340; 
 			FUNC_CPlayer__SpawnForWorld                     = 0x80CA960; 
-			FUNC_CPlayer__Kill                              = 0x80CE590; 
+			FUNC_CPlayer__Kill                              = 0x80C8E20; 
 			FUNC_CPlayer__EnterVehicle                      = 0x80C9B60; 
 			FUNC_CPlayer__ExitVehicle                       = 0x80C9CE0; 
 			FUNC_CConfig__GetValueAsInteger                 = 0x809EEE0; 
@@ -78,7 +78,7 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 			FUNC_CPlayerPool__DeletePlayer                  = 0x80CE070; 
 			FUNC_CreateNPC_RPC                              = 0x80AE340; 
 			FUNC_CPlayer__SpawnForWorld                     = 0x80CA960; 
-			FUNC_CPlayer__Kill                              = 0x80CE590; 
+			FUNC_CPlayer__Kill                              = 0x80C8E20; 
 			FUNC_CPlayer__EnterVehicle                      = 0x80C9B60; 
 			FUNC_CPlayer__ExitVehicle                       = 0x80C9CE0; 
 			FUNC_CConfig__GetValueAsInteger                 = 0x809EEE0; 

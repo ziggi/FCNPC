@@ -14,7 +14,7 @@ extern CServer		*pServer;
 extern logprintf_t	logprintf;
 extern void			*pAMXFunctions;
 
-int STDCALL CFilterScriptPool__OnPlayerGiveDamage(int iPlayerId, int iDamagerId, float fHealthLoss, int iWeapon, int iBodypart)
+/*int STDCALL CFilterScriptPool__OnPlayerGiveDamage(int iPlayerId, int iDamagerId, float fHealthLoss, int iWeapon, int iBodypart)
 {
 	// Call our "OnTakeDamage" callback
 	if(pServer->GetPlayerManager()->IsPlayerConnected(iDamagerId))
@@ -46,13 +46,14 @@ int STDCALL CFilterScriptPool__OnPlayerGiveDamage(int iPlayerId, int iDamagerId,
 		}
 	}
 	return ret;
-}
+}*/
 
 void CHooks::InstallHooks()
 {
+	// Since we cant hook this callback under Linux, i've decided to do this task from inside the include
+	// Thanks to [uL]Pottus for the idea
 	// Hook for CFilterScriptPool__OnPlayerGiveDamage
-	InstallCallHook(CAddress::CALLBACK_CFilterScriptPool__OnPlayerGiveDamage, (DWORD)CFilterScriptPool__OnPlayerGiveDamage);
-
+	//InstallCallHook(CAddress::CALLBACK_CFilterScriptPool__OnPlayerGiveDamage, (DWORD)CFilterScriptPool__OnPlayerGiveDamage);
 }
 
 void CHooks::InstallCallHook(DWORD dwInstallAddress, DWORD dwHookFunction)
