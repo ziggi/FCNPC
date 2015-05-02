@@ -65,7 +65,7 @@ void CUtils::FCNPCSleep(DWORD dwMs)
 	usleep((dwMs) * 1000);
 #endif
 }
-
+// Thanks to kurta999 - YSF project
 DWORD CUtils::FindPattern(char *szPattern, char *szMask)
 {
 #ifdef WIN32
@@ -86,10 +86,9 @@ DWORD CUtils::FindPattern(char *szPattern, char *szMask)
 	{
 		bool bFound = true;
 		// Loop through the pattern caracters
-		for(DWORD j = 0; j < dwPatternLength; j++)
-		{
+		for (DWORD j = 0; j < dwPatternLength; j++)
 			bFound &= szMask[j] == '?' || szPattern[j] == *(char*)(dwBase + i + j);
-		}
+
 		// If found return the current address
 		if(bFound) 
 			return dwBase + i;

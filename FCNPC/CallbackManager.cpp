@@ -143,7 +143,7 @@ void CCallbackManager::OnVehicleExitComplete(int iGameId)
 
 int CCallbackManager::OnTakeDamage(int iGameId, int iDamagerId, int iWeapon, int iBodyPart, float fHealthLoss)
 {
-	cell cReturn = 0;
+	cell cReturn = 1;
 	for(std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++)
 	{
 		// Get the function index
@@ -157,7 +157,7 @@ int CCallbackManager::OnTakeDamage(int iGameId, int iDamagerId, int iWeapon, int
 			amx_Push((*i), iDamagerId);
 			amx_Push((*i), iGameId);
 			// Execute the callback
-			if(!cReturn)
+			if(cReturn)
 				amx_Exec((*i), &cReturn, iIndex);
 			else
 				amx_Exec((*i), NULL, iIndex);
@@ -184,7 +184,7 @@ void CCallbackManager::OnFinishPlayback(int iGameId)
 
 int CCallbackManager::OnChangeNode(int iGameId, int iNodeId)
 {
-	cell cReturn = 0;
+	cell cReturn = 1;
 	for(std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++)
 	{
 		// Get the function index
@@ -195,7 +195,7 @@ int CCallbackManager::OnChangeNode(int iGameId, int iNodeId)
 			amx_Push((*i), iNodeId);
 			amx_Push((*i), iGameId);
 			// Execute the callback
-			if(!cReturn)
+			if(cReturn)
 				amx_Exec((*i), &cReturn, iIndex);
 			else
 				amx_Exec((*i), NULL, iIndex);
@@ -206,7 +206,7 @@ int CCallbackManager::OnChangeNode(int iGameId, int iNodeId)
 
 int CCallbackManager::OnFinishNodePoint(int iGameId, int iNodePoint)
 {
-	cell cReturn = 0;
+	cell cReturn = 1;
 	for(std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++)
 	{
 		// Get the function index
@@ -217,7 +217,7 @@ int CCallbackManager::OnFinishNodePoint(int iGameId, int iNodePoint)
 			amx_Push((*i), iNodePoint);
 			amx_Push((*i), iGameId);
 			// Execute the callback
-			if(!cReturn)
+			if(cReturn)
 				amx_Exec((*i), &cReturn, iIndex);
 			else
 				amx_Exec((*i), NULL, iIndex);

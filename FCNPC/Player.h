@@ -145,6 +145,7 @@ class CPlayer
 		CVector3		m_vecNodeVelocity;
 		CPlayback		*m_pPlayback;
 		CNode			*m_pNode;
+		CVector3		m_vecAimAt;
 		CSAMPPlayer		*m_pInterface;
 
 };

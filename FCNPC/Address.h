@@ -12,22 +12,10 @@
 #ifndef ADDRESS_H
 #define ADDRESS_H
 
-enum eSAMPVersion
-{
-	SAMP_VERSION_UNKNOWN,
-	SAMP_VERSION_03Z_R2,
-#ifndef _WIN32
-	SAMP_VERSION_03Z_R2_1000P,
-#endif
-};
-
 class CAddress
 {
 	public:
-		static void	Initialize(eSAMPVersion sampVersion);
-		
-		// Callbacks
-		static DWORD			CALLBACK_CFilterScriptPool__OnPlayerGiveDamage;
+		static void	Initialize();
 
 		// Functions
 		static DWORD			FUNC_CreateNPC_RPC;
@@ -47,6 +35,13 @@ class CAddress
 		static DWORD			VAR_ConfigPtr;
 		static DWORD			VAR_RakPeerPtr;
 		static DWORD			VAR_ServerAuthentication;
+
+		// Offsets
+		static DWORD			OFFSET_NetVersion;
+		static DWORD			OFFSET_RemoteSystemManager;
+		static DWORD			OFFSET_RemoteSystemSize;
+		static DWORD			OFFSET_RemoteSystem__ConnectMode;
+		static DWORD			OFFSET_RemoteSystem__Unknown;
 		
 		// Arrays
 

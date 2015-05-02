@@ -137,7 +137,7 @@ int CNode::ProcessNodeChange(CPlayer *pPlayer, unsigned short usLinkId, int iTyp
 	// Set the player velocity
 	pPlayer->SetVelocity(vecVelocity);
 	// Move the player to it
-	pPlayer->GoTo(vecPosition, iType == NODE_TYPE_PED ? MOVE_TYPE_WALK : MOVE_TYPE_DRIVE, true);
+	pPlayer->GoTo(vecPosition, iType == NODE_TYPE_PED ? MOVE_TYPE_WALK : MOVE_TYPE_DRIVE, false);
 
 	return m_nodeLink.usNodeId;
 }

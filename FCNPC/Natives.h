@@ -16,7 +16,6 @@ class CNatives
 	public:
 		static cell AMX_NATIVE_CALL FCNPC_SetUpdateRate(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL FCNPC_InitZMap(AMX *amx, cell *params);
-		static cell AMX_NATIVE_CALL FCNPC_ProcessDamage(AMX *amx, cell *params);
 
 		static cell AMX_NATIVE_CALL FCNPC_Create(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL FCNPC_Destroy(AMX *amx, cell *params);

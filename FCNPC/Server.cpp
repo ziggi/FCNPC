@@ -35,7 +35,7 @@ CServer::~CServer()
 	SAFE_DELETE(pCreateNPCParams);
 }
 
-BYTE CServer::Initialize(eSAMPVersion sampVersion)
+BYTE CServer::Initialize()
 {
 	// Create the ZMap instance
 	m_pZMap = new CZMap();
@@ -45,7 +45,7 @@ BYTE CServer::Initialize(eSAMPVersion sampVersion)
 	// Initialize necessary samp functions
 	CSAMPFunctions::PreInitialize();
 	// Initialize addresses
-	CAddress::Initialize(sampVersion);
+	CAddress::Initialize();
 	// Initialize SAMP Functions
 	CSAMPFunctions::Initialize();
 	// Install hooks
@@ -73,7 +73,7 @@ BYTE CServer::Initialize(eSAMPVersion sampVersion)
 		return 5;
 
 	// Push all the basic parameters
-	pCreateNPCParams->Write<int>(SAMP_NETVERSION);
+	pCreateNPCParams->Write<int>(CAddress::OFFSET_NetVersion);
 	pCreateNPCParams->Write<BYTE>(1);
 	// Check the maxnpc from the config
 	if(CSAMPFunctions::GetMaxNPC() == 0)

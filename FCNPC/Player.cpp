@@ -22,6 +22,7 @@ CPlayer::CPlayer(EntityId playerId, char *szName)
 	// Reset variables
 	m_vecDestination = CVector3();
 	m_vecNodeVelocity = CVector3();
+	m_vecAimAt = CVector3();
 	m_bSetup = false;
 	m_bSpawned = false;
 	m_bMoving = false;
@@ -186,6 +187,7 @@ void CPlayer::UpdateSync(int iState)
 
 void CPlayer::Update(int iState)
 {
+	//return;
 	// Validate the player
 	if(!m_bSetup || !m_bSpawned)
 		return;
@@ -350,6 +352,8 @@ void CPlayer::Kill(int iKillerId, int iWeapon)
 	StopAim();
 	// Kill the NPC
 	CSAMPFunctions::KillPlayer(m_playerId, iWeapon, iKillerId);
+	// Set the NPC state
+	SetState(PLAYER_STATE_DEAD);
 	// Call the NPC death callback
 	CCallbackManager::OnDeath((int)m_playerId, iKillerId, iWeapon);
 }
@@ -506,6 +510,8 @@ void CPlayer::Process()
 				{
 					// Decrease the ammo
 					m_wAmmo--;
+					// Shoot
+					CSAMPFunctions::PlayerShoot((int)m_playerId, m_vecAimAt);
 					// Get the weapon clip size
 					DWORD dwClip = 0;
 					if(m_pInterface->syncData.byteWeapon == 38 || m_pInterface->syncData.byteWeapon == 37)
@@ -962,6 +968,8 @@ void CPlayer::AimAt(CVector3 vecPoint, bool bShoot)
 	m_bAiming = true;
 	// Adjust the player position
 	CVector3 vecPosition = m_pInterface->vecPosition;
+	// Save the aiming point
+	m_vecAimAt = vecPoint;
 	// Get the aiming distance
 	CVector3 vecDistance = vecPoint - vecPosition;
 	// Get the distance to the destination point

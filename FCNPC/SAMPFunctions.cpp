@@ -75,7 +75,7 @@ int CSAMPFunctions::NewPlayer(char *szName)
 		return INVALID_ENTITY_ID;
 
 	// Get the SAMP authentication
-	int iAuthentication = *(int *)(CAddress::VAR_ServerAuthentication) ^ SAMP_NETVERSION;
+	int iAuthentication = *(int *)(CAddress::VAR_ServerAuthentication) ^ CAddress::OFFSET_NetVersion;
 	// Set the RPC parameters writing pointer
 	pCreateNPCParams->SetWritePointer(5);
 	// Write to the RPC params
@@ -158,5 +158,27 @@ int CSAMPFunctions::GetMaxNPC()
 	// Call the function
 	void *pConfig = (void *)CAddress::VAR_ConfigPtr;
 	return pfn__CConfig__GetValueAsInteger(pConfig, "maxnpc");
+}
+
+void CSAMPFunctions::PlayerShoot(int iPlayerId, CVector3 vecPoint)
+{
+	// Get the RakPeer pointer
+	CSAMPRakPeer *pSAMPRakPeer = (CSAMPRakPeer *)CAddress::VAR_RakPeerPtr;
+	// Create the SendBullet structure
+	CBulletSyncData bulletSyncData;
+	bulletSyncData.byteHitType = 0; // No targets to hit
+	bulletSyncData.usHitTargetId = INVALID_ENTITY_ID;
+	bulletSyncData.vecCenterOfHit = CVector3();
+	bulletSyncData.vecHitOrigin = CVector3();
+	bulletSyncData.vecHitTarget = vecPoint;
+	// Write it to BitStream
+	RakNet::BitStream bsSend;
+	bsSend.Write((BYTE)BULLET_SYNC_ID);
+	bsSend.Write((unsigned short)iPlayerId);
+	bsSend.Write((char *)&bulletSyncData, sizeof(CBulletSyncData));
+	// Send it
+	/*CSAMPSystemAddress systemAddress = CSAMPSystemAddress();
+	RakServer__Send_t Send = pSAMPRakPeer->pVFTable->Send;
+	Send(pSAMPRakPeer, &bsSend, 1, 6, 0, systemAddress, 1);		*/
 }
 

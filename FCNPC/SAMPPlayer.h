@@ -94,37 +94,39 @@ class CPassengerSyncData
 class CSAMPPlayer
 {
 	public:
+		PAD(pad0, 8);
 		CAimSyncData		aimSyncData;		// 0x0000 - 0x001F
 		CVehicleSyncData	vehicleSyncData;	// 0x001F - 0x005E
 		CPassengerSyncData	passengerSyncData;	// 0x005E - 0x0076
 		CSyncData			syncData;			// 0x0076 - 0x00BA
-		PAD(pad1, 8803);						// 0x00BA - 0x231D
-		BOOL				bUpdateKeys;		// 0x231D - 0x2321
-		CVector3			vecPosition;		// 0x2321 - 0x232D
-		float				fHealth;			// 0x232D - 0x2331
-		float				fArmour;			// 0x2331 - 0x2335
-		PAD(pad2, 16);							// 0x2335 - 0x2345
-		float				fAngle;				// 0x2345 - 0x2349
-		CVector3			vecVelocity;		// 0x2349 - 0x2355
-		WORD				wUDAnalog;			// 0x2355 - 0x2357
-		WORD				wLRAnalog;			// 0x2357 - 0x2359
-		DWORD				dwKeys;				// 0x2359 - 0x235D
-		DWORD				dwOldKeys;			// 0x235D - 0x2361
-		PAD(pad3, 18);							// 0x2361 - 0x2373
-		WORD				wPlayerId;			// 0x2373 - 0x2375 
-		int					iUpdateState;		// 0x2375 - 0x2379 
-		PAD(pad4, 564);							// 0x2379 - 0x25AD
-		BOOL				bHasAimSync;		// 0x25AD - 0x25B1
-		BOOL				bHasUnkSync;		// 0x25B1 - 0x25B5
-		BOOL				bHasUnk2Sync;		// 0x25B5 - 0x25B9
-		BYTE				byteState;			// 0x25B9 - 0x25BA
-		PAD(pad5, 84);							// 0x25BA - 0x260E
-		int					iSkinId;			// 0x260E - 0x2612
-		PAD(pad6, 1);							// 0x2612 - 0x2613
-		CVector3			vecSpawnPosition;	// 0x2613 - 0x261F
-		PAD(pad7, 28);							// 0x261F - 0x263B
-		BOOL				bReadyToSpawn;		// 0x263B - 0x263F
+		PAD(pad1, 10319);						// 0x00C2 - 0x2911
+		BOOL				bUpdateKeys;		// 0x2911 - 0x2915
+		CVector3			vecPosition;		// 0x2915 - 0x2921
+		float				fHealth;			// 0x2921 - 0x2925
+		float				fArmour;			// 0x2925 - 0x2929
+		PAD(pad2, 16);							// 0x2929 - 0x2939
+		float				fAngle;				// 0x2939 - 0x293D
+		CVector3			vecVelocity;		// 0x293D - 0x2949
+		WORD				wUDAnalog;			// 0x2949 - 0x294B
+		WORD				wLRAnalog;			// 0x294B - 0x294D
+		DWORD				dwKeys;				// 0x294D - 0x2951
+		DWORD				dwOldKeys;			// 0x2951 - 0x2955
+		PAD(pad3, 18);							// 0x2955 - 0x2967
+		WORD				wPlayerId;			// 0x2967 - 0x2969 
+		int					iUpdateState;		// 0x2969 - 0x296D
+		PAD(pad4, 560);							// 0x296D - 0x2B9D
+		BOOL				bHasAimSync;		// 0x2B9D - 0x2BA1
+		BOOL				bHasUnkSync;		// 0x2BA1 - 0x2BA5
+		BOOL				bHasUnk2Sync;		// 0x2BA5 - 0x2BA9
+		BYTE				byteState;			// 0x2BA9 - 0x2BAA
+		PAD(pad5, 84);							// 0x2BAA - 0x2BFE
+		int					iSkinId;			// 0x2BFE - 0x2C02
+		PAD(pad6, 1);							// 0x2C02 - 0x2C03
+		CVector3			vecSpawnPosition;	// 0x2C03 - 0x2C0F
+		PAD(pad7, 28);							// 0x2C0F - 0x2C2B
+		BOOL				bReadyToSpawn;		// 0x2C2B - 0x2C2F
 		PAD(pad8, 2);							// 0x263F - 0x2641
+
 		BYTE				byteSeatId;			// 0x2641 - 0x2642
 		WORD				wVehicleId;			// 0x2642 - 0x2644
 		PAD(pad9, 12);							// 0x2644 - 0x2650

@@ -17,7 +17,6 @@ extern void			*pAMXFunctions;
 CServer				*pServer;
 bool				bServerInit = false;
 DWORD				dwStartTick;
-eSAMPVersion		sampVersion = SAMP_VERSION_UNKNOWN;
 
 PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports() 
 {
@@ -41,6 +40,8 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	logprintf("-------------------------------------------------");
 	logprintf("");
 	logprintf("Loading ...");
+	// Install the exception handler
+	CExceptionHandler::Install();
 	// Initialize linux tick count
 #ifndef _WIN32
 	CUtils::LoadTickCount();
@@ -52,36 +53,6 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 		logprintf("Failed. (Cant create server instance)");
 		return false;
 	}
-	// Detect samp server version
-#ifdef _WIN32
-	if (*(DWORD *)0x45A1B0 == 0x24748B56) 
-	{ 
-		sampVersion = SAMP_VERSION_03Z_R2; 
-		logprintf("SAMP Server version 0.3z R2-2 (Windows) detected. Initializing ..."); 
-	} 
-	else
-	{
-		logprintf("Unknown samp server version. FCNPC only supports 0.3z versions");
-		return false;
-	}
-#else
-	if(*(DWORD *)0x80A7577 == 0x01F4FB81)
-	{
-		sampVersion = SAMP_VERSION_03Z_R2;
-		logprintf("SAMP Server version 0.3z R2-2 (Linux) detected. Initializing ...");
-	}
-	else if(*(DWORD *)0x80A7577 == 0x03E8FB81)
-	{
-		sampVersion = SAMP_VERSION_03Z_R2_1000P;
-		logprintf("SAMP Server version 0.3z R2-2 1000p (Linux) detected. Initializing ...");
-	}
-	else
-	{
-		logprintf("Unknown samp server version. FCNPC only supports 0.3z versions");
-		return false;
-	}
-#endif
-
 	return true;
 }
 
@@ -99,7 +70,6 @@ AMX_NATIVE_INFO PluginNatives[ ] =
 {
 	{ "FCNPC_SetUpdateRate", CNatives::FCNPC_SetUpdateRate},
 	{ "FCNPC_InitZMap", CNatives::FCNPC_InitZMap},
-	{ "FCNPC_ProcessDamage", CNatives::FCNPC_ProcessDamage},
 	
 	{ "FCNPC_Create", CNatives::FCNPC_Create},
 	{ "FCNPC_Destroy", CNatives::FCNPC_Destroy},
@@ -184,7 +154,7 @@ PLUGIN_EXPORT int PLUGIN_CALL AmxLoad(AMX *pAMX)
 	{
 		// Initialize the server
 		BYTE byteError = 0;
-		if((byteError = pServer->Initialize(sampVersion)) != 0)
+		if((byteError = pServer->Initialize()) != 0)
 		{
 			// Get the error
 			char szError[64];

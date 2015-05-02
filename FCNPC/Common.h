@@ -13,18 +13,35 @@
 
 #include <math.h>
 
+// logprintf function defintion
+typedef void (* logprintf_t)(char *szFormat, ...);
+extern logprintf_t			logprintf;
+
 // General definitions
-#define VERSION				"0.1 B12"
-#define MAX_PLAYERS			500
+#define VERSION				"0.1 B14"
+#define MAX_PLAYERS			1000
 #define MAX_VEHICLES		2000
 #define MAX_NODES			64
 #define MAX_NAME_LENGTH		24
 #define MAX_FILTERSCRIPTS	16
 #define SAMP_NETVERSION		0x0FCF
 #define INVALID_ENTITY_ID	(0xFFFF)
+#define BULLET_SYNC_ID		224
 #define SAFE_DELETE(ptr)	if(ptr) { delete ptr; ptr = NULL; } 
 #define SAFE_RELEASE(ptr)	if(ptr) { ptr->Release(); ptr = NULL; } 
 #define PAD(a, b)			char a[b]
+#ifndef CHECK_PARAMS
+	#define CHECK_PARAMS(m,n)                                                                                           \
+		do                                                                                                              \
+		{                                                                                                               \
+			if (params[0] != (m * 4))                                                                                   \
+			{                                                                                                           \
+				logprintf("[FCNPC] Error: Incorrect parameter count on \"" n "\", %d != %d\n", m, params[0] / 4); \
+				return 0;                                                                                               \
+			}                                                                                                           \
+		}                                                                                                               \
+		while (0)
+#endif
 // Plugin exports
 #define PLUGIN_DATA_NETGAME		225
 #define PLUGIN_DATA_CONFIG		228
@@ -78,9 +95,6 @@
 #define MAX_DAMAGE_DISTANCE				200.0f
 #define MAX_DISTANCE_TO_ENTER_VEHICLE	30.0f
 #define DEFAULT_UPDATE_RATE				50
-
-// logprintf function defintion
-typedef void (* logprintf_t)(char *szFormat, ...);
 
 // Type definitions
 typedef unsigned short EntityId;

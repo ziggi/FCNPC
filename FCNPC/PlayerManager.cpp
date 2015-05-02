@@ -70,7 +70,7 @@ EntityId CPlayerManager::AddPlayer(char *szName)
 	m_bConnected[iGameId] = true;
 	// Increase players count
 	m_players++;
-	// Gall the created callback
+	// Call the created callback
 	CCallbackManager::OnCreate(iGameId);
 	// Return the NPC ID
 	return iGameId;
@@ -106,10 +106,7 @@ void CPlayerManager::Process()
 bool CPlayerManager::SetupPlayer(EntityId playerId)
 {
 	// Setup the NPC
-	if(!GetAt(playerId)->Setup())
-		return false;
-
-	return true;
+	return GetAt(playerId)->Setup();
 }
 
 bool CPlayerManager::IsNPC(int iPlayerId)

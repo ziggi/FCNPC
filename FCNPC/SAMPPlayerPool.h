@@ -17,10 +17,10 @@
 class CSAMPPlayerPool
 {
 	public:
-		PAD(pad0, 75012);											// 0x00000 - 0x12504
-		BOOL				bIsPlayerConnected[MAX_PLAYERS];		// 0x12504 - 0x12CD4
-		CSAMPPlayer			*pPlayer[MAX_PLAYERS];					// 0x12CD4 - 0x134A4
-		char				szName[MAX_PLAYERS][MAX_NAME_LENGTH];	// 0x134A4 - 0x16384
+		PAD(pad0, 150012);											// 0x00000 - 0x249FC
+		BOOL				bIsPlayerConnected[MAX_PLAYERS];		// 0x249FC - 0x2599C
+		CSAMPPlayer			*pPlayer[MAX_PLAYERS];					// 0x2599C - 0x2693C
+		char				szName[MAX_PLAYERS][MAX_NAME_LENGTH];	// 0x2693C - 0x2C6FC
 };
 #pragma pack(pop)
 

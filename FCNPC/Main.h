@@ -36,6 +36,10 @@
 #include <stdarg.h> 
 #include <math.h>
 #include <string.h>
+// Detours include
+#include <Detours.h>
+// ExceptionHandler includes
+#include "ExceptionHandler.h"
 // SDK includes
 #include "SDK/plugin.h"
 // Utils includes
@@ -62,7 +66,9 @@
 	#include "SAMPVehicle.h"
 	#include "SAMPRakPeer.h"
 	#include "SAMPRPCParams.h"
+	#include "SAMPBullet.h"
 	#include "SAMPFunctions.h"
+	#include "BitStream.h"
 	// SA includes
 	#include "SANode.h"
 

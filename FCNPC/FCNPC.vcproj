@@ -287,6 +287,18 @@
 				Name="SAMP"
 				>
 				<File
+					RelativePath=".\BitStream.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\BitStream.h"
+					>
+				</File>
+				<File
+					RelativePath=".\SAMPBullet.h"
+					>
+				</File>
+				<File
 					RelativePath=".\SAMPFunctions.cpp"
 					>
 				</File>
