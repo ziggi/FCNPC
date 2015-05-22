@@ -63,7 +63,7 @@ long WINAPI CExceptionHandler::ExceptionHandlerCallback(_EXCEPTION_POINTERS *pEx
 	fprintf(pFile, "VAR_ServerPtr: 0x%x\n", CAddress::VAR_ServerPtr);
 	fprintf(pFile, "VAR_ConfigPtr: 0x%x\n", CAddress::VAR_ConfigPtr);
 	fprintf(pFile, "VAR_RakPeerPtr: 0x%x\n", CAddress::VAR_RakPeerPtr);
-	fprintf(pFile, "======================== V:MP Exception Handler ===============================");
+	fprintf(pFile, "======================== FCNPC Exception Handler ===============================");
 	// Close the file
 	fclose(pFile);
 	return EXCEPTION_EXECUTE_HANDLER;
