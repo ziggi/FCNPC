@@ -36,7 +36,7 @@ extern logprintf_t			logprintf;
 		{                                                                                                               \
 			if (params[0] != (m * 4))                                                                                   \
 			{                                                                                                           \
-				logprintf("[FCNPC] Error: Incorrect parameter count on \"" n "\", %d != %d\n", m, params[0] / 4); \
+				logprintf("[FCNPC] Error: Incorrect parameter count for \"" n "\", %d != %d\n", m, params[0] / 4); \
 				return 0;                                                                                               \
 			}                                                                                                           \
 		}                                                                                                               \

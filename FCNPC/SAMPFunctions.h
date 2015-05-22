@@ -53,7 +53,6 @@ class CSAMPFunctions
 		static int		GetNetGame() { return pfn__GetNetGame(); }
 		static int		GetConsole() { return pfn__GetConsole(); }
 		static int		GetRakServer() { return pfn__GetRakServer(); }
-		static void		PlayerShoot(int iPlayerId, CVector3 vecPoint);
 
 		// Functions
 		static CreateNPC_RPC_t					pfn__CreateNPC_RPC;

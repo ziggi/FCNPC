@@ -302,17 +302,30 @@ void CPlayer::UpdateAim()
 			m_pInterface->aimSyncData.byteCameraMode = 4;
 
 		// Set the weapon state
-		m_pInterface->aimSyncData.byteWeaponState = 2 << 3;
-		if(m_bReloading)
-			m_pInterface->aimSyncData.byteWeaponState = 3 << 6;
+#ifdef _WIN32
+		m_pInterface->aimSyncData.byteWeaponState = (BYTE)eWeaponState::WS_MORE_BULLETS;
+		if (m_bReloading)
+			m_pInterface->aimSyncData.byteWeaponState = (BYTE)eWeaponState::WS_RELOADING;
 		else if(!m_wAmmo)
-			m_pInterface->aimSyncData.byteWeaponState = 0;
+			m_pInterface->aimSyncData.byteWeaponState = (BYTE)eWeaponState::WS_NO_BULLETS;
+#else
+		// For some reasons, enumerations dosen't work in linux
+		m_pInterface->aimSyncData.byteWeaponState = (BYTE)WS_MORE_BULLETS;
+		if (m_bReloading)
+			m_pInterface->aimSyncData.byteWeaponState = (BYTE)WS_RELOADING;
+		else if (!m_wAmmo)
+			m_pInterface->aimSyncData.byteWeaponState = (BYTE)WS_NO_BULLETS;
+#endif
 	}
 	else
 	{
 		// Set the camera mode and weapon state
-		m_pInterface->aimSyncData.byteCameraMode = 4;
-		m_pInterface->aimSyncData.byteWeaponState = 0;
+		m_pInterface->aimSyncData.byteCameraMode = 0;
+#ifdef _WIN32
+		m_pInterface->aimSyncData.byteWeaponState = (BYTE)eWeaponState::WS_NO_BULLETS;
+#else
+		m_pInterface->aimSyncData.byteWeaponState = WS_NO_BULLETS;
+#endif
 		// Convert the player angle to radians
 		float fAngle = CMath::DegreeToRadians(GetAngle());
 		// Calculate the camera target
@@ -484,7 +497,7 @@ void CPlayer::Process()
 			DWORD dwThisTick = GetTickCount();
 			DWORD dwTime = (dwThisTick - m_dwReloadTickCount);
 			// Have we finished reloading ?
-			if(dwTime >= 1500)
+			/*if (dwTime >= 10000)// 1500)
 			{
 				// Reset the reloading flag
 				m_bReloading = false;
@@ -492,7 +505,7 @@ void CPlayer::Process()
 				SetKeys(m_pInterface->wUDAnalog, m_pInterface->wLRAnalog, 4 + 0x80);
 				// Update the shoot tick
 				m_dwShootTickCount = dwThisTick;
-			}
+			}*/
 		}
 		// Process player shooting
 		else if(m_bAiming && m_pInterface->dwKeys & 4)
@@ -506,12 +519,10 @@ void CPlayer::Process()
 				// Check the time spent since the last shoot
 				DWORD dwThisTick = GetTickCount();
 				DWORD dwTime = (dwThisTick - m_dwShootTickCount);
-				if(dwTime >= 5000) // TODO: Change that for each weapon rate of fire
+				if(dwTime >= 50) // TODO: Change that for each weapon rate of fire
 				{
 					// Decrease the ammo
 					m_wAmmo--;
-					// Shoot
-					CSAMPFunctions::PlayerShoot((int)m_playerId, m_vecAimAt);
 					// Get the weapon clip size
 					DWORD dwClip = 0;
 					if(m_pInterface->syncData.byteWeapon == 38 || m_pInterface->syncData.byteWeapon == 37)
@@ -522,15 +533,17 @@ void CPlayer::Process()
 					// Check for reload
 					if(m_wAmmo % dwClip == 0 && m_wAmmo != 0)
 					{
+						logprintf("reloading on %d clip %d weapon %d", m_wAmmo, dwClip, m_pInterface->syncData.byteWeapon);
 						// Set the reload tick count
 						m_dwReloadTickCount = GetTickCount();
 						// Set reloading flag
 						m_bReloading = true;
 						// Stop shooting and aim only
-						SetKeys(m_pInterface->wUDAnalog, m_pInterface->wLRAnalog, 0x80);
-						// Update the shoot tick
-						m_dwShootTickCount = dwThisTick;
+						SetKeys(m_pInterface->wUDAnalog, m_pInterface->wLRAnalog, 0);// 0x80);
+						logprintf("%s", m_pInterface->dwKeys & 4 ? "true" : "false");
 					}
+					// Update the shoot tick
+					m_dwShootTickCount = dwThisTick;
 				}
 			}
 		}

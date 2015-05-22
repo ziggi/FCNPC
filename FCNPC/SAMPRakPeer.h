@@ -13,6 +13,12 @@
 
 class CSAMPSystemAddress;
 
+#ifdef _WIN32
+#	define SYSTEM_MANAGER_OFFSET 8
+#else
+#	define SYSTEM_MANAGER_OFFSET 4
+#endif
+
 #pragma pack(push, 1)
 class CSAMPSystemAddress
 {
@@ -48,7 +54,7 @@ class CSAMPRakPeer
 		CSAMPRemoteSystem *GetRemoteSystem(unsigned short usIndex)
 		{
 			// Get the remote system manager
-			CSAMPRemoteSystemManager *pRemoteSystemManager = *(CSAMPRemoteSystemManager **)(this + CAddress::OFFSET_RemoteSystemManager + 8);
+			CSAMPRemoteSystemManager *pRemoteSystemManager = *(CSAMPRemoteSystemManager **)(this + CAddress::OFFSET_RemoteSystemManager + SYSTEM_MANAGER_OFFSET);
 			// Get the remote system
 			return (CSAMPRemoteSystem *)(pRemoteSystemManager + CAddress::OFFSET_RemoteSystemSize * usIndex);
 		}

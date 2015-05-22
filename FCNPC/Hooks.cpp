@@ -88,14 +88,25 @@ void CHooks::InstallHooks()
 {
 	// Reset public flag
 	bGiveDamage = false;
-	// Find the amx_FindPublic function pointer
 	BYTE *pFindPublic = *(BYTE **)((DWORD)pAMXFunctions + PLUGIN_AMX_EXPORT_FindPublic * 4);
 	// Find the amx_Push function pointer
 	BYTE *pPush = *(BYTE **)((DWORD)pAMXFunctions + PLUGIN_AMX_EXPORT_Push * 4);
+	// Find the amx_FindPublic function pointer
+#ifdef _WIN32
 	// Hook for amx_FindPublic
 	pfn_amx_FindPublic = (amx_FindPublic_t)DetourFunction(pFindPublic, (BYTE *)&amx_FindPublic_Hook);
 	// Hook for amx_Push
 	pfn_amx_Push = (amx_Push_t)DetourFunction(pPush, (BYTE *)&amx_Push_Hook);
+#else
+	// Hook for amx_FindPublic
+	subhook_t hook = subhook_new(pFindPublic, (BYTE *)&amx_FindPublic_Hook);
+	subhook_install(hook);
+	pfn_amx_FindPublic = (amx_FindPublic_t)(subhook_get_trampoline(hook));
+	// Hook for amx_Push
+	hook = subhook_new(pPush, (BYTE *)&amx_Push_Hook);
+	subhook_install(hook);
+	pfn_amx_FindPublic = (amx_FindPublic_t)(subhook_get_trampoline(hook));
+#endif
 }
 
 void CHooks::InstallCallHook(DWORD dwInstallAddress, DWORD dwHookFunction)

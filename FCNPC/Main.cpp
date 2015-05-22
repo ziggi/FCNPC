@@ -40,6 +40,12 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	logprintf("-------------------------------------------------");
 	logprintf("");
 	logprintf("Loading ...");
+
+	/*
+
+	*/
+	/*DWORD a = CUtils::FindPattern("\x80\xB8\x67\x0C\x00\x00\x02\x74\x1D\x8B\x45\xD8\x89\x04\x24", "xx????xx?xxxxxx") + 2;
+	logprintf("0x%x - 0x%x", a, *(DWORD *)a);*/
 	// Install the exception handler
 	CExceptionHandler::Install();
 	// Initialize linux tick count

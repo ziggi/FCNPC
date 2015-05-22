@@ -76,8 +76,8 @@ DWORD CUtils::FindPattern(char *szPattern, char *szMask)
 	DWORD dwBase = (DWORD)mInfo.lpBaseOfDll;
 	DWORD dwSize =  (DWORD)mInfo.SizeOfImage;
 #else
-	DWORD dwBase = 0;
-	DWORD dwSize = 0;
+	DWORD dwBase = 0x804b480;
+	DWORD dwSize = 0x8128B80 - dwBase;
 #endif
 	// Get the pattern length
 	DWORD dwPatternLength = (DWORD)strlen(szMask);

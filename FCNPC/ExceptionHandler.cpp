@@ -15,9 +15,13 @@ extern CServer *pServer;
 void CExceptionHandler::Install()
 {
 	// Set the exception handler callback
+#ifdef _WIN32
 	SetUnhandledExceptionFilter(ExceptionHandlerCallback);
-}
+#else
 
+#endif
+}
+#ifdef _WIN32
 long WINAPI CExceptionHandler::ExceptionHandlerCallback(_EXCEPTION_POINTERS *pExceptionInfo)
 {
 	// Get the current time
@@ -64,3 +68,9 @@ long WINAPI CExceptionHandler::ExceptionHandlerCallback(_EXCEPTION_POINTERS *pEx
 	fclose(pFile);
 	return EXCEPTION_EXECUTE_HANDLER;
 }
+#else 
+void CExceptionHandler::ExceptionHandlerCallback(int param)
+{
+
+}
+#endif 

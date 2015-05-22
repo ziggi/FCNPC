@@ -660,12 +660,12 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAt(AMX *amx, cell *params)
 	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
 		return 0;
 
-	// Thanks to abagail
+	/*// Thanks to abagail
 	CVector3 vecPosition;
 	pServer->GetPlayerManager()->GetAt(iNPCId)->GetPosition(&vecPosition);
 	// The coordinates are too far away to shoot at.
-	if (amx_ftoc(vecPosition.fX) >= fX + 30.0 || amx_ftoc(vecPosition.fY) >= fY + 30.0)
-		return 0;
+	if (amx_ftoc(vecPosition.fX) > fX + 100.0 || amx_ftoc(vecPosition.fX) < fX + 100.0 || amx_ftoc(vecPosition.fY) > fY + 100.0 || amx_ftoc(vecPosition.fY) < fY + 100.0)
+		return 0;*/
 
 	// Set the player aiming
 	pServer->GetPlayerManager()->GetAt(iNPCId)->AimAt(CVector3(fX, fY, fZ), !iShoot ? false : true);
