@@ -23,12 +23,19 @@ float fHealthLoss;
 int iWeapon; 
 int iBodypart;
 
+#ifndef _WIN32
+subhook_t	hookFindPublic;
+subhook_t	hookPush;
+#endif
+
 // amx_FindPublic function definition
 typedef int (* amx_FindPublic_t)(AMX *amx, const char *funcname, int *index);
 amx_FindPublic_t pfn_amx_FindPublic = NULL;
 // amx_Push function definition
 typedef int(*amx_Push_t)(AMX *amx, cell value);
 amx_Push_t pfn_amx_Push = NULL;
+
+DWORD test;
 
 int amx_FindPublic_Hook(AMX *amx, const char *funcname, int *index) 
 {
@@ -39,6 +46,9 @@ int amx_FindPublic_Hook(AMX *amx, const char *funcname, int *index)
 		bGiveDamage = true;
 		bytePushCount = 0;
 	}
+#ifndef _WIN32
+	pfn_amx_FindPublic = (amx_FindPublic_t)(subhook_get_trampoline(hookFindPublic));
+#endif
 	return pfn_amx_FindPublic(amx, funcname, index);
 }
 
@@ -80,7 +90,9 @@ int amx_Push_Hook(AMX *amx, cell value)
 			bGiveDamage = false;
 		}
 	}
-
+#ifndef _WIN32
+	pfn_amx_Push = (amx_Push_t)(subhook_get_trampoline(hookPush));
+#endif
 	return pfn_amx_Push(amx, value);
 }
 
@@ -99,13 +111,11 @@ void CHooks::InstallHooks()
 	pfn_amx_Push = (amx_Push_t)DetourFunction(pPush, (BYTE *)&amx_Push_Hook);
 #else
 	// Hook for amx_FindPublic
-	subhook_t hook = subhook_new(pFindPublic, (BYTE *)&amx_FindPublic_Hook);
-	subhook_install(hook);
-	pfn_amx_FindPublic = (amx_FindPublic_t)(subhook_get_trampoline(hook));
+	hookFindPublic = subhook_new(pFindPublic, (BYTE *)&amx_FindPublic_Hook);
+	subhook_install(hookFindPublic);
 	// Hook for amx_Push
-	hook = subhook_new(pPush, (BYTE *)&amx_Push_Hook);
-	subhook_install(hook);
-	pfn_amx_FindPublic = (amx_FindPublic_t)(subhook_get_trampoline(hook));
+	hookPush = subhook_new(pPush, (BYTE *)&amx_Push_Hook);
+	subhook_install(hookFindPublic);
 #endif
 }
 
