@@ -12,6 +12,19 @@
 #ifndef SAMPFUNCTIONS_H
 #define SAMPFUNCTIONS_H
 
+class CSAMPPlayerId
+{
+public:
+	CSAMPPlayerId(CSAMPSystemAddress systemAddress)
+	{
+		uiSystemAddress = systemAddress.uiSystemAddress;
+		usPort = systemAddress.usPort;
+	};
+	
+	unsigned int		uiSystemAddress;	// 0x0000 - 0x0004
+	unsigned short		usPort;				// 0x0004 - 0x0006
+};
+
 // Functions definitions
 typedef void ( *CreateNPC_RPC_t)(CSAMPRPCParams *pRPCParams);
 typedef int  ( *GetNetGame_t)();
@@ -24,6 +37,7 @@ typedef void (__thiscall *CPlayer__Kill_t)(void *pPlayer, int iKillerId, int iWe
 typedef void (__thiscall *CPlayer__EnterVehicle_t)(void *pPlayer, int iVehicleId, int iSeatId);
 typedef void (__thiscall *CPlayer__ExitVehicle_t)(void *pPlayer, int iVehicleId);
 typedef int  (__thiscall *CConfig__GetValueAsInteger_t)(void *pConfig, char *szKey);
+typedef void(__thiscall *RakServer__Send_t)(void *pRakServer, RakNet::BitStream* pBitStream, int iPriority, int iReliability, unsigned ucOrderingChannel, CSAMPPlayerId playerId, bool bBroadcast);
 #else
 typedef int  ( *CPlayerPool__DeletePlayer_t)(void *pPlayerPool, WORD wPlayerId, BYTE byteReason);
 typedef void ( *CPlayer__SpawnForWorld_t)(void *pPlayer);
@@ -31,6 +45,7 @@ typedef void ( *CPlayer__Kill_t)(void *pPlayer, int iKillerId, int iWeapon);
 typedef void ( *CPlayer__EnterVehicle_t)(void *pPlayer, int iVehicleId, int iSeatId);
 typedef void ( *CPlayer__ExitVehicle_t)(void *pPlayer, int iVehicleId);
 typedef int  ( *CConfig__GetValueAsInteger_t)(void *pConfig, char *szKey);
+typedef void ( *RakServer__Send_t)(void *pRakServer, RakNet::BitStream* pBitStream, int iPriority, int iReliability, unsigned ucOrderingChannel, CSAMPPlayerId playerId, bool bBroadcast);
 #endif
 typedef CVector3 *( *GetVehicleModelInfo_t)(int iModelId, int iInfoType);
 
@@ -50,6 +65,7 @@ class CSAMPFunctions
 		static CVector3	*GetVehicleModelInfo(int iModelId, int iInfoType);
 		static int		GetMaxPlayers();
 		static int		GetMaxNPC();
+		static void		PlayerShoot(int iPlayerId, CVector3 vecPoint);
 		static int		GetNetGame() { return pfn__GetNetGame(); }
 		static int		GetConsole() { return pfn__GetConsole(); }
 		static int		GetRakServer() { return pfn__GetRakServer(); }
@@ -63,6 +79,7 @@ class CSAMPFunctions
 		static CPlayer__ExitVehicle_t			pfn__CPlayer__ExitVehicle;
 		static CConfig__GetValueAsInteger_t		pfn__CConfig__GetValueAsInteger;
 		static GetVehicleModelInfo_t			pfn__GetVehicleModelInfo;
+		static RakServer__Send_t				pfn__RakServer__Send;
 		static GetNetGame_t						pfn__GetNetGame;
 		static GetConsole_t						pfn__GetConsole;
 		static GetRakServer_t					pfn__GetRakServer;

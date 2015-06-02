@@ -17,7 +17,7 @@ enum eWeaponState
 	WS_NO_BULLETS = 0,
 	WS_LAST_BULLET = 1,
 	WS_MORE_BULLETS = 2,
-	WS_RELOADING = 3,
+	WS_RELOADING = 127,
 };
 #else
 #define WS_NO_BULLETS 0
@@ -32,6 +32,7 @@ class CWeaponInfo
 		static DWORD	GetWeaponClipSize(int iWeaponId);
 		static float	GetWeaponDamage(int iWeaponId);
 		static WORD		GetWeaponRateOfFire(int iWeaponId);
+		static bool		IsDoubleHanded(BYTE byteWeaponId);
 };
 
 #endif

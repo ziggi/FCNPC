@@ -81,6 +81,9 @@ class CPlayer
 		void		StopMoving();
 		bool		IsMoving() { return m_bMoving; };
 
+		void		ToggleReloading(bool bToggle) { m_bHasReload = bToggle; };
+		void		ToggleInfiniteAmmo(bool bToggle) { m_bHasInfiniteAmmo = bToggle; };
+
 		void		AimAt(CVector3 vecPoint, bool bShoot);
 		void		StopAim();
 		void		MeleeAttack(DWORD dwTime);
@@ -100,10 +103,10 @@ class CPlayer
 		int			GetVehicleId() { return m_pInterface->wVehicleId; };
 		int			GetSeatId() { return m_pInterface->byteSeatId; };
 
-		bool		StartRecordingPlayback(char *szFile);
-		void		StopRecordingPlayback();
-		void		PauseRecordingPlayback();
-		void		ResumeRecordingPlayback();
+		bool		StartPlayingPlayback(char *szFile);
+		void		StopPlayingPlayback();
+		void		PausePlayingPlayback();
+		void		ResumePlayingPlayback();
 
 		bool		PlayNode(int iNodeId, int iType);
 		void		StopPlayingNode();
@@ -121,7 +124,7 @@ class CPlayer
 		bool			m_bEntering;
 		bool			m_bJacking;
 		bool			m_bExiting;
-		bool			m_bRecording;
+		bool			m_bPlaying;
 		bool			m_bPlayingNode;
 		bool			m_bMeleeAttack;
 		float			m_fLastDistance;
@@ -142,6 +145,8 @@ class CPlayer
 		int				m_iNodePoint;
 		int				m_iNodeLastPoint;
 		int				m_iNodeType;
+		bool			m_bHasReload;
+		bool			m_bHasInfiniteAmmo;
 		CVector3		m_vecNodeVelocity;
 		CPlayback		*m_pPlayback;
 		CNode			*m_pNode;

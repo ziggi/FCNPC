@@ -18,11 +18,15 @@ class CSAMPVehicle
 		CVector3		vecPosition;		// 0x0000 - 0x000C
 		float			fQuaternionAngle;	// 0x000C - 0x0010
 		CVector3		vecQuaternion;		// 0x0010 - 0x001C
-		PAD(pad0, 48);						// 0x001C - 0x004C
+		float			fRotationX;			// 0x001C - 0x0020
+		float			fRotationY;			// 0x0020 - 0x0024
+		PAD(pad0, 40);						// 0x0024 - 0x004C
 		CVector3		vecVelocity;		// 0x004C - 0x0058
 		PAD(pad1, 42);						// 0x0058 - 0x0082
 		int				iModelId;			// 0x0082 - 0x0086
-		PAD(pad2, 32);						// 0x0086 - 0x00A6
+		PAD(pad2, 12);						// 0x0086 - 0x0092
+		float			fAngle;				// 0x0092 - 0x0096
+		PAD(pad3, 16);						// 0x0096 - 0x00A6
 		float			fHealth;			// 0x00A6 - 0x00AA
 
 

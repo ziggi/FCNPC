@@ -67,6 +67,9 @@ class CNatives
 		static cell AMX_NATIVE_CALL FCNPC_IsShooting(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL FCNPC_IsReloading(AMX *amx, cell *params);
 
+		static cell AMX_NATIVE_CALL FCNPC_ToggleReloading(AMX *amx, cell *params);
+		static cell AMX_NATIVE_CALL FCNPC_ToggleInfiniteAmmo(AMX *amx, cell *params);
+
 		static cell AMX_NATIVE_CALL FCNPC_EnterVehicle(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL FCNPC_ExitVehicle(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL FCNPC_PutInVehicle(AMX *amx, cell *params);
@@ -74,10 +77,10 @@ class CNatives
 		static cell AMX_NATIVE_CALL FCNPC_GetVehicleID(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL FCNPC_GetVehicleSeat(AMX *amx, cell *params);
 
-		static cell AMX_NATIVE_CALL FCNPC_StartRecordingPlayback(AMX *amx, cell *params);
-		static cell AMX_NATIVE_CALL FCNPC_StopRecordingPlayback(AMX *amx, cell *params);
-		static cell AMX_NATIVE_CALL FCNPC_PauseRecordingPlayback(AMX *amx, cell *params);
-		static cell AMX_NATIVE_CALL FCNPC_ResumeRecordingPlayback(AMX *amx, cell *params);
+		static cell AMX_NATIVE_CALL FCNPC_StartPlayingPlayback(AMX *amx, cell *params);
+		static cell AMX_NATIVE_CALL FCNPC_StopPlayingPlayback(AMX *amx, cell *params);
+		static cell AMX_NATIVE_CALL FCNPC_PausePlayingPlayback(AMX *amx, cell *params);
+		static cell AMX_NATIVE_CALL FCNPC_ResumePlayingPlayback(AMX *amx, cell *params);
 
 		static cell AMX_NATIVE_CALL FCNPC_OpenNode(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL FCNPC_CloseNode(AMX *amx, cell *params);

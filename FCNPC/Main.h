@@ -51,6 +51,7 @@
 #include "Maths.h"
 #include "Common.h"
 #include "Thread.h"
+#include "BitStream.h"
 // Nodes includes
 #include "Playback.h"
 #include "ZMap.h"
@@ -71,6 +72,7 @@
 	#include "SAMPRakPeer.h"
 	#include "SAMPRPCParams.h"
 	#include "SAMPFunctions.h"
+	#include "SAMPBulletSync.h"
 	// SA includes
 	#include "SANode.h"
 

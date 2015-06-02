@@ -30,6 +30,8 @@ class CAddress
 
 		static DWORD			FUNC_GetVehicleModelInfo;
 
+		static DWORD			FUNC_RakServer__Send;
+
 		// Variables
 		static DWORD			VAR_ServerPtr;
 		static DWORD			VAR_ConfigPtr;
@@ -42,6 +44,7 @@ class CAddress
 		static DWORD			OFFSET_RemoteSystemSize;
 		static DWORD			OFFSET_RemoteSystem__ConnectMode;
 		static DWORD			OFFSET_RemoteSystem__Unknown;
+		static BYTE				OFFSET_SendBullet_RPC;
 		
 		// Arrays
 

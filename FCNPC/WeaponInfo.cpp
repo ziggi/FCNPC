@@ -44,12 +44,12 @@ DWORD CWeaponInfo::GetWeaponClipSize(int iWeaponId)
 			return 30;
 
 		// Shotgun and Country Rifle and Sniper Rifle and RPG and HS Rocket
-		case 25:
+		/*case 25:
 		case 33:
 		case 34:
 		case 35:
 		case 36:
-			return 1;
+			return 1;*/
 
 		// Sawnoff Shotgun
 		case 26:
@@ -210,4 +210,12 @@ float CWeaponInfo::GetWeaponDamage(int iWeaponId)
 			return 50.0f;
 	}
 	return 0.0f;
+}
+
+bool CWeaponInfo::IsDoubleHanded(BYTE byteWeaponId)
+{
+	if (byteWeaponId == 22 || byteWeaponId == 26 || byteWeaponId == 28 || byteWeaponId == 32)
+		return true;
+
+	return false;
 }

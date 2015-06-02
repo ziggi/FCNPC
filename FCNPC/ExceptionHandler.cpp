@@ -9,6 +9,9 @@ FCNPC - Fully Controllable NPC
 =========================================*/
 
 #include "Main.h"
+#ifndef _WIN32
+#	include <signal.h>
+#endif
 
 extern CServer *pServer;
 
@@ -18,7 +21,9 @@ void CExceptionHandler::Install()
 #ifdef _WIN32
 	SetUnhandledExceptionFilter(ExceptionHandlerCallback);
 #else
-
+	signal(SIGINT, ExceptionHandlerCallback);
+	signal(SIGHUP, ExceptionHandlerCallback);
+	signal(SIGTERM, ExceptionHandlerCallback);
 #endif
 }
 #ifdef _WIN32
@@ -58,18 +63,28 @@ long WINAPI CExceptionHandler::ExceptionHandlerCallback(_EXCEPTION_POINTERS *pEx
 	fprintf(pFile, "FUNC_GetVehicleModelInfo: 0x%x\n", CAddress::FUNC_GetVehicleModelInfo);
 	fprintf(pFile, "FUNC_CConfig__GetValueAsInteger: 0x%x\n", CAddress::FUNC_CConfig__GetValueAsInteger);
 	fprintf(pFile, "FUNC_CreateNPC_RPC: 0x%x\n", CAddress::FUNC_CreateNPC_RPC);
+	fprintf(pFile, "FUNC_RakServer__Send: 0x%x\n", CAddress::FUNC_RakServer__Send);
 
 	fprintf(pFile, "\n\nPointers:\n");
+	fprintf(pFile, "VAR_ServerAuthentication: 0x%x\n", CAddress::VAR_ServerAuthentication);
 	fprintf(pFile, "VAR_ServerPtr: 0x%x\n", CAddress::VAR_ServerPtr);
 	fprintf(pFile, "VAR_ConfigPtr: 0x%x\n", CAddress::VAR_ConfigPtr);
 	fprintf(pFile, "VAR_RakPeerPtr: 0x%x\n", CAddress::VAR_RakPeerPtr);
+
+	fprintf(pFile, "\n\Offsets:\n");
+	fprintf(pFile, "OFFSET_NetVersion: 0x%x\n", CAddress::OFFSET_NetVersion);
+	fprintf(pFile, "OFFSET_RemoteSystemManager: 0x%x\n", CAddress::OFFSET_RemoteSystemManager);
+	fprintf(pFile, "OFFSET_RemoteSystemSize: 0x%x\n", CAddress::OFFSET_RemoteSystemSize);
+	fprintf(pFile, "OFFSET_RemoteSystem__ConnectMode: 0x%x\n", CAddress::OFFSET_RemoteSystem__ConnectMode);
+	fprintf(pFile, "OFFSET_RemoteSystem__Unknown: 0x%x\n", CAddress::OFFSET_RemoteSystem__Unknown);
+	fprintf(pFile, "OFFSET_SendBullet_RPC: 0x%x\n", CAddress::OFFSET_SendBullet_RPC);
 	fprintf(pFile, "======================== FCNPC Exception Handler ===============================");
 	// Close the file
 	fclose(pFile);
 	return EXCEPTION_EXECUTE_HANDLER;
 }
 #else 
-void CExceptionHandler::ExceptionHandlerCallback(int param)
+void CExceptionHandler::ExceptionHandlerCallback(int signum)
 {
 
 }

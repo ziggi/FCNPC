@@ -40,12 +40,6 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	logprintf("-------------------------------------------------");
 	logprintf("");
 	logprintf("Loading ...");
-
-	/*
-
-	*/
-	/*DWORD a = CUtils::FindPattern("\x80\xB8\x67\x0C\x00\x00\x02\x74\x1D\x8B\x45\xD8\x89\x04\x24", "xx????xx?xxxxxx") + 2;
-	logprintf("0x%x - 0x%x", a, *(DWORD *)a);*/
 	// Install the exception handler
 	CExceptionHandler::Install();
 	// Initialize linux tick count
@@ -115,6 +109,9 @@ AMX_NATIVE_INFO PluginNatives[ ] =
 	{ "FCNPC_SetSpecialAction", CNatives::FCNPC_SetSpecialAction},
 	{ "FCNPC_GetSpecialAction", CNatives::FCNPC_GetSpecialAction},
 
+	{ "FCNPC_ToggleReloading", CNatives::FCNPC_ToggleReloading },
+	{ "FCNPC_ToggleInfiniteAmmo", CNatives::FCNPC_ToggleInfiniteAmmo },
+
 	{ "FCNPC_GoTo", CNatives::FCNPC_GoTo},
 	{ "FCNPC_Stop", CNatives::FCNPC_Stop},
 	{ "FCNPC_IsMoving", CNatives::FCNPC_IsMoving},
@@ -127,17 +124,17 @@ AMX_NATIVE_INFO PluginNatives[ ] =
 	{ "FCNPC_IsShooting", CNatives::FCNPC_IsShooting},
 	{ "FCNPC_IsReloading", CNatives::FCNPC_IsReloading},
 
-	/*{ "FCNPC_EnterVehicle", CNatives::FCNPC_EnterVehicle},
-	{ "FCNPC_ExitVehicle", CNatives::FCNPC_ExitVehicle},*/
+	{ "FCNPC_EnterVehicle", CNatives::FCNPC_EnterVehicle},
+	{ "FCNPC_ExitVehicle", CNatives::FCNPC_ExitVehicle},
 	{ "FCNPC_PutInVehicle", CNatives::FCNPC_PutInVehicle},
 	{ "FCNPC_RemoveFromVehicle", CNatives::FCNPC_RemoveFromVehicle},
 	{ "FCNPC_GetVehicleID", CNatives::FCNPC_GetVehicleID},
 	{ "FCNPC_GetVehicleSeat", CNatives::FCNPC_GetVehicleSeat},
 
-	{ "FCNPC_StartRecordingPlayback", CNatives::FCNPC_StartRecordingPlayback},
-	{ "FCNPC_StopRecordingPlayback", CNatives::FCNPC_StopRecordingPlayback},
-	{ "FCNPC_PauseRecordingPlayback", CNatives::FCNPC_PauseRecordingPlayback},
-	{ "FCNPC_ResumeRecordingPlayback", CNatives::FCNPC_ResumeRecordingPlayback},
+	{ "FCNPC_StartPlayingPlayback", CNatives::FCNPC_StartPlayingPlayback},
+	{ "FCNPC_StopPlayingPlayback", CNatives::FCNPC_StopPlayingPlayback},
+	{ "FCNPC_PausePlayingPlayback", CNatives::FCNPC_PausePlayingPlayback},
+	{ "FCNPC_ResumePlayingPlayback", CNatives::FCNPC_ResumePlayingPlayback},
 
 	{ "FCNPC_OpenNode", CNatives::FCNPC_OpenNode},
 	{ "FCNPC_CloseNode", CNatives::FCNPC_CloseNode},

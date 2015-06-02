@@ -26,6 +26,8 @@ class CMath
 		static float DegreeToRadians(float fDegree);
 
 		static bool	 IsInRange(float fRange1, float fRange2, float fRadius);
+
+		static float GetAngle(float fRotationX, float fRotationY);
 };
 
 #endif

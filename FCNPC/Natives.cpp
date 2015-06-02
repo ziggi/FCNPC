@@ -844,9 +844,41 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleSeat(AMX *amx, cell *params)
 	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetVehicleId() == INVALID_ENTITY_ID ? 128 : pServer->GetPlayerManager()->GetAt(iNPCId)->GetSeatId();
 }
 
-cell AMX_NATIVE_CALL CNatives::FCNPC_StartRecordingPlayback(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleReloading(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "FCNPC_StartRecordingPlayback");
+	CHECK_PARAMS(2, "FCNPC_ToggleReloading");
+	// Get the NPC id
+	int iNPCId = (int)params[1];
+	// Get the reloading state
+	int iReload = (int)params[2];
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+		return 0;
+
+	// Toggle it
+	pServer->GetPlayerManager()->GetAt(iNPCId)->ToggleReloading(iReload ? true : false);
+	return 1;
+}
+
+cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleInfiniteAmmo(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_ToggleInfiniteAmmo");
+	// Get the NPC id
+	int iNPCId = (int)params[1];
+	// Get the reloading state
+	int iToggle = (int)params[2];
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+		return 0;
+
+	// Toggle it
+	pServer->GetPlayerManager()->GetAt(iNPCId)->ToggleInfiniteAmmo(iToggle ? true : false);
+	return 1;
+}
+
+cell AMX_NATIVE_CALL CNatives::FCNPC_StartPlayingPlayback(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_StartPlayingPlayback");
 	// Get the npc id
 	int iNPCId = (int)params[1];
 	// Get the filename length
@@ -868,49 +900,49 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StartRecordingPlayback(AMX *amx, cell *para
 	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
 		return 0;
 
-	// Start recording the player playback
-	return pServer->GetPlayerManager()->GetAt(iNPCId)->StartRecordingPlayback(szFile) ? 1 : 0;
+	// Start Playing the player playback
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->StartPlayingPlayback(szFile) ? 1 : 0;
 }
 
-cell AMX_NATIVE_CALL CNatives::FCNPC_StopRecordingPlayback(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL CNatives::FCNPC_StopPlayingPlayback(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "FCNPC_StopRecordingPlayback");
+	CHECK_PARAMS(1, "FCNPC_StopPlayingPlayback");
 	// Get the npc id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
 	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
 		return 0;
 
-	// Stop recording the player playback
-	pServer->GetPlayerManager()->GetAt(iNPCId)->StopRecordingPlayback();
+	// Stop Playing the player playback
+	pServer->GetPlayerManager()->GetAt(iNPCId)->StopPlayingPlayback();
 	return 1;
 }
 
-cell AMX_NATIVE_CALL CNatives::FCNPC_PauseRecordingPlayback(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL CNatives::FCNPC_PausePlayingPlayback(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "FCNPC_PauseRecordingPlayback");
+	CHECK_PARAMS(1, "FCNPC_PausePlayingPlayback");
 	// Get the npc id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
 	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
 		return 0;
 
-	// Pause recording the player playback
-	pServer->GetPlayerManager()->GetAt(iNPCId)->PauseRecordingPlayback();
+	// Pause Playing the player playback
+	pServer->GetPlayerManager()->GetAt(iNPCId)->PausePlayingPlayback();
 	return 1;
 }
 
-cell AMX_NATIVE_CALL CNatives::FCNPC_ResumeRecordingPlayback(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL CNatives::FCNPC_ResumePlayingPlayback(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "FCNPC_ResumeRecordingPlayback");
+	CHECK_PARAMS(1, "FCNPC_ResumePlayingPlayback");
 	// Get the npc id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
 	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
 		return 0;
 
-	// Resume recording the player playback
-	pServer->GetPlayerManager()->GetAt(iNPCId)->ResumeRecordingPlayback();
+	// Resume Playing the player playback
+	pServer->GetPlayerManager()->GetAt(iNPCId)->ResumePlayingPlayback();
 	return 1;
 }
 

@@ -43,3 +43,14 @@ bool CMath::IsInRange(float fRange1, float fRange2, float fRadius)
 
 	return false;
 }
+
+float CMath::GetAngle(float fRotationX, float fRotationY)
+{
+	float fReturn = atan2(fRotationX, fRotationY) * 57.295776f;
+	if (fReturn > 360.0f)
+		fReturn -= 360.0f;
+	else if (fReturn < 0.0f)
+		fReturn += 360.0f;
+
+	return fReturn;
+}

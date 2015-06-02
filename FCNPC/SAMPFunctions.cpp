@@ -25,6 +25,7 @@ CPlayer__EnterVehicle_t			CSAMPFunctions::pfn__CPlayer__EnterVehicle = NULL;
 CPlayer__ExitVehicle_t			CSAMPFunctions::pfn__CPlayer__ExitVehicle = NULL;
 CConfig__GetValueAsInteger_t	CSAMPFunctions::pfn__CConfig__GetValueAsInteger = NULL;
 GetVehicleModelInfo_t			CSAMPFunctions::pfn__GetVehicleModelInfo = NULL;
+RakServer__Send_t				CSAMPFunctions::pfn__RakServer__Send = NULL;
 GetNetGame_t					CSAMPFunctions::pfn__GetNetGame = NULL;
 GetConsole_t					CSAMPFunctions::pfn__GetConsole = NULL;
 GetRakServer_t					CSAMPFunctions::pfn__GetRakServer = NULL;
@@ -43,6 +44,8 @@ void CSAMPFunctions::Initialize()
 	pfn__CConfig__GetValueAsInteger = (CConfig__GetValueAsInteger_t)(CAddress::FUNC_CConfig__GetValueAsInteger);
 
 	pfn__GetVehicleModelInfo = (GetVehicleModelInfo_t)(CAddress::FUNC_GetVehicleModelInfo);
+
+	pfn__RakServer__Send = (RakServer__Send_t)(CAddress::FUNC_RakServer__Send);
 }
 
 void CSAMPFunctions::PreInitialize()
@@ -142,8 +145,7 @@ void CSAMPFunctions::PlayerExitVehicle(int iPlayerId, int iVehicleId)
 
 CVector3 *CSAMPFunctions::GetVehicleModelInfo(int iModelId, int iInfoType)
 {
-	CVector3 *vecInfo = pfn__GetVehicleModelInfo(iModelId, iInfoType);
-	return vecInfo;
+	return pfn__GetVehicleModelInfo(iModelId, iInfoType);
 }
 
 int CSAMPFunctions::GetMaxPlayers()
@@ -158,5 +160,32 @@ int CSAMPFunctions::GetMaxNPC()
 	// Call the function
 	void *pConfig = (void *)CAddress::VAR_ConfigPtr;
 	return pfn__CConfig__GetValueAsInteger(pConfig, "maxnpc");
+}
+
+void CSAMPFunctions::PlayerShoot(int iPlayerId, CVector3 vecPoint)
+{
+	// Validate the player
+	if (!pServer->GetPlayerManager()->IsPlayerConnected(iPlayerId))
+		return;
+
+	// Get the player position
+	CVector3 vecPosition;
+	pServer->GetPlayerManager()->GetAt(iPlayerId)->GetPosition(&vecPosition);
+	// Create the SendBullet structure
+	CBulletSyncData bulletSyncData;
+	bulletSyncData.byteHitType = 0; // No targets to hit
+	bulletSyncData.wHitID = INVALID_ENTITY_ID;
+	bulletSyncData.vecCenterOfHit = CVector3(0.1f, 0.1f, 0.1f);
+	bulletSyncData.vecHitOrigin = vecPosition;
+	bulletSyncData.vecHitTarget = vecPoint;
+	// Write it to BitStream
+	RakNet::BitStream bsSend;
+	bsSend.Write((BYTE)CAddress::OFFSET_SendBullet_RPC);
+	bsSend.Write((unsigned short)iPlayerId);
+	bsSend.Write((char *)&bulletSyncData, sizeof(CBulletSyncData));
+	// Send it
+	CSAMPSystemAddress systemAddress = CSAMPSystemAddress();
+	CSAMPRakPeer *pSAMPRakPeer = (CSAMPRakPeer *)CAddress::VAR_RakPeerPtr;
+	pfn__RakServer__Send((void *)pSAMPRakPeer, &bsSend, 1, 6, 0, CSAMPPlayerId(systemAddress), 1);
 }
 

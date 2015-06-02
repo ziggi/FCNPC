@@ -66,7 +66,7 @@ bool CPlayback::Initialize()
 	}
 	// Save the playback type
 	m_iPlaybackType = iPlaybackType;
-	// Read the first recording time
+	// Read the first Playing time
 	DWORD dwTime;
 	fread(&dwTime, sizeof(DWORD), 1, m_pFile);
 	m_dwTime = dwTime;

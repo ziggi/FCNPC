@@ -44,7 +44,11 @@ class CAimSyncData
 		float			fZAim;					// 0x0019 - 0x001D
 		BYTE			byteWeaponState;		// 0x001D - 0x001E
 		PAD(pad0, 1);							// 0x001E - 0x001F
-		// Size = 0x1F
+		WORD			wCameraObject;			// 0x001F - 0x0021
+		WORD			wCameraVehicle;			// 0x0021 - 0x0023
+		WORD			wCameraPlayer;			// 0x0023 - 0x0025
+		WORD			wCameraActor;			// 0x0025 - 0x0027
+		// Size = 0x27
 
 };
 #pragma pack(pop)
@@ -94,11 +98,10 @@ class CPassengerSyncData
 class CSAMPPlayer
 {
 	public:
-		PAD(pad0, 8);
-		CAimSyncData		aimSyncData;		// 0x0000 - 0x001F
-		CVehicleSyncData	vehicleSyncData;	// 0x001F - 0x005E
-		CPassengerSyncData	passengerSyncData;	// 0x005E - 0x0076
-		CSyncData			syncData;			// 0x0076 - 0x00BA
+		CAimSyncData		aimSyncData;		// 0x0000 - 0x0027
+		CVehicleSyncData	vehicleSyncData;	// 0x001F - 0x0066
+		CPassengerSyncData	passengerSyncData;	// 0x005E - 0x007E
+		CSyncData			syncData;			// 0x007E - 0x00C2
 		PAD(pad1, 10319);						// 0x00C2 - 0x2911
 		BOOL				bUpdateKeys;		// 0x2911 - 0x2915
 		CVector3			vecPosition;		// 0x2915 - 0x2921
@@ -125,8 +128,8 @@ class CSAMPPlayer
 		CVector3			vecSpawnPosition;	// 0x2C03 - 0x2C0F
 		PAD(pad7, 28);							// 0x2C0F - 0x2C2B
 		BOOL				bReadyToSpawn;		// 0x2C2B - 0x2C2F
-		PAD(pad8, 2);							// 0x263F - 0x2641
 
+		PAD(pad8, 2);							// 0x263F - 0x2641
 		BYTE				byteSeatId;			// 0x2641 - 0x2642
 		WORD				wVehicleId;			// 0x2642 - 0x2644
 		PAD(pad9, 12);							// 0x2644 - 0x2650

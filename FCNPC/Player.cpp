@@ -32,7 +32,9 @@ CPlayer::CPlayer(EntityId playerId, char *szName)
 	m_bEntering = false;
 	m_bJacking = false;
 	m_bExiting = false;
-	m_bRecording = false;
+	m_bHasReload = true;
+	m_bHasInfiniteAmmo = false;
+	m_bPlaying = false;
 	m_bPlayingNode = false;
 	m_byteWeaponId = 0;
 	m_wAmmo = 0;
@@ -50,9 +52,9 @@ CPlayer::~CPlayer()
 
 void CPlayer::Destroy()
 {
-	// Stop recording any playback
-	if(m_bRecording)
-		StopRecordingPlayback();
+	// Stop Playing any playback
+	if(m_bPlaying)
+		StopPlayingPlayback();
 
 	// Stop playing any node
 	if(m_bPlayingNode)
@@ -123,8 +125,8 @@ bool CPlayer::Respawn()
 	if(!m_bSpawned)
 		return false;
 
-	// Pause recording any playback
-	if(m_bRecording)
+	// Pause Playing any playback
+	if(m_bPlaying)
 		m_pPlayback->SetPaused(true);
 
 	// Get the last player stats
@@ -159,7 +161,7 @@ bool CPlayer::Respawn()
 		PutInVehicle(wVehicleId, byteSeat);
 
 	// Resume any playback
-	if(m_bRecording)
+	if(m_bPlaying)
 		m_pPlayback->SetPaused(false);
 
 	// Reset stats
@@ -187,7 +189,6 @@ void CPlayer::UpdateSync(int iState)
 
 void CPlayer::Update(int iState)
 {
-	//return;
 	// Validate the player
 	if(!m_bSetup || !m_bSpawned)
 		return;
@@ -297,24 +298,26 @@ void CPlayer::UpdateAim()
 	if(m_bAiming)
 	{
 		// Set the camera mode
-		m_pInterface->aimSyncData.byteCameraMode = 53;
+		m_pInterface->aimSyncData.byteCameraMode = CWeaponInfo::IsDoubleHanded(m_pInterface->syncData.byteWeapon) ? 53 : 7;
 		if(m_pInterface->syncData.byteWeapon == 0 || m_pInterface->syncData.byteWeapon == 1)
 			m_pInterface->aimSyncData.byteCameraMode = 4;
+		else if (m_pInterface->syncData.byteWeapon == 34) // Sniper rifle
+			m_pInterface->aimSyncData.byteCameraMode = 7;
 
 		// Set the weapon state
 #ifdef _WIN32
-		m_pInterface->aimSyncData.byteWeaponState = (BYTE)eWeaponState::WS_MORE_BULLETS;
+		m_pInterface->aimSyncData.byteWeaponState = 191;// (BYTE)eWeaponState::WS_MORE_BULLETS;
 		if (m_bReloading)
-			m_pInterface->aimSyncData.byteWeaponState = (BYTE)eWeaponState::WS_RELOADING;
-		else if(!m_wAmmo)
-			m_pInterface->aimSyncData.byteWeaponState = (BYTE)eWeaponState::WS_NO_BULLETS;
+			m_pInterface->aimSyncData.byteWeaponState = 127;// (BYTE)eWeaponState::WS_RELOADING;
+		else if (!m_wAmmo)
+			m_pInterface->aimSyncData.byteWeaponState = 0;// (BYTE)eWeaponState::WS_NO_BULLETS;
 #else
 		// For some reasons, enumerations dosen't work in linux
-		m_pInterface->aimSyncData.byteWeaponState = (BYTE)WS_MORE_BULLETS;
+		m_pInterface->aimSyncData.byteWeaponState = 191;//(BYTE)WS_MORE_BULLETS;
 		if (m_bReloading)
-			m_pInterface->aimSyncData.byteWeaponState = (BYTE)WS_RELOADING;
+			m_pInterface->aimSyncData.byteWeaponState = 127;//(BYTE)WS_RELOADING;
 		else if (!m_wAmmo)
-			m_pInterface->aimSyncData.byteWeaponState = (BYTE)WS_NO_BULLETS;
+			m_pInterface->aimSyncData.byteWeaponState = 0;//(BYTE)WS_NO_BULLETS;
 #endif
 	}
 	else
@@ -332,7 +335,7 @@ void CPlayer::UpdateAim()
 		CVector3 vecTarget(m_pInterface->aimSyncData.vecPosition.fX - sin(fAngle) * 0.2f,
 			m_pInterface->aimSyncData.vecPosition.fY + cos(fAngle) * 0.2f, m_pInterface->aimSyncData.vecPosition.fZ);
 		
-		// Calculate the camera font vector
+		// Calculate the camera front vector
 		m_pInterface->aimSyncData.vecFront = vecTarget - m_pInterface->aimSyncData.vecPosition;
 	}
 	// Set the aim sync flag
@@ -352,9 +355,9 @@ bool CPlayer::SetState(BYTE byteState)
 
 void CPlayer::Kill(int iKillerId, int iWeapon)
 {
-	// Stop recording any playback
-	if(m_bRecording)
-		StopRecordingPlayback();
+	// Stop Playing any playback
+	if(m_bPlaying)
+		StopPlayingPlayback();
 
 	// Stop playing any node
 	if(m_bPlayingNode)
@@ -377,12 +380,12 @@ void CPlayer::Process()
 	if(!m_bSetup)
 		return;
 
-	// Process recording
-	if(m_bRecording)
+	// Process Playing
+	if(m_bPlaying)
 	{
 		// Process the player playback
 		if(!m_pPlayback->Process(this))
-			StopRecordingPlayback();
+			StopPlayingPlayback();
 
 		return;
 	}
@@ -497,7 +500,7 @@ void CPlayer::Process()
 			DWORD dwThisTick = GetTickCount();
 			DWORD dwTime = (dwThisTick - m_dwReloadTickCount);
 			// Have we finished reloading ?
-			/*if (dwTime >= 10000)// 1500)
+			if (dwTime >= 1500)
 			{
 				// Reset the reloading flag
 				m_bReloading = false;
@@ -505,43 +508,54 @@ void CPlayer::Process()
 				SetKeys(m_pInterface->wUDAnalog, m_pInterface->wLRAnalog, 4 + 0x80);
 				// Update the shoot tick
 				m_dwShootTickCount = dwThisTick;
-			}*/
+				m_wAmmo = 0;
+			}
 		}
 		// Process player shooting
 		else if(m_bAiming && m_pInterface->dwKeys & 4)
 		{	
 			// Do we still have ammo ?
-			if(m_wAmmo == 0)
-				// Stop shooting and aim only
-				SetKeys(m_pInterface->wUDAnalog, m_pInterface->wLRAnalog, 0x80);
+			if (m_wAmmo == 0)
+			{
+				// Check for infinite ammo flag
+				if (!m_bHasInfiniteAmmo)
+					// Stop shooting and aim only
+					SetKeys(m_pInterface->wUDAnalog, m_pInterface->wLRAnalog, 0x80);
+				else
+					// This is done so the NPC would keep reloading even if the infinite ammo flag is set
+					m_wAmmo = 500;
+			}
 			else
 			{
 				// Check the time spent since the last shoot
 				DWORD dwThisTick = GetTickCount();
 				DWORD dwTime = (dwThisTick - m_dwShootTickCount);
-				if(dwTime >= 50) // TODO: Change that for each weapon rate of fire
+				if(dwTime >= 800) // TODO: Change that for each weapon rate of fire
 				{
 					// Decrease the ammo
 					m_wAmmo--;
 					// Get the weapon clip size
 					DWORD dwClip = 0;
-					if(m_pInterface->syncData.byteWeapon == 38 || m_pInterface->syncData.byteWeapon == 37)
+					if (m_pInterface->syncData.byteWeapon == 38 || m_pInterface->syncData.byteWeapon == 37 || m_pInterface->syncData.byteWeapon == 34)
 						dwClip = m_wAmmo;
 					else
 						dwClip = CWeaponInfo::GetWeaponClipSize(m_pInterface->syncData.byteWeapon);
 					
+					
 					// Check for reload
-					if(m_wAmmo % dwClip == 0 && m_wAmmo != 0)
+					if (m_wAmmo % dwClip == 0 && m_wAmmo != 0 && dwClip != m_wAmmo && m_bHasReload)
 					{
-						logprintf("reloading on %d clip %d weapon %d", m_wAmmo, dwClip, m_pInterface->syncData.byteWeapon);
 						// Set the reload tick count
 						m_dwReloadTickCount = GetTickCount();
 						// Set reloading flag
 						m_bReloading = true;
 						// Stop shooting and aim only
-						SetKeys(m_pInterface->wUDAnalog, m_pInterface->wLRAnalog, 0);// 0x80);
-						logprintf("%s", m_pInterface->dwKeys & 4 ? "true" : "false");
+						SetKeys(m_pInterface->wUDAnalog, m_pInterface->wLRAnalog, 0x80);
 					}
+					else
+						// Send the bullet
+						CSAMPFunctions::PlayerShoot((int)m_playerId, m_vecAimAt);
+
 					// Update the shoot tick
 					m_dwShootTickCount = dwThisTick;
 				}
@@ -671,14 +685,25 @@ void CPlayer::Process()
 			CVector3 vecVehiclePos = pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId]->vecPosition;
 			// Get the seat position
 			CVector3 *pvecSeat = CSAMPFunctions::GetVehicleModelInfo(pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId]->iModelId, 
-				m_pInterface->byteSeatId == 0 ? VEHICLE_MODEL_INFO_FRONTSEAT : VEHICLE_MODEL_INFO_REARSEAT);
+				m_pInterface->byteSeatId == 0 || m_pInterface->byteSeatId == 1 ? VEHICLE_MODEL_INFO_FRONTSEAT : VEHICLE_MODEL_INFO_REARSEAT);
 	
-			// Calculate the destination point
-			CVector3 vecSeat = (*pvecSeat);
-			vecSeat *= -1.5f;
-			CVector3 vecDestination = vecVehiclePos + vecSeat;		
+			// Adjust the seat vector
+			CVector3 vecSeat(pvecSeat->fX + 0.8f, pvecSeat->fY, pvecSeat->fZ);
+			if (m_pInterface->byteSeatId == 0 || m_pInterface->byteSeatId == 2)
+				vecSeat.fX = -vecSeat.fX;
+
+			// Get vehicle angle
+			float fAngle = CMath::GetAngle(-pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId]->fRotationX, pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId]->fRotationY);
+			// This is absolutely bullshit
+			float _fAngle = fAngle * 0.01570796326794897f;
+			// Calculate the seat position based on vehicle angle
+			CVector3 vecSeatPosition(vecSeat.fX * cos(_fAngle) - vecSeat.fY * sin(_fAngle) + vecVehiclePos.fX,
+				vecSeat.fX * sin(_fAngle) + vecSeat.fY * cos(_fAngle) + vecVehiclePos.fY, vecSeat.fZ + vecVehiclePos.fZ);
+
 			// Set his position
-			SetPosition(vecDestination);
+			SetPosition(vecSeatPosition);
+			// Set his angle
+			SetAngle(fAngle);
 			// Reset the player vehicle and seat id
 			m_pInterface->wVehicleId = INVALID_ENTITY_ID;
 			m_pInterface->byteSeatId = 0;	
@@ -978,7 +1003,6 @@ void CPlayer::AimAt(CVector3 vecPoint, bool bShoot)
 		m_dwShootTickCount = GetTickCount();
 		m_bReloading = false;
 	}
-	m_bAiming = true;
 	// Adjust the player position
 	CVector3 vecPosition = m_pInterface->vecPosition;
 	// Save the aiming point
@@ -1002,7 +1026,11 @@ void CPlayer::AimAt(CVector3 vecPoint, bool bShoot)
 	// Set the player camera position
 	m_pInterface->aimSyncData.vecPosition = vecPosition;
 	// Set keys
-	SetKeys(m_pInterface->wUDAnalog, m_pInterface->wLRAnalog, bShoot ? 4 + 0x80 : 0x80);
+	if (!m_bAiming)
+		SetKeys(m_pInterface->wUDAnalog, m_pInterface->wLRAnalog, bShoot ? 4 + 0x80 : 0x80);
+
+	// Mark as aiming
+	m_bAiming = true;
 }
 
 void CPlayer::StopAim()
@@ -1116,17 +1144,20 @@ bool CPlayer::EnterVehicle(int iVehicleId, int iSeatId, int iType)
 	m_wVehicleToEnter = (WORD)iVehicleId;
 	m_byteSeatToEnter = (BYTE)iSeatId;
 	// Get the seat position
-	CVector3 *pvecSeat = CSAMPFunctions::GetVehicleModelInfo(pSAMPServer->pVehiclePool->pVehicle[iVehicleId]->iModelId, 
-		(iSeatId == 0 || iSeatId == 1) ? VEHICLE_MODEL_INFO_FRONTSEAT : VEHICLE_MODEL_INFO_REARSEAT);
+	CVector3 *pvecSeat = CSAMPFunctions::GetVehicleModelInfo(pSAMPServer->pVehiclePool->pVehicle[iVehicleId]->iModelId,
+		iSeatId == 0 || iSeatId == 1 ? VEHICLE_MODEL_INFO_FRONTSEAT : VEHICLE_MODEL_INFO_REARSEAT);
 
-	// Correct seat position for side seats
-	if(iSeatId == 1 || iSeatId == 3)
-		pvecSeat->fX = -pvecSeat->fX;
+	// Adjust the seat vector
+	CVector3 vecSeat(pvecSeat->fX + 0.7f, pvecSeat->fY, pvecSeat->fZ);
+	if (iSeatId == 0 || iSeatId == 2)
+		vecSeat.fX = -vecSeat.fX;
 
 	// Get vehicle angle
-	float fAngle = *(float *)(pSAMPServer->pVehiclePool->pVehicle[iVehicleId] + 0x92);
+	float fAngle = CMath::GetAngle(-pSAMPServer->pVehiclePool->pVehicle[iVehicleId]->fRotationX, pSAMPServer->pVehiclePool->pVehicle[iVehicleId]->fRotationY);
+	// This is absolutely bullshit
+	float _fAngle = fAngle * 0.01570796326794897f;
 	// Calculate the seat position based on vehicle angle
-	CVector3 vecSeatPosition(pvecSeat->fX * cos(fAngle), pvecSeat->fX * sin(fAngle), pvecSeat->fZ);
+	CVector3 vecSeatPosition(vecSeat.fX * cos(_fAngle) - vecSeat.fY * sin(_fAngle), vecSeat.fX * sin(_fAngle) + vecSeat.fY * cos(_fAngle), vecSeat.fZ);
 	// Calculate the destination point
 	CVector3 vecDestination = pSAMPServer->pVehiclePool->pVehicle[iVehicleId]->vecPosition + vecSeatPosition;
 	// Go to the vehicle
@@ -1202,10 +1233,10 @@ bool CPlayer::RemoveFromVehicle()
 	return true;
 }
 
-bool CPlayer::StartRecordingPlayback(char *szFile)
+bool CPlayer::StartPlayingPlayback(char *szFile)
 {
-	// Make sure the player is not already recording
-	if(m_bRecording)
+	// Make sure the player is not already Playing
+	if(m_bPlaying)
 		return false;
 
 	// Create a new playback instance
@@ -1214,15 +1245,15 @@ bool CPlayer::StartRecordingPlayback(char *szFile)
 	if(!m_pPlayback || !m_pPlayback->Initialize())
 		return false;
 
-	// Mark as recording
-	m_bRecording = true;
+	// Mark as Playing
+	m_bPlaying = true;
 	return true;
 }
 
-void CPlayer::StopRecordingPlayback()
+void CPlayer::StopPlayingPlayback()
 {
-	// Make sure the player is recording
-	if(!m_bRecording)
+	// Make sure the player is Playing
+	if(!m_bPlaying)
 		return;
 
 	// Delete the playback instance
@@ -1230,26 +1261,26 @@ void CPlayer::StopRecordingPlayback()
 	// Reset the player data
 	SetVelocity(CVector3(0.0f, 0.0f, 0.0f));
 	SetKeys(0, 0, 0);
-	// Reset the recording flag
-	m_bRecording = false;
+	// Reset the Playing flag
+	m_bPlaying = false;
 	// Call the playback finish callback
 	CCallbackManager::OnFinishPlayback((int)m_playerId);
 }
 
-void CPlayer::PauseRecordingPlayback()
+void CPlayer::PausePlayingPlayback()
 {
-	// Make sure the player is recording
-	if(!m_bRecording)
+	// Make sure the player is Playing
+	if(!m_bPlaying)
 		return;
 
 	// Pause the playback
 	m_pPlayback->SetPaused(true);
 }
 
-void CPlayer::ResumeRecordingPlayback()
+void CPlayer::ResumePlayingPlayback()
 {
-	// Make sure the player is recording
-	if(!m_bRecording)
+	// Make sure the player is Playing
+	if(!m_bPlaying)
 		return;
 
 	// Resume the playback
@@ -1259,8 +1290,8 @@ void CPlayer::ResumeRecordingPlayback()
 bool CPlayer::PlayNode(int iNodeId, int iType)
 {	
 	// Stop the player playback if he's playing one
-	if(m_bRecording)
-		StopRecordingPlayback();
+	if(m_bPlaying)
+		StopPlayingPlayback();
 
 	// Stop the last node if any node exists
 	if(m_bPlayingNode)

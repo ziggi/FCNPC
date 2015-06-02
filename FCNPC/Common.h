@@ -18,15 +18,13 @@ typedef void (* logprintf_t)(char *szFormat, ...);
 extern logprintf_t			logprintf;
 
 // General definitions
-#define VERSION				"0.1 B14"
+#define VERSION				"0.1 B15"
 #define MAX_PLAYERS			1000
 #define MAX_VEHICLES		2000
 #define MAX_NODES			64
 #define MAX_NAME_LENGTH		24
 #define MAX_FILTERSCRIPTS	16
-#define SAMP_NETVERSION		0x0FCF
 #define INVALID_ENTITY_ID	(0xFFFF)
-#define BULLET_SYNC_ID		224
 #define SAFE_DELETE(ptr)	if(ptr) { delete ptr; ptr = NULL; } 
 #define SAFE_RELEASE(ptr)	if(ptr) { ptr->Release(); ptr = NULL; } 
 #define PAD(a, b)			char a[b]
