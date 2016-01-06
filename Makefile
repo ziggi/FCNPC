@@ -6,8 +6,7 @@
 #
 
 GPP = g++
-GCC = gcc
-FCNPC_OUTFILE = "Bin/FCNPC.so"
+FCNPC_OUTFILE = "LinuxBin/FCNPC.so"
 
 COMPILE_FLAGS = -m32 -fPIC -c -O2 -w -D LINUX -D PROJECT_NAME=\"FCNPC\" -I ./FCNPC/SDK/amx/
 
@@ -21,7 +20,6 @@ clean:
 FCNPC: clean
 	$(GPP) $(FCNPC) ./FCNPC/SDK/amx/*.c
 	$(GPP) $(FCNPC) ./FCNPC/SDK/*.cpp
-	$(GCC) $(FCNPC) ./FCNPC*.c
-	$(GPP) $(FCNPC) ./FCNPC*.cpp
+	$(GPP) $(FCNPC) ./FCNPC/*.cpp
 	$(GPP) -m32 -O2 -fshort-wchar -shared -o $(FCNPC_OUTFILE) *.o
 	rm *.o
