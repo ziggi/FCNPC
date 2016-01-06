@@ -3,6 +3,18 @@ By OrMisicL
 
 [Forum thread](http://forum.sa-mp.com/showthread.php?t=428066)
 
+# Building (Windows)
+You can use Visual Studio for build too. Just use CMake for generate VS project:
+```bash
+cmake -G "Visual Studio 12 2013"
+```
+
+# Building (Linux)
+```bash
+cmake .
+make
+```
+
 # Definitions
 ```Pawn
 #define MOVE_TYPE_WALK      0
