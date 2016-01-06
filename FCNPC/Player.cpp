@@ -75,7 +75,7 @@ bool CPlayer::Setup()
 
 	// Get the player interface
 	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
-	m_pInterface = pSAMPServer->pPlayerPool->pPlayer[m_playerId]; 
+	m_pInterface = pSAMPServer->pPlayerPool->pPlayer[m_playerId];
 	// Validate the interface
 	if(!m_pInterface)
 		return false;

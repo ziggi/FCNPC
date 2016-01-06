@@ -5,6 +5,7 @@
 # make FCNPC
 #
 
+GCC = gcc
 GPP = g++
 FCNPC_OUTFILE = "LinuxBin/FCNPC.so"
 
@@ -18,6 +19,7 @@ clean:
 	-rm -f *~ *.o *.so
 
 FCNPC: clean
+	$(GCC) $(FCNPC) ./FCNPC/subhook/{subhook,subhook_linux,subhook_x86}.c
 	$(GPP) $(FCNPC) ./FCNPC/SDK/amx/*.c
 	$(GPP) $(FCNPC) ./FCNPC/SDK/*.cpp
 	$(GPP) $(FCNPC) ./FCNPC/*.cpp
