@@ -1,6 +1,6 @@
 # binary
-bin/*
-
+*.dll
+*.so
 
 # CMake
 CMakeCache.txt
