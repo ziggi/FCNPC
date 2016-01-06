@@ -6,42 +6,38 @@ set (VERSION "0.1 B15 R2")
 add_definitions (-DVERSION="${VERSION}")
 
 if (WIN32)
-	add_definitions(-DWIN32 -D_WIN32)
+	add_definitions (-DWIN32 -D_WIN32 -D_CRT_SECURE_NO_WARNINGS -D__STDC__)
 
-	set(CMAKE_C_FLAGS "/nologo /EHsc /MT")
-	set(CMAKE_CXX_FLAGS "/nologo /EHsc /MT")
-	set(CMAKE_SHARED_LINKER_FLAGS "/NOLOGO /MACHINE:X86 /DEF:\"${CMAKE_CURRENT_SOURCE_DIR}/src/Exports.def\"")
+	file (GLOB FCNPC_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/subhook/subhook_windows.c)
 
-	set(CMAKE_C_FLAGS_DEBUG "/Od /Zi")
-	set(CMAKE_CXX_FLAGS_DEBUG "/Od /Zi")
-	set(CMAKE_C_FLAGS_RELEASE "/Ox")
-	set(CMAKE_CXX_FLAGS_RELEASE "/Ox")
-	set(CMAKE_C_FLAGS_RELWITHDEBINFO "/Ox /Zi")
-	set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "/Ox /Zi")
+	set (CMAKE_SHARED_LINKER_FLAGS "/NOLOGO /MACHINE:X86 /DEF:\"${CMAKE_CURRENT_SOURCE_DIR}/src/Exports.def\"")
 else ()
-	add_definitions(-DLINUX)
+	add_definitions (-DLINUX)
 
-	set(CMAKE_C_FLAGS "-m32")
-	set(CMAKE_CXX_FLAGS "-m32 -std=c++11 -Wno-write-strings")
-	set(CMAKE_SHARED_LINKER_FLAGS "-m32 -fshort-wchar -shared")
+	file (GLOB FCNPC_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/subhook/subhook_linux.c)
 
-	set(CMAKE_C_FLAGS_DEBUG "-O0 -g3")
-	set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g3")
-	set(CMAKE_C_FLAGS_RELEASE "-O3 -g0")
-	set(CMAKE_CXX_FLAGS_RELEASE "-O3 -g0")
-	set(CMAKE_C_FLAGS_RELWITHDEBINFO "-O2 -g3")
-	set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g3")
+	set (CMAKE_C_FLAGS "-m32")
+	set (CMAKE_CXX_FLAGS "-m32 -std=c++11 -Wno-write-strings")
+	set (CMAKE_SHARED_LINKER_FLAGS "-m32 -fshort-wchar -shared")
+endif (WIN32)
 
-	set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "-O3 -s")
-endif(WIN32)
-
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/src" "${CMAKE_CURRENT_SOURCE_DIR}/src/SDK" "${CMAKE_CURRENT_SOURCE_DIR}/src/SDK/amx" "${CMAKE_CURRENT_SOURCE_DIR}/src/subhook")
-
-set (SOURCE_LIB 
-	"${CMAKE_CURRENT_SOURCE_DIR}/src"
-	"${CMAKE_CURRENT_SOURCE_DIR}/src/SDK"
-	"${CMAKE_CURRENT_SOURCE_DIR}/src/SDK"
-	"${CMAKE_CURRENT_SOURCE_DIR}/src/subhook"
+include_directories (
+	${CMAKE_CURRENT_SOURCE_DIR}/src
+	${CMAKE_CURRENT_SOURCE_DIR}/src/SDK
+	${CMAKE_CURRENT_SOURCE_DIR}/src/SDK/amx
+	${CMAKE_CURRENT_SOURCE_DIR}/src/subhook
 )
 
-add_library (FCNPC SHARED ${SOURCE_LIB})
+file (GLOB FCNPC_SRC
+	${FCNPC_SRC}
+	${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/SDK/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/SDK/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/SDK/amx/*.c
+	${CMAKE_CURRENT_SOURCE_DIR}/src/SDK/amx/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/subhook/subhook.c
+	${CMAKE_CURRENT_SOURCE_DIR}/src/subhook/subhook_x86.c
+)
+
+add_library (FCNPC SHARED ${FCNPC_SRC})
