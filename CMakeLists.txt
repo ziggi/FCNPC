@@ -5,6 +5,8 @@ project (FCNPC)
 set (VERSION "0.1 B15 R2")
 add_definitions (-DVERSION="${VERSION}")
 
+set (CMAKE_SHARED_LIBRARY_PREFIX "")
+
 if (WIN32)
 	add_definitions (-DWIN32 -D_WIN32 -D_CRT_SECURE_NO_WARNINGS -D__STDC__)
 
@@ -16,9 +18,9 @@ else ()
 
 	file (GLOB FCNPC_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/subhook/subhook_linux.c)
 
-	set (CMAKE_C_FLAGS "-m32")
-	set (CMAKE_CXX_FLAGS "-m32 -std=c++11 -Wno-write-strings")
-	set (CMAKE_SHARED_LINKER_FLAGS "-m32 -fshort-wchar -shared")
+	set (CMAKE_C_FLAGS "-m32 -fPIC -O2 -w")
+	set (CMAKE_CXX_FLAGS "-m32 -fPIC -O2 -w")
+	set (CMAKE_SHARED_LINKER_FLAGS "-m32 -O2 -fshort-wchar -shared")
 endif (WIN32)
 
 include_directories (
