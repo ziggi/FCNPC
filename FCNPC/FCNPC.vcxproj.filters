@@ -81,6 +81,18 @@
     <ClCompile Include="SDK\amxplugin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="subhook\subhook.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="subhook\subhook_linux.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="subhook\subhook_windows.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="subhook\subhook_x86.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Address.h">
@@ -176,24 +188,23 @@
     <ClInclude Include="ZMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Detours\Detours.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SDK\plugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SDK\plugincommon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="subhook\subhook.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="subhook\subhook_private.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="makefile" />
-    <None Include="Detours\Detours.pdb" />
     <None Include="Exports.def">
       <Filter>Source Files</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="Detours\Detours.lib" />
   </ItemGroup>
 </Project>

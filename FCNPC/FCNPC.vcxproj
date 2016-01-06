@@ -98,6 +98,10 @@
     <ClCompile Include="SAMPFunctions.cpp" />
     <ClCompile Include="SDK\amxplugin.cpp" />
     <ClCompile Include="Server.cpp" />
+    <ClCompile Include="subhook\subhook.c" />
+    <ClCompile Include="subhook\subhook_linux.c" />
+    <ClCompile Include="subhook\subhook_windows.c" />
+    <ClCompile Include="subhook\subhook_x86.c" />
     <ClCompile Include="Thread.cpp" />
     <ClCompile Include="ThreadFunctions.cpp" />
     <ClCompile Include="Utils.cpp" />
@@ -109,7 +113,6 @@
     <ClInclude Include="BitStream.h" />
     <ClInclude Include="CallbackManager.h" />
     <ClInclude Include="Common.h" />
-    <ClInclude Include="Detours\Detours.h" />
     <ClInclude Include="ExceptionHandler.h" />
     <ClInclude Include="Hooks.h" />
     <ClInclude Include="Main.h" />
@@ -134,6 +137,8 @@
     <ClInclude Include="SDK\plugin.h" />
     <ClInclude Include="SDK\plugincommon.h" />
     <ClInclude Include="Server.h" />
+    <ClInclude Include="subhook\subhook.h" />
+    <ClInclude Include="subhook\subhook_private.h" />
     <ClInclude Include="Thread.h" />
     <ClInclude Include="ThreadFunctions.h" />
     <ClInclude Include="Utils.h" />
@@ -141,12 +146,8 @@
     <ClInclude Include="ZMap.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Detours\Detours.pdb" />
     <None Include="Exports.def" />
     <None Include="makefile" />
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="Detours\Detours.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
