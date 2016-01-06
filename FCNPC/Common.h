@@ -18,7 +18,7 @@ typedef void (* logprintf_t)(char *szFormat, ...);
 extern logprintf_t			logprintf;
 
 // General definitions
-#define VERSION				"0.1 B15"
+#define VERSION				"0.1 B15 R2"
 #define MAX_PLAYERS			1000
 #define MAX_VEHICLES		2000
 #define MAX_NODES			64

@@ -36,6 +36,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	logprintf("     FCNPC - Fully Controllable NPC v" VERSION "");
 	logprintf("");
 	logprintf("- Author: OrMisicL");
+	logprintf("- Contributors: ziggi, Neutralneu");
 	logprintf("- Build:  " __DATE__" at " __TIME__ "");
 	logprintf("-------------------------------------------------");
 	logprintf("");
