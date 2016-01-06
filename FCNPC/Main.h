@@ -38,9 +38,9 @@
 #include <string.h>
 // Detours include
 #ifdef _WIN32
-#	include <Detours.h>
+	#include "Detours/Detours.h"
 #else
-#	include "../subhook/subhook.h"
+	#include "subhook/subhook.h"
 #endif
 // ExceptionHandler includes
 #include "ExceptionHandler.h"

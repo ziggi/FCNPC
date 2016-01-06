@@ -71,7 +71,7 @@ long WINAPI CExceptionHandler::ExceptionHandlerCallback(_EXCEPTION_POINTERS *pEx
 	fprintf(pFile, "VAR_ConfigPtr: 0x%x\n", CAddress::VAR_ConfigPtr);
 	fprintf(pFile, "VAR_RakPeerPtr: 0x%x\n", CAddress::VAR_RakPeerPtr);
 
-	fprintf(pFile, "\n\Offsets:\n");
+	fprintf(pFile, "\n\nOffsets:\n");
 	fprintf(pFile, "OFFSET_NetVersion: 0x%x\n", CAddress::OFFSET_NetVersion);
 	fprintf(pFile, "OFFSET_RemoteSystemManager: 0x%x\n", CAddress::OFFSET_RemoteSystemManager);
 	fprintf(pFile, "OFFSET_RemoteSystemSize: 0x%x\n", CAddress::OFFSET_RemoteSystemSize);
