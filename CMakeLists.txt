@@ -25,7 +25,7 @@ include_directories (
 	${CMAKE_CURRENT_SOURCE_DIR}/src/SDK/amx
 )
 
-set (SUBHOOK_NO_TESTS 1)
+set (SUBHOOK_NO_TESTS true)
 add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/src/subhook
 )
