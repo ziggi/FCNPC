@@ -22,7 +22,6 @@ void CExceptionHandler::Install()
 #ifdef _WIN32
 	SetUnhandledExceptionFilter(ExceptionHandlerCallback);
 #else
-	signal(SIGINT, ExceptionHandlerCallback);
 	signal(SIGHUP, ExceptionHandlerCallback);
 	signal(SIGTERM, ExceptionHandlerCallback);
 	signal(SIGSEGV, ExceptionHandlerCallback);
