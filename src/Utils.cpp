@@ -72,7 +72,7 @@ DWORD CUtils::FindPattern(char *szPattern, char *szMask)
 	// Get the current process information
 	MODULEINFO mInfo = {0};
 	GetModuleInformation(GetCurrentProcess(), GetModuleHandle(NULL), &mInfo, sizeof(MODULEINFO));
-	// Find the base address 
+	// Find the base address
 	DWORD dwBase = (DWORD)mInfo.lpBaseOfDll;
 	DWORD dwSize =  (DWORD)mInfo.SizeOfImage;
 #else
@@ -90,12 +90,12 @@ DWORD CUtils::FindPattern(char *szPattern, char *szMask)
 			bFound &= szMask[j] == '?' || szPattern[j] == *(char*)(dwBase + i + j);
 
 		// If found return the current address
-		if(bFound) 
+		if(bFound)
 			return dwBase + i;
 	}
 	// Return null
 	return NULL;
-} 
+}
 
 // Linux GetTickCount
 #ifndef _WIN32

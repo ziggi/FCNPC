@@ -18,12 +18,12 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_Create(AMX *amx, cell *params)
 	// Get the name length
 	int iLength = 0;
 	cell *pAddress = NULL;
-	amx_GetAddr(amx, params[1], &pAddress); 
-    amx_StrLen(pAddress, &iLength);
+	amx_GetAddr(amx, params[1], &pAddress);
+	amx_StrLen(pAddress, &iLength);
 	// Make sure the length is valid
 	if(!iLength)
 		return INVALID_ENTITY_ID;
-	
+
 	// Make room for the string end
 	iLength++;
 	// Allocate the name string
@@ -884,8 +884,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StartPlayingPlayback(AMX *amx, cell *params
 	// Get the filename length
 	int iLength = 0;
 	cell *pAddress = NULL;
-	amx_GetAddr(amx, params[2], &pAddress); 
-    amx_StrLen(pAddress, &iLength);
+	amx_GetAddr(amx, params[2], &pAddress);
+	amx_StrLen(pAddress, &iLength);
 	// Make sure the length is valid
 	if(!iLength)
 		return 0;
@@ -1159,12 +1159,12 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_InitZMap(AMX *amx, cell *params)
 	// Get the filename length
 	int iLength = 0;
 	cell *pAddress = NULL;
-	amx_GetAddr(amx, params[1], &pAddress); 
-    amx_StrLen(pAddress, &iLength);
+	amx_GetAddr(amx, params[1], &pAddress);
+	amx_StrLen(pAddress, &iLength);
 	// Make sure the length is valid
 	if(!iLength)
 		return 0;
-	
+
 	// Make room for the string end
 	iLength++;
 	// Allocate the filename string

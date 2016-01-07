@@ -19,9 +19,9 @@ public:
 	// Exception handler callback
 #ifdef _WIN32
 	static long WINAPI ExceptionHandlerCallback(_EXCEPTION_POINTERS *pExceptionInfo);
-#else 
+#else
 	static void ExceptionHandlerCallback(int param);
-#endif 
+#endif
 
 };
 

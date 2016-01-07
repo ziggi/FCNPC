@@ -10,8 +10,8 @@
 
 #include "Main.h"
 
-extern CServer		*pServer;
-extern bool			bServerInit;
+extern CServer     *pServer;
+extern bool        bServerInit;
 
 // Keep that until a further notice, for now, no threads needed
 void CThreadFunctions::DamageThread(void *pThread)
@@ -27,12 +27,12 @@ void CThreadFunctions::DamageThread(void *pThread)
 	CSAMPPlayerPool *pPlayerPool = pSAMPServer->pPlayerPool;
 	// Are we still alive ?
 	while(bServerInit)
-	{		
+	{
 		// Loop through all the players
 		for(int i = 0; i < MAX_PLAYERS; i++)
 		{
 			// Ignore non connected players
-			if(!pPlayerPool->bIsPlayerConnected[i] || 
+			if(!pPlayerPool->bIsPlayerConnected[i] ||
 				(pServer->GetPlayerManager()->IsNPC(i) && !pServer->GetPlayerManager()->GetAt(i)->IsSpawned()))
 				continue;
 

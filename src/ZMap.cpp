@@ -51,14 +51,14 @@ float CZMap::GetGroundForCoord(CVector3 vecCoord) // From MapAndreas plugin by K
 		return 0.0f;
 
 	// Validate the coordinates
-	if(vecCoord.fX < -3000.0f || vecCoord.fX > 3000.0f || vecCoord.fY > 3000.0f || vecCoord.fY < -3000.0f) 
+	if(vecCoord.fX < -3000.0f || vecCoord.fX > 3000.0f || vecCoord.fY > 3000.0f || vecCoord.fY < -3000.0f)
 		return 0.0f;
 
 	// Get the the coordinates grid
 	int iGridX = ((int)vecCoord.fX) + 3000;
 	int iGridY = (((int)vecCoord.fY) - 3000) * -1;
 	// Find the grid point
-	int iPoint = ((iGridY * 6000) + iGridX) * 2; 
+	int iPoint = ((iGridY * 6000) + iGridX) * 2;
 	// Set the file pointer to the point
 	fseek(m_pFile, iPoint, SEEK_SET);
 	// Read the point

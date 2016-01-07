@@ -88,7 +88,7 @@ int CNode::Process(CPlayer *pPlayer, int iPointId, int iLastPoint, int iType, CV
 		{
 			// Increase the attempts count
 			byteCount++;
-			if(byteCount > 10) 
+			if(byteCount > 10)
 				break;
 
 			// Generate a random link id
@@ -145,7 +145,7 @@ int CNode::ProcessNodeChange(CPlayer *pPlayer, unsigned short usLinkId, int iTyp
 void CNode::GetPosition(CVector3 *pVecPosition)
 {
 	// Get the node position
-	*pVecPosition = CVector3((float)(m_nodePath.sPositionX / 8), 
+	*pVecPosition = CVector3((float)(m_nodePath.sPositionX / 8),
 		(float)(m_nodePath.sPositionY / 8), (float)(m_nodePath.sPositionZ / 8) + 0.7f);
 }
 

@@ -24,9 +24,9 @@ class CZMap
 		float GetGroundForCoord(CVector3 vecCoord);
 
 	private:
-		bool				m_bIsInitialized;
-		FILE				*m_pFile;
-		char				m_szFilePath[MAX_PATH];
+		bool m_bIsInitialized;
+		FILE *m_pFile;
+		char m_szFilePath[MAX_PATH];
 };
 
 #endif

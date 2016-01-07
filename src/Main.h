@@ -18,7 +18,7 @@
 #endif
 
 // Define some linux types
-#ifndef _WIN32 
+#ifndef _WIN32
 #	define BOOL		int
 #	define DWORD	unsigned long
 #	define BYTE		unsigned char
@@ -33,7 +33,7 @@
 // Standard includes
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdarg.h> 
+#include <stdarg.h>
 #include <math.h>
 #include <string.h>
 #include "subhook/subhook.h"

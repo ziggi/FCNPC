@@ -30,21 +30,21 @@ class CThread
 		static void *ThreadFunction(void * pVoidThis);
 #endif
 
-		template <typename T> 
+		template <typename T>
 		void SetParam(T param) { m_pParam = (void *)param; };
 
 		template <typename T>
 		T GetParam() { return (T)(m_pParam); };
 
 	private:
-		bool				m_bStarted;
-		ThreadCallback_t	m_pfnThreadCallback;
+		bool                m_bStarted;
+		ThreadCallback_t    m_pfnThreadCallback;
 #ifdef _WIN32
-		HANDLE				m_hThread;
+		HANDLE              m_hThread;
 #else
-		pthread_t			m_Thread;
+		pthread_t           m_Thread;
 #endif
-		void				*m_pParam;
+		void                *m_pParam;
 };
 
 #endif

@@ -17,13 +17,13 @@
 class CSAMPRPCParams
 {
 	private:
-		unsigned char			*m_pData;
-		DWORD					m_dwLength;
-		CSAMPSystemAddress		m_systemAddress;
+		unsigned char           *m_pData;
+		DWORD                   m_dwLength;
+		CSAMPSystemAddress      m_systemAddress;
 		// BitStream uses stack data (256 bytes) to store small data instead of heap allocation
 		// and since our data is small, we use it
-		unsigned char			ucStackData[256];
-		int						m_iWritePointer; // Using a write pointer saves us from news and deletes (faster)
+		unsigned char           ucStackData[256];
+		int                     m_iWritePointer; // Using a write pointer saves us from news and deletes (faster)
 
 	public:
 		CSAMPRPCParams()
@@ -42,7 +42,7 @@ class CSAMPRPCParams
 		template <typename T>
 		void Write(T value, DWORD dwLength = sizeof(T))
 		{
-			// Write to buffer 
+			// Write to buffer
 			memcpy(m_pData + m_iWritePointer, &value, dwLength);
 			// Set the new length (Multiply by 8 cuz BitStream length is in bits not bytes)
 			m_dwLength += (dwLength * 8);
@@ -60,7 +60,7 @@ class CSAMPRPCParams
 			m_iWritePointer += dwLength;
 		};
 
-		void SetWritePointer(int iWritePointer) 
+		void SetWritePointer(int iWritePointer)
 		{
 			// Set the write pointer
 			m_iWritePointer = iWritePointer;

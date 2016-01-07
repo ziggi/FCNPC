@@ -18,12 +18,12 @@ CServer				*pServer;
 bool				bServerInit = false;
 DWORD				dwStartTick;
 
-PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports() 
+PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports()
 {
 	return SUPPORTS_VERSION | SUPPORTS_AMX_NATIVES | SUPPORTS_PROCESS_TICK;
 }
 
-PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData) 
+PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 {
 	ppPluginData = ppData;
 	// Get the AMX functions pointer
@@ -152,7 +152,7 @@ AMX_NATIVE_INFO PluginNatives[ ] =
 	{ 0, 0 }
 };
 
-PLUGIN_EXPORT int PLUGIN_CALL AmxLoad(AMX *pAMX) 
+PLUGIN_EXPORT int PLUGIN_CALL AmxLoad(AMX *pAMX)
 {
 	if(!bServerInit)
 	{
@@ -177,21 +177,21 @@ PLUGIN_EXPORT int PLUGIN_CALL AmxLoad(AMX *pAMX)
 	return amx_Register(pAMX, PluginNatives, -1);
 }
 
-PLUGIN_EXPORT int PLUGIN_CALL AmxUnload(AMX *pAMX) 
+PLUGIN_EXPORT int PLUGIN_CALL AmxUnload(AMX *pAMX)
 {
 	// Unregister the AMX
 	CCallbackManager::UnregisterAMX(pAMX);	
 	return AMX_ERR_NONE;
 }
 
-PLUGIN_EXPORT void PLUGIN_CALL ProcessTick() 
+PLUGIN_EXPORT void PLUGIN_CALL ProcessTick()
 {
 	// Check if we need to process
 	if((GetTickCount() - dwStartTick) >= 5)
 	{
 		// Process the player manager
 		pServer->GetPlayerManager()->Process();
-		// Update the start tick 
+		// Update the start tick
 		dwStartTick = GetTickCount();
 	}
 }

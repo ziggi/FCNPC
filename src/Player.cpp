@@ -11,7 +11,7 @@
 
 #include "Main.h"
 
-extern CServer					*pServer;
+extern CServer   *pServer;
 
 CPlayer::CPlayer(EntityId playerId, char *szName)
 {
@@ -173,7 +173,7 @@ bool CPlayer::Respawn()
 
 void CPlayer::SetSpawnPosition(CVector3 vecPosition)
 {
-	// Set the player position 
+	// Set the player position
 	m_pInterface->vecSpawnPosition = vecPosition;
 }
 
@@ -235,7 +235,7 @@ void CPlayer::Update(int iState)
 
 		// Get the player vehicle interface
 		CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
-		CSAMPVehicle *pVehicle = pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId]; 
+		CSAMPVehicle *pVehicle = pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId];
 		// Set the player sync vehicle id
 		m_pInterface->vehicleSyncData.wVehicleId = m_pInterface->wVehicleId;
 		// Set the player sync position
@@ -269,7 +269,7 @@ void CPlayer::Update(int iState)
 
 		// Get the player vehicle interface
 		CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
-		CSAMPVehicle *pVehicle = pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId]; 
+		CSAMPVehicle *pVehicle = pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId];
 		// Set the player position to the vehicle position
 		SetPosition(pVehicle->vecPosition);
 		// Set the player sync vehicle and seat id
@@ -414,7 +414,7 @@ void CPlayer::Process()
 					vecNewPosition.fZ = pServer->GetZMap()->GetGroundForCoord(vecNewPosition) + 0.5f;
 				
 				// Set the position
-				SetPosition(vecNewPosition); 
+				SetPosition(vecNewPosition);
 				// Update the tick count
 				m_dwMoveTickCount = dwThisTick;
 			}
@@ -431,7 +431,7 @@ void CPlayer::Process()
 					vecNewPosition.fZ = pServer->GetZMap()->GetGroundForCoord(vecNewPosition) + 0.5f;
 					
 				// Set the position
-				SetPosition(vecNewPosition); 
+				SetPosition(vecNewPosition);
 				// Stop the player
 				StopMoving();
 				// Are we entering a vehicle ?
@@ -445,7 +445,7 @@ void CPlayer::Process()
 						m_bJacking = true;
 
 					// Call the SAMP enter vehicle function
-					CSAMPFunctions::PlayerEnterVehicle((int)m_playerId, (int)m_wVehicleToEnter, (int)m_byteSeatToEnter); 
+					CSAMPFunctions::PlayerEnterVehicle((int)m_playerId, (int)m_wVehicleToEnter, (int)m_byteSeatToEnter);
 				}
 				else
 				{
@@ -584,7 +584,7 @@ void CPlayer::Process()
 			if(m_iLastDamager != INVALID_ENTITY_ID)
 			{
 				CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
-				byteWeapon = pSAMPServer->pPlayerPool->pPlayer[m_iLastDamager]->syncData.byteWeapon; 
+				byteWeapon = pSAMPServer->pPlayerPool->pPlayer[m_iLastDamager]->syncData.byteWeapon;
 			}
 			// Kill the player
 			Kill(m_iLastDamager, (int)byteWeapon);
@@ -624,7 +624,7 @@ void CPlayer::Process()
 					vecNewPosition.fZ = pServer->GetZMap()->GetGroundForCoord(vecNewPosition) + 0.5f;
 				
 				// Set the vehicle position
-				SetPosition(vecNewPosition); 
+				SetPosition(vecNewPosition);
 				// Update the tick count
 				m_dwMoveTickCount = dwThisTick;
 			}
@@ -641,7 +641,7 @@ void CPlayer::Process()
 					vecNewPosition.fZ = pServer->GetZMap()->GetGroundForCoord(vecNewPosition) + 0.5f;
 				
 				// Set the position
-				SetPosition(vecNewPosition); 
+				SetPosition(vecNewPosition);
 				// Stop the player
 				StopMoving();
 				// Are we playing a node ?
@@ -684,7 +684,7 @@ void CPlayer::Process()
 			CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 			CVector3 vecVehiclePos = pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId]->vecPosition;
 			// Get the seat position
-			CVector3 *pvecSeat = CSAMPFunctions::GetVehicleModelInfo(pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId]->iModelId, 
+			CVector3 *pvecSeat = CSAMPFunctions::GetVehicleModelInfo(pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId]->iModelId,
 				m_pInterface->byteSeatId == 0 || m_pInterface->byteSeatId == 1 ? VEHICLE_MODEL_INFO_FRONTSEAT : VEHICLE_MODEL_INFO_REARSEAT);
 	
 			// Adjust the seat vector
@@ -720,7 +720,7 @@ void CPlayer::SetPosition(CVector3 vecPosition)
 	{
 		// Get the player vehicle interface
 		CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
-		CSAMPVehicle *pVehicle = pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId]; 
+		CSAMPVehicle *pVehicle = pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId];
 		// Get the player vehicle position
 		pVehicle->vecPosition = vecPosition;
 	}
@@ -735,7 +735,7 @@ void CPlayer::GetPosition(CVector3 *pvecPosition)
 	{
 		// Get the player vehicle interface
 		CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
-		CSAMPVehicle *pVehicle = pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId]; 
+		CSAMPVehicle *pVehicle = pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId];
 		// Get the player vehicle position
 		*pvecPosition = pVehicle->vecPosition;
 	}
@@ -750,12 +750,12 @@ void CPlayer::SetQuaternion(CVector3 vecQuaternion, float fAngle)
 	{
 		// Get the player vehicle interface
 		CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
-		CSAMPVehicle *pVehicle = pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId]; 
-		// Set the player vehicle quaternion 
+		CSAMPVehicle *pVehicle = pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId];
+		// Set the player vehicle quaternion
 		pVehicle->vecQuaternion = vecQuaternion;
 		pVehicle->fQuaternionAngle = fAngle;
 	}
-	// Set the player quaternion 
+	// Set the player quaternion
 	m_pInterface->syncData.vecQuaternion = vecQuaternion;
 	m_pInterface->syncData.fQuaternionAngle = fAngle;
 }
@@ -767,14 +767,14 @@ void CPlayer::GetQuaternion(CVector3 *pvecQuaternion, float *pfAngle)
 	{
 		// Get the player vehicle interface
 		CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
-		CSAMPVehicle *pVehicle = pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId]; 
-		// Get the player vehicle quaternion 
+		CSAMPVehicle *pVehicle = pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId];
+		// Get the player vehicle quaternion
 		*pvecQuaternion = pVehicle->vecQuaternion;
 		*pfAngle = pVehicle->fQuaternionAngle;
 	}
 	else
 	{
-		// Get the player vehicle quaternion 
+		// Get the player vehicle quaternion
 		*pvecQuaternion = m_pInterface->syncData.vecQuaternion;
 		*pfAngle = m_pInterface->syncData.fQuaternionAngle;
 	}
@@ -782,7 +782,7 @@ void CPlayer::GetQuaternion(CVector3 *pvecQuaternion, float *pfAngle)
 
 void CPlayer::SetAngle(float fAngle)
 {
-	// Set the player  
+	// Set the player
 	m_pInterface->fAngle = fAngle;
 	// Check the player state
 	if(GetState() == PLAYER_STATE_DRIVER && m_pInterface->wVehicleId != INVALID_ENTITY_ID)
@@ -805,7 +805,7 @@ void CPlayer::SetHealth(float fHealth)
 	else if(fHealth > 200.0f)
 		fHealth = 200.0f;
 
-	// Set the player health 
+	// Set the player health
 	m_pInterface->fHealth = fHealth;
 }
 
@@ -817,7 +817,7 @@ void CPlayer::SetArmour(float fArmour)
 	else if(fArmour > 200.0f)
 		fArmour = 200.0f;
 
-	// Set the player armour 
+	// Set the player armour
 	m_pInterface->fArmour = fArmour;
 }
 
@@ -849,7 +849,7 @@ void CPlayer::SetWeapon(BYTE byteWeaponId)
 	if(byteWeaponId > 46)
 		return;
 
-	// Set the player weapon id 
+	// Set the player weapon id
 	m_byteWeaponId = byteWeaponId;
 }
 
@@ -882,10 +882,10 @@ void CPlayer::SetVelocity(CVector3 vecVelocity)
 		// Get the player vehicle interface
 		CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 		CSAMPVehicle *pVehicle = pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId];
-		// Set the player vehicle velocity 
+		// Set the player vehicle velocity
 		pVehicle->vecVelocity = vecVelocity;
 	}
-	// Set the player velocity 
+	// Set the player velocity
 	m_pInterface->vecVelocity = vecVelocity;
 }
 
@@ -896,7 +896,7 @@ void CPlayer::GetVelocity(CVector3 *pvecVelocity)
 	{
 		// Get the player vehicle interface
 		CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
-		CSAMPVehicle *pVehicle = pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId]; 
+		CSAMPVehicle *pVehicle = pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId];
 		// Get the player vehicle position
 		*pvecVelocity = pVehicle->vecVelocity;
 	}
@@ -1012,8 +1012,8 @@ void CPlayer::AimAt(CVector3 vecPoint, bool bShoot)
 	// Get the distance to the destination point
 	float fDistance = CMath::GetDistanceBetween3DPoints(vecPosition, vecPoint);
 	// Calculate the aiming Z angle
-	float fZAngle = -acos(((vecDistance.fX * vecDistance.fX) + (vecDistance.fY * vecDistance.fY)) 
-		/ (sqrt((vecDistance.fX * vecDistance.fX) + (vecDistance.fY * vecDistance.fY) + (vecDistance.fZ * vecDistance.fZ)) 
+	float fZAngle = -acos(((vecDistance.fX * vecDistance.fX) + (vecDistance.fY * vecDistance.fY))
+		/ (sqrt((vecDistance.fX * vecDistance.fX) + (vecDistance.fY * vecDistance.fY) + (vecDistance.fZ * vecDistance.fZ))
 		* sqrt((vecDistance.fX * vecDistance.fX) + (vecDistance.fY * vecDistance.fY)))) + 0.1f;
 	
 	// Get the destination angle
@@ -1136,7 +1136,7 @@ bool CPlayer::EnterVehicle(int iVehicleId, int iSeatId, int iType)
 		return false;
 
 	// Validate the distance to enter
-	if(CMath::GetDistanceBetween3DPoints(pSAMPServer->pVehiclePool->pVehicle[iVehicleId]->vecPosition, 
+	if(CMath::GetDistanceBetween3DPoints(pSAMPServer->pVehiclePool->pVehicle[iVehicleId]->vecPosition,
 		m_pInterface->vecPosition) > MAX_DISTANCE_TO_ENTER_VEHICLE)
 		return false;
 
@@ -1177,8 +1177,8 @@ bool CPlayer::ExitVehicle()
 		return false;
 
 	// Call the SAMP exit vehicle function
-	CSAMPFunctions::PlayerExitVehicle(m_playerId, m_pInterface->wVehicleId); 
-	// Set the player state 
+	CSAMPFunctions::PlayerExitVehicle(m_playerId, m_pInterface->wVehicleId);
+	// Set the player state
 	SetState(PLAYER_STATE_EXIT_VEHICLE);
 	// Set the exit start tick
 	m_dwEnterExitTickCount = GetTickCount();
@@ -1223,7 +1223,7 @@ bool CPlayer::RemoveFromVehicle()
 	if(!pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId])
 		return false;
 
-	// Set the player state 
+	// Set the player state
 	SetState(PLAYER_STATE_ONFOOT);
 	CVector3 vecVehiclePos = pSAMPServer->pVehiclePool->pVehicle[m_pInterface->wVehicleId]->vecPosition;
 	SetPosition(CVector3(vecVehiclePos.fX + 2.0f, vecVehiclePos.fY + 2.0f, vecVehiclePos.fZ));

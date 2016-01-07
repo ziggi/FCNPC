@@ -20,26 +20,26 @@ class CPlayerManager
 		~CPlayerManager();
 
 		bool IsPlayerConnected(EntityId playerId)
-		{ 
-			if(playerId > MAX_PLAYERS || playerId < 0) 
-				return false; 
-			else 
-				return m_bConnected[playerId]; 
+		{
+			if(playerId > MAX_PLAYERS || playerId < 0)
+				return false;
+			else
+				return m_bConnected[playerId];
 		};
 		inline CPlayer *GetAt(EntityId playerId) { return m_pPlayer[playerId]; };
-		bool			SetupPlayer(EntityId playerId);
+		bool            SetupPlayer(EntityId playerId);
 		
-		EntityId		AddPlayer(char *szName);
-		bool			DeletePlayer(EntityId playerId);
+		EntityId        AddPlayer(char *szName);
+		bool            DeletePlayer(EntityId playerId);
 
-		void			Process();
+		void            Process();
 
-		bool			IsNPC(int iPlayerId);
+		bool            IsNPC(int iPlayerId);
 
 	private:
-		EntityId		m_players;
-		bool			m_bConnected[MAX_PLAYERS];
-		CPlayer			*m_pPlayer[MAX_PLAYERS];
+		EntityId        m_players;
+		bool            m_bConnected[MAX_PLAYERS];
+		CPlayer         *m_pPlayer[MAX_PLAYERS];
 };
 
 #endif

@@ -48,13 +48,13 @@ namespace RakNet
 	{
 	
 	public:
-		/// Default Constructor 
+		/// Default Constructor
 		BitStream();
 		
 		/// Create the bitstream, with some number of bytes to immediately allocate.
 		/// There is no benefit to calling this, unless you know exactly how many bytes you need and it is greater than BITSTREAM_STACK_ALLOCATION_SIZE.
 		/// In that case all it does is save you one or more realloc calls.
-		/// \param[in] initialBytesToAllocate the number of bytes to pre-allocate. 
+		/// \param[in] initialBytesToAllocate the number of bytes to pre-allocate.
 		BitStream( int initialBytesToAllocate );
 		
 		/// Initialize the BitStream, immediately setting the data it contains to a predefined pointer.
@@ -69,7 +69,7 @@ namespace RakNet
 		/// \param[in] _copyData true or false to make a copy of \a _data or not.
 		BitStream( unsigned char* _data, unsigned int lengthInBytes, bool _copyData );
 		
-		/// Destructor 
+		/// Destructor
 		~BitStream();
 		
 		/// Resets the bitstream for reuse.
@@ -126,8 +126,8 @@ namespace RakNet
 
 		/// Bidirectional serialize/deserialize an array or casted stream or raw data.  This does NOT do endian swapping.
 		/// \param[in] writeToBitstream true to write from your data to this bitstream.  False to read from this bitstream and write to your data
-		/// \param[in] input a byte buffer 
-		/// \param[in] numberOfBytes the size of \a input in bytes 
+		/// \param[in] input a byte buffer
+		/// \param[in] numberOfBytes the size of \a input in bytes
 		/// \return true if \a writeToBitstream is true.  true if \a writeToBitstream is false and the read was successful.  false if \a writeToBitstream is false and the read was not successful.
 		bool Serialize(bool writeToBitstream,  char* input, const int numberOfBytes );
 
@@ -166,7 +166,7 @@ namespace RakNet
 		/// Lossy, although the result is renormalized
 		template <class templateType> // templateType for this function must be a float or double
 			bool SerializeOrthMatrix(
-			bool writeToBitstream,  
+			bool writeToBitstream,
 			templateType &m00, templateType &m01, templateType &m02,
 			templateType &m10, templateType &m11, templateType &m12,
 			templateType &m20, templateType &m21, templateType &m22 );
@@ -178,9 +178,9 @@ namespace RakNet
 		/// writing user data, and false when copying bitstream data, such
 		/// as writing one bitstream to another
 		/// \param[in] writeToBitstream true to write from your data to this bitstream.  False to read from this bitstream and write to your data
-		/// \param[in] input The data 
-		/// \param[in] numberOfBitsToSerialize The number of bits to write 
-		/// \param[in] rightAlignedBits if true data will be right aligned 
+		/// \param[in] input The data
+		/// \param[in] numberOfBitsToSerialize The number of bits to write
+		/// \param[in] rightAlignedBits if true data will be right aligned
 		/// \return true if \a writeToBitstream is true.  true if \a writeToBitstream is false and the read was successful.  false if \a writeToBitstream is false and the read was not successful.
 		bool SerializeBits(bool writeToBitstream, unsigned char* input, int numberOfBitsToSerialize, const bool rightAlignedBits = true );
 
@@ -255,8 +255,8 @@ namespace RakNet
 			bool ReadCompressedDelta(templateType &var);
 
 		/// Write an array or casted stream or raw data.  This does NOT do endian swapping.
-		/// \param[in] input a byte buffer 
-		/// \param[in] numberOfBytes the size of \a input in bytes 
+		/// \param[in] input a byte buffer
+		/// \param[in] numberOfBytes the size of \a input in bytes
 		void Write( const char* input, const int numberOfBytes );
 		
 		/// Write one bitstream to another
@@ -293,16 +293,16 @@ namespace RakNet
 		/// for 6 bytes instead of 36
 		/// Lossy, although the result is renormalized
 		template <class templateType> // templateType for this function must be a float or double
-		void WriteOrthMatrix( 
+		void WriteOrthMatrix(
 			templateType m00, templateType m01, templateType m02,
 			templateType m10, templateType m11, templateType m12,
 			templateType m20, templateType m21, templateType m22 );
 
 		/// Read an array or casted stream of byte. The array
 		/// is raw data. There is no automatic endian conversion with this function
-		/// \param[in] output The result byte array. It should be larger than @em numberOfBytes. 
+		/// \param[in] output The result byte array. It should be larger than @em numberOfBytes.
 		/// \param[in] numberOfBytes The number of byte to read
-		/// \return true on success false if there is some missing bytes. 
+		/// \return true on success false if there is some missing bytes.
 		bool Read( char* output, const int numberOfBytes );
 
 		/// Read a normalized 3D vector, using (at most) 4 bytes + 3 bits instead of 12-24 bytes.  Will further compress y or z axis aligned vectors.
@@ -333,7 +333,7 @@ namespace RakNet
 		/// for 6 bytes instead of 36
 		/// Lossy, although the result is renormalized
 		template <class templateType> // templateType for this function must be a float or double
-		bool ReadOrthMatrix( 
+		bool ReadOrthMatrix(
 			templateType &m00, templateType &m01, templateType &m02,
 			templateType &m10, templateType &m11, templateType &m12,
 			templateType &m20, templateType &m21, templateType &m22 );
@@ -355,9 +355,9 @@ namespace RakNet
 		/// \param[in] numberOfBits The number of bits to ignore
 		void IgnoreBits( const int numberOfBits );
 		
-		///Move the write pointer to a position on the array.  
-		/// \param[in] offset the offset from the start of the array. 
-		/// \attention 
+		///Move the write pointer to a position on the array.
+		/// \param[in] offset the offset from the start of the array.
+		/// \attention
 		/// Dangerous if you don't know what you are doing! 	
 		/// For efficiency reasons you can only write mid-stream if your data is byte aligned.
 		void SetWriteOffset( const int offset );
@@ -380,7 +380,7 @@ namespace RakNet
 		
 		/// Makes a copy of the internal data for you \a _data will point to
 		/// the stream. Returns the length in bits of the stream. Partial
-		/// bytes are left aligned 
+		/// bytes are left aligned
 		/// \param[out] _data The allocated copy of GetData()
 		int CopyData( unsigned char** _data ) const;
 		
@@ -390,7 +390,7 @@ namespace RakNet
 		
 		/// Gets the data that BitStream is writing to / reading from
 		/// Partial bytes are left aligned.
-		/// \return A pointer to the internal state 
+		/// \return A pointer to the internal state
 		inline unsigned char* GetData( void ) const {return data;}
 		
 		/// Write numberToWrite bits from the input source Right aligned
@@ -399,9 +399,9 @@ namespace RakNet
 		/// internal representation) You would set this to true when
 		/// writing user data, and false when copying bitstream data, such
 		/// as writing one bitstream to another
-		/// \param[in] input The data 
-		/// \param[in] numberOfBitsToWrite The number of bits to write 
-		/// \param[in] rightAlignedBits if true data will be right aligned 
+		/// \param[in] input The data
+		/// \param[in] numberOfBitsToWrite The number of bits to write
+		/// \param[in] rightAlignedBits if true data will be right aligned
 		void WriteBits( const unsigned char* input,	int numberOfBitsToWrite, const bool rightAlignedBits = true );
 		
 		/// Align the bitstream to the byte boundary and then write the
@@ -409,7 +409,7 @@ namespace RakNet
 		/// wastes the bits to do the alignment and requires you to call
 		/// ReadAlignedBits at the corresponding read position.
 		/// \param[in] input The data
-		/// \param[in] numberOfBytesToWrite The size of data. 
+		/// \param[in] numberOfBytesToWrite The size of data.
 		void WriteAlignedBytes( const unsigned char *input,	const int numberOfBytesToWrite );
 		
 		/// Read bits, starting at the next aligned bits. Note that the
@@ -417,8 +417,8 @@ namespace RakNet
 		/// was used with WriteBits. This will be a problem with packet
 		/// coalescence unless you byte align the coalesced packets.
 		/// \param[in] output The byte array larger than @em numberOfBytesToRead
-		/// \param[in] numberOfBytesToRead The number of byte to read from the internal state 
-		/// \return true if there is enough byte. 
+		/// \param[in] numberOfBytesToRead The number of byte to read from the internal state
+		/// \return true if there is enough byte.
 		bool ReadAlignedBytes( unsigned char *output,	const int numberOfBytesToRead );
 		
 		/// Align the next write and/or read to a byte boundary.  This can
@@ -439,16 +439,16 @@ namespace RakNet
 		/// alignBitsToRight should be set to true to convert internal
 		/// bitstream data to userdata. It should be false if you used
 		/// WriteBits with rightAlignedBits false
-		/// \param[in] output The resulting bits array 
-		/// \param[in] numberOfBitsToRead The number of bits to read 
-		/// \param[in] alignBitsToRight if true bits will be right aligned. 
-		/// \return true if there is enough bits to read 
+		/// \param[in] output The resulting bits array
+		/// \param[in] numberOfBitsToRead The number of bits to read
+		/// \param[in] alignBitsToRight if true bits will be right aligned.
+		/// \return true if there is enough bits to read
 		bool ReadBits( unsigned char *output, int numberOfBitsToRead,	const bool alignBitsToRight = true );
 		
-		/// Write a 0  
+		/// Write a 0
 		void Write0( void );
 		
-		/// Write a 1 
+		/// Write a 1
 		void Write1( void );
 		
 		/// Reads 1 bit and returns true if that bit is 1 and false if it is 0
@@ -463,7 +463,7 @@ namespace RakNet
 		/// *reallocation
 		void SetNumberOfBitsAllocated( const unsigned int lengthInBits );
 
-		/// Reallocates (if necessary) in preparation of writing numberOfBitsToWrite 
+		/// Reallocates (if necessary) in preparation of writing numberOfBitsToWrite
 		void AddBitsAndReallocate( const int numberOfBitsToWrite );
 
 
@@ -700,7 +700,7 @@ namespace RakNet
 
 		template <class templateType>
 		inline bool BitStream::SerializeOrthMatrix(
-		bool writeToBitstream,  
+		bool writeToBitstream,
 		templateType &m00, templateType &m01, templateType &m02,
 		templateType &m10, templateType &m11, templateType &m12,
 		templateType &m20, templateType &m21, templateType &m22 )
@@ -1142,7 +1142,7 @@ namespace RakNet
 	}
 
 	template <class templateType> // templateType for this function must be a float or double
-		void BitStream::WriteOrthMatrix( 
+		void BitStream::WriteOrthMatrix(
 		templateType m00, templateType m01, templateType m02,
 		templateType m10, templateType m11, templateType m12,
 		templateType m20, templateType m21, templateType m22 )
@@ -1161,13 +1161,13 @@ namespace RakNet
 		float sum;
 		sum = 1 + m00 + m11 + m22;
 		if (sum < 0.0f) sum=0.0f;
-		qw = sqrt( sum  ) / 2; 
+		qw = sqrt( sum  ) / 2;
 		sum = 1 + m00 - m11 - m22;
 		if (sum < 0.0f) sum=0.0f;
-		qx = sqrt( sum  ) / 2; 
+		qx = sqrt( sum  ) / 2;
 		sum = 1 - m00 + m11 - m22;
 		if (sum < 0.0f) sum=0.0f;
-		qy = sqrt( sum  ) / 2; 
+		qy = sqrt( sum  ) / 2;
 		sum = 1 - m00 - m11 + m22;
 		if (sum < 0.0f) sum=0.0f;
 		qz = sqrt( sum  ) / 2;
@@ -1293,7 +1293,7 @@ namespace RakNet
 	}
 
 	template <class templateType> // templateType for this function must be a float or double
-		bool BitStream::ReadOrthMatrix( 
+		bool BitStream::ReadOrthMatrix(
 		templateType &m00, templateType &m01, templateType &m02,
 		templateType &m10, templateType &m11, templateType &m12,
 		templateType &m20, templateType &m21, templateType &m22 )
@@ -1334,4 +1334,4 @@ namespace RakNet
 #pragma warning( pop )
 #endif
 
-#endif 
+#endif

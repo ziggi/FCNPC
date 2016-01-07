@@ -23,24 +23,24 @@ class CServer
 
 		BYTE Initialize();
 
-		CPlayerManager		*GetPlayerManager() { return m_pPlayerManager; };
-		CNodeManager		*GetNodeManager() { return m_pNodeManager; };
+		CPlayerManager     *GetPlayerManager() { return m_pPlayerManager; };
+		CNodeManager       *GetNodeManager() { return m_pNodeManager; };
 
-		bool	DoesNameExist(char *szName);
+		bool    DoesNameExist(char *szName);
 
-		void	SetUpdateRate(DWORD dwRate) { m_dwUpdateRate = dwRate; };
-		DWORD	GetUpdateRate() { return m_dwUpdateRate; };
+		void    SetUpdateRate(DWORD dwRate) { m_dwUpdateRate = dwRate; };
+		DWORD   GetUpdateRate() { return m_dwUpdateRate; };
 
-		CZMap	*GetZMap() { return m_pZMap; };
+		CZMap   *GetZMap() { return m_pZMap; };
 
 		bool    IsVehicleSeatOccupied(int iPlayerId, WORD wVehicleId, BYTE byteSeatId);
 
 	private:
-		CPlayerManager		*m_pPlayerManager;
-		CNodeManager		*m_pNodeManager;
-		CThread				*m_pDamageThread;
-		CZMap				*m_pZMap;
-		DWORD				m_dwUpdateRate;
+		CPlayerManager      *m_pPlayerManager;
+		CNodeManager        *m_pNodeManager;
+		CThread             *m_pDamageThread;
+		CZMap               *m_pZMap;
+		DWORD               m_dwUpdateRate;
 };
 
 #endif

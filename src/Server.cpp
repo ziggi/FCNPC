@@ -10,8 +10,8 @@
 
 #include "Main.h"
 
-CSAMPRPCParams		*pCreateNPCParams;
-extern logprintf_t	logprintf;
+CSAMPRPCParams      *pCreateNPCParams;
+extern logprintf_t  logprintf;
 
 CServer::CServer()
 {
@@ -136,7 +136,7 @@ BYTE CServer::Initialize()
 
 				}
 				// Increase the format current character
-				_szFormat++; 
+				_szFormat++;
 			}
 			logprintf("out");
 			// End the arguments list
@@ -189,7 +189,7 @@ bool CServer::IsVehicleSeatOccupied(int iPlayerId, WORD wVehicleId, BYTE byteSea
 		// Get the player interface
 		CSAMPPlayer *pPlayer = pSAMPServer->pPlayerPool->pPlayer[i];
 		// Check vehicle and seat
-		if(pPlayer->wVehicleId == wVehicleId && pPlayer->byteSeatId == byteSeatId) 
+		if(pPlayer->wVehicleId == wVehicleId && pPlayer->byteSeatId == byteSeatId)
 			return true;
 	}
 	return false;

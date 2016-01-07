@@ -251,11 +251,11 @@ void BitStream::ResetWritePointer( void )
 void BitStream::Write0( void )
 {
 	AddBitsAndReallocate( 1 );
-	
+
 	// New bytes need to be zeroed
 	if ( ( numberOfBitsUsed & 7 ) == 0 )
 		data[ numberOfBitsUsed >> 3 ] = 0;
-		
+
 	numberOfBitsUsed++;
 }
 
@@ -263,14 +263,14 @@ void BitStream::Write0( void )
 void BitStream::Write1( void )
 {
 	AddBitsAndReallocate( 1 );
-	
+
 	int numberOfBitsMod8 = numberOfBitsUsed & 7;
-	
+
 	if ( numberOfBitsMod8 == 0 )
 		data[ numberOfBitsUsed >> 3 ] = 0x80;
 	else
 		data[ numberOfBitsUsed >> 3 ] |= 0x80 >> ( numberOfBitsMod8 ); // Set the bit to 1
-		
+
 	numberOfBitsUsed++;
 }
 
@@ -305,10 +305,10 @@ bool BitStream::ReadAlignedBytes( unsigned char* output, const int numberOfBytes
 #ifdef _DEBUG
 	assert( numberOfBytesToRead > 0 );
 #endif
-	
+
 	if ( numberOfBytesToRead <= 0 )
 		return false;
-		
+
 	// Byte align
 	AlignReadToByteBoundary();
 
@@ -317,9 +317,9 @@ bool BitStream::ReadAlignedBytes( unsigned char* output, const int numberOfBytes
 
 	// Write the data
 	memcpy( output, data + ( readOffset >> 3 ), numberOfBytesToRead );
-	
+
 	readOffset += numberOfBytesToRead << 3;
-	
+
 	return true;
 }
 
@@ -342,23 +342,22 @@ void BitStream::WriteBits( const unsigned char *input, int numberOfBitsToWrite, 
 {
 	if (numberOfBitsToWrite<=0)
 		return;
-	
+
 	AddBitsAndReallocate( numberOfBitsToWrite );
 	int offset = 0;
 	unsigned char dataByte;
 	int numberOfBitsUsedMod8;
-	
+
 	numberOfBitsUsedMod8 = numberOfBitsUsed & 7;
-	
+
 	// Faster to put the while at the top surprisingly enough
 	while ( numberOfBitsToWrite > 0 )
-		//do
 	{
 		dataByte = *( input + offset );
 		
 		if ( numberOfBitsToWrite < 8 && rightAlignedBits )   // rightAlignedBits means in the case of a partial byte, the bits are aligned from the right (bit 0) rather than the left (as in the normal internal representation)
 			dataByte <<= 8 - numberOfBitsToWrite;  // shift left to get the bits on the left, as in our internal representation
-			
+
 		// Writing to a new byte each time
 		if ( numberOfBitsUsedMod8 == 0 )
 			* ( data + ( numberOfBitsUsed >> 3 ) ) = dataByte;
@@ -372,17 +371,16 @@ void BitStream::WriteBits( const unsigned char *input, int numberOfBitsToWrite, 
 				*( data + ( numberOfBitsUsed >> 3 ) + 1 ) = (unsigned char) ( dataByte << ( 8 - ( numberOfBitsUsedMod8 ) ) ); // Second half (overlaps byte boundary)
 			}
 		}
-		
+
 		if ( numberOfBitsToWrite >= 8 )
 			numberOfBitsUsed += 8;
 		else
 			numberOfBitsUsed += numberOfBitsToWrite;
-		
+
 		numberOfBitsToWrite -= 8;
-		
+
 		offset++;
 	}
-	// } while(numberOfBitsToWrite>0);
 }
 
 // Set the stream to some initial data.  For internal use
@@ -397,19 +395,18 @@ void BitStream::WriteCompressed( const unsigned char* input,
 	const int size, const bool unsignedData )
 {
 	int currentByte = ( size >> 3 ) - 1; // PCs
-	
+
 	unsigned char byteMatch;
-	
+
 	if ( unsignedData )
 	{
 		byteMatch = 0;
 	}
-	
 	else
 	{
 		byteMatch = 0xFF;
 	}
-	
+
 	// Write upper bytes with a single 1
 	// From high byte to low byte, if high byte is a byteMatch then write a 1 bit. Otherwise write a 0 bit and then write the remaining bytes
 	while ( currentByte > 0 )
@@ -424,17 +421,17 @@ void BitStream::WriteCompressed( const unsigned char* input,
 			// Write the remainder of the data after writing 0
 			bool b = false;
 			Write( b );
-			
+
 			WriteBits( input, ( currentByte + 1 ) << 3, true );
 			//  currentByte--;
-			
-			
+
+
 			return ;
 		}
-		
+
 		currentByte--;
 	}
-	
+
 	// If the upper half of the last byte is a 0 (positive) or 16 (negative) then write a 1 and the remaining 4 bits.  Otherwise write a 0 and the 8 bites.
 	if ( ( unsignedData && ( ( *( input + currentByte ) ) & 0xF0 ) == 0x00 ) ||
 		( unsignedData == false && ( ( *( input + currentByte ) ) & 0xF0 ) == 0xF0 ) )
@@ -443,7 +440,6 @@ void BitStream::WriteCompressed( const unsigned char* input,
 		Write( b );
 		WriteBits( input + currentByte, 4, true );
 	}
-	
 	else
 	{
 		bool b = false;
@@ -461,7 +457,7 @@ bool BitStream::ReadBits( unsigned char* output, int numberOfBitsToRead, const b
 	assert( numberOfBitsToRead > 0 );
 #endif
 	if (numberOfBitsToRead<=0)
-	  return false;
+	 	return false;
 	
 	if ( readOffset + numberOfBitsToRead > numberOfBitsUsed )
 		return false;
@@ -609,7 +605,7 @@ void BitStream::AddBitsAndReallocate( const int numberOfBitsToWrite )
 				 data = ( unsigned char* ) malloc( amountToAllocate );
 
 				 // need to copy the stack data over to our new memory area too
-				 memcpy ((void *)data, (void *)stackData, BITS_TO_BYTES( numberOfBitsAllocated )); 
+				 memcpy ((void *)data, (void *)stackData, BITS_TO_BYTES( numberOfBitsAllocated ));
 			 }
 		}
 		else

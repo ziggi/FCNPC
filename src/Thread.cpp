@@ -38,7 +38,7 @@ bool CThread::Start()
 
 	// Start the thread
 #ifdef _WIN32
-	m_hThread = CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)ThreadFunction, (LPVOID)this, NULL, NULL); 
+	m_hThread = CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)ThreadFunction, (LPVOID)this, NULL, NULL);
 	if(!m_hThread)
 		return false;
 #else

@@ -86,7 +86,7 @@ long WINAPI CExceptionHandler::ExceptionHandlerCallback(_EXCEPTION_POINTERS *pEx
 	fclose(pFile);
 	return EXCEPTION_EXECUTE_HANDLER;
 }
-#else 
+#else
 void CExceptionHandler::ExceptionHandlerCallback(int signum)
 {
 	time_t rawtime;
@@ -148,4 +148,4 @@ void CExceptionHandler::ExceptionHandlerCallback(int signum)
 	exit(signum);
 	return;
 }
-#endif 
+#endif

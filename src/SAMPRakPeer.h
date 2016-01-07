@@ -23,9 +23,9 @@ class CSAMPSystemAddress;
 class CSAMPSystemAddress
 {
 	public:
-		unsigned int		uiSystemAddress;	// 0x0000 - 0x0004
-		unsigned short		usPort;				// 0x0004 - 0x0006
-		unsigned short		usPlayerId;			// 0x0006 - 0x0008
+		unsigned int        uiSystemAddress;    // 0x0000 - 0x0004
+		unsigned short      usPort;             // 0x0004 - 0x0006
+		unsigned short      usPlayerId;         // 0x0006 - 0x0008
 
 		CSAMPSystemAddress()
 		{	
@@ -81,7 +81,7 @@ class CSAMPRakPeer
 			*(bool *)(pRemoteSystem) = false;
 			// Reset stats
 			*(CSAMPSystemAddress *)(pRemoteSystem + 1) = CSAMPSystemAddress();
-			*(int *)(pRemoteSystem + CAddress::OFFSET_RemoteSystem__ConnectMode) = 0; 
+			*(int *)(pRemoteSystem + CAddress::OFFSET_RemoteSystem__ConnectMode) = 0;
 			*(BYTE *)(pRemoteSystem + CAddress::OFFSET_RemoteSystem__Unknown) = 0;
 			*(BYTE *)(pRemoteSystem + CAddress::OFFSET_RemoteSystem__Unknown + 1) = 0;
 		};

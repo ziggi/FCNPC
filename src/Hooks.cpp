@@ -18,9 +18,9 @@ extern void			*pAMXFunctions;
 bool bGiveDamage;
 BYTE bytePushCount;
 int iPlayerId;
-int iDamagerId; 
-float fHealthLoss; 
-int iWeapon; 
+int iDamagerId;
+float fHealthLoss;
+int iWeapon;
 int iBodypart;
 
 subhook_t	hookFindPublic;
@@ -35,7 +35,7 @@ amx_Push_t pfn_amx_Push = NULL;
 
 DWORD test;
 
-int amx_FindPublic_Hook(AMX *amx, const char *funcname, int *index) 
+int amx_FindPublic_Hook(AMX *amx, const char *funcname, int *index)
 {
 	// Is it "OnPlayerGiveDamage"
 	if (!strcmp(funcname, "OnPlayerGiveDamage"))
