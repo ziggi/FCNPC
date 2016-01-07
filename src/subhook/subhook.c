@@ -41,8 +41,8 @@ SUBHOOK_EXPORT void *SUBHOOK_API subhook_get_trampoline(subhook_t hook) {
 SUBHOOK_EXPORT int SUBHOOK_API subhook_is_installed(subhook_t hook) {
 	return hook->installed;
 }
-/*
-#ifdef _WIN32
+
+#if defined SUBHOOK_WINDOWS
 	#include "subhook_windows.c"
 #elif defined SUBHOOK_LINUX
 	#include "subhook_linux.c"
@@ -51,4 +51,3 @@ SUBHOOK_EXPORT int SUBHOOK_API subhook_is_installed(subhook_t hook) {
 #if defined SUBHOOK_X86 || defined SUBHOOK_X86_64
 	#include "subhook_x86.c"
 #endif
-*/

@@ -38,7 +38,7 @@
 
 #if defined __linux__
 	#define SUBHOOK_LINUX
-#elif defined _WIN32
+#elif defined _WIN32 || defined __CYGWIN__
 	#define SUBHOOK_WINDOWS
 #else
 	#error Unsupported operating system
@@ -72,13 +72,13 @@
 #if !defined SUBHOOK_EXPORT
 	#if defined SUBHOOK_WINDOWS
 		#if defined SUBHOOK_IMPLEMENTATION
-			#define SUBHOOK_EXPORT SUBHOOK_EXTERN
+			#define SUBHOOK_EXPORT SUBHOOK_EXTERN __declspec(dllexport)
 		#else
-			#define SUBHOOK_EXPORT SUBHOOK_EXTERN
+			#define SUBHOOK_EXPORT SUBHOOK_EXTERN __declspec(dllimport)
 		#endif
 	#elif defined SUBHOOK_LINUX
 		#if defined SUBHOOK_IMPLEMENTATION
-			#define SUBHOOK_EXPORT SUBHOOK_EXTERN
+			#define SUBHOOK_EXPORT SUBHOOK_EXTERN __attribute__((visibility("default")))
 		#else
 			#define SUBHOOK_EXPORT SUBHOOK_EXTERN
 		#endif
