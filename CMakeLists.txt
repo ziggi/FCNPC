@@ -10,7 +10,8 @@ set (CMAKE_SHARED_LIBRARY_PREFIX "")
 if (WIN32)
 	add_definitions (-DWIN32 -D_WIN32 -D_CRT_SECURE_NO_WARNINGS -D__STDC__)
 
-	set (CMAKE_SHARED_LINKER_FLAGS "/NOLOGO /MACHINE:X86 /DEF:\"${CMAKE_CURRENT_SOURCE_DIR}/src/Exports.def\"")
+	set (CMAKE_SHARED_LINKER_FLAGS "/NOLOGO /MACHINE:X86")
+	set (FCNPC_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/Exports.def)
 else ()
 	add_definitions (-DLINUX)
 
@@ -25,12 +26,14 @@ include_directories (
 	${CMAKE_CURRENT_SOURCE_DIR}/src/SDK/amx
 )
 
+set (SUBHOOK_STATIC true)
 set (SUBHOOK_NO_TESTS true)
 add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/src/subhook
 )
 
 file (GLOB FCNPC_SRC
+	${FCNPC_SRC}
 	${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/SDK/*.cpp
