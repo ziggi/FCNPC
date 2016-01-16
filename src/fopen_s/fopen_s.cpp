@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <errno.h>
+#include "fopen_s.h"
 
 errno_t fopen_s(FILE **f, const char *name, const char *mode) {
 	errno_t ret = 0;
