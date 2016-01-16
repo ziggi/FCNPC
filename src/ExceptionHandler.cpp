@@ -13,7 +13,7 @@ FCNPC - Fully Controllable NPC
 	#include <signal.h>
 	#include <time.h>
 #endif
-#include <stdio.h>
+
 extern CServer *pServer;
 
 void CExceptionHandler::Install()
