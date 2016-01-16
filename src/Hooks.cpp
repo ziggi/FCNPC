@@ -10,9 +10,9 @@
 
 #include "Main.h"
 
-extern CServer		*pServer;
-extern logprintf_t	logprintf;
-extern void			*pAMXFunctions;
+extern CServer      *pServer;
+extern logprintf_t  logprintf;
+extern void         *pAMXFunctions;
 
 // Parameters for "OnPlayerGiveDamage" function
 bool bGiveDamage;
@@ -23,21 +23,21 @@ float fHealthLoss;
 int iWeapon;
 int iBodypart;
 
-subhook_t	hookFindPublic;
-subhook_t	hookPush;
-subhook_t	hookExec;
+subhook_t hookFindPublic;
+subhook_t hookPush;
+subhook_t hookExec;
 
 // amx_FindPublic function definition
 typedef int (* amx_FindPublic_t)(AMX *amx, const char *funcname, int *index);
 amx_FindPublic_t pfn_amx_FindPublic = NULL;
+
 // amx_Push function definition
 typedef int(*amx_Push_t)(AMX *amx, cell value);
 amx_Push_t pfn_amx_Push = NULL;
+
 // amx_Exec function definition
 typedef int(*amx_Exec_t)(AMX *amx, long *retval, int index);
 amx_Exec_t pfn_amx_Exec = NULL;
-
-DWORD test;
 
 int amx_FindPublic_Hook(AMX *amx, const char *funcname, int *index)
 {
@@ -111,16 +111,20 @@ void CHooks::InstallHooks()
 {
 	// Reset public flag
 	bGiveDamage = false;
+
 	// Find the function pointers
 	BYTE *pFindPublic = *(BYTE **)((DWORD)pAMXFunctions + PLUGIN_AMX_EXPORT_FindPublic * 4);
 	BYTE *pPush = *(BYTE **)((DWORD)pAMXFunctions + PLUGIN_AMX_EXPORT_Push * 4);
 	BYTE *pExec = *(BYTE **)((DWORD)pAMXFunctions + PLUGIN_AMX_EXPORT_Exec * 4);
+
 	// Hook for amx_FindPublic
 	hookFindPublic = subhook_new(pFindPublic, (BYTE *)&amx_FindPublic_Hook);
 	subhook_install(hookFindPublic);
+
 	// Hook for amx_Push
 	hookPush = subhook_new(pPush, (BYTE *)&amx_Push_Hook);
 	subhook_install(hookPush);
+
 	// Hook for amx_Exec
 	hookExec = subhook_new(pExec, (BYTE *)&amx_Exec_Hook);
 	subhook_install(hookExec);

@@ -13,7 +13,7 @@
 CPlayback::CPlayback(char *szFile)
 {
 	// Save the file name
-	strcpy(m_szFile, szFile);
+	strlcpy(m_szFile, szFile, sizeof(m_szFile));
 	// Reset variables
 	m_iPlaybackType = PLAYBACK_TYPE_NONE;
 	m_bPaused = false;

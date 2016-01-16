@@ -18,7 +18,7 @@ CPlayer::CPlayer(EntityId playerId, char *szName)
 	// Save the player id
 	m_playerId = playerId;
 	// Save player name
-	strcpy(m_szName, szName);
+	strlcpy(m_szName, szName, sizeof(m_szName));
 	// Reset variables
 	m_vecDestination = CVector3();
 	m_vecNodeVelocity = CVector3();

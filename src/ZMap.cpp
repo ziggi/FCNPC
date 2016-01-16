@@ -15,7 +15,7 @@ CZMap::CZMap()
 	// Reset parameters
 	m_pFile = NULL;
 	m_bIsInitialized = false;
-	strcpy(m_szFilePath, "");
+	strlcpy(m_szFilePath, "", sizeof(m_szFilePath));
 }
 
 CZMap::~CZMap()

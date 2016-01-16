@@ -38,17 +38,17 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	if ((DWORD)logprintf == CAddress::FUNC_Logprintf_037)
 	{
 		version = SAMP_VERSION_037;
-		strcpy(szVersion, "0.3.7");
+		strlcpy(szVersion, "0.3.7", sizeof(szVersion));
 	}
 	else if ((DWORD)logprintf == CAddress::FUNC_Logprintf_037_R2_1)
 	{
 		version = SAMP_VERSION_037_R2_1;
-		strcpy(szVersion, "0.3.7 R2-1");
+		strlcpy(szVersion, "0.3.7 R2-1", sizeof(szVersion));
 	}
 	else
 	{
 		version = SAMP_VERSION_UNKNOWN;
-		strcpy(szVersion, "Unknown");
+		strlcpy(szVersion, "Unknown", sizeof(szVersion));
 	}
 	// Print the loading message
 	logprintf("");
@@ -58,10 +58,10 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	logprintf("- Author: OrMisicL");
 	logprintf("- Contributors: ziggi, Neutralneu");
 	logprintf("- Server version: %s", szVersion);
-	logprintf("- Build:  " __DATE__" at " __TIME__ "");
+	logprintf("- Build: " __DATE__" at " __TIME__ "");
 	logprintf("-------------------------------------------------");
 	logprintf("");
-	logprintf("Loading ...");
+	logprintf("Loading...");
 	// Install the exception handler
 	CExceptionHandler::Install();
 	// Initialize linux tick count
@@ -183,7 +183,7 @@ PLUGIN_EXPORT int PLUGIN_CALL AmxLoad(AMX *pAMX)
 		{
 			// Get the error
 			char szError[64];
-			CUtils::GetPluginError(byteError, szError);
+			CUtils::GetPluginError(byteError, szError, sizeof(szError));
 			logprintf("Failed. (Error: %s)", szError);
 			exit(0);
 		}

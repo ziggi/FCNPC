@@ -10,24 +10,24 @@
 
 // OS includes
 #ifdef _WIN32
-#	include <windows.h>
+	#include <windows.h>
 #else
-#	include "pthread.h"
-#	include "unistd.h"
-#	include <sys/mman.h>
+	#include "pthread.h"
+	#include "unistd.h"
+	#include <sys/mman.h>
 #endif
 
 // Define some linux types
 #ifndef _WIN32
-#	define BOOL		int
-#	define DWORD	unsigned long
-#	define BYTE		unsigned char
-#	define WORD		unsigned short
-#	define TRUE		(1)
-#	define FALSE	(0)
-#	define STDCALL	
+	#define BOOL    int
+	#define DWORD   unsigned long
+	#define BYTE    unsigned char
+	#define WORD    unsigned short
+	#define TRUE    (1)
+	#define FALSE   (0)
+	#define STDCALL 
 #else
-#	define STDCALL	__stdcall
+	#define STDCALL __stdcall
 #endif
 
 // Standard includes
@@ -37,6 +37,7 @@
 #include <math.h>
 #include <string.h>
 #include "subhook/subhook.h"
+#include "strlcpy/strlcpy.h"
 // ExceptionHandler includes
 #include "ExceptionHandler.h"
 // SDK includes

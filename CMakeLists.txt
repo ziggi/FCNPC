@@ -40,6 +40,8 @@ file (GLOB FCNPC_SRC
 	${CMAKE_CURRENT_SOURCE_DIR}/src/SDK/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/SDK/amx/*.c
 	${CMAKE_CURRENT_SOURCE_DIR}/src/SDK/amx/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/strlcpy/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/strlcpy/*.h
 )
 
 add_library (${PROJECT_NAME} SHARED ${FCNPC_SRC})

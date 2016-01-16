@@ -18,7 +18,7 @@ class CZMap
 		~CZMap();
 
 		inline bool IsInitialized() { return m_bIsInitialized; };
-		inline void SetPath(char *szPath) { strcpy(m_szFilePath, szPath); };
+		inline void SetPath(char *szPath) { strlcpy(m_szFilePath, szPath, sizeof(m_szFilePath)); };
 
 		bool  Initialize();
 		float GetGroundForCoord(CVector3 vecCoord);

@@ -41,7 +41,7 @@ class CPlayer
 		void		SetOnFootSync(CSyncData syncData) { memcpy(&m_pInterface->syncData, &syncData, sizeof(CSyncData)); };
 		void		SetVehicleSync(CVehicleSyncData syncData) { memcpy(&m_pInterface->vehicleSyncData, &syncData, sizeof(CVehicleSyncData)); };
 
-		void		GetName(char *szName) { strcpy(szName, m_szName); };
+		void		GetName(char *szName, size_t size) { strlcpy(szName, m_szName, size); };
 		void		SetName(char *szName);
 
 		bool		SetState(BYTE byteState);

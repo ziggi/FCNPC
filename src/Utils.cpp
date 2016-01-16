@@ -9,38 +9,41 @@
   =========================================*/
 
 #include "Main.h"
-#ifdef WIN32
-#include <Psapi.h>
-#else
 
+#ifdef WIN32
+	#include <Psapi.h>
+#else
+	#include "sys/time.h"
+	timeval startTime;
+	timeval currentTime;
 #endif
 
-void CUtils::GetPluginError(BYTE byteError, char *szError)
+void CUtils::GetPluginError(BYTE byteError, char *szError, size_t sSize)
 {
 	switch(byteError)
 	{
 		case 1:
-			strcpy(szError, "File \"scriptfiles/FCNPC/ZMap.hmap\" is not found");
+			strlcpy(szError, "File \"scriptfiles/FCNPC/ZMap.hmap\" is not found", sSize);
 			break;
 
 		case 2:
-			strcpy(szError, "Failed to create PlayerManager instance");
+			strlcpy(szError, "Failed to create PlayerManager instance", sSize);
 			break;
 
 		case 3:
-			strcpy(szError, "Failed to create NodeManager instance");
+			strlcpy(szError, "Failed to create NodeManager instance", sSize);
 			break;
 
 		case 4:
-			strcpy(szError, "Failed to create damage thread");
+			strlcpy(szError, "Failed to create damage thread", sSize);
 			break;
 
 		case 5:
-			strcpy(szError, "Failed to create RPCParams instance");
+			strlcpy(szError, "Failed to create RPCParams instance", sSize);
 			break;
 
 		default:
-			strcpy(szError, "");
+			strlcpy(szError, "", sSize);
 			break;
 	}
 }
@@ -99,10 +102,6 @@ DWORD CUtils::FindPattern(char *szPattern, char *szMask)
 
 // Linux GetTickCount
 #ifndef _WIN32
-
-#include "sys/time.h"
-timeval startTime;
-timeval currentTime;
 
 void CUtils::LoadTickCount()
 {
