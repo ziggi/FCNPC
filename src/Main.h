@@ -38,6 +38,11 @@
 #include <string.h>
 #include "subhook/subhook.h"
 #include "strlcpy/strlcpy.h"
+#ifdef _WIN32
+	#include "snprintf/snprintf.h"
+#else
+	#include "fopen_s/fopen_s.h"
+#endif
 // ExceptionHandler includes
 #include "ExceptionHandler.h"
 // SDK includes

@@ -13,7 +13,7 @@ FCNPC - Fully Controllable NPC
 	#include <signal.h>
 	#include <time.h>
 #endif
-
+#include <stdio.h>
 extern CServer *pServer;
 
 void CExceptionHandler::Install()
@@ -36,9 +36,10 @@ long WINAPI CExceptionHandler::ExceptionHandlerCallback(_EXCEPTION_POINTERS *pEx
 	GetSystemTime(&systemTime);
 	// Create the file name
 	char szFileName[MAX_PATH];
-	sprintf(szFileName, "fcnpc-crash_%d-%d-%d_%d.%d.%d.txt", systemTime.wDay, systemTime.wMonth, systemTime.wYear, systemTime.wHour, systemTime.wMinute, systemTime.wSecond);
+	snprintf(szFileName, sizeof(szFileName), "fcnpc-crash_%d-%d-%d_%d.%d.%d.txt", systemTime.wDay, systemTime.wMonth, systemTime.wYear, systemTime.wHour, systemTime.wMinute, systemTime.wSecond);
 	// Open the log file
-	FILE *pFile = fopen(szFileName, "w");
+	FILE *pFile;
+	fopen_s(&pFile, szFileName, "w");
 	// Make sure the file is opened
 	if (!pFile)
 		return EXCEPTION_EXECUTE_HANDLER;

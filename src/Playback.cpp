@@ -38,9 +38,9 @@ bool CPlayback::Initialize()
 {
 	// Format the file path
 	char szPath[MAX_PATH];
-	sprintf(szPath, "npcmodes/recordings/%s.rec", m_szFile);
+	snprintf(szPath, sizeof(szPath), "npcmodes/recordings/%s.rec", m_szFile);
 	// Try to open the playback file
-	m_pFile = fopen(szPath, "rb");
+	fopen_s(&m_pFile, szPath, "rb");
 	if(!m_pFile)
 		return false;
 

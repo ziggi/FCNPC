@@ -8,12 +8,22 @@ add_definitions (-DVERSION="${VERSION}")
 set (CMAKE_SHARED_LIBRARY_PREFIX "")
 
 if (WIN32)
-	add_definitions (-DWIN32 -D_WIN32 -D_CRT_SECURE_NO_WARNINGS -D__STDC__)
+	add_definitions (-DWIN32 -D_WIN32 -D__STDC__)
+
+	set (FCNPC_SRC
+		${CMAKE_CURRENT_SOURCE_DIR}/src/Exports.def
+		${CMAKE_CURRENT_SOURCE_DIR}/src/snprintf/*.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/snprintf/*.h
+	)
 
 	set (CMAKE_SHARED_LINKER_FLAGS "/NOLOGO /MACHINE:X86")
-	set (FCNPC_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/Exports.def)
 else ()
 	add_definitions (-DLINUX)
+
+	set (FCNPC_SRC
+		${CMAKE_CURRENT_SOURCE_DIR}/src/fopen_s/*.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/fopen_s/*.h
+	)
 
 	set (CMAKE_C_FLAGS "-m32 -fPIC -O2 -w")
 	set (CMAKE_CXX_FLAGS "-m32 -fPIC -O2 -w")

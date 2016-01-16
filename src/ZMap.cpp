@@ -36,7 +36,7 @@ bool CZMap::Initialize()
 		fclose(m_pFile);
 
 	// Try to open the file
-	m_pFile = fopen(m_szFilePath, "rb");
+	fopen_s(&m_pFile, m_szFilePath, "rb");
 	if(!m_pFile)
 		return false;
 
