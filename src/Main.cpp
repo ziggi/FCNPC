@@ -32,20 +32,23 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	// Get the logprintf function address
 	logprintf = (logprintf_t)ppData[PLUGIN_DATA_LOGPRINTF];
 	// Check server version
-	eSAMPVersion version = SAMP_VERSION_UNKNOWN;
-
+	eSAMPVersion version;
 	char szVersion[64];
 
-	DWORD addr = (DWORD)ppData[PLUGIN_DATA_LOGPRINTF];
-	if (addr == CAddress::FUNC_Logprintf_037)
+	if ((DWORD)logprintf == CAddress::FUNC_Logprintf_037)
 	{
 		version = SAMP_VERSION_037;
 		strcpy(szVersion, "0.3.7");
 	}
-	else if (addr == CAddress::FUNC_Logprintf_037_R2_1)
+	else if ((DWORD)logprintf == CAddress::FUNC_Logprintf_037_R2_1)
 	{
 		version = SAMP_VERSION_037_R2_1;
 		strcpy(szVersion, "0.3.7 R2-1");
+	}
+	else
+	{
+		version = SAMP_VERSION_UNKNOWN;
+		strcpy(szVersion, "Unknown");
 	}
 	// Print the loading message
 	logprintf("");
