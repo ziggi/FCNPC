@@ -11,24 +11,24 @@
 
 #include "Main.h"
 
-extern CServer			*pServer;
-extern CSAMPRPCParams	*pCreateNPCParams;
-extern void				**ppPluginData;
-extern logprintf_t			logprintf;
+extern CServer          *pServer;
+extern CSAMPRPCParams   *pCreateNPCParams;
+extern void             **ppPluginData;
+extern logprintf_t      logprintf;
 
 // Functions
-CreateNPC_RPC_t					CSAMPFunctions::pfn__CreateNPC_RPC = NULL;
-CPlayerPool__DeletePlayer_t		CSAMPFunctions::pfn__CPlayerPool__DeletePlayer = NULL;
-CPlayer__SpawnForWorld_t		CSAMPFunctions::pfn__CPlayer__SpawnForWorld = NULL;
-CPlayer__Kill_t					CSAMPFunctions::pfn__CPlayer__Kill = NULL;
-CPlayer__EnterVehicle_t			CSAMPFunctions::pfn__CPlayer__EnterVehicle = NULL;
-CPlayer__ExitVehicle_t			CSAMPFunctions::pfn__CPlayer__ExitVehicle = NULL;
-CConfig__GetValueAsInteger_t	CSAMPFunctions::pfn__CConfig__GetValueAsInteger = NULL;
-GetVehicleModelInfo_t			CSAMPFunctions::pfn__GetVehicleModelInfo = NULL;
-RakServer__Send_t				CSAMPFunctions::pfn__RakServer__Send = NULL;
-GetNetGame_t					CSAMPFunctions::pfn__GetNetGame = NULL;
-GetConsole_t					CSAMPFunctions::pfn__GetConsole = NULL;
-GetRakServer_t					CSAMPFunctions::pfn__GetRakServer = NULL;
+CreateNPC_RPC_t                 CSAMPFunctions::pfn__CreateNPC_RPC = NULL;
+CPlayerPool__DeletePlayer_t     CSAMPFunctions::pfn__CPlayerPool__DeletePlayer = NULL;
+CPlayer__SpawnForWorld_t        CSAMPFunctions::pfn__CPlayer__SpawnForWorld = NULL;
+CPlayer__Kill_t                 CSAMPFunctions::pfn__CPlayer__Kill = NULL;
+CPlayer__EnterVehicle_t         CSAMPFunctions::pfn__CPlayer__EnterVehicle = NULL;
+CPlayer__ExitVehicle_t          CSAMPFunctions::pfn__CPlayer__ExitVehicle = NULL;
+CConfig__GetValueAsInteger_t    CSAMPFunctions::pfn__CConfig__GetValueAsInteger = NULL;
+GetVehicleModelInfo_t           CSAMPFunctions::pfn__GetVehicleModelInfo = NULL;
+RakServer__Send_t               CSAMPFunctions::pfn__RakServer__Send = NULL;
+GetNetGame_t                    CSAMPFunctions::pfn__GetNetGame = NULL;
+GetConsole_t                    CSAMPFunctions::pfn__GetConsole = NULL;
+GetRakServer_t                  CSAMPFunctions::pfn__GetRakServer = NULL;
 
 void CSAMPFunctions::Initialize()
 {
