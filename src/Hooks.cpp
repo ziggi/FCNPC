@@ -106,7 +106,7 @@ void CHooks::InstallHooks()
 	subhook_install(hookFindPublic);
 	// Hook for amx_Push
 	hookPush = subhook_new(pPush, (BYTE *)&amx_Push_Hook);
-	subhook_install(hookFindPublic);
+	subhook_install(hookPush);
 }
 
 void CHooks::InstallCallHook(DWORD dwInstallAddress, DWORD dwHookFunction)
