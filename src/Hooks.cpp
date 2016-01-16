@@ -52,6 +52,8 @@ int amx_FindPublic_Hook(AMX *amx, const char *funcname, int *index)
 
 int amx_Push_Hook(AMX *amx, cell value)
 {
+	subhook_remove(hookPush);
+
 	// Are we retrieving parameters ?
 	if (bGiveDamage)
 	{
@@ -89,9 +91,7 @@ int amx_Push_Hook(AMX *amx, cell value)
 		}
 	}
 
-	pfn_amx_Push = (amx_Push_t)(subhook_get_trampoline(hookPush));
-
-	return pfn_amx_Push(amx, value);
+	return subhook_install(hookPush);
 }
 
 void CHooks::InstallHooks()
