@@ -18,7 +18,7 @@
 class CServer
 {
 	public:
-		CServer();
+		CServer(eSAMPVersion version);
 		~CServer();
 
 		BYTE Initialize();
@@ -35,7 +35,10 @@ class CServer
 
 		bool    IsVehicleSeatOccupied(int iPlayerId, WORD wVehicleId, BYTE byteSeatId);
 
+		eSAMPVersion GetVersion() { return m_Version; }
+
 	private:
+		eSAMPVersion        m_Version;
 		CPlayerManager      *m_pPlayerManager;
 		CNodeManager        *m_pNodeManager;
 		CThread             *m_pDamageThread;

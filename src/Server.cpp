@@ -13,8 +13,9 @@
 CSAMPRPCParams      *pCreateNPCParams;
 extern logprintf_t  logprintf;
 
-CServer::CServer()
+CServer::CServer(eSAMPVersion version)
 {
+	m_Version = version;
 	// Reset instances
 	m_pPlayerManager = NULL;
 	m_pNodeManager = NULL;
@@ -45,7 +46,7 @@ BYTE CServer::Initialize()
 	// Initialize necessary samp functions
 	CSAMPFunctions::PreInitialize();
 	// Initialize addresses
-	CAddress::Initialize();
+	CAddress::Initialize(CServer::GetVersion());
 	// Initialize SAMP Functions
 	CSAMPFunctions::Initialize();
 	// Install hooks

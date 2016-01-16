@@ -12,10 +12,20 @@
 #ifndef ADDRESS_H
 #define ADDRESS_H
 
+enum eSAMPVersion
+{
+	SAMP_VERSION_UNKNOWN,
+	SAMP_VERSION_037,
+	SAMP_VERSION_037_R2_1,
+};
+
 class CAddress
 {
 	public:
-		static void	Initialize();
+		static void	Initialize(eSAMPVersion sampVersion);
+
+		static DWORD           FUNC_Logprintf_037;
+		static DWORD           FUNC_Logprintf_037_R2_1;
 
 		// Functions
 		static DWORD           FUNC_CreateNPC_RPC;

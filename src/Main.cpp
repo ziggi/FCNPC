@@ -9,14 +9,15 @@
   =========================================*/
 
 #include "Main.h"
+#include "Address.h"
 
 // Globals
-logprintf_t			logprintf;
-void				**ppPluginData;
-extern void			*pAMXFunctions;
-CServer				*pServer;
-bool				bServerInit = false;
-DWORD				dwStartTick;
+logprintf_t         logprintf;
+void                **ppPluginData;
+extern void         *pAMXFunctions;
+CServer             *pServer;
+bool                bServerInit = false;
+DWORD               dwStartTick;
 
 PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports()
 {
@@ -30,6 +31,22 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	pAMXFunctions = ppData[PLUGIN_DATA_AMX_EXPORTS];
 	// Get the logprintf function address
 	logprintf = (logprintf_t)ppData[PLUGIN_DATA_LOGPRINTF];
+	// Check server version
+	eSAMPVersion version = SAMP_VERSION_UNKNOWN;
+
+	char szVersion[64];
+
+	DWORD addr = (DWORD)ppData[PLUGIN_DATA_LOGPRINTF];
+	if (addr == CAddress::FUNC_Logprintf_037)
+	{
+		version = SAMP_VERSION_037;
+		strcpy(szVersion, "0.3.7");
+	}
+	else if (addr == CAddress::FUNC_Logprintf_037_R2_1)
+	{
+		version = SAMP_VERSION_037_R2_1;
+		strcpy(szVersion, "0.3.7 R2-1");
+	}
 	// Print the loading message
 	logprintf("");
 	logprintf("-------------------------------------------------");
@@ -37,6 +54,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	logprintf("");
 	logprintf("- Author: OrMisicL");
 	logprintf("- Contributors: ziggi, Neutralneu");
+	logprintf("- Server version: %s", szVersion);
 	logprintf("- Build:  " __DATE__" at " __TIME__ "");
 	logprintf("-------------------------------------------------");
 	logprintf("");
@@ -48,7 +66,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	CUtils::LoadTickCount();
 #endif
 	// Create the server instance
-	pServer = new CServer();
+	pServer = new CServer(version);
 	if(!pServer)
 	{
 		logprintf("Failed. (Cant create server instance)");
