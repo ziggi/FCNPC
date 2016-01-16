@@ -25,6 +25,7 @@ int iBodypart;
 
 subhook_t	hookFindPublic;
 subhook_t	hookPush;
+subhook_t	hookExec;
 
 // amx_FindPublic function definition
 typedef int (* amx_FindPublic_t)(AMX *amx, const char *funcname, int *index);
@@ -32,6 +33,9 @@ amx_FindPublic_t pfn_amx_FindPublic = NULL;
 // amx_Push function definition
 typedef int(*amx_Push_t)(AMX *amx, cell value);
 amx_Push_t pfn_amx_Push = NULL;
+// amx_Exec function definition
+typedef int(*amx_Exec_t)(AMX *amx, long *retval, int index);
+amx_Exec_t pfn_amx_Exec = NULL;
 
 DWORD test;
 
@@ -52,8 +56,6 @@ int amx_FindPublic_Hook(AMX *amx, const char *funcname, int *index)
 
 int amx_Push_Hook(AMX *amx, cell value)
 {
-	subhook_remove(hookPush);
-
 	// Are we retrieving parameters ?
 	if (bGiveDamage)
 	{
@@ -81,32 +83,47 @@ int amx_Push_Hook(AMX *amx, cell value)
 		}
 		// Increase the parameters count
 		bytePushCount++;
-		// If we have finished then execute the function
-		if (bytePushCount == 5)
-		{
-			if (pServer->GetPlayerManager()->IsPlayerConnected(iDamagerId))
-				pServer->GetPlayerManager()->GetAt(iDamagerId)->ProcessDamage(iPlayerId, fHealthLoss, iWeapon, iBodypart);
-
-			bGiveDamage = false;
-		}
 	}
 
-	return subhook_install(hookPush);
+	pfn_amx_Push = (amx_Push_t)(subhook_get_trampoline(hookPush));
+
+	return pfn_amx_Push(amx, value);
+}
+
+int amx_Exec_Hook(AMX *amx, long *retval, int index)
+{
+	pfn_amx_Exec = (amx_Exec_t)(subhook_get_trampoline(hookExec));
+
+	int ret = pfn_amx_Exec(amx, retval, index);
+
+	if (bGiveDamage)
+	{
+		bGiveDamage = false;
+
+		if (pServer->GetPlayerManager()->IsPlayerConnected(iDamagerId))
+			pServer->GetPlayerManager()->GetAt(iDamagerId)->ProcessDamage(iPlayerId, fHealthLoss, iWeapon, iBodypart);
+	}
+
+	return ret;
 }
 
 void CHooks::InstallHooks()
 {
 	// Reset public flag
 	bGiveDamage = false;
+	// Find the function pointers
 	BYTE *pFindPublic = *(BYTE **)((DWORD)pAMXFunctions + PLUGIN_AMX_EXPORT_FindPublic * 4);
-	// Find the amx_Push function pointer
 	BYTE *pPush = *(BYTE **)((DWORD)pAMXFunctions + PLUGIN_AMX_EXPORT_Push * 4);
-	// Find the amx_FindPublic function pointer
+	BYTE *pExec = *(BYTE **)((DWORD)pAMXFunctions + PLUGIN_AMX_EXPORT_Exec * 4);
+	// Hook for amx_FindPublic
 	hookFindPublic = subhook_new(pFindPublic, (BYTE *)&amx_FindPublic_Hook);
 	subhook_install(hookFindPublic);
 	// Hook for amx_Push
 	hookPush = subhook_new(pPush, (BYTE *)&amx_Push_Hook);
 	subhook_install(hookPush);
+	// Hook for amx_Exec
+	hookExec = subhook_new(pExec, (BYTE *)&amx_Exec_Hook);
+	subhook_install(hookExec);
 }
 
 void CHooks::InstallCallHook(DWORD dwInstallAddress, DWORD dwHookFunction)
