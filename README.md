@@ -46,7 +46,7 @@ forward FCNPC_OnFinishPlayback(npcid);
 forward FCNPC_OnTakeDamage(npcid, damagerid, weaponid, bodypart, Float:health_loss);
 
 forward FCNPC_OnFinishNodePoint(npcid, point);
-forward FCNPC_OnChangeNode(playerid, nodeid);
+forward FCNPC_OnChangeNode(npcid, nodeid);
 forward FCNPC_OnFinishNode(npcid);
 ```
 
@@ -103,6 +103,7 @@ native FCNPC_Stop(npcid);
 native FCNPC_IsMoving(npcid);
 
 native FCNPC_AimAt(npcid, Float:X, Float:Y, Float:Z, shoot);
+native FCNPC_AimAtPlayer(npcid, playerid, shoot);
 native FCNPC_StopAim(npcid);
 native FCNPC_MeleeAttack(npcid, delay);
 native FCNPC_StopAttack(npcid);
