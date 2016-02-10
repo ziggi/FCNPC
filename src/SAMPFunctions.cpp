@@ -190,7 +190,8 @@ void CSAMPFunctions::PlayerShoot(int iPlayerId, CVector3 vecPoint, BYTE iWeaponI
 
 		CSAMPPlayer *pPlayer = pSAMPServer->pPlayerPool->pPlayer[i];
 
-		if (CMath::GetDistanceFromRayToPoint(vecPoint, vecPosition, pPlayer->vecPosition) < 1.0f)
+		if (CMath::GetDistanceFromRayToPoint(vecPoint, vecPosition, pPlayer->vecPosition) < 1.0f &&
+			CMath::GetDistanceBetween3DPoints(vecPosition, pPlayer->vecPosition) < MAX_DAMAGE_DISTANCE)
 		{
 			bulletSyncData.byteHitType = 1;
 			bulletSyncData.wHitID = i;
