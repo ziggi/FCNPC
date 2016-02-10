@@ -219,7 +219,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetInterior(AMX *amx, cell *params)
 	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
 		return 0;
 
-	// Set the player angle
+	// Set the player interior
 	pServer->GetPlayerManager()->GetAt(iNPCId)->SetInterior(iInterior);
 	return 1;
 }
@@ -235,6 +235,37 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetInterior(AMX *amx, cell *params)
 
 	// Get the player interior
 	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetInterior();
+}
+
+cell AMX_NATIVE_CALL CNatives::FCNPC_SetVirtualWorld(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_SetVirtualWorld");
+	// Get the NPC id
+	int iNPCId = (int)params[1];
+	// Get the virtual world
+	int iVirtualWorld = (int)params[2];
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+		return 0;
+
+	// Set the player virtual world
+	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
+	pSAMPServer->pPlayerPool->dwVirtualWorld[iNPCId] = iVirtualWorld;
+	return 1;
+}
+
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetVirtualWorld(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_GetVirtualWorld");
+	// Get the NPC id
+	int iNPCId = (int)params[1];
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+		return 0;
+
+	// Get the player virtual world
+	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
+	return pSAMPServer->pPlayerPool->dwVirtualWorld[iNPCId];
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetQuaternion(AMX *amx, cell *params)

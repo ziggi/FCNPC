@@ -43,6 +43,8 @@ class CNatives
 		static cell AMX_NATIVE_CALL FCNPC_GetSkin(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL FCNPC_SetInterior(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL FCNPC_GetInterior(AMX *amx, cell *params);
+		static cell AMX_NATIVE_CALL FCNPC_SetVirtualWorld(AMX *amx, cell *params);
+		static cell AMX_NATIVE_CALL FCNPC_GetVirtualWorld(AMX *amx, cell *params);
 
 		static cell AMX_NATIVE_CALL FCNPC_SetWeapon(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL FCNPC_GetWeapon(AMX *amx, cell *params);
