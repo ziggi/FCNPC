@@ -518,17 +518,16 @@ void CPlayer::Process()
 				// Check the time spent since the last shoot
 				DWORD dwThisTick = GetTickCount();
 				DWORD dwTime = (dwThisTick - m_dwShootTickCount);
-				if(dwTime >= 800) // TODO: Change that for each weapon rate of fire
+				if (dwTime >= CWeaponInfo::GetWeaponRateOfFire(m_byteWeaponId))
 				{
 					// Decrease the ammo
 					m_wAmmo--;
 					// Get the weapon clip size
 					DWORD dwClip = 0;
-					if (m_pInterface->syncData.byteWeapon == 38 || m_pInterface->syncData.byteWeapon == 37 || m_pInterface->syncData.byteWeapon == 34)
+					if (m_byteWeaponId == 38 || m_byteWeaponId == 37 || m_byteWeaponId == 34)
 						dwClip = m_wAmmo;
 					else
-						dwClip = CWeaponInfo::GetWeaponClipSize(m_pInterface->syncData.byteWeapon);
-					
+						dwClip = CWeaponInfo::GetWeaponClipSize(m_byteWeaponId);
 					
 					// Check for reload
 					if (m_wAmmo % dwClip == 0 && m_wAmmo != 0 && dwClip != m_wAmmo && m_bHasReload)
