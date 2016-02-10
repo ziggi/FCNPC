@@ -1176,7 +1176,7 @@ bool CPlayer::ExitVehicle()
 bool CPlayer::PutInVehicle(int iVehicleId, int iSeatId)
 {
 	// Validate the vehicle
-	if(iVehicleId < 0 || iVehicleId >= MAX_VEHICLES)
+	if(iVehicleId < 1 || iVehicleId > MAX_VEHICLES)
 		return false;
 
 	// Validate the player state
