@@ -88,6 +88,12 @@ extern logprintf_t          logprintf;
 #define NODE_TYPE_PED                   0
 #define NODE_TYPE_VEHICLE               1
 #define NODE_TYPE_BOAT                  2
+// Bullet hit types
+#define BULLET_HIT_TYPE_NONE            0
+#define BULLET_HIT_TYPE_PLAYER          1
+#define BULLET_HIT_TYPE_VEHICLE         2
+#define BULLET_HIT_TYPE_OBJECT          3
+#define BULLET_HIT_TYPE_PLAYER_OBJECT   4
 // Other
 #define MAX_DAMAGE_DISTANCE             200.0f
 #define MAX_DISTANCE_TO_ENTER_VEHICLE   30.0f

@@ -173,7 +173,7 @@ void CSAMPFunctions::PlayerShoot(int iPlayerId, CVector3 vecPoint, BYTE iWeaponI
 	pServer->GetPlayerManager()->GetAt(iPlayerId)->GetPosition(&vecPosition);
 	// Create the SendBullet structure
 	CBulletSyncData bulletSyncData;
-	bulletSyncData.byteHitType = 0;
+	bulletSyncData.byteHitType = BULLET_HIT_TYPE_NONE;
 	bulletSyncData.wHitID = INVALID_ENTITY_ID;
 	bulletSyncData.byteWeaponID = iWeaponId;
 	bulletSyncData.vecCenterOfHit = CVector3(0.1f, 0.1f, 0.1f);
@@ -193,7 +193,7 @@ void CSAMPFunctions::PlayerShoot(int iPlayerId, CVector3 vecPoint, BYTE iWeaponI
 		if (CMath::GetDistanceFromRayToPoint(vecPoint, vecPosition, pPlayer->vecPosition) < 1.0f &&
 			CMath::GetDistanceBetween3DPoints(vecPosition, pPlayer->vecPosition) < MAX_DAMAGE_DISTANCE)
 		{
-			bulletSyncData.byteHitType = 1;
+			bulletSyncData.byteHitType = BULLET_HIT_TYPE_PLAYER;
 			bulletSyncData.wHitID = i;
 			break;
 		}
