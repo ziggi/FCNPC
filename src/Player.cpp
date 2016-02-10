@@ -493,6 +493,9 @@ void CPlayer::Process()
 				// Set the player vehicle and seat
 				m_pInterface->wVehicleId = m_wVehicleToEnter;
 				m_pInterface->byteSeatId = m_byteSeatToEnter;
+				// Update player angle
+				CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
+				SetAngle(pSAMPServer->pVehiclePool->pVehicle[m_wVehicleToEnter]->fAngle);
 				// Reset entering values
 				m_wVehicleToEnter = INVALID_ENTITY_ID;
 				m_byteSeatToEnter = 0;
@@ -1223,8 +1226,12 @@ bool CPlayer::PutInVehicle(int iVehicleId, int iSeatId)
 	// Set the player vehicle and seat id
 	m_pInterface->wVehicleId = (WORD)iVehicleId;
 	m_pInterface->byteSeatId = (BYTE)iSeatId;
+
 	// Set the player state
 	SetState(iSeatId == 0 ? PLAYER_STATE_DRIVER : PLAYER_STATE_PASSENGER);
+
+	// Update player angle
+	SetAngle(pSAMPServer->pVehiclePool->pVehicle[iVehicleId]->fAngle);
 	return true;
 }
 
