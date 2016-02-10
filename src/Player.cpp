@@ -1150,8 +1150,8 @@ bool CPlayer::EnterVehicle(int iVehicleId, int iSeatId, int iType)
 	if(!pSAMPServer->pVehiclePool->pVehicle[iVehicleId])
 		return false;
 
-	// TODO: Validate the seat id
-	if(iSeatId < 0 || iSeatId > 3)
+	// Validate the seat id
+	if(!CVehicleInfo::IsValidPassengerSeat(iSeatId, pSAMPServer->pVehiclePool->pVehicle[iVehicleId]->iModelId))
 		return false;
 
 	// Validate the distance to enter
@@ -1219,8 +1219,8 @@ bool CPlayer::PutInVehicle(int iVehicleId, int iSeatId)
 	if(!pSAMPServer->pVehiclePool->pVehicle[iVehicleId])
 		return false;
 
-	// TODO: Validate the seat id
-	if(iSeatId < 0 || iSeatId > 3)
+	// Validate the seat id
+	if(!CVehicleInfo::IsValidPassengerSeat(iSeatId, pSAMPServer->pVehiclePool->pVehicle[iVehicleId]->iModelId))
 		return false;
 
 	// Set the player vehicle and seat id

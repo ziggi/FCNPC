@@ -62,6 +62,7 @@
 #include "Server.h"
 #include "Patches.h"
 #include "Hooks.h"
+#include "VehicleInfo.h"
 #include "WeaponInfo.h"
 #include "ThreadFunctions.h"
 	// SAMP includes
