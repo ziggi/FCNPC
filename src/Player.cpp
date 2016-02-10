@@ -36,6 +36,7 @@ CPlayer::CPlayer(EntityId playerId, char *szName)
 	m_bHasInfiniteAmmo = false;
 	m_bPlaying = false;
 	m_bPlayingNode = false;
+	m_bMeleeAttack = false;
 	m_byteWeaponId = 0;
 	m_wAmmo = 0;
 	m_iNodePoint = 0;
