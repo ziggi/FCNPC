@@ -488,7 +488,7 @@ void CPlayer::Process()
 			DWORD dwThisTick = GetTickCount();
 			DWORD dwTime = (dwThisTick - m_dwReloadTickCount);
 			// Have we finished reloading ?
-			if (dwTime >= 1500)
+			if (dwTime >= 2500)
 			{
 				// Reset the reloading flag
 				m_bReloading = false;
@@ -496,7 +496,6 @@ void CPlayer::Process()
 				SetKeys(m_pInterface->wUDAnalog, m_pInterface->wLRAnalog, 4 + 0x80);
 				// Update the shoot tick
 				m_dwShootTickCount = dwThisTick;
-				m_wAmmo = 0;
 			}
 		}
 		// Process player shooting
