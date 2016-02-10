@@ -542,7 +542,7 @@ void CPlayer::Process()
 					}
 					else
 						// Send the bullet
-						CSAMPFunctions::PlayerShoot((int)m_playerId, m_vecAimAt);
+						CSAMPFunctions::PlayerShoot((int)m_playerId, m_vecAimAt, m_byteWeaponId);
 
 					// Update the shoot tick
 					m_dwShootTickCount = dwThisTick;

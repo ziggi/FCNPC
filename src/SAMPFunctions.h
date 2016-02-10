@@ -65,7 +65,7 @@ class CSAMPFunctions
 		static CVector3	*GetVehicleModelInfo(int iModelId, int iInfoType);
 		static int		GetMaxPlayers();
 		static int		GetMaxNPC();
-		static void		PlayerShoot(int iPlayerId, CVector3 vecPoint);
+		static void		PlayerShoot(int iPlayerId, CVector3 vecPoint, BYTE iWeaponId);
 		static int		GetNetGame() { return pfn__GetNetGame(); }
 		static int		GetConsole() { return pfn__GetConsole(); }
 		static int		GetRakServer() { return pfn__GetRakServer(); }

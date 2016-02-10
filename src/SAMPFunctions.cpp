@@ -162,7 +162,7 @@ int CSAMPFunctions::GetMaxNPC()
 	return pfn__CConfig__GetValueAsInteger(pConfig, "maxnpc");
 }
 
-void CSAMPFunctions::PlayerShoot(int iPlayerId, CVector3 vecPoint)
+void CSAMPFunctions::PlayerShoot(int iPlayerId, CVector3 vecPoint, BYTE iWeaponId)
 {
 	// Validate the player
 	if (!pServer->GetPlayerManager()->IsPlayerConnected(iPlayerId))
@@ -175,6 +175,7 @@ void CSAMPFunctions::PlayerShoot(int iPlayerId, CVector3 vecPoint)
 	CBulletSyncData bulletSyncData;
 	bulletSyncData.byteHitType = 0; // No targets to hit
 	bulletSyncData.wHitID = INVALID_ENTITY_ID;
+	bulletSyncData.byteWeaponID = iWeaponId;
 	bulletSyncData.vecCenterOfHit = CVector3(0.1f, 0.1f, 0.1f);
 	bulletSyncData.vecHitOrigin = vecPosition;
 	bulletSyncData.vecHitTarget = vecPoint;
