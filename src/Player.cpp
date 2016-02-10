@@ -305,30 +305,17 @@ void CPlayer::UpdateAim()
 			m_pInterface->aimSyncData.byteCameraMode = 7;
 
 		// Set the weapon state
-#ifdef _WIN32
-		m_pInterface->aimSyncData.byteWeaponState = 191;// (BYTE)eWeaponState::WS_MORE_BULLETS;
+		m_pInterface->aimSyncData.byteWeaponState = WS_MORE_BULLETS;
 		if (m_bReloading)
-			m_pInterface->aimSyncData.byteWeaponState = 127;// (BYTE)eWeaponState::WS_RELOADING;
+			m_pInterface->aimSyncData.byteWeaponState = WS_RELOADING;
 		else if (!m_wAmmo)
-			m_pInterface->aimSyncData.byteWeaponState = 0;// (BYTE)eWeaponState::WS_NO_BULLETS;
-#else
-		// For some reasons, enumerations dosen't work in linux
-		m_pInterface->aimSyncData.byteWeaponState = 191;//(BYTE)WS_MORE_BULLETS;
-		if (m_bReloading)
-			m_pInterface->aimSyncData.byteWeaponState = 127;//(BYTE)WS_RELOADING;
-		else if (!m_wAmmo)
-			m_pInterface->aimSyncData.byteWeaponState = 0;//(BYTE)WS_NO_BULLETS;
-#endif
+			m_pInterface->aimSyncData.byteWeaponState = WS_NO_BULLETS;
 	}
 	else
 	{
 		// Set the camera mode and weapon state
 		m_pInterface->aimSyncData.byteCameraMode = 0;
-#ifdef _WIN32
-		m_pInterface->aimSyncData.byteWeaponState = (BYTE)eWeaponState::WS_NO_BULLETS;
-#else
 		m_pInterface->aimSyncData.byteWeaponState = WS_NO_BULLETS;
-#endif
 		// Convert the player angle to radians
 		float fAngle = CMath::DegreeToRadians(GetAngle());
 		// Calculate the camera target
