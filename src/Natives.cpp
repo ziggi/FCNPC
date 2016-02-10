@@ -703,6 +703,34 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAt(AMX *amx, cell *params)
 	return 1;
 }
 
+cell AMX_NATIVE_CALL CNatives::FCNPC_AimAtPlayer(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(3, "FCNPC_AimAtPlayer");
+	// Get the NPC id
+	int iNPCId = (int)params[1];
+	// Get the aim playerid
+	int iPlayerId = (int)params[2];
+	// Get the shooting flag
+	int iShoot = (int)params[3];
+	// Make sure the npc is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+		return 0;
+	// Make sure the player is valid
+	if (iPlayerId < 0 || iPlayerId > MAX_PLAYERS)
+		return 0;
+
+	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
+
+	if (!pSAMPServer->pPlayerPool->bIsPlayerConnected[iPlayerId] || iPlayerId == iNPCId)
+		return 0;
+
+	CSAMPPlayer *pPlayer = pSAMPServer->pPlayerPool->pPlayer[iPlayerId];
+
+	// Set the player aiming
+	pServer->GetPlayerManager()->GetAt(iNPCId)->AimAtPlayer(pPlayer, !iShoot ? false : true);
+	return 1;
+}
+
 cell AMX_NATIVE_CALL CNatives::FCNPC_MeleeAttack(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_MeleeAttack");

@@ -85,6 +85,7 @@ class CPlayer
 		void		ToggleInfiniteAmmo(bool bToggle) { m_bHasInfiniteAmmo = bToggle; };
 
 		void		AimAt(CVector3 vecPoint, bool bShoot);
+		void		AimAtPlayer(CSAMPPlayer *pPlayer, bool bShoot);
 		void		StopAim();
 		void		MeleeAttack(DWORD dwTime);
 		void		StopAttack();
@@ -139,6 +140,8 @@ class CPlayer
 		CVector3		m_vecDestination;
 		BYTE			m_byteWeaponId;
 		WORD			m_wAmmo;
+		WORD			m_bHitId;
+		BYTE			m_bHitType;
 		WORD			m_wVehicleToEnter;
 		BYTE			m_byteSeatToEnter;
 		int				m_iLastDamager;

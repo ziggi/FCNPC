@@ -62,6 +62,7 @@ class CNatives
 		static cell AMX_NATIVE_CALL FCNPC_IsMoving(AMX *amx, cell *params);
 
 		static cell AMX_NATIVE_CALL FCNPC_AimAt(AMX *amx, cell *params);
+		static cell AMX_NATIVE_CALL FCNPC_AimAtPlayer(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL FCNPC_StopAim(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL FCNPC_MeleeAttack(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL FCNPC_StopAttack(AMX *amx, cell *params);

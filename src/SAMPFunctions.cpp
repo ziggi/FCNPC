@@ -162,7 +162,7 @@ int CSAMPFunctions::GetMaxNPC()
 	return pfn__CConfig__GetValueAsInteger(pConfig, "maxnpc");
 }
 
-void CSAMPFunctions::PlayerShoot(int iPlayerId, CVector3 vecPoint, BYTE iWeaponId)
+void CSAMPFunctions::PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE iWeaponId, CVector3 vecPoint)
 {
 	// Validate the player
 	if (!pServer->GetPlayerManager()->IsPlayerConnected(iPlayerId))
@@ -171,31 +171,35 @@ void CSAMPFunctions::PlayerShoot(int iPlayerId, CVector3 vecPoint, BYTE iWeaponI
 	// Get the player position
 	CVector3 vecPosition;
 	pServer->GetPlayerManager()->GetAt(iPlayerId)->GetPosition(&vecPosition);
+
 	// Create the SendBullet structure
 	CBulletSyncData bulletSyncData;
-	bulletSyncData.byteHitType = BULLET_HIT_TYPE_NONE;
-	bulletSyncData.wHitID = INVALID_ENTITY_ID;
+	bulletSyncData.wHitID = iHitId;
+	bulletSyncData.byteHitType = iHitType;
 	bulletSyncData.byteWeaponID = iWeaponId;
 	bulletSyncData.vecCenterOfHit = CVector3(0.1f, 0.1f, 0.1f);
 	bulletSyncData.vecHitOrigin = vecPosition;
 	bulletSyncData.vecHitTarget = vecPoint;
 
 	// find player in vecPoint
-	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
-
-	for (int i = 0; i < MAX_PLAYERS; i++)
+	if (bulletSyncData.byteHitType == BULLET_HIT_TYPE_NONE)
 	{
-		if (!pSAMPServer->pPlayerPool->bIsPlayerConnected[i] || iPlayerId == i)
-			continue;
+		CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 
-		CSAMPPlayer *pPlayer = pSAMPServer->pPlayerPool->pPlayer[i];
-
-		if (CMath::GetDistanceFromRayToPoint(vecPoint, vecPosition, pPlayer->vecPosition) < 1.0f &&
-			CMath::GetDistanceBetween3DPoints(vecPosition, pPlayer->vecPosition) < MAX_DAMAGE_DISTANCE)
+		for (int i = 0; i < MAX_PLAYERS; i++)
 		{
-			bulletSyncData.byteHitType = BULLET_HIT_TYPE_PLAYER;
-			bulletSyncData.wHitID = i;
-			break;
+			if (!pSAMPServer->pPlayerPool->bIsPlayerConnected[i] || iPlayerId == i)
+				continue;
+
+			CSAMPPlayer *pPlayer = pSAMPServer->pPlayerPool->pPlayer[i];
+
+			if (CMath::GetDistanceFromRayToPoint(vecPoint, vecPosition, pPlayer->vecPosition) < 1.0f &&
+				CMath::GetDistanceBetween3DPoints(vecPosition, pPlayer->vecPosition) < MAX_DAMAGE_DISTANCE)
+			{
+				bulletSyncData.byteHitType = BULLET_HIT_TYPE_PLAYER;
+				bulletSyncData.wHitID = i;
+				break;
+			}
 		}
 	}
 
@@ -204,6 +208,7 @@ void CSAMPFunctions::PlayerShoot(int iPlayerId, CVector3 vecPoint, BYTE iWeaponI
 	bsSend.Write((BYTE)CAddress::OFFSET_SendBullet_RPC);
 	bsSend.Write((unsigned short)iPlayerId);
 	bsSend.Write((char *)&bulletSyncData, sizeof(CBulletSyncData));
+
 	// Send it
 	CSAMPSystemAddress systemAddress = CSAMPSystemAddress();
 	CSAMPRakPeer *pSAMPRakPeer = (CSAMPRakPeer *)CAddress::VAR_RakPeerPtr;

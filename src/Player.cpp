@@ -44,6 +44,8 @@ CPlayer::CPlayer(EntityId playerId, char *szName)
 	m_iLastDamager = INVALID_ENTITY_ID;
 	m_wVehicleToEnter = INVALID_ENTITY_ID;
 	m_byteSeatToEnter = 0;
+	m_bHitId = INVALID_ENTITY_ID;
+	m_bHitType = BULLET_HIT_TYPE_NONE;
 }
 
 CPlayer::~CPlayer()
@@ -311,6 +313,21 @@ void CPlayer::UpdateAim()
 			m_pInterface->aimSyncData.byteWeaponState = WS_RELOADING;
 		else if (!m_wAmmo)
 			m_pInterface->aimSyncData.byteWeaponState = WS_NO_BULLETS;
+
+		// Update vector pos
+		if (m_bHitType == BULLET_HIT_TYPE_PLAYER && m_bHitId != INVALID_ENTITY_ID)
+		{
+			CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
+			CSAMPPlayer *pPlayer = pSAMPServer->pPlayerPool->pPlayer[m_bHitId];
+			if (pPlayer)
+			{
+				CPlayer::AimAt(pPlayer->vecPosition, m_pInterface->dwKeys & 4);
+			}
+			else
+			{
+				CPlayer::StopAim();
+			}
+		}
 	}
 	else
 	{
@@ -539,8 +556,10 @@ void CPlayer::Process()
 						SetKeys(m_pInterface->wUDAnalog, m_pInterface->wLRAnalog, 0x80);
 					}
 					else
+					{
 						// Send the bullet
-						CSAMPFunctions::PlayerShoot((int)m_playerId, m_vecAimAt, m_byteWeaponId);
+						CSAMPFunctions::PlayerShoot((int)m_playerId, m_bHitId, m_bHitType, m_byteWeaponId, m_vecAimAt);
+					}
 
 					// Update the shoot tick
 					m_dwShootTickCount = dwThisTick;
@@ -1019,6 +1038,13 @@ void CPlayer::AimAt(CVector3 vecPoint, bool bShoot)
 	m_bAiming = true;
 }
 
+void CPlayer::AimAtPlayer(CSAMPPlayer *pPlayer, bool bShoot)
+{
+	AimAt(pPlayer->vecPosition, bShoot);
+	m_bHitId = pPlayer->wPlayerId;
+	m_bHitType = BULLET_HIT_TYPE_PLAYER;
+}
+
 void CPlayer::StopAim()
 {
 	// Make sure the player is aiming
@@ -1028,6 +1054,8 @@ void CPlayer::StopAim()
 	// Reset aiming flags
 	m_bAiming = false;
 	m_bReloading = false;
+	m_bHitId = INVALID_ENTITY_ID;
+	m_bHitType = BULLET_HIT_TYPE_NONE;
 	// Reset keys
 	SetKeys(m_pInterface->wUDAnalog, m_pInterface->wLRAnalog, 0);
 }
@@ -1056,6 +1084,8 @@ void CPlayer::MeleeAttack(DWORD dwTime)
 		m_bMeleeAttack = true;
 		// Reset the aiming flag
 		m_bAiming = false;
+		m_bHitId = INVALID_ENTITY_ID;
+		m_bHitType = BULLET_HIT_TYPE_NONE;
 		// Set the melee keys
 		SetKeys(m_pInterface->wUDAnalog, m_pInterface->wLRAnalog, 4);
 	}
