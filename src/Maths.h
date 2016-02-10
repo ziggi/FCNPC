@@ -19,6 +19,7 @@ class CMath
 {
 	public:
 		static float GetDistanceBetween3DPoints(CVector3 vecPosition, CVector3 _vecPosition);
+		static float GetDistanceFromRayToPoint(const CVector3 p, const CVector3 v, const CVector3 w);
 
 		static float AngleToQuaternion(float fAngle);
 		static float RadiansToDegree(float fRadian);

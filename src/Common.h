@@ -131,6 +131,20 @@ class CVector3
 			return sqrt ( (fX*fX) + (fY*fY) + (fZ*fZ) );
 		}
 
+		float DotProduct(const CVector3 param) const
+		{
+			return fX*param.fX + fY*param.fY + fZ*param.fZ;
+		}
+
+		CVector3 CrossProduct(const CVector3 param)
+		{
+			float _fX = fX, _fY = fY, _fZ = fZ;
+			fX = _fY * param.fZ - param.fY * _fZ;
+			fY = _fZ * param.fX - param.fZ * _fX;
+			fZ = _fX * param.fY - param.fX * _fY;
+			return CVector3(fX, fY, fZ);
+		}
+
 		CVector3 operator + ( const CVector3& vecRight ) const
 		{
 			return CVector3 ( fX + vecRight.fX, fY + vecRight.fY, fZ + vecRight.fZ );

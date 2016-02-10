@@ -94,7 +94,7 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 		OFFSET_RemoteSystemSize = 0xcb8;
 		OFFSET_RemoteSystem__ConnectMode = 0xcb0;
 		OFFSET_RemoteSystem__Unknown = 0xcb5;
-		OFFSET_SendBullet_RPC = 0x33;
+		OFFSET_SendBullet_RPC = 0xce;
 		break;
 
 	case SAMP_VERSION_UNKNOWN:

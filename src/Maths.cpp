@@ -19,6 +19,21 @@ float CMath::GetDistanceBetween3DPoints(CVector3 vecPosition, CVector3 _vecPosit
 	return ((float)sqrt(fSX + fSY + fSZ));	
 }
 
+float CMath::GetDistanceFromRayToPoint(CVector3 p, CVector3 a, CVector3 b)
+{
+	CVector3 n = b - a;
+	CVector3 pa = a - p;
+
+	float c = n.DotProduct(pa);
+
+	if (c > 0.0f)
+		return pa.DotProduct(pa);
+
+	CVector3 e = pa - n * (c / n.DotProduct(n));
+
+	return e.DotProduct(e);
+}
+
 float CMath::AngleToQuaternion(float fAngle)
 {
 	return sin((fAngle * (M_PI / 180.0f)) / 2) * (fAngle < 180.0f ? -1.0f : 1.0f);

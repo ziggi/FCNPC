@@ -173,12 +173,31 @@ void CSAMPFunctions::PlayerShoot(int iPlayerId, CVector3 vecPoint, BYTE iWeaponI
 	pServer->GetPlayerManager()->GetAt(iPlayerId)->GetPosition(&vecPosition);
 	// Create the SendBullet structure
 	CBulletSyncData bulletSyncData;
-	bulletSyncData.byteHitType = 0; // No targets to hit
+	bulletSyncData.byteHitType = 0;
 	bulletSyncData.wHitID = INVALID_ENTITY_ID;
 	bulletSyncData.byteWeaponID = iWeaponId;
 	bulletSyncData.vecCenterOfHit = CVector3(0.1f, 0.1f, 0.1f);
 	bulletSyncData.vecHitOrigin = vecPosition;
 	bulletSyncData.vecHitTarget = vecPoint;
+
+	// find player in vecPoint
+	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
+
+	for (int i = 0; i < MAX_PLAYERS; i++)
+	{
+		if (!pSAMPServer->pPlayerPool->bIsPlayerConnected[i] || iPlayerId == i)
+			continue;
+
+		CSAMPPlayer *pPlayer = pSAMPServer->pPlayerPool->pPlayer[i];
+
+		if (CMath::GetDistanceFromRayToPoint(vecPoint, vecPosition, pPlayer->vecPosition) < 1.0f)
+		{
+			bulletSyncData.byteHitType = 1;
+			bulletSyncData.wHitID = i;
+			break;
+		}
+	}
+
 	// Write it to BitStream
 	RakNet::BitStream bsSend;
 	bsSend.Write((BYTE)CAddress::OFFSET_SendBullet_RPC);
@@ -187,6 +206,6 @@ void CSAMPFunctions::PlayerShoot(int iPlayerId, CVector3 vecPoint, BYTE iWeaponI
 	// Send it
 	CSAMPSystemAddress systemAddress = CSAMPSystemAddress();
 	CSAMPRakPeer *pSAMPRakPeer = (CSAMPRakPeer *)CAddress::VAR_RakPeerPtr;
-	pfn__RakServer__Send((void *)pSAMPRakPeer, &bsSend, 1, 6, 0, CSAMPPlayerId(systemAddress), 1);
+	pfn__RakServer__Send((void *)pSAMPRakPeer, &bsSend, 1, 9, 0, CSAMPPlayerId(systemAddress), 1);
 }
 
