@@ -534,7 +534,7 @@ void CPlayer::Process()
 				// Check the time spent since the last shoot
 				DWORD dwThisTick = GetTickCount();
 				DWORD dwTime = (dwThisTick - m_dwShootTickCount);
-				if (dwTime >= CWeaponInfo::GetWeaponRateOfFire(m_byteWeaponId))
+				if (dwTime >= CWeaponInfo::GetWeaponRateOfFire(m_byteWeaponId) * 2)
 				{
 					// Decrease the ammo
 					m_wAmmo--;
