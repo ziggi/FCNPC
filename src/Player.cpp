@@ -828,7 +828,7 @@ void CPlayer::SetSkin(int iSkin)
 		return;
 
 	// Validate the skin
-	if(iSkin > 299 || iSkin < 0)
+	if(iSkin > 311 || iSkin < 0)
 		return;
 
 	// Set the player skin
