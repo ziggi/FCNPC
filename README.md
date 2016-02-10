@@ -73,8 +73,8 @@ native FCNPC_SetVelocity(npcid, Float:X, Float:Y, Float:Z);
 native FCNPC_GetVelocity(npcid, &Float:X, &Float:Y, &Float:Z);
 native FCNPC_SetInterior(npcid, interiorid);
 native FCNPC_GetInterior(npcid);
-native FCNPC_SetWorld(npcid, worldid) = SetPlayerVirtualWorld;
-native FCNPC_GetWorld(npcid) = GetPlayerVirtualWorld;
+native FCNPC_SetVirtualWorld(npcid, worldid);
+native FCNPC_GetVirtualWorld(npcid);
 
 native FCNPC_SetHealth(npcid, Float:health);
 native Float:FCNPC_GetHealth(npcid);
