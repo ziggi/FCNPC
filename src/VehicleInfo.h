@@ -14,7 +14,9 @@
 class CVehicleInfo
 {
 	public:
-		static bool IsValidPassengerSeat(BYTE seat, WORD model);
+		static bool IsValidPassengerSeat(BYTE iSeatId, WORD iModelId);
+		static bool IsValidModel(WORD iModelId);
+		static WORD GetMaxPassengers(WORD iModelId);
 };
 
 #endif
