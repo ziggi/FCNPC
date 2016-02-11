@@ -411,7 +411,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetHealth(AMX *amx, cell *params)
 	float fHealth = 0.0f;
 	// Make sure the player is valid
 	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
-		return amx_ftoc(fHealth);;
+		return amx_ftoc(fHealth);
 
 	// Get the player health
 	fHealth = pServer->GetPlayerManager()->GetAt(iNPCId)->GetHealth();
@@ -442,7 +442,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetArmour(AMX *amx, cell *params)
 	float fArmour = 0.0f;
 	// Make sure the player is valid
 	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
-		return amx_ftoc(fArmour);;
+		return amx_ftoc(fArmour);
 
 	// Get the player armour
 	fArmour = pServer->GetPlayerManager()->GetAt(iNPCId)->GetArmour();

@@ -194,7 +194,7 @@ static int subhook_disasm(uint8_t *code, int *reloc) {
 	if (opcodes[i].flags & IMM16)
 		len += 2;
 	if (opcodes[i].flags & IMM32)
-		len += operand_size;;
+		len += operand_size;
 
 	return len;
 }
