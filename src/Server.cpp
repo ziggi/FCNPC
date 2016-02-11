@@ -12,6 +12,7 @@
 
 CSAMPRPCParams      *pCreateNPCParams;
 extern logprintf_t  logprintf;
+extern CSAMPServer  *pNetGame;
 
 CServer::CServer(eSAMPVersion version)
 {
@@ -160,17 +161,15 @@ BYTE CServer::Initialize()
 
 bool CServer::DoesNameExist(char *szName)
 {
-	// Get the server interface
-	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 	// Loop through all the players
 	for(int i = 0; i < MAX_PLAYERS; i++)
 	{
 		// Ignore non connected players
-		if(!pSAMPServer->pPlayerPool->bIsPlayerConnected[i])
+		if(!pNetGame->pPlayerPool->bIsPlayerConnected[i])
 			continue;
 
 		// Compare names
-		if(!strcmp(szName, pSAMPServer->pPlayerPool->szName[i]))
+		if(!strcmp(szName, pNetGame->pPlayerPool->szName[i]))
 			return true;
 	}
 	return false;
@@ -178,17 +177,15 @@ bool CServer::DoesNameExist(char *szName)
 
 bool CServer::IsVehicleSeatOccupied(int iPlayerId, WORD wVehicleId, BYTE byteSeatId)
 {
-	// Get the server interface
-	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
 	// Loop through all the players
 	for(int i = 0; i < MAX_PLAYERS; i++)
 	{
 		// Ignore non connected players and the same player
-		if(!pSAMPServer->pPlayerPool->bIsPlayerConnected[i] || iPlayerId == i)
+		if(!pNetGame->pPlayerPool->bIsPlayerConnected[i] || iPlayerId == i)
 			continue;
 
 		// Get the player interface
-		CSAMPPlayer *pPlayer = pSAMPServer->pPlayerPool->pPlayer[i];
+		CSAMPPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[i];
 		// Check vehicle and seat
 		if(pPlayer->wVehicleId == wVehicleId && pPlayer->byteSeatId == byteSeatId)
 			return true;

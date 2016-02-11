@@ -10,7 +10,8 @@
 
 #include "Main.h"
 
-extern CServer					*pServer;
+extern CServer        *pServer;
+extern CSAMPServer    *pNetGame;
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_Create(AMX *amx, cell *params)
 {
@@ -249,8 +250,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVirtualWorld(AMX *amx, cell *params)
 		return 0;
 
 	// Set the player virtual world
-	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
-	pSAMPServer->pPlayerPool->dwVirtualWorld[iNPCId] = iVirtualWorld;
+	pNetGame->pPlayerPool->dwVirtualWorld[iNPCId] = iVirtualWorld;
 	return 1;
 }
 
@@ -264,8 +264,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVirtualWorld(AMX *amx, cell *params)
 		return 0;
 
 	// Get the player virtual world
-	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
-	return pSAMPServer->pPlayerPool->dwVirtualWorld[iNPCId];
+	return pNetGame->pPlayerPool->dwVirtualWorld[iNPCId];
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetQuaternion(AMX *amx, cell *params)
@@ -719,12 +718,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAtPlayer(AMX *amx, cell *params)
 	if (iPlayerId < 0 || iPlayerId > MAX_PLAYERS)
 		return 0;
 
-	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
-
-	if (!pSAMPServer->pPlayerPool->bIsPlayerConnected[iPlayerId] || iPlayerId == iNPCId)
+	if (!pNetGame->pPlayerPool->bIsPlayerConnected[iPlayerId] || iPlayerId == iNPCId)
 		return 0;
 
-	CSAMPPlayer *pPlayer = pSAMPServer->pPlayerPool->pPlayer[iPlayerId];
+	CSAMPPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[iPlayerId];
 
 	// Set the player aiming
 	pServer->GetPlayerManager()->GetAt(iNPCId)->AimAtPlayer(pPlayer, !iShoot ? false : true);

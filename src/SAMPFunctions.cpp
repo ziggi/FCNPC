@@ -15,6 +15,7 @@ extern CServer          *pServer;
 extern CSAMPRPCParams   *pCreateNPCParams;
 extern void             **ppPluginData;
 extern logprintf_t      logprintf;
+extern CSAMPServer      *pNetGame;
 
 // Functions
 CreateNPC_RPC_t                 CSAMPFunctions::pfn__CreateNPC_RPC = NULL;
@@ -51,7 +52,10 @@ void CSAMPFunctions::Initialize()
 void CSAMPFunctions::PreInitialize()
 {
 	pfn__GetNetGame = (GetNetGame_t)(ppPluginData[PLUGIN_DATA_NETGAME]);
+	pNetGame = (CSAMPServer*)pfn__GetNetGame();
+
 	pfn__GetConsole = (GetConsole_t)(ppPluginData[PLUGIN_DATA_CONSOLE]);
+
 	pfn__GetRakServer = (GetRakServer_t)(ppPluginData[PLUGIN_DATA_RAKSERVER]);
 
 	int *pRakServer_VTBL = ((int*)(*(void**)pfn__GetRakServer()));
@@ -67,14 +71,11 @@ void CSAMPFunctions::PreInitialize()
 
 int CSAMPFunctions::GetFreePlayerSlot()
 {
-	// Get the playerpool interface
-	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
-	CSAMPPlayerPool *pPlayerPool = pSAMPServer->pPlayerPool;
 	// Loop through all the players
 	for(int i = (GetMaxPlayers() - 1); i != 0; i--)
 	{
 		// Is he not connected ?
-		if(!pPlayerPool->bIsPlayerConnected[i])
+		if(!pNetGame->pPlayerPool->bIsPlayerConnected[i])
 			return i;
 	}
 	return INVALID_ENTITY_ID;
@@ -116,41 +117,27 @@ int CSAMPFunctions::NewPlayer(char *szName)
 
 void CSAMPFunctions::DeletePlayer(int iPlayerId)
 {
-	// Call the function
-	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
-	pfn__CPlayerPool__DeletePlayer(pSAMPServer->pPlayerPool, iPlayerId, 0);
+	pfn__CPlayerPool__DeletePlayer(pNetGame->pPlayerPool, iPlayerId, 0);
 }
 
 void CSAMPFunctions::SpawnPlayer(int iPlayerId)
 {
-	// Get the player pointer
-	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
-	// Call the function
-	pfn__CPlayer__SpawnForWorld(pSAMPServer->pPlayerPool->pPlayer[iPlayerId]);	
+	pfn__CPlayer__SpawnForWorld(pNetGame->pPlayerPool->pPlayer[iPlayerId]);	
 }
 
 void CSAMPFunctions::KillPlayer(int iPlayerId, int iKillerId, int iWeapon)
 {
-	// Get the player pointer
-	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
-	// Call the function
-	pfn__CPlayer__Kill(pSAMPServer->pPlayerPool->pPlayer[iPlayerId], iKillerId, iWeapon);	
+	pfn__CPlayer__Kill(pNetGame->pPlayerPool->pPlayer[iPlayerId], iKillerId, iWeapon);	
 }
 
 void CSAMPFunctions::PlayerEnterVehicle(int iPlayerId, int iVehicleId, int iSeatId)
 {
-	// Get the player pointer
-	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
-	// Call the function
-	pfn__CPlayer__EnterVehicle(pSAMPServer->pPlayerPool->pPlayer[iPlayerId], iVehicleId, iSeatId);	
+	pfn__CPlayer__EnterVehicle(pNetGame->pPlayerPool->pPlayer[iPlayerId], iVehicleId, iSeatId);	
 }
 
 void CSAMPFunctions::PlayerExitVehicle(int iPlayerId, int iVehicleId)
 {
-	// Get the player pointer
-	CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
-	// Call the function
-	pfn__CPlayer__ExitVehicle(pSAMPServer->pPlayerPool->pPlayer[iPlayerId], iVehicleId);	
+	pfn__CPlayer__ExitVehicle(pNetGame->pPlayerPool->pPlayer[iPlayerId], iVehicleId);	
 }
 
 CVector3 *CSAMPFunctions::GetVehicleModelInfo(int iModelId, int iInfoType)
@@ -194,14 +181,12 @@ void CSAMPFunctions::PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE
 	// find player in vecPoint
 	if (bulletSyncData.byteHitType == BULLET_HIT_TYPE_NONE)
 	{
-		CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
-
 		for (int i = 0; i < MAX_PLAYERS; i++)
 		{
-			if (!pSAMPServer->pPlayerPool->bIsPlayerConnected[i] || iPlayerId == i)
+			if (!pNetGame->pPlayerPool->bIsPlayerConnected[i] || iPlayerId == i)
 				continue;
 
-			CSAMPPlayer *pPlayer = pSAMPServer->pPlayerPool->pPlayer[i];
+			CSAMPPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[i];
 
 			if (CMath::GetDistanceFromRayToPoint(vecPoint, vecPosition, pPlayer->vecPosition) < 1.0f &&
 				CMath::GetDistanceBetween3DPoints(vecPosition, pPlayer->vecPosition) < MAX_DAMAGE_DISTANCE)

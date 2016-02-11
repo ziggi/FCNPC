@@ -12,12 +12,13 @@
 #include "Address.h"
 
 // Globals
-logprintf_t         logprintf;
-void                **ppPluginData;
-extern void         *pAMXFunctions;
-CServer             *pServer;
-bool                bServerInit = false;
-DWORD               dwStartTick;
+logprintf_t  logprintf;
+void         **ppPluginData;
+extern void  *pAMXFunctions;
+CServer      *pServer;
+bool         bServerInit = false;
+DWORD        dwStartTick;
+CSAMPServer  *pNetGame;
 
 PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports()
 {

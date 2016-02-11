@@ -10,6 +10,8 @@
 
 #include "Main.h"
 
+extern CSAMPServer      *pNetGame;
+
 CPlayback::CPlayback(char *szFile)
 {
 	// Save the file name
@@ -125,8 +127,7 @@ bool CPlayback::Process(CPlayer *pPlayer)
 				return false;
 
 			// Get the vehicle interface
-			CSAMPServer *pSAMPServer = (CSAMPServer *)CAddress::VAR_ServerPtr;
-			CSAMPVehicle *pVehicle = pSAMPServer->pVehiclePool->pVehicle[pPlayer->GetVehicleId()];
+			CSAMPVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[pPlayer->GetVehicleId()];
 			// Set the data
 			pVehicle->vecPosition = vehicleSyncData.vecPosition;
 			pVehicle->vecQuaternion = vehicleSyncData.vecQuaternion;
