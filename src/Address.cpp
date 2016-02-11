@@ -32,8 +32,6 @@ DWORD CAddress::FUNC_CConfig__GetValueAsInteger = NULL;
 
 DWORD CAddress::FUNC_GetVehicleModelInfo = NULL;
 
-DWORD CAddress::FUNC_RakServer__Send = NULL;
-
 // Variables
 DWORD CAddress::VAR_ServerPtr = NULL;
 DWORD CAddress::VAR_ConfigPtr = NULL;
@@ -62,7 +60,6 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 		FUNC_GetVehicleModelInfo = 0x486e10;
 		FUNC_CConfig__GetValueAsInteger = 0x488db0;
 		FUNC_CreateNPC_RPC = 0x48f040;
-		FUNC_RakServer__Send = 0x45a8e0;
 		VAR_ServerAuthentication = 0x4f6cf0;
 		VAR_ServerPtr = CSAMPFunctions::GetNetGame();
 		VAR_ConfigPtr = CSAMPFunctions::GetConsole();
@@ -84,7 +81,6 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 		FUNC_GetVehicleModelInfo = 0x488240;
 		FUNC_CConfig__GetValueAsInteger = 0x48b5b0;
 		FUNC_CreateNPC_RPC = 0x4918f0;
-		FUNC_RakServer__Send = 0x45a260;
 		VAR_ServerAuthentication = 0x4f5fe8;
 		VAR_ServerPtr = CSAMPFunctions::GetNetGame();
 		VAR_ConfigPtr = CSAMPFunctions::GetConsole();
@@ -107,7 +103,6 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 		FUNC_GetVehicleModelInfo = CUtils::FindPattern("\x8B\x44\x24\x04\x3D\x90\x01\x00\x00\x0F\x8C\x83\x00\x00\x00\x3D\x63\x02\x00\x00\x7F\x7C", "xxxxxxxxxxxxxxxxxxxxxx");
 		FUNC_CConfig__GetValueAsInteger = CUtils::FindPattern("\x85\xC0\x74\x0D\x83\x38\x01\x75\x08\x8B\x48\x08\x8B\x01", "xxxxxxxxxxxxxx") - 0x0A;
 		FUNC_CreateNPC_RPC = CUtils::FindPattern("\x83\xC1\x08\x8B\x11\x66\x8B\x49\x04\x89\x54\x24\x14\x99\x83\xE2\x07\x03\xC2\xC1\xF8\x03\x53\x40\x50\x66\x89", "xxxxxxxxxxxxxxxxxxxxxxxxxxx") - 0x3E;
-		FUNC_RakServer__Send = CUtils::FindPattern("\x8B\x44\x24\x1C\x50\x8B\x44\x24\x18\x83\xEC\x08\x8B\xD4\x89\x02\x66\x8B\x44\x24\x24\x66\x89\x42\x04", "xxxxxxxxxxxxxxxxxxxxxxxxx");
 
 		// Variables
 		VAR_ServerAuthentication = *(DWORD *)(CUtils::FindPattern("\x8B\x4C\x24\x28\xA1\xE8\x5F\x4F\x00\x81\xF1\xD9\x0F\x00\x00\x3B\xC1", "xxxxx????xx????xx") + 5);
@@ -136,7 +131,6 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 		FUNC_GetVehicleModelInfo = 0x80d58a0;
 		FUNC_CConfig__GetValueAsInteger = 0x80a0040;
 		FUNC_CreateNPC_RPC = 0x80afcf0;
-		FUNC_RakServer__Send = 0x807ba80;
 		VAR_ServerAuthentication = 0x81a06e8;
 		VAR_ServerPtr = CSAMPFunctions::GetNetGame();
 		VAR_ConfigPtr = CSAMPFunctions::GetConsole();
@@ -158,7 +152,6 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 		FUNC_GetVehicleModelInfo = 0x80d5d30;
 		FUNC_CConfig__GetValueAsInteger = 0x80a0070;
 		FUNC_CreateNPC_RPC = 0x80b0030;
-		FUNC_RakServer__Send = 0x807bab0;
 		VAR_ServerAuthentication = 0x81aa8a8;
 		VAR_ServerPtr = CSAMPFunctions::GetNetGame();
 		VAR_ConfigPtr = CSAMPFunctions::GetConsole();
@@ -181,7 +174,6 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 		FUNC_CPlayer__ExitVehicle = CUtils::FindPattern("\x55\x89\xE5\x81\xEC\x68\x01\x00\x00\x89\x5D\xF4\x89\x75\xF8\x8D\xB5\xC8\xFE\xFF\xFF\x0F\xB7\x5D\x0C\x89\x7D\xFC\x8B\x7D\x08\x89\x34\x24", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 		FUNC_CConfig__GetValueAsInteger = CUtils::FindPattern("\x55\x89\xE5\x83\xEC\x08\x8B\x45\x0C\x89\x44\x24\x04\x8B\x45\x08\x89\x04\x24\xE8\x68\xFA\xFF\xFF\x85\xC0\x74\x05\x83\x38\x01", "xxxxxxxxxxxxxxxxxxxx????xxx?xxx") + 0x30;
 		FUNC_GetVehicleModelInfo = CUtils::FindPattern("\x55\x89\xE5\x57\x8B\x45\x08\x8B\x4D\x0C\x2D\x90\x01\x00\x00\x3D\xD3\x00\x00\x00", "xxxxxxxxxxxxxxxxxxxx");
-		FUNC_RakServer__Send = CUtils::FindPattern("\x55\x89\xE5\x83\xEC\x18\x8B\x55\x08\x8D\x45\xFC\x8B\x4A\x04\x89\x44\x24\x08\x83\xC2\x04", "xxxxxxxxxxxxxxxxxxxxxx");
 
 		// Variables
 		VAR_ServerAuthentication = *(DWORD *)(CUtils::FindPattern("\x8B\x85\x7C\xFC\xFF\xFF\x35", "xxxxxxx") + 13);

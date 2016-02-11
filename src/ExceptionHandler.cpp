@@ -66,7 +66,6 @@ long WINAPI CExceptionHandler::ExceptionHandlerCallback(_EXCEPTION_POINTERS *pEx
 	fprintf(pFile, "FUNC_GetVehicleModelInfo: 0x%x\n", CAddress::FUNC_GetVehicleModelInfo);
 	fprintf(pFile, "FUNC_CConfig__GetValueAsInteger: 0x%x\n", CAddress::FUNC_CConfig__GetValueAsInteger);
 	fprintf(pFile, "FUNC_CreateNPC_RPC: 0x%x\n", CAddress::FUNC_CreateNPC_RPC);
-	fprintf(pFile, "FUNC_RakServer__Send: 0x%x\n", CAddress::FUNC_RakServer__Send);
 
 	fprintf(pFile, "\n\nPointers:\n");
 	fprintf(pFile, "VAR_ServerAuthentication: 0x%x\n", CAddress::VAR_ServerAuthentication);
@@ -125,7 +124,6 @@ void CExceptionHandler::ExceptionHandlerCallback(int signum)
 	fprintf(pFile, "FUNC_GetVehicleModelInfo: 0x%x\n", CAddress::FUNC_GetVehicleModelInfo);
 	fprintf(pFile, "FUNC_CConfig__GetValueAsInteger: 0x%x\n", CAddress::FUNC_CConfig__GetValueAsInteger);
 	fprintf(pFile, "FUNC_CreateNPC_RPC: 0x%x\n", CAddress::FUNC_CreateNPC_RPC);
-	fprintf(pFile, "FUNC_RakServer__Send: 0x%x\n", CAddress::FUNC_RakServer__Send);
 
 	fprintf(pFile, "\n\nPointers:\n");
 	fprintf(pFile, "VAR_ServerAuthentication: 0x%x\n", CAddress::VAR_ServerAuthentication);

@@ -26,6 +26,8 @@ CPlayer__ExitVehicle_t          CSAMPFunctions::pfn__CPlayer__ExitVehicle = NULL
 CConfig__GetValueAsInteger_t    CSAMPFunctions::pfn__CConfig__GetValueAsInteger = NULL;
 GetVehicleModelInfo_t           CSAMPFunctions::pfn__GetVehicleModelInfo = NULL;
 RakServer__Send_t               CSAMPFunctions::pfn__RakServer__Send = NULL;
+RakServer__RPC_t                CSAMPFunctions::pfn__RakServer__RPC = NULL;
+RakServer__Receive_t            CSAMPFunctions::pfn__RakServer__Receive = NULL;
 GetNetGame_t                    CSAMPFunctions::pfn__GetNetGame = NULL;
 GetConsole_t                    CSAMPFunctions::pfn__GetConsole = NULL;
 GetRakServer_t                  CSAMPFunctions::pfn__GetRakServer = NULL;
@@ -44,15 +46,23 @@ void CSAMPFunctions::Initialize()
 	pfn__CConfig__GetValueAsInteger = (CConfig__GetValueAsInteger_t)(CAddress::FUNC_CConfig__GetValueAsInteger);
 
 	pfn__GetVehicleModelInfo = (GetVehicleModelInfo_t)(CAddress::FUNC_GetVehicleModelInfo);
-
-	pfn__RakServer__Send = (RakServer__Send_t)(CAddress::FUNC_RakServer__Send);
 }
 
 void CSAMPFunctions::PreInitialize()
 {
 	pfn__GetNetGame = (GetNetGame_t)(ppPluginData[PLUGIN_DATA_NETGAME]);
-	pfn__GetConsole = (GetConsole_t)(ppPluginData[PLUGIN_DATA_CONFIG]);
-	pfn__GetRakServer = (GetRakServer_t)(ppPluginData[PLUGIN_DATA_RAKPEER]);
+	pfn__GetConsole = (GetConsole_t)(ppPluginData[PLUGIN_DATA_CONSOLE]);
+	pfn__GetRakServer = (GetRakServer_t)(ppPluginData[PLUGIN_DATA_RAKSERVER]);
+
+	int *pRakServer_VTBL = ((int*)(*(void**)pfn__GetRakServer()));
+
+	CUtils::UnProtect(pRakServer_VTBL[RAKNET_SEND_OFFSET], 4);
+	CUtils::UnProtect(pRakServer_VTBL[RAKNET_RPC_OFFSET], 4);
+	CUtils::UnProtect(pRakServer_VTBL[RAKNET_RECEIVE_OFFSET], 4);
+
+	pfn__RakServer__Send = (RakServer__Send_t)(pRakServer_VTBL[RAKNET_SEND_OFFSET]);
+	pfn__RakServer__RPC = (RakServer__RPC_t)(pRakServer_VTBL[RAKNET_RPC_OFFSET]);
+	pfn__RakServer__Receive = (RakServer__Receive_t)(pRakServer_VTBL[RAKNET_RECEIVE_OFFSET]);
 }
 
 int CSAMPFunctions::GetFreePlayerSlot()

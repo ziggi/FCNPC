@@ -26,8 +26,10 @@
 	#define TRUE    (1)
 	#define FALSE   (0)
 	#define STDCALL 
+	#define THISCALL 
 #else
 	#define STDCALL __stdcall
+	#define THISCALL __thiscall
 #endif
 
 // Standard includes

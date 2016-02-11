@@ -12,6 +12,16 @@
 #ifndef ADDRESS_H
 #define ADDRESS_H
 
+#ifdef _WIN32
+	#define RAKNET_SEND_OFFSET          7
+	#define RAKNET_RPC_OFFSET           32
+	#define RAKNET_RECEIVE_OFFSET       10
+#else
+	#define RAKNET_SEND_OFFSET          9
+	#define RAKNET_RPC_OFFSET           35
+	#define RAKNET_RECEIVE_OFFSET       11
+#endif
+
 enum eSAMPVersion
 {
 	SAMP_VERSION_UNKNOWN,
@@ -39,8 +49,6 @@ class CAddress
 		static DWORD           FUNC_CConfig__GetValueAsInteger;
 
 		static DWORD           FUNC_GetVehicleModelInfo;
-
-		static DWORD           FUNC_RakServer__Send;
 
 		// Variables
 		static DWORD           VAR_ServerPtr;
