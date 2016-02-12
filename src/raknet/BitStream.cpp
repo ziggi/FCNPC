@@ -14,7 +14,7 @@
 /// Software Foundation; either version 2 of the License, or (at your
 /// option) any later version.
 
-#include "BitStream.h"
+#include "raknet/BitStream.h"
 #include <stdlib.h>
 #include <memory.h>
 #include <stdio.h>

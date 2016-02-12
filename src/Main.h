@@ -54,7 +54,7 @@
 #include "Maths.h"
 #include "Common.h"
 #include "Thread.h"
-#include "BitStream.h"
+#include "raknet/BitStream.h"
 // Nodes includes
 #include "Playback.h"
 #include "ZMap.h"
