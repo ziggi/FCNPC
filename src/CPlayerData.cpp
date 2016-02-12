@@ -408,7 +408,7 @@ void CPlayerData::Kill(int iKillerId, int iWeapon)
 	// Kill the NPC
 	CSAMPFunctions::KillPlayer(m_playerId, iWeapon, iKillerId);
 	// Set the NPC state
-	SetState(PLAYER_STATE_DEAD);
+	SetState(PLAYER_STATE_WASTED);
 	// Call the NPC death callback
 	CCallbackManager::OnDeath((int)m_playerId, iKillerId, iWeapon);
 }
@@ -618,7 +618,7 @@ void CPlayerData::Process()
 				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, 0);
 		}
 		// Process death
-		if(GetHealth() <= 0.0f && GetState() != PLAYER_STATE_DEAD && GetState() != PLAYER_STATE_SPAWNED)
+		if(GetHealth() <= 0.0f && GetState() != PLAYER_STATE_WASTED && GetState() != PLAYER_STATE_SPAWNED)
 		{
 			// Get the last damager weapon
 			BYTE byteWeapon = -1;

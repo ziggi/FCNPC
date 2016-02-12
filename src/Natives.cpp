@@ -119,7 +119,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsDead(AMX *amx, cell *params)
 		return 0;
 
 	// Return the player dead state
-	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetState() == PLAYER_STATE_DEAD ? 1 : 0;
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetState() == PLAYER_STATE_WASTED ? 1 : 0;
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetPosition(AMX *amx, cell *params)

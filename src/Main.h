@@ -50,8 +50,6 @@
 #include "ExceptionHandler.h"
 // SDK includes
 #include <sdk/plugin.h>
-// SAMP GDK
-#include <sampgdk/sampgdk.h>
 // Utils includes
 #include "Utils.h"
 #include "Maths.h"

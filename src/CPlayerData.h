@@ -121,7 +121,7 @@ class CPlayerData
 	private:
 		WORD m_playerId;
 		bool m_bSetup;
-		char m_szName[MAX_NAME_LENGTH];
+		char m_szName[MAX_PLAYER_NAME];
 		bool m_bSpawned;
 		bool m_bMoving;
 		bool m_bUseZMap;

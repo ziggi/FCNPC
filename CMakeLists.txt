@@ -16,6 +16,8 @@ if (WIN32)
 		${CMAKE_CURRENT_SOURCE_DIR}/src/snprintf/*.h
 	)
 
+	set (CMAKE_C_FLAGS "/Zp1")
+	set (CMAKE_CXX_FLAGS "/Zp1 /EHsc")
 	set (CMAKE_SHARED_LINKER_FLAGS "/NOLOGO /MACHINE:X86")
 else ()
 	add_definitions (-DLINUX)
@@ -54,8 +56,6 @@ file (GLOB FCNPC_SRC
 	${CMAKE_CURRENT_SOURCE_DIR}/src/strlcpy/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/raknet/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/raknet/*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/src/sampgdk/*.c
-	${CMAKE_CURRENT_SOURCE_DIR}/src/sampgdk/*.h
 )
 
 add_library (${PROJECT_NAME} SHARED ${FCNPC_SRC})

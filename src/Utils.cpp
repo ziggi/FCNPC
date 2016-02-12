@@ -10,6 +10,9 @@
 
 #include "Main.h"
 
+#ifdef _WIN32
+	#include <Psapi.h>
+#endif
 // Linux GetTickCount
 #ifndef _WIN32
 

@@ -41,7 +41,7 @@ CPlayerManager::~CPlayerManager()
 WORD CPlayerManager::AddPlayer(char *szName)
 {
 	// Make sure the name is valid
-	if(strlen(szName) > MAX_NAME_LENGTH || pServer->DoesNameExist(szName))
+	if(strlen(szName) > MAX_PLAYER_NAME || pServer->DoesNameExist(szName))
 		return INVALID_ENTITY_ID;
 
 	// Create the player in SAMP server
