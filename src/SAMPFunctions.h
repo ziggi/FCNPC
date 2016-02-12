@@ -12,42 +12,10 @@
 #ifndef SAMPFUNCTIONS_H
 #define SAMPFUNCTIONS_H
 
-class CSAMPPlayerId
-{
-public:
-	CSAMPPlayerId(CSAMPSystemAddress systemAddress)
-	{
-		uiSystemAddress = systemAddress.uiSystemAddress;
-		usPort = systemAddress.usPort;
-	};
-	
-	unsigned int		uiSystemAddress;	// 0x0000 - 0x0004
-	unsigned short		usPort;				// 0x0004 - 0x0006
-};
+//#include "Structs.h"
 
-/// This represents a user message from another system.
-struct Packet
-{
-	/// Server only - this is the index into the player array that this playerId maps to
-	unsigned short playerIndex; // 0 - 2
-
-	/// The system that send this packet.
-	CSAMPPlayerId playerId; // 2  - 8
-
-	/// The length of the data in bytes
-	/// \deprecated You should use bitSize.
-	unsigned int length; // 8 - 12
-
-	/// The length of the data in bits
-	unsigned int bitSize; // 12 - 16
-
-	/// The data from the sender
-	unsigned char* data; // 16 - 20
-
-	/// @internal
-	/// Indicates whether to delete the data, or to simply delete the packet.
-	bool deleteData;
-};
+struct Packet;
+struct PlayerId;
 
 // Functions definitions
 typedef void ( *CreateNPC_RPC_t)(CSAMPRPCParams *pRPCParams);
@@ -61,9 +29,9 @@ typedef void (THISCALL *CPlayer__Kill_t)(void *pPlayer, int iKillerId, int iWeap
 typedef void (THISCALL *CPlayer__EnterVehicle_t)(void *pPlayer, int iVehicleId, int iSeatId);
 typedef void (THISCALL *CPlayer__ExitVehicle_t)(void *pPlayer, int iVehicleId);
 typedef int  (THISCALL *CConfig__GetValueAsInteger_t)(void *pConfig, char *szKey);
-typedef void (THISCALL *RakServer__Send_t)(void *pRakServer, RakNet::BitStream* pBitStream, int iPriority, int iReliability, unsigned ucOrderingChannel, CSAMPPlayerId playerId, bool bBroadcast);
-typedef bool (THISCALL *RakServer__RPC_t)(void* pRakServer, int* iUniqueID, RakNet::BitStream* pBitStream, int iPriority, int iReliability, unsigned ucOrderingChannel, CSAMPPlayerId playerId, bool bBroadcast, bool bShiftTimestamp);
-typedef Packet* (THISCALL *RakServer__Receive_t)(void* pRakServer);
+typedef bool (THISCALL *RakNet__Send_t)(void* ppRakServer, RakNet::BitStream* parameters, PacketPriority priority, PacketReliability reliability, unsigned orderingChannel, PlayerID playerId, bool broadcast);
+typedef bool (THISCALL *RakNet__RPC_t)(void* ppRakServer, int* uniqueID, RakNet::BitStream* parameters, PacketPriority priority, PacketReliability reliability, unsigned orderingChannel, PlayerID playerId, bool broadcast, bool shiftTimestamp);
+typedef Packet* (THISCALL *RakNet__Receive_t)(void* ppRakServer);
 
 typedef CVector *( *GetVehicleModelInfo_t)(int iModelId, int iInfoType);
 
@@ -80,7 +48,7 @@ class CSAMPFunctions
 		static void		KillPlayer(int iPlayerId, int iKillerId, int iWeapon);
 		static void		PlayerEnterVehicle(int iPlayerId, int iVehicleId, int iSeatId);
 		static void		PlayerExitVehicle(int iPlayerId, int iVehicleId);
-		static CVector	*GetVehicleModelInfo(int iModelId, int iInfoType);
+		static CVector	*GetVehicleModelInfoEx(int iModelId, int iInfoType);
 		static int		GetMaxPlayers();
 		static int		GetMaxNPC();
 		static void		PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE iWeaponId, CVector vecPoint);
@@ -97,9 +65,9 @@ class CSAMPFunctions
 		static CPlayer__ExitVehicle_t			pfn__CPlayer__ExitVehicle;
 		static CConfig__GetValueAsInteger_t		pfn__CConfig__GetValueAsInteger;
 		static GetVehicleModelInfo_t			pfn__GetVehicleModelInfo;
-		static RakServer__Send_t				pfn__RakServer__Send;
-		static RakServer__RPC_t				    pfn__RakServer__RPC;
-		static RakServer__Receive_t				pfn__RakServer__Receive;
+		static RakNet__Send_t					pfn__RakNet__Send;
+		static RakNet__RPC_t					pfn__RakNet__RPC;
+		static RakNet__Receive_t				pfn__RakNet__Receive;
 		static GetNetGame_t						pfn__GetNetGame;
 		static GetConsole_t						pfn__GetConsole;
 		static GetRakServer_t					pfn__GetRakServer;

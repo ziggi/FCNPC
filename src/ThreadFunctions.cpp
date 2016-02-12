@@ -23,7 +23,7 @@ void CThreadFunctions::DamageThread(void *pThread)
 		CUtils::FCNPCSleep(5);
 
 	// Get the playerpool pointer
-	CSAMPPlayerPool *pPlayerPool = pNetGame->pPlayerPool;
+	CPlayerPool *pPlayerPool = pNetGame->pPlayerPool;
 	// Are we still alive ?
 	while(bServerInit)
 	{
@@ -31,7 +31,7 @@ void CThreadFunctions::DamageThread(void *pThread)
 		for(int i = 0; i < MAX_PLAYERS; i++)
 		{
 			// Ignore non connected players
-			if(!pPlayerPool->bIsPlayerConnected[i] ||
+			if(!pPlayerPool->bIsPlayerConnectedEx[i] ||
 				(pServer->GetPlayerManager()->IsNPC(i) && !pServer->GetPlayerManager()->GetAt(i)->IsSpawned()))
 				continue;
 
@@ -39,7 +39,7 @@ void CThreadFunctions::DamageThread(void *pThread)
 			for(int j = (MAX_PLAYERS - 1); j != 0; j--)
 			{
 				// Ignore non connected NPCs
-				if(!pServer->GetPlayerManager()->IsPlayerConnected(j) || !pServer->GetPlayerManager()->GetAt(j)->IsSpawned())
+				if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(j) || !pServer->GetPlayerManager()->GetAt(j)->IsSpawned())
 					continue;
 
 				// Process damage for players

@@ -10,12 +10,26 @@
 
 #include "Main.h"
 
-#ifdef WIN32
-	#include <Psapi.h>
-#else
-	#include "sys/time.h"
-	timeval startTime;
-	timeval currentTime;
+// Linux GetTickCount
+#ifndef _WIN32
+
+#include "sys/time.h"
+timeval startTime;
+timeval currentTime;
+
+void LoadTickCount()
+{
+	// Get the starting time
+	gettimeofday(&startTime, 0);
+}
+
+int GetTickCount()
+{
+	// Get the time elapsed since the start
+	gettimeofday(&currentTime, 0);
+	return (currentTime.tv_usec - startTime.tv_usec) / 1000 + 1000 * (currentTime.tv_sec - startTime.tv_sec);
+}
+
 #endif
 
 void CUtils::GetPluginError(BYTE byteError, char *szError, size_t sSize)
@@ -99,21 +113,3 @@ DWORD CUtils::FindPattern(char *szPattern, char *szMask)
 	// Return null
 	return NULL;
 }
-
-// Linux GetTickCount
-#ifndef _WIN32
-
-void CUtils::LoadTickCount()
-{
-	// Get the starting time
-	gettimeofday(&startTime, 0);
-}
-
-int GetTickCount()
-{
-	// Get the time elapsed since the start
-	gettimeofday(&currentTime, 0);
-	return (currentTime.tv_usec - startTime.tv_usec) / 1000 + 1000 * (currentTime.tv_sec - startTime.tv_sec);
-}
-
-#endif

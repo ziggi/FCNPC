@@ -100,7 +100,7 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 	{
 		bGiveDamage = false;
 
-		if (pServer->GetPlayerManager()->IsPlayerConnected(iDamagerId))
+		if (pServer->GetPlayerManager()->IsPlayerConnectedEx(iDamagerId))
 			pServer->GetPlayerManager()->GetAt(iDamagerId)->ProcessDamage(iPlayerId, fHealthLoss, iWeapon, iBodypart);
 	}
 

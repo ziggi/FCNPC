@@ -101,9 +101,6 @@ extern logprintf_t          logprintf;
 #define MAX_DISTANCE_TO_ENTER_VEHICLE   30.0f
 #define DEFAULT_UPDATE_RATE             50
 
-// Type definitions
-typedef unsigned short EntityId;
-
 // Hook functions
 #ifdef _WIN32
 	#define HOOK void _declspec(naked)

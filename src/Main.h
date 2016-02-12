@@ -27,6 +27,7 @@
 	#define FALSE   (0)
 	#define STDCALL 
 	#define THISCALL 
+	#define MAX_PATH 260
 #else
 	#define STDCALL __stdcall
 	#define THISCALL __thiscall
@@ -48,7 +49,9 @@
 // ExceptionHandler includes
 #include "ExceptionHandler.h"
 // SDK includes
-#include "SDK/plugin.h"
+#include <sdk/plugin.h>
+// SAMP GDK
+#include <sampgdk/sampgdk.h>
 // Utils includes
 #include "Utils.h"
 #include "Maths.h"
@@ -62,31 +65,33 @@
 #include "Node.h"
 // Server includes
 #include "Address.h"
-#include "Server.h"
+#include "CServer.h"
 #include "Patches.h"
 #include "Hooks.h"
 #include "VehicleInfo.h"
 #include "WeaponInfo.h"
 #include "ThreadFunctions.h"
-	// SAMP includes
-	#include "SAMPServer.h"
-	#include "SAMPPlayerPool.h"
-	#include "SAMPVehiclePool.h"
-	#include "SAMPPlayer.h"
-	#include "SAMPVehicle.h"
-	#include "SAMPRakPeer.h"
-	#include "SAMPRPCParams.h"
-	#include "SAMPFunctions.h"
-	#include "SAMPBulletSync.h"
-	// SA includes
-	#include "SANode.h"
+// SAMP includes
+#include "SAMPRakPeer.h"
+#include "SAMPRPCParams.h"
+#include "SAMPFunctions.h"
+#include "Structs.h"
+// SA includes
+#include "SANode.h"
 
 // Managers includes
 #include "PlayerManager.h"
 #include "NodeManager.h"
 #include "CallbackManager.h"
 // Entity includes
-#include "Player.h"
+#include "CPlayerData.h"
 // Scripting includes
 #include "Natives.h"
 
+// externals
+extern CServer          *pServer;
+extern CSAMPRPCParams   *pCreateNPCParams;
+extern void             **ppPluginData;
+extern CNetGame         *pNetGame;
+extern void             *pConsole;
+extern RakServer        *pRakServer;

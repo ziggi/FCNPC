@@ -18,7 +18,9 @@ extern void  *pAMXFunctions;
 CServer      *pServer;
 bool         bServerInit = false;
 DWORD        dwStartTick;
-CSAMPServer  *pNetGame;
+CNetGame     *pNetGame;
+void         *pConsole = NULL;
+RakServer    *pRakServer = NULL;
 
 PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports()
 {
@@ -67,7 +69,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	CExceptionHandler::Install();
 	// Initialize linux tick count
 #ifndef _WIN32
-	CUtils::LoadTickCount();
+	LoadTickCount();
 #endif
 	// Create the server instance
 	pServer = new CServer(version);

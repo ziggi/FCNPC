@@ -12,13 +12,13 @@
 
 CSAMPRPCParams      *pCreateNPCParams;
 extern logprintf_t  logprintf;
-extern CSAMPServer  *pNetGame;
+extern CNetGame  *pNetGame;
 
 CServer::CServer(eSAMPVersion version)
 {
 	m_Version = version;
 	// Reset instances
-	m_pPlayerManager = NULL;
+	m_pPlayerDataManager = NULL;
 	m_pNodeManager = NULL;
 	m_pDamageThread = NULL;
 	m_pZMap = NULL;
@@ -30,7 +30,7 @@ CServer::CServer(eSAMPVersion version)
 CServer::~CServer()
 {
 	// Delete instance
-	SAFE_DELETE(m_pPlayerManager);
+	SAFE_DELETE(m_pPlayerDataManager);
 	SAFE_DELETE(m_pNodeManager);
 	SAFE_DELETE(m_pDamageThread);
 	SAFE_DELETE(m_pZMap);
@@ -55,8 +55,8 @@ BYTE CServer::Initialize()
 	// Install patches
 	CPatches::InstallPatches();
 	// Create the player manager instance
-	m_pPlayerManager = new CPlayerManager();
-	if(!m_pPlayerManager)
+	m_pPlayerDataManager = new CPlayerManager();
+	if(!m_pPlayerDataManager)
 		return 2;
 
 	// Create the node manager instance
@@ -165,7 +165,7 @@ bool CServer::DoesNameExist(char *szName)
 	for(int i = 0; i < MAX_PLAYERS; i++)
 	{
 		// Ignore non connected players
-		if(!pNetGame->pPlayerPool->bIsPlayerConnected[i])
+		if(!pNetGame->pPlayerPool->bIsPlayerConnectedEx[i])
 			continue;
 
 		// Compare names
@@ -181,11 +181,11 @@ bool CServer::IsVehicleSeatOccupied(int iPlayerId, WORD wVehicleId, BYTE byteSea
 	for(int i = 0; i < MAX_PLAYERS; i++)
 	{
 		// Ignore non connected players and the same player
-		if(!pNetGame->pPlayerPool->bIsPlayerConnected[i] || iPlayerId == i)
+		if(!pNetGame->pPlayerPool->bIsPlayerConnectedEx[i] || iPlayerId == i)
 			continue;
 
 		// Get the player interface
-		CSAMPPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[i];
+		CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[i];
 		// Check vehicle and seat
 		if(pPlayer->wVehicleId == wVehicleId && pPlayer->byteSeatId == byteSeatId)
 			return true;

@@ -11,7 +11,7 @@
 #include "Main.h"
 
 extern CServer        *pServer;
-extern CSAMPServer    *pNetGame;
+extern CNetGame    *pNetGame;
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_Create(AMX *amx, cell *params)
 {
@@ -41,7 +41,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_Destroy(AMX *amx, cell *params)
 	// Get the NPC id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Destoy the player
@@ -60,7 +60,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_Spawn(AMX *amx, cell *params)
 	float fY = amx_ctof(params[4]);
 	float fZ = amx_ctof(params[5]);
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Set the spawn position
@@ -75,7 +75,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_Respawn(AMX *amx, cell *params)
 	// Get the NPC id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Respawn the player
@@ -88,7 +88,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsSpawned(AMX *amx, cell *params)
 	// Get the NPC id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Respawn the player
@@ -101,7 +101,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_Kill(AMX *amx, cell *params)
 	// Get the NPC id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Kill the player
@@ -115,7 +115,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsDead(AMX *amx, cell *params)
 	// Get the NPC id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Return the player dead state
@@ -132,7 +132,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetPosition(AMX *amx, cell *params)
 	float fY = amx_ctof(params[3]);
 	float fZ = amx_ctof(params[4]);
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Set the player position
@@ -146,7 +146,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetPosition(AMX *amx, cell *params)
 	// Get the NPC id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 	{
 		// Get the argument pointers and set its value
 		cell *pAddress = NULL;
@@ -186,7 +186,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetAngle(AMX *amx, cell *params)
 	// Get the angle
 	float fAngle = amx_ctof(params[2]);
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Set the player angle
@@ -201,7 +201,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetAngle(AMX *amx, cell *params)
 	int iNPCId = (int)params[1];
 	float Angle = 0.0f;
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return amx_ftoc(Angle);
 
 	// Get the player angle
@@ -217,7 +217,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetInterior(AMX *amx, cell *params)
 	// Get the interior
 	int iInterior = (int)params[2];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Set the player interior
@@ -231,7 +231,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetInterior(AMX *amx, cell *params)
 	// Get the NPC id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Get the player interior
@@ -246,7 +246,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVirtualWorld(AMX *amx, cell *params)
 	// Get the virtual world
 	int iVirtualWorld = (int)params[2];
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Set the player virtual world
@@ -260,7 +260,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVirtualWorld(AMX *amx, cell *params)
 	// Get the NPC id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Get the player virtual world
@@ -279,7 +279,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetQuaternion(AMX *amx, cell *params)
 	// Get the quaternion angle
 	float fA = amx_ctof(params[5]);
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Set the player quaternion
@@ -293,7 +293,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetQuaternion(AMX *amx, cell *params)
 	// Get the NPC id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 	{
 		// Get the argument pointers and set its value
 		cell *pAddress = NULL;
@@ -341,7 +341,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVelocity(AMX *amx, cell *params)
 	float fY = amx_ctof(params[3]);
 	float fZ = amx_ctof(params[4]);
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Set the player velocity
@@ -355,7 +355,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVelocity(AMX *amx, cell *params)
 	// Get the NPC id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 	{
 		// Get the argument pointers and set its value
 		cell *pAddress = NULL;
@@ -394,7 +394,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetHealth(AMX *amx, cell *params)
 	// Get the health
 	float fHealth = amx_ctof(params[2]);
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Set the player health
@@ -409,7 +409,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetHealth(AMX *amx, cell *params)
 	int iNPCId = (int)params[1];
 	float fHealth = 0.0f;
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return amx_ftoc(fHealth);
 
 	// Get the player health
@@ -425,7 +425,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetArmour(AMX *amx, cell *params)
 	// Get the armour
 	float fArmour = amx_ctof(params[2]);
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Set the player armour
@@ -440,7 +440,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetArmour(AMX *amx, cell *params)
 	int iNPCId = (int)params[1];
 	float fArmour = 0.0f;
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return amx_ftoc(fArmour);
 
 	// Get the player armour
@@ -456,7 +456,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetSkin(AMX *amx, cell *params)
 	// Get the skin
 	int iSkin = (int)params[2];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Set the player skin
@@ -470,7 +470,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetSkin(AMX *amx, cell *params)
 	// Get the NPC id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Get the player skin
@@ -485,7 +485,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetKeys(AMX *amx, cell *params)
 	// Get the keys
 	DWORD dwKeys = (DWORD)params[2];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Get the player keys
@@ -503,7 +503,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetKeys(AMX *amx, cell *params)
 	// Get the NPC id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 	{
 		// Get the argument pointers and set its value
 		cell *pAddress = NULL;
@@ -543,7 +543,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetSpecialAction(AMX *amx, cell *params)
 	// Get the action id
 	int iActionId = (int)params[2];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Set the player special action
@@ -557,7 +557,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetSpecialAction(AMX *amx, cell *params)
 	// Get the NPC id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Get the player special action
@@ -580,7 +580,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GoTo(AMX *amx, cell *params)
 	// Get the ZMap status
 	int iZMap = (int)params[7];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Set the player velocity
@@ -596,7 +596,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_Stop(AMX *amx, cell *params)
 	// Get the NPC id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Stop the player
@@ -610,7 +610,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsMoving(AMX *amx, cell *params)
 	// Get the NPC id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Get the player moving state
@@ -625,7 +625,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeapon(AMX *amx, cell *params)
 	// Get the weapon id
 	int iWeapon = (int)params[2];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Set the player weapon
@@ -639,7 +639,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeapon(AMX *amx, cell *params)
 	// Get the NPC id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Get the player weapon
@@ -654,7 +654,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetAmmo(AMX *amx, cell *params)
 	// Get the ammo
 	int iAmmo = (int)params[2];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Set the player ammo
@@ -668,7 +668,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetAmmo(AMX *amx, cell *params)
 	// Get the NPC id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Get the player ammo
@@ -687,7 +687,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAt(AMX *amx, cell *params)
 	// Get the shooting flag
 	int iShoot = (int)params[5];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	/*// Thanks to abagail
@@ -712,19 +712,17 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAtPlayer(AMX *amx, cell *params)
 	// Get the shooting flag
 	int iShoot = (int)params[3];
 	// Make sure the npc is valid
-	if (!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 	// Make sure the player is valid
 	if (iPlayerId < 0 || iPlayerId > MAX_PLAYERS)
 		return 0;
 
-	if (!pNetGame->pPlayerPool->bIsPlayerConnected[iPlayerId] || iPlayerId == iNPCId)
+	if (!pNetGame->pPlayerPool->bIsPlayerConnectedEx[iPlayerId] || iPlayerId == iNPCId)
 		return 0;
 
-	CSAMPPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[iPlayerId];
-
 	// Set the player aiming
-	pServer->GetPlayerManager()->GetAt(iNPCId)->AimAtPlayer(pPlayer, !iShoot ? false : true);
+	pServer->GetPlayerManager()->GetAt(iNPCId)->AimAtPlayer(iPlayerId, !iShoot ? false : true);
 	return 1;
 }
 
@@ -736,7 +734,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_MeleeAttack(AMX *amx, cell *params)
 	// Get the attack time
 	int iTime = (int)params[2];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Set the player melee attack
@@ -750,7 +748,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StopAttack(AMX *amx, cell *params)
 	// Get the NPC id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Stop the player attack
@@ -765,7 +763,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StopAim(AMX *amx, cell *params)
 	// Get the NPC id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Stop the player aim
@@ -779,7 +777,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsAiming(AMX *amx, cell *params)
 	// Get the NPC id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Get the player aiming state
@@ -792,7 +790,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsShooting(AMX *amx, cell *params)
 	// Get the NPC id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Get the player shooting state
@@ -805,7 +803,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsReloading(AMX *amx, cell *params)
 	// Get the NPC id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Get the player shooting state
@@ -824,7 +822,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_EnterVehicle(AMX *amx, cell *params)
 	// Get the move type
 	int iType = (int)params[4];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Make the player enter the vehicle
@@ -837,7 +835,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ExitVehicle(AMX *amx, cell *params)
 	// Get the NPC id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Make the player exit the vehicle
@@ -854,7 +852,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_PutInVehicle(AMX *amx, cell *params)
 	// Get the seat id
 	int iSeatId = (int)params[3];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Make the player enter the vehicle
@@ -867,7 +865,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_RemoveFromVehicle(AMX *amx, cell *params)
 	// Get the NPC id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Make the player exit the vehicle
@@ -880,7 +878,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleID(AMX *amx, cell *params)
 	// Get the NPC id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return INVALID_ENTITY_ID;
 
 	// Make the player exit the vehicle
@@ -893,11 +891,14 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleSeat(AMX *amx, cell *params)
 	// Get the NPC id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Make the player exit the vehicle
-	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetVehicleId() == INVALID_ENTITY_ID ? 128 : pServer->GetPlayerManager()->GetAt(iNPCId)->GetSeatId();
+	if (pServer->GetPlayerManager()->GetAt(iNPCId)->GetVehicleId() == INVALID_ENTITY_ID)
+		return 128;
+
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetSeatId();
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleReloading(AMX *amx, cell *params)
@@ -908,7 +909,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleReloading(AMX *amx, cell *params)
 	// Get the reloading state
 	int iReload = (int)params[2];
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Toggle it
@@ -924,7 +925,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleInfiniteAmmo(AMX *amx, cell *params)
 	// Get the reloading state
 	int iToggle = (int)params[2];
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Toggle it
@@ -953,7 +954,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StartPlayingPlayback(AMX *amx, cell *params
 	// Get the name
 	amx_GetString(szFile, pAddress, 0, iLength);
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Start Playing the player playback
@@ -966,7 +967,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StopPlayingPlayback(AMX *amx, cell *params)
 	// Get the npc id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Stop Playing the player playback
@@ -980,7 +981,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_PausePlayingPlayback(AMX *amx, cell *params
 	// Get the npc id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Pause Playing the player playback
@@ -994,7 +995,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ResumePlayingPlayback(AMX *amx, cell *param
 	// Get the npc id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Resume Playing the player playback
@@ -1167,7 +1168,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_PlayNode(AMX *amx, cell *params)
 	// Get the node type
 	int iType = (int)params[3];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Make sure the node is valid
@@ -1184,7 +1185,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StopPlayingNode(AMX *amx, cell *params)
 	// Get the NPC id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnected(iNPCId))
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Stop playing the node

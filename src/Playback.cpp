@@ -10,7 +10,7 @@
 
 #include "Main.h"
 
-extern CSAMPServer      *pNetGame;
+extern CNetGame      *pNetGame;
 
 CPlayback::CPlayback(char *szFile)
 {
@@ -77,7 +77,7 @@ bool CPlayback::Initialize()
 	return true;
 }
 
-bool CPlayback::Process(CPlayer *pPlayer)
+bool CPlayback::Process(CPlayerData *pPlayerData)
 {
 	// Dont process if its paused
 	if(m_bPaused)
@@ -86,30 +86,30 @@ bool CPlayback::Process(CPlayer *pPlayer)
 		if(m_iPlaybackType == PLAYBACK_TYPE_DRIVER)
 		{
 			// Set the state
-			pPlayer->SetState(PLAYER_STATE_DRIVER);
+			pPlayerData->SetState(PLAYER_STATE_DRIVER);
 			// Pause the sync data
 			m_vehicleSyncData.wUDAnalog = 0;
 			m_vehicleSyncData.wLRAnalog = 0;
 			m_vehicleSyncData.wKeys = 0;
 			m_vehicleSyncData.vecVelocity = CVector(0.0f, 0.0f, 0.0f);
 			// Set vehicle sync data
-			pPlayer->SetVehicleSync(m_vehicleSyncData);		
+			pPlayerData->SetVehicleSync(&m_vehicleSyncData);		
 			// Update the player
-			pPlayer->UpdateSync(UPDATE_STATE_DRIVER);
+			pPlayerData->UpdateSync(UPDATE_STATE_DRIVER);
 		}
 		else
 		{
 			// Set the state
-			pPlayer->SetState(PLAYER_STATE_ONFOOT);
+			pPlayerData->SetState(PLAYER_STATE_ONFOOT);
 			// Pause the sync data
 			m_syncData.wUDAnalog = 0;
 			m_syncData.wLRAnalog = 0;
 			m_syncData.wKeys = 0;
 			m_syncData.vecVelocity = CVector(0.0f, 0.0f, 0.0f);
 			// Set vehicle sync data
-			pPlayer->SetOnFootSync(m_syncData);		
+			pPlayerData->SetOnFootSync(&m_syncData);		
 			// Update the player
-			pPlayer->UpdateSync(UPDATE_STATE_ONFOOT);
+			pPlayerData->UpdateSync(UPDATE_STATE_ONFOOT);
 		}
 		// Update the starting time
 		m_dwStartTime = (GetTickCount() - m_dwTime);
@@ -127,24 +127,24 @@ bool CPlayback::Process(CPlayer *pPlayer)
 				return false;
 
 			// Get the vehicle interface
-			CSAMPVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[pPlayer->GetVehicleId()];
+			CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[pPlayerData->GetVehicleId()];
 			// Set the data
 			pVehicle->vecPosition = vehicleSyncData.vecPosition;
 			pVehicle->vecQuaternion = vehicleSyncData.vecQuaternion;
 			pVehicle->fQuaternionAngle = vehicleSyncData.fQuaternionAngle;
 			pVehicle->vecVelocity = vehicleSyncData.vecVelocity;
 			// Apply the sync data
-			pPlayer->SetState(PLAYER_STATE_DRIVER);
+			pPlayerData->SetState(PLAYER_STATE_DRIVER);
 			// Save the position
-			pPlayer->SetPosition(vehicleSyncData.vecPosition);
+			pPlayerData->SetPosition(vehicleSyncData.vecPosition);
 			// Save the quaternion
-			pPlayer->SetQuaternion(vehicleSyncData.vecQuaternion, vehicleSyncData.fQuaternionAngle);
+			pPlayerData->SetQuaternion(vehicleSyncData.vecQuaternion, vehicleSyncData.fQuaternionAngle);
 			// Set vehicle sync data
-			pPlayer->SetVehicleSync(vehicleSyncData);
+			pPlayerData->SetVehicleSync(&vehicleSyncData);
 			// Save the last onfoot sync
 			memcpy(&m_vehicleSyncData, &vehicleSyncData, sizeof(CVehicleSyncData));
 			// Update the player
-			pPlayer->UpdateSync(UPDATE_STATE_DRIVER);
+			pPlayerData->UpdateSync(UPDATE_STATE_DRIVER);
 		}
 		else
 		{
@@ -154,17 +154,17 @@ bool CPlayback::Process(CPlayer *pPlayer)
 				return false;
 
 			// Apply the sync data
-			pPlayer->SetState(PLAYER_STATE_ONFOOT);
+			pPlayerData->SetState(PLAYER_STATE_ONFOOT);
 			// Save the position
-			pPlayer->SetPosition(syncData.vecPosition);
+			pPlayerData->SetPosition(syncData.vecPosition);
 			// Save the quaternion
-			pPlayer->SetQuaternion(syncData.vecQuaternion, syncData.fQuaternionAngle);
+			pPlayerData->SetQuaternion(syncData.vecQuaternion, syncData.fQuaternionAngle);
 			// Set onfoot data
-			pPlayer->SetOnFootSync(syncData);
+			pPlayerData->SetOnFootSync(&syncData);
 			// Save the last onfoot sync
 			memcpy(&m_syncData, &syncData, sizeof(CSyncData));
 			// Update the player
-			pPlayer->UpdateSync(UPDATE_STATE_ONFOOT);
+			pPlayerData->UpdateSync(UPDATE_STATE_ONFOOT);
 		}
 		// Update the time
 		if(!fread(&m_dwTime, sizeof(DWORD), 1, m_pFile))

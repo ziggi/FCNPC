@@ -67,7 +67,7 @@ void CNode::GetHeaderInfo(unsigned long *pulVehicleNodes, unsigned long *pulPedN
 	*pulNaviNodes = m_nodeHeader.ulNaviNodesNumber;
 }
 
-int CNode::Process(CPlayer *pPlayer, int iPointId, int iLastPoint, int iType, CVector vecVelocity)
+int CNode::Process(CPlayerData *pPlayerData, int iPointId, int iLastPoint, int iType, CVector vecVelocity)
 {
 	int iChangeNode = 0;
 	// Set the node to the player point
@@ -101,8 +101,8 @@ int CNode::Process(CPlayer *pPlayer, int iPointId, int iLastPoint, int iType, CV
 		{
 			if(m_nodeLink.usAreaId != 65535)
 			{
-				if((iChangeNode = CCallbackManager::OnChangeNode(pPlayer->GetId(), (int)m_nodeLink.usAreaId)))
-					return pPlayer->ChangeNode(m_nodeLink.usAreaId, usLinkId);
+				if((iChangeNode = CCallbackManager::OnChangeNode(pPlayerData->GetId(), (int)m_nodeLink.usAreaId)))
+					return pPlayerData->ChangeNode(m_nodeLink.usAreaId, usLinkId);
 			}
 			else
 				return 0;
@@ -115,9 +115,9 @@ int CNode::Process(CPlayer *pPlayer, int iPointId, int iLastPoint, int iType, CV
 			CVector vecPosition;
 			GetPosition(&vecPosition);
 			// Set the player velocity
-			pPlayer->SetVelocity(vecVelocity);
+			pPlayerData->SetVelocity(vecVelocity);
 			// Move the player to it
-			pPlayer->GoTo(vecPosition, iType == NODE_TYPE_PED ? MOVE_TYPE_WALK : MOVE_TYPE_DRIVE, true);
+			pPlayerData->GoTo(vecPosition, iType == NODE_TYPE_PED ? MOVE_TYPE_WALK : MOVE_TYPE_DRIVE, true);
 
 			return m_nodeLink.usNodeId;
 		}
@@ -125,7 +125,7 @@ int CNode::Process(CPlayer *pPlayer, int iPointId, int iLastPoint, int iType, CV
 	return 0;
 }
 
-int CNode::ProcessNodeChange(CPlayer *pPlayer, unsigned short usLinkId, int iType, CVector vecVelocity)
+int CNode::ProcessNodeChange(CPlayerData *pPlayerData, unsigned short usLinkId, int iType, CVector vecVelocity)
 {
 	// Set the node link
 	SetLink(usLinkId);
@@ -135,9 +135,9 @@ int CNode::ProcessNodeChange(CPlayer *pPlayer, unsigned short usLinkId, int iTyp
 	CVector vecPosition;
 	GetPosition(&vecPosition);
 	// Set the player velocity
-	pPlayer->SetVelocity(vecVelocity);
+	pPlayerData->SetVelocity(vecVelocity);
 	// Move the player to it
-	pPlayer->GoTo(vecPosition, iType == NODE_TYPE_PED ? MOVE_TYPE_WALK : MOVE_TYPE_DRIVE, false);
+	pPlayerData->GoTo(vecPosition, iType == NODE_TYPE_PED ? MOVE_TYPE_WALK : MOVE_TYPE_DRIVE, false);
 
 	return m_nodeLink.usNodeId;
 }

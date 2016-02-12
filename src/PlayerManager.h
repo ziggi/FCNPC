@@ -11,7 +11,7 @@
 #ifndef PLAYERMANAGER_H
 #define PLAYERMANAGER_H
 
-#include "Player.h"
+#include "CPlayerData.h"
 
 class CPlayerManager
 {
@@ -19,27 +19,27 @@ class CPlayerManager
 		CPlayerManager();
 		~CPlayerManager();
 
-		bool IsPlayerConnected(EntityId playerId)
+		bool IsPlayerConnectedEx(WORD playerId)
 		{
 			if(playerId > MAX_PLAYERS || playerId < 0)
 				return false;
 			else
 				return m_bConnected[playerId];
 		};
-		inline CPlayer *GetAt(EntityId playerId) { return m_pPlayer[playerId]; };
-		bool            SetupPlayer(EntityId playerId);
+		inline CPlayerData *GetAt(WORD playerId) { return m_pPlayerData[playerId]; };
+		bool SetupPlayer(WORD playerId);
 		
-		EntityId        AddPlayer(char *szName);
-		bool            DeletePlayer(EntityId playerId);
+		WORD AddPlayer(char *szName);
+		bool DeletePlayer(WORD playerId);
 
-		void            Process();
+		void Process();
 
-		bool            IsNPC(int iPlayerId);
+		bool IsNPC(int iPlayerId);
 
 	private:
-		EntityId        m_players;
-		bool            m_bConnected[MAX_PLAYERS];
-		CPlayer         *m_pPlayer[MAX_PLAYERS];
+		WORD m_players;
+		bool m_bConnected[MAX_PLAYERS];
+		CPlayerData *m_pPlayerData[MAX_PLAYERS];
 };
 
 #endif

@@ -11,10 +11,10 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include "SAMPPlayer.h"
+#include "Structs.h"
 #include "SANode.h"
 
-class CPlayer;
+class CPlayerData;
 
 class CNode
 {
@@ -23,8 +23,8 @@ class CNode
 		~CNode();
 
 		bool Initialize();
-		int  Process(CPlayer *pPlayer, int iPointId, int iLastPoint, int iType, CVector vecVelocity);
-		int  ProcessNodeChange(CPlayer *pPlayer, unsigned short usLinkId, int iType, CVector vecVelocity);
+		int  Process(CPlayerData *pPlayerData, int iPointId, int iLastPoint, int iType, CVector vecVelocity);
+		int  ProcessNodeChange(CPlayerData *pPlayerData, unsigned short usLinkId, int iType, CVector vecVelocity);
 
 		void SetPaused(bool bPaused) { m_bPaused = bPaused; };
 

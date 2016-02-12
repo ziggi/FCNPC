@@ -11,11 +11,7 @@
 
 #include "Main.h"
 
-extern CServer          *pServer;
-extern CSAMPRPCParams   *pCreateNPCParams;
-extern void             **ppPluginData;
-extern logprintf_t      logprintf;
-extern CSAMPServer      *pNetGame;
+extern logprintf_t logprintf;
 
 // Functions
 CreateNPC_RPC_t                 CSAMPFunctions::pfn__CreateNPC_RPC = NULL;
@@ -26,9 +22,9 @@ CPlayer__EnterVehicle_t         CSAMPFunctions::pfn__CPlayer__EnterVehicle = NUL
 CPlayer__ExitVehicle_t          CSAMPFunctions::pfn__CPlayer__ExitVehicle = NULL;
 CConfig__GetValueAsInteger_t    CSAMPFunctions::pfn__CConfig__GetValueAsInteger = NULL;
 GetVehicleModelInfo_t           CSAMPFunctions::pfn__GetVehicleModelInfo = NULL;
-RakServer__Send_t               CSAMPFunctions::pfn__RakServer__Send = NULL;
-RakServer__RPC_t                CSAMPFunctions::pfn__RakServer__RPC = NULL;
-RakServer__Receive_t            CSAMPFunctions::pfn__RakServer__Receive = NULL;
+RakNet__Send_t                  CSAMPFunctions::pfn__RakNet__Send = NULL;
+RakNet__RPC_t                   CSAMPFunctions::pfn__RakNet__RPC = NULL;
+RakNet__Receive_t               CSAMPFunctions::pfn__RakNet__Receive = NULL;
 GetNetGame_t                    CSAMPFunctions::pfn__GetNetGame = NULL;
 GetConsole_t                    CSAMPFunctions::pfn__GetConsole = NULL;
 GetRakServer_t                  CSAMPFunctions::pfn__GetRakServer = NULL;
@@ -52,21 +48,23 @@ void CSAMPFunctions::Initialize()
 void CSAMPFunctions::PreInitialize()
 {
 	pfn__GetNetGame = (GetNetGame_t)(ppPluginData[PLUGIN_DATA_NETGAME]);
-	pNetGame = (CSAMPServer*)pfn__GetNetGame();
+	pNetGame = (CNetGame*)pfn__GetNetGame();
 
 	pfn__GetConsole = (GetConsole_t)(ppPluginData[PLUGIN_DATA_CONSOLE]);
+	pConsole = (void*)pfn__GetConsole();
 
 	pfn__GetRakServer = (GetRakServer_t)(ppPluginData[PLUGIN_DATA_RAKSERVER]);
+	pRakServer = (RakServer*)pfn__GetRakServer();
 
-	int *pRakServer_VTBL = ((int*)(*(void**)pfn__GetRakServer()));
+	int *pRakServer_VTBL = ((int*)(*(void**)pRakServer));
 
 	CUtils::UnProtect(pRakServer_VTBL[RAKNET_SEND_OFFSET], 4);
 	CUtils::UnProtect(pRakServer_VTBL[RAKNET_RPC_OFFSET], 4);
 	CUtils::UnProtect(pRakServer_VTBL[RAKNET_RECEIVE_OFFSET], 4);
 
-	pfn__RakServer__Send = (RakServer__Send_t)(pRakServer_VTBL[RAKNET_SEND_OFFSET]);
-	pfn__RakServer__RPC = (RakServer__RPC_t)(pRakServer_VTBL[RAKNET_RPC_OFFSET]);
-	pfn__RakServer__Receive = (RakServer__Receive_t)(pRakServer_VTBL[RAKNET_RECEIVE_OFFSET]);
+	pfn__RakNet__Send = (RakNet__Send_t)(pRakServer_VTBL[RAKNET_SEND_OFFSET]);
+	pfn__RakNet__RPC = (RakNet__RPC_t)(pRakServer_VTBL[RAKNET_RPC_OFFSET]);
+	pfn__RakNet__Receive = (RakNet__Receive_t)(pRakServer_VTBL[RAKNET_RECEIVE_OFFSET]);
 }
 
 int CSAMPFunctions::GetFreePlayerSlot()
@@ -75,7 +73,7 @@ int CSAMPFunctions::GetFreePlayerSlot()
 	for(int i = (GetMaxPlayers() - 1); i != 0; i--)
 	{
 		// Is he not connected ?
-		if(!pNetGame->pPlayerPool->bIsPlayerConnected[i])
+		if(!pNetGame->pPlayerPool->bIsPlayerConnectedEx[i])
 			return i;
 	}
 	return INVALID_ENTITY_ID;
@@ -140,7 +138,7 @@ void CSAMPFunctions::PlayerExitVehicle(int iPlayerId, int iVehicleId)
 	pfn__CPlayer__ExitVehicle(pNetGame->pPlayerPool->pPlayer[iPlayerId], iVehicleId);	
 }
 
-CVector *CSAMPFunctions::GetVehicleModelInfo(int iModelId, int iInfoType)
+CVector *CSAMPFunctions::GetVehicleModelInfoEx(int iModelId, int iInfoType)
 {
 	return pfn__GetVehicleModelInfo(iModelId, iInfoType);
 }
@@ -162,7 +160,7 @@ int CSAMPFunctions::GetMaxNPC()
 void CSAMPFunctions::PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE iWeaponId, CVector vecPoint)
 {
 	// Validate the player
-	if (!pServer->GetPlayerManager()->IsPlayerConnected(iPlayerId))
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iPlayerId))
 		return;
 
 	// Get the player position
@@ -183,10 +181,10 @@ void CSAMPFunctions::PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE
 	{
 		for (int i = 0; i < MAX_PLAYERS; i++)
 		{
-			if (!pNetGame->pPlayerPool->bIsPlayerConnected[i] || iPlayerId == i)
+			if (!pNetGame->pPlayerPool->bIsPlayerConnectedEx[i] || iPlayerId == i)
 				continue;
 
-			CSAMPPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[i];
+			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[i];
 
 			if (CMath::GetDistanceFromRayToPoint(vecPoint, vecPosition, pPlayer->vecPosition) < 1.0f &&
 				CMath::GetDistanceBetween3DPoints(vecPosition, pPlayer->vecPosition) < MAX_DAMAGE_DISTANCE)
@@ -205,8 +203,7 @@ void CSAMPFunctions::PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE
 	bsSend.Write((char *)&bulletSyncData, sizeof(CBulletSyncData));
 
 	// Send it
-	CSAMPSystemAddress systemAddress = CSAMPSystemAddress();
 	CSAMPRakPeer *pSAMPRakPeer = (CSAMPRakPeer *)CAddress::VAR_RakPeerPtr;
-	pfn__RakServer__Send((void *)pSAMPRakPeer, &bsSend, 1, 9, 0, CSAMPPlayerId(systemAddress), 1);
+	pfn__RakNet__Send((void *)pSAMPRakPeer, &bsSend, HIGH_PRIORITY, RELIABLE_ORDERED, 0, UNASSIGNED_PLAYER_ID, 1);
 }
 

@@ -25,15 +25,15 @@ else ()
 		${CMAKE_CURRENT_SOURCE_DIR}/src/fopen_s/*.h
 	)
 
-	set (CMAKE_C_FLAGS "-m32 -fPIC -O2 -w")
-	set (CMAKE_CXX_FLAGS "-m32 -fPIC -O2 -w")
-	set (CMAKE_SHARED_LINKER_FLAGS "-m32 -O2 -fshort-wchar -shared")
+	set (CMAKE_C_FLAGS "-m32 -fPIC -O2 -w -DSAMPGDK_AMALGAMATION -fno-stack-protector -fpack-struct=1")
+	set (CMAKE_CXX_FLAGS "-m32 -fPIC -O2 -w -DSAMPGDK_AMALGAMATION -fno-stack-protector -fpack-struct=1")
+	set (CMAKE_SHARED_LINKER_FLAGS "-fshort-wchar -shared")
 endif (WIN32)
 
 include_directories (
 	${CMAKE_CURRENT_SOURCE_DIR}/src
-	${CMAKE_CURRENT_SOURCE_DIR}/src/SDK
-	${CMAKE_CURRENT_SOURCE_DIR}/src/SDK/amx
+	${CMAKE_CURRENT_SOURCE_DIR}/src/sdk
+	${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/amx
 )
 
 set (SUBHOOK_STATIC true)
@@ -46,14 +46,16 @@ file (GLOB FCNPC_SRC
 	${FCNPC_SRC}
 	${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/src/SDK/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/SDK/*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/src/SDK/amx/*.c
-	${CMAKE_CURRENT_SOURCE_DIR}/src/SDK/amx/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/amx/*.c
+	${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/amx/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/strlcpy/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/strlcpy/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/raknet/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/raknet/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/sampgdk/*.c
+	${CMAKE_CURRENT_SOURCE_DIR}/src/sampgdk/*.h
 )
 
 add_library (${PROJECT_NAME} SHARED ${FCNPC_SRC})

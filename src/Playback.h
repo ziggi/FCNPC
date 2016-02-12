@@ -11,13 +11,9 @@
 #ifndef PLAYBACK_H
 #define PLAYBACK_H
 
-#include "SAMPPlayer.h"
+#include "Structs.h"
 
-class CPlayer;
-
-#ifndef _WIN32
-#	define MAX_PATH 260
-#endif
+class CPlayerData;
 
 class CPlayback
 {
@@ -26,7 +22,7 @@ class CPlayback
 		~CPlayback();
 
 		bool Initialize();
-		bool Process(CPlayer *pPlayer);
+		bool Process(CPlayerData *pPlayerData);
 
 		void SetPaused(bool bPaused) { m_bPaused = bPaused; };
 

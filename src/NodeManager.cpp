@@ -16,7 +16,7 @@ extern CServer			*pServer;
 CNodeManager::CNodeManager()
 {
 	// Reset node values
-	for(EntityId i = 0; i < MAX_NODES; i++)
+	for(WORD i = 0; i < MAX_NODES; i++)
 	{
 		m_bOpened[i] = false;
 		m_pNode[i] = NULL;
@@ -26,7 +26,7 @@ CNodeManager::CNodeManager()
 CNodeManager::~CNodeManager()
 {
 	// Reset player values
-	for(EntityId i = 0; i < MAX_NODES; i++)
+	for(WORD i = 0; i < MAX_NODES; i++)
 	{
 		if(m_pNode[i])
 			SAFE_DELETE(m_pNode[i]);

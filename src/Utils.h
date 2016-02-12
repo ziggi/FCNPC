@@ -18,16 +18,14 @@ class CUtils
 		static void  UnProtect(DWORD dwAddress, size_t sSize);
 		static void  FCNPCSleep(DWORD dwMs);
 		static DWORD FindPattern(char *szPattern, char *szMask);
-#ifndef _WIN32
-		static void LoadTickCount();
-		static int  GetTickCount();
-#endif
 };
 
 // Linux
 #ifndef _WIN32
 
+#undef GetTickCount
 int GetTickCount();
+void LoadTickCount();
 
 #endif
 

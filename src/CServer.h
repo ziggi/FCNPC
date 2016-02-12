@@ -11,8 +11,16 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+struct CNetGame;
+class RakServer;
+struct Packet;
+struct CVehicleSpawn;
+class CGangZonePool;
+
+#include "Address.h"
 #include "PlayerManager.h"
 #include "NodeManager.h"
+#include "ZMap.h"
 #include <list>
 
 class CServer
@@ -23,7 +31,7 @@ class CServer
 
 		BYTE Initialize();
 
-		CPlayerManager     *GetPlayerManager() { return m_pPlayerManager; };
+		CPlayerManager     *GetPlayerManager() { return m_pPlayerDataManager; };
 		CNodeManager       *GetNodeManager() { return m_pNodeManager; };
 
 		bool    DoesNameExist(char *szName);
@@ -39,7 +47,7 @@ class CServer
 
 	private:
 		eSAMPVersion        m_Version;
-		CPlayerManager      *m_pPlayerManager;
+		CPlayerManager      *m_pPlayerDataManager;
 		CNodeManager        *m_pNodeManager;
 		CThread             *m_pDamageThread;
 		CZMap               *m_pZMap;
