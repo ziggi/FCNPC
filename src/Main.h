@@ -53,6 +53,7 @@
 #include "Utils.h"
 #include "Maths.h"
 #include "Common.h"
+#include "CVector.h"
 #include "Thread.h"
 #include "raknet/BitStream.h"
 // Nodes includes

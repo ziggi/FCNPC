@@ -21,9 +21,9 @@ CPlayer::CPlayer(EntityId playerId, char *szName)
 	// Save player name
 	strlcpy(m_szName, szName, sizeof(m_szName));
 	// Reset variables
-	m_vecDestination = CVector3();
-	m_vecNodeVelocity = CVector3();
-	m_vecAimAt = CVector3();
+	m_vecDestination = CVector();
+	m_vecNodeVelocity = CVector();
+	m_vecAimAt = CVector();
 	m_bSetup = false;
 	m_bSpawned = false;
 	m_bMoving = false;
@@ -133,7 +133,7 @@ bool CPlayer::Respawn()
 		m_pPlayback->SetPaused(true);
 
 	// Get the last player stats
-	CVector3 vecPosition = m_pInterface->vecPosition;
+	CVector vecPosition = m_pInterface->vecPosition;
 	float fHealth = m_pInterface->fHealth;
 	float fArmour = m_pInterface->fArmour;
 	WORD wVehicleId = m_pInterface->wVehicleId;
@@ -174,7 +174,7 @@ bool CPlayer::Respawn()
 	return true;
 }
 
-void CPlayer::SetSpawnPosition(CVector3 vecPosition)
+void CPlayer::SetSpawnPosition(CVector vecPosition)
 {
 	// Set the player position
 	m_pInterface->vecSpawnPosition = vecPosition;
@@ -212,7 +212,7 @@ void CPlayer::Update(int iState)
 		// Set the sync velocity vector
 		m_pInterface->syncData.vecVelocity = m_pInterface->vecVelocity;
 		// Reset the sync surfing vector
-		m_pInterface->syncData.vecSurfing = CVector3(0.0f, 0.0f, 0.0f);
+		m_pInterface->syncData.vecSurfing = CVector(0.0f, 0.0f, 0.0f);
 		// Reset the sync surfing information
 		m_pInterface->syncData.wSurfingInfo = 0;
 		// Set the sync weapon index
@@ -334,7 +334,7 @@ void CPlayer::UpdateAim()
 		// Convert the player angle to radians
 		float fAngle = CMath::DegreeToRadians(GetAngle());
 		// Calculate the camera target
-		CVector3 vecTarget(m_pInterface->aimSyncData.vecPosition.fX - sin(fAngle) * 0.2f,
+		CVector vecTarget(m_pInterface->aimSyncData.vecPosition.fX - sin(fAngle) * 0.2f,
 			m_pInterface->aimSyncData.vecPosition.fY + cos(fAngle) * 0.2f, m_pInterface->aimSyncData.vecPosition.fZ);
 		
 		// Calculate the camera front vector
@@ -398,10 +398,10 @@ void CPlayer::Process()
 		if(m_bMoving)
 		{
 			// Get the player position
-			CVector3 vecPosition;
+			CVector vecPosition;
 			GetPosition(&vecPosition);
 			// Get the player velocity
-			CVector3 vecVelocity;
+			CVector vecVelocity;
 			GetVelocity(&vecVelocity);
 			// Make sure we still need to move
 			if((GetTickCount() - m_dwMoveStartTime) < m_dwMoveTime)
@@ -410,7 +410,7 @@ void CPlayer::Process()
 				DWORD dwThisTick = GetTickCount();
 				DWORD dwTime = (dwThisTick - m_dwMoveTickCount);
 				// Set the new position
-				CVector3 vecNewPosition = vecPosition + (vecVelocity * (float)dwTime);
+				CVector vecNewPosition = vecPosition + (vecVelocity * (float)dwTime);
 				// Set the Z ground (is using ZMap)
 				if(m_bUseZMap && pServer->GetZMap()->IsInitialized())
 					vecNewPosition.fZ = pServer->GetZMap()->GetGroundForCoord(vecNewPosition) + 0.5f;
@@ -427,7 +427,7 @@ void CPlayer::Process()
 				DWORD dwTime = (dwThisTick - m_dwMoveTickCount);
 				dwTime -= (dwThisTick - m_dwMoveStartTime) - m_dwMoveTime;
 				// Set the new position
-				CVector3 vecNewPosition = vecPosition + (vecVelocity * (float)dwTime);
+				CVector vecNewPosition = vecPosition + (vecVelocity * (float)dwTime);
 				// Set the Z ground (is using ZMap)
 				if(m_bUseZMap && pServer->GetZMap()->IsInitialized())
 					vecNewPosition.fZ = pServer->GetZMap()->GetGroundForCoord(vecNewPosition) + 0.5f;
@@ -608,10 +608,10 @@ void CPlayer::Process()
 			// Get the player vehicle interface
 			CSAMPVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[m_pInterface->wVehicleId];
 			// Get the vehicle position
-			CVector3 vecPosition;
+			CVector vecPosition;
 			GetPosition(&vecPosition);
 			// Get the vehicle velocity
-			CVector3 vecVelocity;
+			CVector vecVelocity;
 			GetVelocity(&vecVelocity);
 			// Make sure we still need to move
 			if((GetTickCount() - m_dwMoveStartTime) < m_dwMoveTime)
@@ -620,7 +620,7 @@ void CPlayer::Process()
 				DWORD dwThisTick = GetTickCount();
 				DWORD dwTime = (dwThisTick - m_dwMoveTickCount);
 				// Set the new position
-				CVector3 vecNewPosition = vecPosition + (vecVelocity * (float)dwTime);
+				CVector vecNewPosition = vecPosition + (vecVelocity * (float)dwTime);
 				// Set the Z ground (is using ZMap)
 				if(m_bUseZMap && pServer->GetZMap()->IsInitialized())
 					vecNewPosition.fZ = pServer->GetZMap()->GetGroundForCoord(vecNewPosition) + 0.5f;
@@ -637,7 +637,7 @@ void CPlayer::Process()
 				DWORD dwTime = (dwThisTick - m_dwMoveTickCount);
 				dwTime -= (dwThisTick - m_dwMoveStartTime) - m_dwMoveTime;
 				// Set the new position
-				CVector3 vecNewPosition = vecPosition + (vecVelocity * (float)dwTime);
+				CVector vecNewPosition = vecPosition + (vecVelocity * (float)dwTime);
 				// Set the Z ground (is using ZMap)
 				if(m_bUseZMap && pServer->GetZMap()->IsInitialized())
 					vecNewPosition.fZ = pServer->GetZMap()->GetGroundForCoord(vecNewPosition) + 0.5f;
@@ -683,13 +683,13 @@ void CPlayer::Process()
 			// Reset the player state
 			SetState(PLAYER_STATE_ONFOOT);
 			// Get the vehicle position
-			CVector3 vecVehiclePos = pNetGame->pVehiclePool->pVehicle[m_pInterface->wVehicleId]->vecPosition;
+			CVector vecVehiclePos = pNetGame->pVehiclePool->pVehicle[m_pInterface->wVehicleId]->vecPosition;
 			// Get the seat position
-			CVector3 *pvecSeat = CSAMPFunctions::GetVehicleModelInfo(pNetGame->pVehiclePool->pVehicle[m_pInterface->wVehicleId]->iModelId,
+			CVector *pvecSeat = CSAMPFunctions::GetVehicleModelInfo(pNetGame->pVehiclePool->pVehicle[m_pInterface->wVehicleId]->iModelId,
 				m_pInterface->byteSeatId == 0 || m_pInterface->byteSeatId == 1 ? VEHICLE_MODEL_INFO_FRONTSEAT : VEHICLE_MODEL_INFO_REARSEAT);
 	
 			// Adjust the seat vector
-			CVector3 vecSeat(pvecSeat->fX + 0.8f, pvecSeat->fY, pvecSeat->fZ);
+			CVector vecSeat(pvecSeat->fX + 0.8f, pvecSeat->fY, pvecSeat->fZ);
 			if (m_pInterface->byteSeatId == 0 || m_pInterface->byteSeatId == 2)
 				vecSeat.fX = -vecSeat.fX;
 
@@ -698,7 +698,7 @@ void CPlayer::Process()
 			// This is absolutely bullshit
 			float _fAngle = fAngle * 0.01570796326794897f;
 			// Calculate the seat position based on vehicle angle
-			CVector3 vecSeatPosition(vecSeat.fX * cos(_fAngle) - vecSeat.fY * sin(_fAngle) + vecVehiclePos.fX,
+			CVector vecSeatPosition(vecSeat.fX * cos(_fAngle) - vecSeat.fY * sin(_fAngle) + vecVehiclePos.fX,
 				vecSeat.fX * sin(_fAngle) + vecSeat.fY * cos(_fAngle) + vecVehiclePos.fY, vecSeat.fZ + vecVehiclePos.fZ);
 
 			// Set his position
@@ -714,7 +714,7 @@ void CPlayer::Process()
 	}
 }
 
-void CPlayer::SetPosition(CVector3 vecPosition)
+void CPlayer::SetPosition(CVector vecPosition)
 {
 	// Check the player state
 	if(GetState() == PLAYER_STATE_DRIVER && m_pInterface->wVehicleId != INVALID_ENTITY_ID)
@@ -728,7 +728,7 @@ void CPlayer::SetPosition(CVector3 vecPosition)
 	m_pInterface->vecPosition = vecPosition;
 }
 
-void CPlayer::GetPosition(CVector3 *pvecPosition)
+void CPlayer::GetPosition(CVector *pvecPosition)
 {
 	// Check the player state
 	if((GetState() == PLAYER_STATE_DRIVER ||  GetState() == PLAYER_STATE_PASSENGER) && m_pInterface->wVehicleId != INVALID_ENTITY_ID)
@@ -742,7 +742,7 @@ void CPlayer::GetPosition(CVector3 *pvecPosition)
 		*pvecPosition = m_pInterface->vecPosition;
 }
 
-void CPlayer::SetQuaternion(CVector3 vecQuaternion, float fAngle)
+void CPlayer::SetQuaternion(CVector vecQuaternion, float fAngle)
 {
 	// Check the player state
 	if(GetState() == PLAYER_STATE_DRIVER && m_pInterface->wVehicleId != INVALID_ENTITY_ID)
@@ -758,7 +758,7 @@ void CPlayer::SetQuaternion(CVector3 vecQuaternion, float fAngle)
 	m_pInterface->syncData.fQuaternionAngle = fAngle;
 }
 
-void CPlayer::GetQuaternion(CVector3 *pvecQuaternion, float *pfAngle)
+void CPlayer::GetQuaternion(CVector *pvecQuaternion, float *pfAngle)
 {
 	// Check the player state
 	if((GetState() == PLAYER_STATE_DRIVER ||  GetState() == PLAYER_STATE_PASSENGER) && m_pInterface->wVehicleId != INVALID_ENTITY_ID)
@@ -870,7 +870,7 @@ void CPlayer::SetSpecialAction(int iActionId)
 	m_pInterface->syncData.byteSpecialAction = (BYTE)iActionId;
 }
 
-void CPlayer::SetVelocity(CVector3 vecVelocity)
+void CPlayer::SetVelocity(CVector vecVelocity)
 {
 	// Check the player state
 	if(GetState() == PLAYER_STATE_DRIVER && m_pInterface->wVehicleId != INVALID_ENTITY_ID)
@@ -884,7 +884,7 @@ void CPlayer::SetVelocity(CVector3 vecVelocity)
 	m_pInterface->vecVelocity = vecVelocity;
 }
 
-void CPlayer::GetVelocity(CVector3 *pvecVelocity)
+void CPlayer::GetVelocity(CVector *pvecVelocity)
 {
 	// Check the player state
 	if((GetState() == PLAYER_STATE_DRIVER ||  GetState() == PLAYER_STATE_PASSENGER) && m_pInterface->wVehicleId != INVALID_ENTITY_ID)
@@ -914,7 +914,7 @@ void CPlayer::GetKeys(WORD *pwUDAnalog, WORD *pwLRAnalog, DWORD *pdwKeys)
 	*pdwKeys = m_pInterface->dwKeys;
 }
 
-void CPlayer::GoTo(CVector3 vecPoint, int iType, bool bUseZMap)
+void CPlayer::GoTo(CVector vecPoint, int iType, bool bUseZMap)
 {
 	// Validate the mouvement type
 	if(iType > MOVE_TYPE_DRIVE || iType < MOVE_TYPE_WALK)
@@ -947,10 +947,10 @@ void CPlayer::GoTo(CVector3 vecPoint, int iType, bool bUseZMap)
 		SetKeys(0x0000, 0x0000, 0);
 
 	// Get the player position
-	CVector3 vecPosition;
+	CVector vecPosition;
 	GetPosition(&vecPosition);
 	// Get the moving front vector
-	CVector3 vecFront = m_vecDestination - vecPosition;
+	CVector vecFront = m_vecDestination - vecPosition;
 	// Get the distance to the destination point
 	float fDistance = CMath::GetDistanceBetween3DPoints(vecPosition, m_vecDestination);	
 	// Set the player to the destination angle
@@ -983,12 +983,12 @@ void CPlayer::StopMoving()
 	// Reset other moving variables
 	m_dwMoveTime = 0;
 	m_dwMoveStartTime = 0;
-	memset(&m_vecDestination, 0, sizeof(CVector3));
+	memset(&m_vecDestination, 0, sizeof(CVector));
 	// Reset the ZMap usage
 	m_bUseZMap = false;
 }
 
-void CPlayer::AimAt(CVector3 vecPoint, bool bShoot)
+void CPlayer::AimAt(CVector vecPoint, bool bShoot)
 {
 	// Set the aiming flag
 	if(!m_bAiming)
@@ -998,11 +998,11 @@ void CPlayer::AimAt(CVector3 vecPoint, bool bShoot)
 		m_bReloading = false;
 	}
 	// Adjust the player position
-	CVector3 vecPosition = m_pInterface->vecPosition;
+	CVector vecPosition = m_pInterface->vecPosition;
 	// Save the aiming point
 	m_vecAimAt = vecPoint;
 	// Get the aiming distance
-	CVector3 vecDistance = vecPoint - vecPosition;
+	CVector vecDistance = vecPoint - vecPosition;
 	// Get the distance to the destination point
 	float fDistance = CMath::GetDistanceBetween3DPoints(vecPosition, vecPoint);
 	// Calculate the aiming Z angle
@@ -1148,11 +1148,11 @@ bool CPlayer::EnterVehicle(int iVehicleId, int iSeatId, int iType)
 	m_wVehicleToEnter = (WORD)iVehicleId;
 	m_byteSeatToEnter = (BYTE)iSeatId;
 	// Get the seat position
-	CVector3 *pvecSeat = CSAMPFunctions::GetVehicleModelInfo(pNetGame->pVehiclePool->pVehicle[iVehicleId]->iModelId,
+	CVector *pvecSeat = CSAMPFunctions::GetVehicleModelInfo(pNetGame->pVehiclePool->pVehicle[iVehicleId]->iModelId,
 		iSeatId == 0 || iSeatId == 1 ? VEHICLE_MODEL_INFO_FRONTSEAT : VEHICLE_MODEL_INFO_REARSEAT);
 
 	// Adjust the seat vector
-	CVector3 vecSeat(pvecSeat->fX + 0.7f, pvecSeat->fY, pvecSeat->fZ);
+	CVector vecSeat(pvecSeat->fX + 0.7f, pvecSeat->fY, pvecSeat->fZ);
 	if (iSeatId == 0 || iSeatId == 2)
 		vecSeat.fX = -vecSeat.fX;
 
@@ -1161,9 +1161,9 @@ bool CPlayer::EnterVehicle(int iVehicleId, int iSeatId, int iType)
 	// This is absolutely bullshit
 	float _fAngle = fAngle * 0.01570796326794897f;
 	// Calculate the seat position based on vehicle angle
-	CVector3 vecSeatPosition(vecSeat.fX * cos(_fAngle) - vecSeat.fY * sin(_fAngle), vecSeat.fX * sin(_fAngle) + vecSeat.fY * cos(_fAngle), vecSeat.fZ);
+	CVector vecSeatPosition(vecSeat.fX * cos(_fAngle) - vecSeat.fY * sin(_fAngle), vecSeat.fX * sin(_fAngle) + vecSeat.fY * cos(_fAngle), vecSeat.fZ);
 	// Calculate the destination point
-	CVector3 vecDestination = pNetGame->pVehiclePool->pVehicle[iVehicleId]->vecPosition + vecSeatPosition;
+	CVector vecDestination = pNetGame->pVehiclePool->pVehicle[iVehicleId]->vecPosition + vecSeatPosition;
 	// Go to the vehicle
 	GoTo(vecDestination, iType, true);
 	return true;
@@ -1230,8 +1230,8 @@ bool CPlayer::RemoveFromVehicle()
 
 	// Set the player state
 	SetState(PLAYER_STATE_ONFOOT);
-	CVector3 vecVehiclePos = pNetGame->pVehiclePool->pVehicle[m_pInterface->wVehicleId]->vecPosition;
-	SetPosition(CVector3(vecVehiclePos.fX + 2.0f, vecVehiclePos.fY + 2.0f, vecVehiclePos.fZ));
+	CVector vecVehiclePos = pNetGame->pVehiclePool->pVehicle[m_pInterface->wVehicleId]->vecPosition;
+	SetPosition(CVector(vecVehiclePos.fX + 2.0f, vecVehiclePos.fY + 2.0f, vecVehiclePos.fZ));
 	// Reset the player vehicle and seat id
 	m_pInterface->wVehicleId = INVALID_ENTITY_ID;
 	m_pInterface->byteSeatId = 0;
@@ -1264,7 +1264,7 @@ void CPlayer::StopPlayingPlayback()
 	// Delete the playback instance
 	SAFE_DELETE(m_pPlayback);
 	// Reset the player data
-	SetVelocity(CVector3(0.0f, 0.0f, 0.0f));
+	SetVelocity(CVector(0.0f, 0.0f, 0.0f));
 	SetKeys(0, 0, 0);
 	// Reset the Playing flag
 	m_bPlaying = false;
@@ -1309,7 +1309,7 @@ bool CPlayer::PlayNode(int iNodeId, int iType)
 	// Save the node type
 	m_iNodeType = iType;
 	// Get the starting point
-	CVector3 vecStart;
+	CVector vecStart;
 	m_pNode->GetPosition(&vecStart);
 	// Save the node moving velocity
 	m_vecNodeVelocity = m_pInterface->vecVelocity;
@@ -1321,7 +1321,7 @@ bool CPlayer::PlayNode(int iNodeId, int iType)
 	// Save the current point
 	m_iNodePoint = m_pNode->GetLinkPoint();
 	// Get the destination point
-	CVector3 vecDestination;
+	CVector vecDestination;
 	m_pNode->GetPosition(&vecDestination);
 	// Move the player to it
 	GoTo(vecDestination, iType == NODE_TYPE_PED ? MOVE_TYPE_WALK : MOVE_TYPE_DRIVE, false);
@@ -1340,8 +1340,8 @@ void CPlayer::StopPlayingNode()
 	m_pNode = NULL;
 	// Reset the player data
 	SetKeys(0, 0, 0);
-	SetVelocity(CVector3(0.0f, 0.0f, 0.0f));
-	m_vecNodeVelocity = CVector3();
+	SetVelocity(CVector(0.0f, 0.0f, 0.0f));
+	m_vecNodeVelocity = CVector();
 	// Reset the node flag
 	m_bPlayingNode = false;
 	m_iNodePoint = 0;

@@ -64,7 +64,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_Spawn(AMX *amx, cell *params)
 		return 0;
 
 	// Set the spawn position
-	pServer->GetPlayerManager()->GetAt(iNPCId)->SetSpawnPosition(CVector3(fX, fY, fZ));
+	pServer->GetPlayerManager()->GetAt(iNPCId)->SetSpawnPosition(CVector(fX, fY, fZ));
 	// Spawn the player
 	return pServer->GetPlayerManager()->GetAt(iNPCId)->Spawn(iSkin) ? 1 : 0;
 }
@@ -136,7 +136,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetPosition(AMX *amx, cell *params)
 		return 0;
 
 	// Set the player position
-	pServer->GetPlayerManager()->GetAt(iNPCId)->SetPosition(CVector3(fX, fY, fZ));
+	pServer->GetPlayerManager()->GetAt(iNPCId)->SetPosition(CVector(fX, fY, fZ));
 	return 1;
 }
 
@@ -162,7 +162,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetPosition(AMX *amx, cell *params)
 		return 0;
 	}
 	// Get the player position
-	CVector3 vecPosition;
+	CVector vecPosition;
 	pServer->GetPlayerManager()->GetAt(iNPCId)->GetPosition(&vecPosition);
 	// Get the argument pointers and set its value
 	cell *pAddress = NULL;
@@ -283,7 +283,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetQuaternion(AMX *amx, cell *params)
 		return 0;
 
 	// Set the player quaternion
-	pServer->GetPlayerManager()->GetAt(iNPCId)->SetQuaternion(CVector3(fX, fY, fZ), fA);
+	pServer->GetPlayerManager()->GetAt(iNPCId)->SetQuaternion(CVector(fX, fY, fZ), fA);
 	return 1;
 }
 
@@ -312,7 +312,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetQuaternion(AMX *amx, cell *params)
 		return 0;
 	}
 	// Get the player quaternion
-	CVector3 vecQuaternion;
+	CVector vecQuaternion;
 	float fAngle;
 	pServer->GetPlayerManager()->GetAt(iNPCId)->GetQuaternion(&vecQuaternion, &fAngle);
 	// Get the argument pointers and set its value
@@ -345,7 +345,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVelocity(AMX *amx, cell *params)
 		return 0;
 
 	// Set the player velocity
-	pServer->GetPlayerManager()->GetAt(iNPCId)->SetVelocity(CVector3(fX, fY, fZ));
+	pServer->GetPlayerManager()->GetAt(iNPCId)->SetVelocity(CVector(fX, fY, fZ));
 	return 1;
 }
 
@@ -371,7 +371,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVelocity(AMX *amx, cell *params)
 		return 0;
 	}
 	// Get the player velocity
-	CVector3 vecVelocity;
+	CVector vecVelocity;
 	pServer->GetPlayerManager()->GetAt(iNPCId)->GetVelocity(&vecVelocity);
 	// Get the argument pointers and set its value
 	cell *pAddress = NULL;
@@ -584,9 +584,9 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GoTo(AMX *amx, cell *params)
 		return 0;
 
 	// Set the player velocity
-	pServer->GetPlayerManager()->GetAt(iNPCId)->SetVelocity(CVector3(fSpeed, fSpeed, fSpeed));
+	pServer->GetPlayerManager()->GetAt(iNPCId)->SetVelocity(CVector(fSpeed, fSpeed, fSpeed));
 	// Move the player
-	pServer->GetPlayerManager()->GetAt(iNPCId)->GoTo(CVector3(fX, fY, fZ), iType, !iZMap ? false : true);
+	pServer->GetPlayerManager()->GetAt(iNPCId)->GoTo(CVector(fX, fY, fZ), iType, !iZMap ? false : true);
 	return 1;
 }
 
@@ -691,14 +691,14 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAt(AMX *amx, cell *params)
 		return 0;
 
 	/*// Thanks to abagail
-	CVector3 vecPosition;
+	CVector vecPosition;
 	pServer->GetPlayerManager()->GetAt(iNPCId)->GetPosition(&vecPosition);
 	// The coordinates are too far away to shoot at.
 	if (amx_ftoc(vecPosition.fX) > fX + 100.0 || amx_ftoc(vecPosition.fX) < fX + 100.0 || amx_ftoc(vecPosition.fY) > fY + 100.0 || amx_ftoc(vecPosition.fY) < fY + 100.0)
 		return 0;*/
 
 	// Set the player aiming
-	pServer->GetPlayerManager()->GetAt(iNPCId)->AimAt(CVector3(fX, fY, fZ), !iShoot ? false : true);
+	pServer->GetPlayerManager()->GetAt(iNPCId)->AimAt(CVector(fX, fY, fZ), !iShoot ? false : true);
 	return 1;
 }
 
@@ -1088,7 +1088,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetNodePointPosition(AMX *amx, cell *params
 		return 0;
 	}
 	// Get the player position
-	CVector3 vecPosition;
+	CVector vecPosition;
 	pServer->GetNodeManager()->GetAt(iNodeId)->GetPosition(&vecPosition);
 	// Get the argument pointers and set its value
 	cell *pAddress = NULL;
@@ -1200,7 +1200,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetZGround(AMX *amx, cell *params)
 	// Get the Y coord
 	float fY = amx_ctof(params[2]);
 	// Get the Z ground
-	float fZ = pServer->GetZMap()->GetGroundForCoord(CVector3(fX, fY, 0.0f));
+	float fZ = pServer->GetZMap()->GetGroundForCoord(CVector(fX, fY, 0.0f));
 	// Get the argument pointer and set its value
 	cell *pAddress = NULL;
 	amx_GetAddr(amx, params[3], &pAddress);

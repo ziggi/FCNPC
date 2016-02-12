@@ -44,7 +44,7 @@ bool CZMap::Initialize()
 	return true;
 }
 
-float CZMap::GetGroundForCoord(CVector3 vecCoord) // From MapAndreas plugin by Kalcor
+float CZMap::GetGroundForCoord(CVector vecCoord) // From MapAndreas plugin by Kalcor
 {
 	// Make sure the ZMap is initialized
 	if(!m_bIsInitialized)

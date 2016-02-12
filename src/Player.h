@@ -12,7 +12,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "Common.h"
+#include "CVector.h"
 #include "SAMPPlayer.h"
 #include "Playback.h"
 #include "Node.h"
@@ -36,7 +36,7 @@ class CPlayer
 		void		UpdateSync(int iState);
 		void		UpdateAim();
 		bool		IsSpawned() { return m_bSpawned; };
-		void		SetSpawnPosition(CVector3 vecPosition);
+		void		SetSpawnPosition(CVector vecPosition);
 
 		void		SetOnFootSync(CSyncData syncData) { memcpy(&m_pInterface->syncData, &syncData, sizeof(CSyncData)); };
 		void		SetVehicleSync(CVehicleSyncData syncData) { memcpy(&m_pInterface->vehicleSyncData, &syncData, sizeof(CVehicleSyncData)); };
@@ -47,14 +47,14 @@ class CPlayer
 		bool		SetState(BYTE byteState);
 		BYTE		GetState() { return m_pInterface->byteState; };
 
-		void		SetPosition(CVector3 vecPosition);
-		void		GetPosition(CVector3 *pvecPosition);
-		void		SetQuaternion(CVector3 vecQuaternion, float fAngle);
-		void		GetQuaternion(CVector3 *pvecQuaternion, float *pfAngle);
+		void		SetPosition(CVector vecPosition);
+		void		GetPosition(CVector *pvecPosition);
+		void		SetQuaternion(CVector vecQuaternion, float fAngle);
+		void		GetQuaternion(CVector *pvecQuaternion, float *pfAngle);
 		void		SetAngle(float fAngle);
 		float		GetAngle() { return m_pInterface->fAngle; };
-		void		SetVelocity(CVector3 vecVelocity);
-		void		GetVelocity(CVector3 *pvecVelocity);
+		void		SetVelocity(CVector vecVelocity);
+		void		GetVelocity(CVector *pvecVelocity);
 
 		void		SetHealth(float fHealth);
 		float		GetHealth() { return m_pInterface->fHealth; };
@@ -77,14 +77,14 @@ class CPlayer
 		void		SetSpecialAction(int iActionId);
 		int			GetSpecialAction() { return m_pInterface->syncData.byteSpecialAction; };
 
-		void		GoTo(CVector3 vecPoint, int iType, bool bUseZMap);
+		void		GoTo(CVector vecPoint, int iType, bool bUseZMap);
 		void		StopMoving();
 		bool		IsMoving() { return m_bMoving; };
 
 		void		ToggleReloading(bool bToggle) { m_bHasReload = bToggle; };
 		void		ToggleInfiniteAmmo(bool bToggle) { m_bHasInfiniteAmmo = bToggle; };
 
-		void		AimAt(CVector3 vecPoint, bool bShoot);
+		void		AimAt(CVector vecPoint, bool bShoot);
 		void		AimAtPlayer(CSAMPPlayer *pPlayer, bool bShoot);
 		void		StopAim();
 		void		MeleeAttack(DWORD dwTime);
@@ -137,7 +137,7 @@ class CPlayer
 		DWORD			m_dwMoveStartTime;
 		DWORD			m_dwMoveTime;
 		DWORD			m_dwMeleeDelay;
-		CVector3		m_vecDestination;
+		CVector		m_vecDestination;
 		BYTE			m_byteWeaponId;
 		WORD			m_wAmmo;
 		WORD			m_bHitId;
@@ -150,10 +150,10 @@ class CPlayer
 		int				m_iNodeType;
 		bool			m_bHasReload;
 		bool			m_bHasInfiniteAmmo;
-		CVector3		m_vecNodeVelocity;
+		CVector		m_vecNodeVelocity;
 		CPlayback		*m_pPlayback;
 		CNode			*m_pNode;
-		CVector3		m_vecAimAt;
+		CVector		m_vecAimAt;
 		CSAMPPlayer		*m_pInterface;
 
 };

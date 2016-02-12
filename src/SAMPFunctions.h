@@ -65,7 +65,7 @@ typedef void (THISCALL *RakServer__Send_t)(void *pRakServer, RakNet::BitStream* 
 typedef bool (THISCALL *RakServer__RPC_t)(void* pRakServer, int* iUniqueID, RakNet::BitStream* pBitStream, int iPriority, int iReliability, unsigned ucOrderingChannel, CSAMPPlayerId playerId, bool bBroadcast, bool bShiftTimestamp);
 typedef Packet* (THISCALL *RakServer__Receive_t)(void* pRakServer);
 
-typedef CVector3 *( *GetVehicleModelInfo_t)(int iModelId, int iInfoType);
+typedef CVector *( *GetVehicleModelInfo_t)(int iModelId, int iInfoType);
 
 class CSAMPFunctions
 {
@@ -80,10 +80,10 @@ class CSAMPFunctions
 		static void		KillPlayer(int iPlayerId, int iKillerId, int iWeapon);
 		static void		PlayerEnterVehicle(int iPlayerId, int iVehicleId, int iSeatId);
 		static void		PlayerExitVehicle(int iPlayerId, int iVehicleId);
-		static CVector3	*GetVehicleModelInfo(int iModelId, int iInfoType);
+		static CVector	*GetVehicleModelInfo(int iModelId, int iInfoType);
 		static int		GetMaxPlayers();
 		static int		GetMaxNPC();
-		static void		PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE iWeaponId, CVector3 vecPoint);
+		static void		PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE iWeaponId, CVector vecPoint);
 		static int		GetNetGame() { return pfn__GetNetGame(); }
 		static int		GetConsole() { return pfn__GetConsole(); }
 		static int		GetRakServer() { return pfn__GetRakServer(); }

@@ -67,7 +67,7 @@ void CNode::GetHeaderInfo(unsigned long *pulVehicleNodes, unsigned long *pulPedN
 	*pulNaviNodes = m_nodeHeader.ulNaviNodesNumber;
 }
 
-int CNode::Process(CPlayer *pPlayer, int iPointId, int iLastPoint, int iType, CVector3 vecVelocity)
+int CNode::Process(CPlayer *pPlayer, int iPointId, int iLastPoint, int iType, CVector vecVelocity)
 {
 	int iChangeNode = 0;
 	// Set the node to the player point
@@ -112,7 +112,7 @@ int CNode::Process(CPlayer *pPlayer, int iPointId, int iLastPoint, int iType, CV
 			// Set the next point
 			SetPoint(m_nodeLink.usNodeId);
 			// Get the point position
-			CVector3 vecPosition;
+			CVector vecPosition;
 			GetPosition(&vecPosition);
 			// Set the player velocity
 			pPlayer->SetVelocity(vecVelocity);
@@ -125,14 +125,14 @@ int CNode::Process(CPlayer *pPlayer, int iPointId, int iLastPoint, int iType, CV
 	return 0;
 }
 
-int CNode::ProcessNodeChange(CPlayer *pPlayer, unsigned short usLinkId, int iType, CVector3 vecVelocity)
+int CNode::ProcessNodeChange(CPlayer *pPlayer, unsigned short usLinkId, int iType, CVector vecVelocity)
 {
 	// Set the node link
 	SetLink(usLinkId);
 	// Set the next point
 	SetPoint(m_nodeLink.usNodeId);
 	// Get the point position
-	CVector3 vecPosition;
+	CVector vecPosition;
 	GetPosition(&vecPosition);
 	// Set the player velocity
 	pPlayer->SetVelocity(vecVelocity);
@@ -142,10 +142,10 @@ int CNode::ProcessNodeChange(CPlayer *pPlayer, unsigned short usLinkId, int iTyp
 	return m_nodeLink.usNodeId;
 }
 
-void CNode::GetPosition(CVector3 *pVecPosition)
+void CNode::GetPosition(CVector *pVecPosition)
 {
 	// Get the node position
-	*pVecPosition = CVector3((float)(m_nodePath.sPositionX / 8),
+	*pVecPosition = CVector((float)(m_nodePath.sPositionX / 8),
 		(float)(m_nodePath.sPositionY / 8), (float)(m_nodePath.sPositionZ / 8) + 0.7f);
 }
 

@@ -11,15 +11,15 @@
 #ifndef MATHS_H
 #define MATHS_H
 
-#include "Common.h"
+#include "CVector.h"
 
 #define M_PI           3.14159265358979323846f
 
 class CMath
 {
 	public:
-		static float GetDistanceBetween3DPoints(CVector3 vecPosition, CVector3 _vecPosition);
-		static float GetDistanceFromRayToPoint(const CVector3 p, const CVector3 v, const CVector3 w);
+		static float GetDistanceBetween3DPoints(CVector vecPosition, CVector _vecPosition);
+		static float GetDistanceFromRayToPoint(const CVector p, const CVector v, const CVector w);
 
 		static float AngleToQuaternion(float fAngle);
 		static float RadiansToDegree(float fRadian);

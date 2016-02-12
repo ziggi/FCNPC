@@ -23,12 +23,12 @@ class CNode
 		~CNode();
 
 		bool Initialize();
-		int  Process(CPlayer *pPlayer, int iPointId, int iLastPoint, int iType, CVector3 vecVelocity);
-		int  ProcessNodeChange(CPlayer *pPlayer, unsigned short usLinkId, int iType, CVector3 vecVelocity);
+		int  Process(CPlayer *pPlayer, int iPointId, int iLastPoint, int iType, CVector vecVelocity);
+		int  ProcessNodeChange(CPlayer *pPlayer, unsigned short usLinkId, int iType, CVector vecVelocity);
 
 		void SetPaused(bool bPaused) { m_bPaused = bPaused; };
 
-		void				GetPosition(CVector3 *pVecPosition);
+		void				GetPosition(CVector *pVecPosition);
 
 		int					GetNodesNumber() { return m_nodeHeader.ulNodesNumber; };
 		void				GetHeaderInfo(unsigned long *pulVehicleNodes, unsigned long *pulPedNodes, unsigned long *pulNaviNodes);

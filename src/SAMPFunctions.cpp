@@ -140,7 +140,7 @@ void CSAMPFunctions::PlayerExitVehicle(int iPlayerId, int iVehicleId)
 	pfn__CPlayer__ExitVehicle(pNetGame->pPlayerPool->pPlayer[iPlayerId], iVehicleId);	
 }
 
-CVector3 *CSAMPFunctions::GetVehicleModelInfo(int iModelId, int iInfoType)
+CVector *CSAMPFunctions::GetVehicleModelInfo(int iModelId, int iInfoType)
 {
 	return pfn__GetVehicleModelInfo(iModelId, iInfoType);
 }
@@ -159,14 +159,14 @@ int CSAMPFunctions::GetMaxNPC()
 	return pfn__CConfig__GetValueAsInteger(pConfig, "maxnpc");
 }
 
-void CSAMPFunctions::PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE iWeaponId, CVector3 vecPoint)
+void CSAMPFunctions::PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE iWeaponId, CVector vecPoint)
 {
 	// Validate the player
 	if (!pServer->GetPlayerManager()->IsPlayerConnected(iPlayerId))
 		return;
 
 	// Get the player position
-	CVector3 vecPosition;
+	CVector vecPosition;
 	pServer->GetPlayerManager()->GetAt(iPlayerId)->GetPosition(&vecPosition);
 
 	// Create the SendBullet structure
@@ -174,7 +174,7 @@ void CSAMPFunctions::PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE
 	bulletSyncData.wHitID = iHitId;
 	bulletSyncData.byteHitType = iHitType;
 	bulletSyncData.byteWeaponID = iWeaponId;
-	bulletSyncData.vecCenterOfHit = CVector3(0.1f, 0.1f, 0.1f);
+	bulletSyncData.vecCenterOfHit = CVector(0.1f, 0.1f, 0.1f);
 	bulletSyncData.vecHitOrigin = vecPosition;
 	bulletSyncData.vecHitTarget = vecPoint;
 

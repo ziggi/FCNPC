@@ -15,13 +15,13 @@
 class CSAMPVehicle
 {
 	public:
-		CVector3		vecPosition;		// 0x0000 - 0x000C
+		CVector		vecPosition;		// 0x0000 - 0x000C
 		float			fQuaternionAngle;	// 0x000C - 0x0010
-		CVector3		vecQuaternion;		// 0x0010 - 0x001C
+		CVector		vecQuaternion;		// 0x0010 - 0x001C
 		float			fRotationX;			// 0x001C - 0x0020
 		float			fRotationY;			// 0x0020 - 0x0024
 		PAD(pad0, 40);						// 0x0024 - 0x004C
-		CVector3		vecVelocity;		// 0x004C - 0x0058
+		CVector		vecVelocity;		// 0x004C - 0x0058
 		PAD(pad1, 42);						// 0x0058 - 0x0082
 		int				iModelId;			// 0x0082 - 0x0086
 		PAD(pad2, 12);						// 0x0086 - 0x0092

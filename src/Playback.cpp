@@ -91,7 +91,7 @@ bool CPlayback::Process(CPlayer *pPlayer)
 			m_vehicleSyncData.wUDAnalog = 0;
 			m_vehicleSyncData.wLRAnalog = 0;
 			m_vehicleSyncData.wKeys = 0;
-			m_vehicleSyncData.vecVelocity = CVector3(0.0f, 0.0f, 0.0f);
+			m_vehicleSyncData.vecVelocity = CVector(0.0f, 0.0f, 0.0f);
 			// Set vehicle sync data
 			pPlayer->SetVehicleSync(m_vehicleSyncData);		
 			// Update the player
@@ -105,7 +105,7 @@ bool CPlayback::Process(CPlayer *pPlayer)
 			m_syncData.wUDAnalog = 0;
 			m_syncData.wLRAnalog = 0;
 			m_syncData.wKeys = 0;
-			m_syncData.vecVelocity = CVector3(0.0f, 0.0f, 0.0f);
+			m_syncData.vecVelocity = CVector(0.0f, 0.0f, 0.0f);
 			// Set vehicle sync data
 			pPlayer->SetOnFootSync(m_syncData);		
 			// Update the player

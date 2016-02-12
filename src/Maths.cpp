@@ -10,7 +10,7 @@
 
 #include "Main.h"
 
-float CMath::GetDistanceBetween3DPoints(CVector3 vecPosition, CVector3 _vecPosition)
+float CMath::GetDistanceBetween3DPoints(CVector vecPosition, CVector _vecPosition)
 {
 	// Get the distance between the two vectors
 	float fSX = (_vecPosition.fX - vecPosition.fX) * (_vecPosition.fX - vecPosition.fX);
@@ -19,19 +19,19 @@ float CMath::GetDistanceBetween3DPoints(CVector3 vecPosition, CVector3 _vecPosit
 	return ((float)sqrt(fSX + fSY + fSZ));	
 }
 
-float CMath::GetDistanceFromRayToPoint(CVector3 p, CVector3 a, CVector3 b)
+float CMath::GetDistanceFromRayToPoint(CVector p, CVector a, CVector b)
 {
-	CVector3 n = b - a;
-	CVector3 pa = a - p;
+	CVector n = b - a;
+	CVector pa = a - p;
 
-	float c = n.DotProduct(pa);
+	float c = n.DotProduct(&pa);
 
 	if (c > 0.0f)
-		return pa.DotProduct(pa);
+		return pa.DotProduct(&pa);
 
-	CVector3 e = pa - n * (c / n.DotProduct(n));
+	CVector e = pa - n * (c / n.DotProduct(&n));
 
-	return e.DotProduct(e);
+	return e.DotProduct(&e);
 }
 
 float CMath::AngleToQuaternion(float fAngle)
