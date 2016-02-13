@@ -52,7 +52,6 @@
 #include <sdk/plugin.h>
 // Utils includes
 #include "Utils.h"
-#include "Maths.h"
 #include "Common.h"
 #include "CVector.h"
 #include "Thread.h"
@@ -76,6 +75,7 @@
 #include "Structs.h"
 // SA includes
 #include "SANode.h"
+#include "Maths.h"
 
 // Managers includes
 #include "PlayerManager.h"

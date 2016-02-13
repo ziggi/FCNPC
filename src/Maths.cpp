@@ -9,6 +9,7 @@
   =========================================*/
 
 #include "Main.h"
+#include "Utils.h"
 
 float CMath::GetDistanceBetween3DPoints(CVector vecPosition, CVector _vecPosition)
 {
@@ -32,6 +33,53 @@ float CMath::GetDistanceFromRayToPoint(CVector p, CVector a, CVector b)
 	CVector e = pa - n * (c / n.DotProduct(&n));
 
 	return e.DotProduct(&e);
+}
+
+
+float CMath::Max(const float a, const float b)
+{
+	return a > b ? a : b;
+}
+
+// based on Quat function from MTA SA
+void CMath::GetQuaternionFromMatrix(MATRIX4X4 m, float *fQuaternion)
+{
+	fQuaternion[0] = sqrt(Max((float)0, 1.0f + m.right.fX + m.up.fY + m.at.fZ)) * 0.5f;
+	fQuaternion[1] = sqrt(Max((float)0, 1.0f + m.right.fX - m.up.fY - m.at.fZ)) * 0.5f;
+	fQuaternion[2] = sqrt(Max((float)0, 1.0f - m.right.fX + m.up.fY - m.at.fZ)) * 0.5f;
+	fQuaternion[3] = sqrt(Max((float)0, 1.0f - m.right.fX - m.up.fY + m.at.fZ)) * 0.5f;
+
+	fQuaternion[1] = static_cast < float > (_copysign(fQuaternion[1], m.at.fY - m.up.fZ));
+	fQuaternion[2] = static_cast < float > (_copysign(fQuaternion[2], m.right.fZ - m.at.fX));
+	fQuaternion[3] = static_cast < float > (_copysign(fQuaternion[3], m.up.fX - m.right.fY));
+}
+
+// based on ToMatrix function from MTA SA
+void CMath::GetMatrixFromQuaternion(float *fQuaternion, MATRIX4X4 *m)
+{
+	float xx = fQuaternion[1] * fQuaternion[1];
+	float xy = fQuaternion[1] * fQuaternion[2];
+	float xz = fQuaternion[1] * fQuaternion[3];
+	float xw = fQuaternion[1] * fQuaternion[0];
+
+	float yy = fQuaternion[2] * fQuaternion[2];
+	float yz = fQuaternion[2] * fQuaternion[3];
+	float yw = fQuaternion[2] * fQuaternion[0];
+
+	float zz = fQuaternion[3] * fQuaternion[3];
+	float zw = fQuaternion[3] * fQuaternion[0];
+
+	m->right.fX = 1.0f - 2.0f * (yy + zz);
+	m->right.fY = 2.0f * (xy - zw);
+	m->right.fZ = 2.0f * (xz + yw);
+
+	m->up.fX = 2.0f * (xy + zw);
+	m->up.fY = 1.0f - 2.0f * (xx + zz);
+	m->up.fZ = 2.0f * (yz - xw);
+
+	m->at.fX = 2.0f * (xz - yw);
+	m->at.fY = 2.0f * (yz + xw);
+	m->at.fZ = 1.0f - 2.0f * (xx + yy);
 }
 
 float CMath::AngleToQuaternion(float fAngle)
@@ -61,8 +109,8 @@ bool CMath::IsInRange(float fRange1, float fRange2, float fRadius)
 
 float CMath::GetAngle(float fRotationX, float fRotationY)
 {
-	float fReturn = atan2(fRotationX, fRotationY) * 57.295776f;
-	if (fReturn > 360.0f)
+	float fReturn = atan2(fRotationX, fRotationY) * 180.0f / M_PI;
+	if (fReturn >= 360.0f)
 		fReturn -= 360.0f;
 	else if (fReturn < 0.0f)
 		fReturn += 360.0f;

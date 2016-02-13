@@ -73,7 +73,7 @@ typedef void(*VARCHANGEFUNC)();
 typedef struct _MATRIX4X4 
 {
 	CVector right;
-	DWORD  flags;
+	DWORD flags;
 	CVector up;
 	float  pad_u;
 	CVector at;
@@ -92,12 +92,12 @@ struct ConsoleVariable_s
 
 struct C3DText  // size 0x21
 {
-	char*			szText;                                     // + 0x00
-    DWORD			dwColor;                         // + 0x04
+	char*			szText;                // + 0x00
+    DWORD			dwColor;               // + 0x04
 	CVector			vecPos;
-	float			fDrawDistance;                     // + 0x14
-    bool			bLineOfSight;            // + 0x18
-    int				iWorld;                  // + 0x19
+	float			fDrawDistance;         // + 0x14
+    bool			bLineOfSight;          // + 0x18
+    int				iWorld;                // + 0x19
     WORD			attachedToPlayerID;    // + 0x1D
 	WORD			attachedToVehicleID;   // + 0x1F
 };
@@ -129,8 +129,7 @@ struct CVehicleSyncData
 	WORD			wUDAnalog;				// 0x0021 - 0x0023
 	WORD			wLRAnalog;				// 0x0023 - 0x0025
 	WORD			wKeys;					// 0x0025 - 0x0027
-	float			fQuaternionAngle;		// 0x0027 - 0x002B
-	CVector			vecQuaternion;			// 0x002B - 0x0037
+	float			fQuaternion[4];			// 0x0027 - 0x0037
 	CVector			vecPosition;			// 0x0037 - 0x0043
 	CVector			vecVelocity;			// 0x0043 - 0x004F
 	float			fHealth;				// 0x004F - 0x0053
@@ -170,11 +169,10 @@ struct CSyncData
 	WORD			wLRAnalog;				// 0x0078 - 0x007A
 	WORD			wKeys;					// 0x007A - 0x007C
 	CVector			vecPosition;			// 0x007C - 0x0088
-	float			fQuaternionAngle;		// 0x0088 - 0x008C
-	CVector			vecQuaternion;			// 0x008C - 0x0098
+	float			fQuaternion[4];			// 0x0088 - 0x008C
 	BYTE			byteHealth;				// 0x0098 - 0x0099
 	BYTE			byteArmour;				// 0x0099 - 0x009A
-	BYTE			byteWeapon : 6;				// 0x009A - 0x009B
+	BYTE			byteWeapon : 6;			// 0x009A - 0x009B
 	BYTE			_unk_ : 2;
 	BYTE			byteSpecialAction;		// 0x009B - 0x009C
 	CVector			vecVelocity;			// 0x009C - 0x00A8
@@ -195,13 +193,13 @@ struct CSyncData
 struct CUnoccupiedSyncData // size 0x43
 {
 	WORD			wVehicleID;				// + 0x0000
-	BYTE			bytePassengerSlot;			// + 0x0002
+	BYTE			bytePassengerSlot;		// + 0x0002
 	CVector			vecRool;				// + 0x0003
 	CVector			vecDirection;			// + 0x000F
 	CVector			vecPosition;			// + 0x001B
 	CVector			vecVelocity;			// + 0x0027
 	CVector			vecTurnVelocity;		// + 0x0033
-	float			fHealth;					// + 0x003F
+	float			fHealth;				// + 0x003F
 };
 
 struct CSpectatingSyncData		// size 0x12
@@ -487,12 +485,7 @@ struct CVehicleParams // sizeof = 16
 struct CVehicle
 {
 	CVector			vecPosition;		// 0 - 12
-	//MATRIX4X4		vehMatrix;			// 12 - 76
-	float			fQuaternionAngle;	// 0x000C - 0x0010 right.fX
-	CVector			vecQuaternion;		// 0x0010 - 0x001C
-	float			fRotationX;			// 0x001C - 0x0020
-	float			fRotationY;			// 0x0020 - 0x0024
-	PAD(pad0, 40);						// 0x0024 - 0x004C
+	MATRIX4X4		vehMatrix;			// 12 - 76
 	CVector			vecVelocity;		// 76 - 88
 	CVector			vecTurnSpeed;		// 88 - 100
 	WORD			wVehicleID;			// 100 - 102

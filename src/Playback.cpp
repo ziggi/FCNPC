@@ -130,15 +130,14 @@ bool CPlayback::Process(CPlayerData *pPlayerData)
 			CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[pPlayerData->GetVehicleId()];
 			// Set the data
 			pVehicle->vecPosition = vehicleSyncData.vecPosition;
-			pVehicle->vecQuaternion = vehicleSyncData.vecQuaternion;
-			pVehicle->fQuaternionAngle = vehicleSyncData.fQuaternionAngle;
+			CMath::GetMatrixFromQuaternion(vehicleSyncData.fQuaternion, &pVehicle->vehMatrix);
 			pVehicle->vecVelocity = vehicleSyncData.vecVelocity;
 			// Apply the sync data
 			pPlayerData->SetState(PLAYER_STATE_DRIVER);
 			// Save the position
 			pPlayerData->SetPosition(vehicleSyncData.vecPosition);
 			// Save the quaternion
-			pPlayerData->SetQuaternion(vehicleSyncData.vecQuaternion, vehicleSyncData.fQuaternionAngle);
+			pPlayerData->SetQuaternion(vehicleSyncData.fQuaternion);
 			// Set vehicle sync data
 			pPlayerData->SetVehicleSync(&vehicleSyncData);
 			// Save the last onfoot sync
@@ -158,7 +157,7 @@ bool CPlayback::Process(CPlayerData *pPlayerData)
 			// Save the position
 			pPlayerData->SetPosition(syncData.vecPosition);
 			// Save the quaternion
-			pPlayerData->SetQuaternion(syncData.vecQuaternion, syncData.fQuaternionAngle);
+			pPlayerData->SetQuaternion(syncData.fQuaternion);
 			// Set onfoot data
 			pPlayerData->SetOnFootSync(&syncData);
 			// Save the last onfoot sync

@@ -272,18 +272,18 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetQuaternion(AMX *amx, cell *params)
 	CHECK_PARAMS(5, "FCNPC_SetQuaternion");
 	// Get the NPC id
 	int iNPCId = (int)params[1];
-	// Get the quaternion vector
-	float fX = amx_ctof(params[2]);
-	float fY = amx_ctof(params[3]);
-	float fZ = amx_ctof(params[4]);
-	// Get the quaternion angle
-	float fA = amx_ctof(params[5]);
+	// Get the quaternion
+	float *fQuaternion = new float [4];
+	fQuaternion[0] = amx_ctof(params[2]);
+	fQuaternion[1] = amx_ctof(params[3]);
+	fQuaternion[2] = amx_ctof(params[4]);
+	fQuaternion[3] = amx_ctof(params[5]);
 	// Make sure the player is valid
 	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Set the player quaternion
-	pServer->GetPlayerManager()->GetAt(iNPCId)->SetQuaternion(CVector(fX, fY, fZ), fA);
+	pServer->GetPlayerManager()->GetAt(iNPCId)->SetQuaternion(fQuaternion);
 	return 1;
 }
 
@@ -312,22 +312,21 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetQuaternion(AMX *amx, cell *params)
 		return 0;
 	}
 	// Get the player quaternion
-	CVector vecQuaternion;
-	float fAngle;
-	pServer->GetPlayerManager()->GetAt(iNPCId)->GetQuaternion(&vecQuaternion, &fAngle);
+	float *fQuaternion = new float [4];
+	pServer->GetPlayerManager()->GetAt(iNPCId)->GetQuaternion(fQuaternion);
 	// Get the argument pointers and set its value
 	cell *pAddress = NULL;
 	amx_GetAddr(amx, params[2], &pAddress);
-	*pAddress = amx_ftoc(vecQuaternion.fX);
+	*pAddress = amx_ftoc(fQuaternion[0]);
 
 	amx_GetAddr(amx, params[3], &pAddress);
-	*pAddress = amx_ftoc(vecQuaternion.fY);
+	*pAddress = amx_ftoc(fQuaternion[1]);
 
 	amx_GetAddr(amx, params[4], &pAddress);
-	*pAddress = amx_ftoc(vecQuaternion.fZ);
+	*pAddress = amx_ftoc(fQuaternion[2]);
 
 	amx_GetAddr(amx, params[5], &pAddress);
-	*pAddress = amx_ftoc(fAngle);
+	*pAddress = amx_ftoc(fQuaternion[3]);
 	return 1;
 }
 

@@ -271,11 +271,6 @@ void CPlayerData::Update(int iState)
 		m_pPlayer->vehicleSyncData.vecPosition = pVehicle->vecPosition;
 		// Set the player velocity
 		m_pPlayer->vehicleSyncData.vecVelocity = m_pPlayer->vecVelocity;
-		// Set the vehicle quaternion
-		m_pPlayer->vehicleSyncData.vecQuaternion = pVehicle->vecQuaternion;
-		m_pPlayer->vehicleSyncData.fQuaternionAngle = pVehicle->fQuaternionAngle;
-		// Set the player quaternion
-		SetQuaternion(pVehicle->vecQuaternion, pVehicle->fQuaternionAngle);
 		// Set the player keys
 		m_pPlayer->vehicleSyncData.wUDAnalog = m_pPlayer->wUDAnalog;
 		m_pPlayer->vehicleSyncData.wLRAnalog = m_pPlayer->wLRAnalog;
@@ -522,13 +517,14 @@ void CPlayerData::Process()
 				// Reset entering variables
 				m_bEntering = false;
 				m_bJacking = false;
+				// Set the angle
+				CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[m_wVehicleToEnter];
+				SetAngle(CMath::GetAngle(-pVehicle->vehMatrix.up.fX, pVehicle->vehMatrix.up.fY));
 				// Call the vehicle entry complete callback
 				CCallbackManager::OnVehicleEntryComplete((int)m_playerId, (int)m_wVehicleToEnter, (int)m_byteSeatToEnter);
 				// Set the player vehicle and seat
 				m_pPlayer->wVehicleId = m_wVehicleToEnter;
 				m_pPlayer->byteSeatId = m_byteSeatToEnter;
-				// Update player angle
-				SetAngle(pNetGame->pVehiclePool->pVehicle[m_wVehicleToEnter]->customSpawn.fRot);
 				// Reset entering values
 				m_wVehicleToEnter = INVALID_ENTITY_ID;
 				m_byteSeatToEnter = 0;
@@ -720,9 +716,10 @@ void CPlayerData::Process()
 			// Reset the player state
 			SetState(PLAYER_STATE_ONFOOT);
 			// Get the vehicle position
-			CVector vecVehiclePos = pNetGame->pVehiclePool->pVehicle[m_pPlayer->wVehicleId]->vecPosition;
+			CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[m_pPlayer->wVehicleId];
+			CVector vecVehiclePos = pVehicle->vecPosition;
 			// Get the seat position
-			CVector *pvecSeat = CSAMPFunctions::GetVehicleModelInfoEx(pNetGame->pVehiclePool->pVehicle[m_pPlayer->wVehicleId]->customSpawn.iModelID,
+			CVector *pvecSeat = CSAMPFunctions::GetVehicleModelInfoEx(pVehicle->customSpawn.iModelID,
 				m_pPlayer->byteSeatId == 0 || m_pPlayer->byteSeatId == 1 ? VEHICLE_MODEL_INFO_FRONTSEAT : VEHICLE_MODEL_INFO_REARSEAT);
 	
 			// Adjust the seat vector
@@ -731,7 +728,7 @@ void CPlayerData::Process()
 				vecSeat.fX = -vecSeat.fX;
 
 			// Get vehicle angle
-			float fAngle = CMath::GetAngle(-pNetGame->pVehiclePool->pVehicle[m_pPlayer->wVehicleId]->fRotationX, pNetGame->pVehiclePool->pVehicle[m_pPlayer->wVehicleId]->fRotationY);
+			float fAngle = CMath::GetAngle(-pVehicle->vehMatrix.up.fX, pVehicle->vehMatrix.up.fY);
 			// This is absolutely bullshit
 			float _fAngle = fAngle * 0.01570796326794897f;
 			// Calculate the seat position based on vehicle angle
@@ -779,23 +776,23 @@ void CPlayerData::GetPosition(CVector *pvecPosition)
 		*pvecPosition = m_pPlayer->vecPosition;
 }
 
-void CPlayerData::SetQuaternion(CVector vecQuaternion, float fAngle)
+void CPlayerData::SetQuaternion(float *fQuaternion)
 {
 	// Check the player state
-	if(GetState() == PLAYER_STATE_DRIVER && m_pPlayer->wVehicleId != INVALID_ENTITY_ID)
+	if (GetState() == PLAYER_STATE_DRIVER && m_pPlayer->wVehicleId != INVALID_ENTITY_ID)
 	{
-		// Get the player vehicle interface
+		// get vehicle interface
 		CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[m_pPlayer->wVehicleId];
-		// Set the player vehicle quaternion
-		pVehicle->vecQuaternion = vecQuaternion;
-		pVehicle->fQuaternionAngle = fAngle;
+		// update matrix
+		CMath::GetMatrixFromQuaternion(fQuaternion, &pVehicle->vehMatrix);
+		// update sync data
+		memcpy(m_pPlayer->vehicleSyncData.fQuaternion, fQuaternion, 4 * sizeof(float));
 	}
 	// Set the player quaternion
-	m_pPlayer->syncData.vecQuaternion = vecQuaternion;
-	m_pPlayer->syncData.fQuaternionAngle = fAngle;
+	memcpy(m_pPlayer->syncData.fQuaternion, fQuaternion, 4 * sizeof(float));
 }
 
-void CPlayerData::GetQuaternion(CVector *pvecQuaternion, float *pfAngle)
+void CPlayerData::GetQuaternion(float *fQuaternion)
 {
 	// Check the player state
 	if((GetState() == PLAYER_STATE_DRIVER ||  GetState() == PLAYER_STATE_PASSENGER) && m_pPlayer->wVehicleId != INVALID_ENTITY_ID)
@@ -803,14 +800,12 @@ void CPlayerData::GetQuaternion(CVector *pvecQuaternion, float *pfAngle)
 		// Get the player vehicle interface
 		CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[m_pPlayer->wVehicleId];
 		// Get the player vehicle quaternion
-		*pvecQuaternion = pVehicle->vecQuaternion;
-		*pfAngle = pVehicle->fQuaternionAngle;
+		CMath::GetQuaternionFromMatrix(pVehicle->vehMatrix, fQuaternion);
 	}
 	else
 	{
-		// Get the player vehicle quaternion
-		*pvecQuaternion = m_pPlayer->syncData.vecQuaternion;
-		*pfAngle = m_pPlayer->syncData.fQuaternionAngle;
+		// Get the player quaternion
+		memcpy(fQuaternion, m_pPlayer->syncData.fQuaternion, 4 * sizeof(float));
 	}
 }
 
@@ -818,16 +813,11 @@ void CPlayerData::SetAngle(float fAngle)
 {
 	// Set the player
 	m_pPlayer->fAngle = fAngle;
-	// Check the player state
-	if(GetState() == PLAYER_STATE_DRIVER && m_pPlayer->wVehicleId != INVALID_ENTITY_ID)
-	{
-		// Get the player vehicle interface
-		CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[m_pPlayer->wVehicleId];
-		// Set the vehicle angle
-		pVehicle->vecQuaternion.fZ = CMath::AngleToQuaternion(fAngle);
-	}
-	// Set the sync angle
-	m_pPlayer->syncData.vecQuaternion.fZ = CMath::AngleToQuaternion(fAngle);
+	// Create new quaternion
+	// TODO: rotate a quaternion by the rules
+	float fQuaternion[4] = { 0.0, 0.0, 0.0, CMath::AngleToQuaternion(fAngle) };
+	// Update quaternion
+	SetQuaternion(fQuaternion);
 }
 
 float CPlayerData::GetAngle()
@@ -1228,27 +1218,29 @@ void CPlayerData::ProcessDamage(int iDamagerId, float fHealthLoss, int iWeaponId
 bool CPlayerData::EnterVehicle(int iVehicleId, int iSeatId, int iType)
 {
 	// Validate the vehicle
-	if(iVehicleId < 1 || iVehicleId > MAX_VEHICLES)
+	if (iVehicleId < 1 || iVehicleId > MAX_VEHICLES)
 		return false;
 
 	// Validate the player state
-	if(GetState() != PLAYER_STATE_ONFOOT)
+	if (GetState() != PLAYER_STATE_ONFOOT)
 		return false;
 
 	// Validate the entering type
-	if(iType > MOVE_TYPE_SPRINT || iType < MOVE_TYPE_WALK)
+	if (iType > MOVE_TYPE_SPRINT || iType < MOVE_TYPE_WALK)
 		iType = MOVE_TYPE_RUN;
 
 	// Validate the vehicle
-	if(!pNetGame->pVehiclePool->pVehicle[iVehicleId])
+	CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[iVehicleId];
+
+	if (!pVehicle)
 		return false;
 
 	// Validate the seat id
-	if(!CVehicleInfo::IsValidPassengerSeat(iSeatId, pNetGame->pVehiclePool->pVehicle[iVehicleId]->customSpawn.iModelID))
+	if (!CVehicleInfo::IsValidPassengerSeat(iSeatId, pVehicle->customSpawn.iModelID))
 		return false;
 
 	// Validate the distance to enter
-	if(CMath::GetDistanceBetween3DPoints(pNetGame->pVehiclePool->pVehicle[iVehicleId]->vecPosition,
+	if (CMath::GetDistanceBetween3DPoints(pVehicle->vecPosition,
 		m_pPlayer->vecPosition) > MAX_DISTANCE_TO_ENTER_VEHICLE)
 		return false;
 
@@ -1256,7 +1248,7 @@ bool CPlayerData::EnterVehicle(int iVehicleId, int iSeatId, int iType)
 	m_wVehicleToEnter = (WORD)iVehicleId;
 	m_byteSeatToEnter = (BYTE)iSeatId;
 	// Get the seat position
-	CVector *pvecSeat = CSAMPFunctions::GetVehicleModelInfoEx(pNetGame->pVehiclePool->pVehicle[iVehicleId]->customSpawn.iModelID,
+	CVector *pvecSeat = CSAMPFunctions::GetVehicleModelInfoEx(pVehicle->customSpawn.iModelID,
 		iSeatId == 0 || iSeatId == 1 ? VEHICLE_MODEL_INFO_FRONTSEAT : VEHICLE_MODEL_INFO_REARSEAT);
 
 	// Adjust the seat vector
@@ -1265,13 +1257,13 @@ bool CPlayerData::EnterVehicle(int iVehicleId, int iSeatId, int iType)
 		vecSeat.fX = -vecSeat.fX;
 
 	// Get vehicle angle
-	float fAngle = CMath::GetAngle(-pNetGame->pVehiclePool->pVehicle[iVehicleId]->fRotationX, pNetGame->pVehiclePool->pVehicle[iVehicleId]->fRotationY);
+	float fAngle = CMath::GetAngle(-pVehicle->vehMatrix.up.fX, pVehicle->vehMatrix.up.fY);
 	// This is absolutely bullshit
 	float _fAngle = fAngle * 0.01570796326794897f;
 	// Calculate the seat position based on vehicle angle
 	CVector vecSeatPosition(vecSeat.fX * cos(_fAngle) - vecSeat.fY * sin(_fAngle), vecSeat.fX * sin(_fAngle) + vecSeat.fY * cos(_fAngle), vecSeat.fZ);
 	// Calculate the destination point
-	CVector vecDestination = pNetGame->pVehiclePool->pVehicle[iVehicleId]->vecPosition + vecSeatPosition;
+	CVector vecDestination = pVehicle->vecPosition + vecSeatPosition;
 	// Go to the vehicle
 	GoTo(vecDestination, iType, true);
 	return true;
@@ -1299,19 +1291,21 @@ bool CPlayerData::ExitVehicle()
 bool CPlayerData::PutInVehicle(int iVehicleId, int iSeatId)
 {
 	// Validate the vehicle
-	if(iVehicleId < 1 || iVehicleId > MAX_VEHICLES)
+	if (iVehicleId < 1 || iVehicleId > MAX_VEHICLES)
 		return false;
 
 	// Validate the player state
-	if(GetState() != PLAYER_STATE_ONFOOT)
+	if (GetState() != PLAYER_STATE_ONFOOT)
 		return false;
 
 	// Validate the vehicle
-	if(!pNetGame->pVehiclePool->pVehicle[iVehicleId])
+	CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[iVehicleId];
+
+	if (!pVehicle)
 		return false;
 
 	// Validate the seat id
-	if(!CVehicleInfo::IsValidPassengerSeat(iSeatId, pNetGame->pVehiclePool->pVehicle[iVehicleId]->customSpawn.iModelID))
+	if (!CVehicleInfo::IsValidPassengerSeat(iSeatId, pVehicle->customSpawn.iModelID))
 		return false;
 
 	// Set the player vehicle and seat id
@@ -1321,8 +1315,8 @@ bool CPlayerData::PutInVehicle(int iVehicleId, int iSeatId)
 	// Set the player state
 	SetState(iSeatId == 0 ? PLAYER_STATE_DRIVER : PLAYER_STATE_PASSENGER);
 
-	// Update player angle
-	SetAngle(pNetGame->pVehiclePool->pVehicle[iVehicleId]->customSpawn.fRot);
+	// Set the angle
+	SetAngle(CMath::GetAngle(-pVehicle->vehMatrix.up.fX, pVehicle->vehMatrix.up.fY));
 	return true;
 }
 

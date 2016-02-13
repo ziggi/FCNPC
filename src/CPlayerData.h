@@ -54,8 +54,8 @@ class CPlayerData
 
 		void SetPosition(CVector vecPosition);
 		void GetPosition(CVector *pvecPosition);
-		void SetQuaternion(CVector vecQuaternion, float fAngle);
-		void GetQuaternion(CVector *pvecQuaternion, float *pfAngle);
+		void SetQuaternion(float *fQuaternion);
+		void GetQuaternion(float *fQuaternion);
 		void SetAngle(float fAngle);
 		float GetAngle();
 		void SetVelocity(CVector vecVelocity);
