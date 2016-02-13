@@ -517,9 +517,6 @@ void CPlayerData::Process()
 				// Reset entering variables
 				m_bEntering = false;
 				m_bJacking = false;
-				// Set the angle
-				CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[m_wVehicleToEnter];
-				SetAngle(CMath::GetAngle(-pVehicle->vehMatrix.up.fX, pVehicle->vehMatrix.up.fY));
 				// Call the vehicle entry complete callback
 				CCallbackManager::OnVehicleEntryComplete((int)m_playerId, (int)m_wVehicleToEnter, (int)m_byteSeatToEnter);
 				// Set the player vehicle and seat
@@ -813,9 +810,12 @@ void CPlayerData::SetAngle(float fAngle)
 {
 	// Set the player
 	m_pPlayer->fAngle = fAngle;
-	// Create new quaternion
-	// TODO: rotate a quaternion by the rules
-	float fQuaternion[4] = { 0.0, 0.0, 0.0, CMath::AngleToQuaternion(fAngle) };
+	// Rotate new quaternion matrix
+	MATRIX4X4 *matrix = new MATRIX4X4;
+	float *fQuaternion = new float[4];
+
+	CMath::QuaternionRotateZ(matrix, CMath::DegreeToRadians(fAngle));	
+	CMath::GetQuaternionFromMatrix(*matrix, fQuaternion);
 	// Update quaternion
 	SetQuaternion(fQuaternion);
 }
@@ -1314,9 +1314,6 @@ bool CPlayerData::PutInVehicle(int iVehicleId, int iSeatId)
 
 	// Set the player state
 	SetState(iSeatId == 0 ? PLAYER_STATE_DRIVER : PLAYER_STATE_PASSENGER);
-
-	// Set the angle
-	SetAngle(CMath::GetAngle(-pVehicle->vehMatrix.up.fX, pVehicle->vehMatrix.up.fY));
 	return true;
 }
 

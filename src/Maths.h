@@ -12,7 +12,6 @@
 #define MATHS_H
 
 #include "CVector.h"
-#include "vectormath_aos.h"
 
 #define M_PI           3.14159265358979323846f
 
@@ -24,6 +23,7 @@ class CMath
 
 		static void  GetQuaternionFromMatrix(MATRIX4X4 matrix, float *fQuaternion);
 		static void  GetMatrixFromQuaternion(float *fQuaternion, MATRIX4X4 *matrix);
+		static void  QuaternionRotateZ(MATRIX4X4 *m, double angle);
 
 		static float AngleToQuaternion(float fAngle);
 		static float RadiansToDegree(float fRadian);

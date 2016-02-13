@@ -82,6 +82,23 @@ void CMath::GetMatrixFromQuaternion(float *fQuaternion, MATRIX4X4 *m)
 	m->at.fZ = 1.0f - 2.0f * (xx + yy);
 }
 
+void CMath::QuaternionRotateZ(MATRIX4X4 *m, double angle) {
+	double c = cos(angle);
+	double s = sin(angle);
+
+	m->right.fX = c;
+	m->right.fY = s;
+	m->right.fZ = 0.0;
+
+	m->up.fX = -s;
+	m->up.fY = c;
+	m->up.fZ = 0.0;
+
+	m->at.fX = 0.0;
+	m->at.fY = 0.0;
+	m->at.fZ = 1.0;
+}
+
 float CMath::AngleToQuaternion(float fAngle)
 {
 	return sin((fAngle * (M_PI / 180.0f)) / 2) * (fAngle < 180.0f ? -1.0f : 1.0f);
