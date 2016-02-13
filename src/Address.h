@@ -46,14 +46,11 @@ class CAddress
 		static DWORD           FUNC_CPlayer__EnterVehicle;
 		static DWORD           FUNC_CPlayer__ExitVehicle;
 
-		static DWORD           FUNC_CConfig__GetValueAsInteger;
+		static DWORD           FUNC_CConsole__GetIntVariable;
 
 		static DWORD           FUNC_GetVehicleModelInfo;
 
 		// Variables
-		static DWORD           VAR_ServerPtr;
-		static DWORD           VAR_ConfigPtr;
-		static DWORD           VAR_RakPeerPtr;
 		static DWORD           VAR_ServerAuthentication;
 
 		// Offsets

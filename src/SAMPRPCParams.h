@@ -19,7 +19,7 @@ class CSAMPRPCParams
 	private:
 		unsigned char           *m_pData;
 		DWORD                   m_dwLength;
-		CSAMPSystemAddress      m_systemAddress;
+		PlayerID                m_systemAddress;
 		// BitStream uses stack data (256 bytes) to store small data instead of heap allocation
 		// and since our data is small, we use it
 		unsigned char           ucStackData[256];
@@ -68,7 +68,7 @@ class CSAMPRPCParams
 			m_dwLength = iWritePointer * 8;
 		};
 
-		void SetSystemAddress(CSAMPSystemAddress systemAddress)
+		void SetSystemAddress(PlayerID systemAddress)
 		{
 			// Set the RPC params system address
 			m_systemAddress = systemAddress;

@@ -14,34 +14,10 @@
 class CSAMPSystemAddress;
 
 #ifdef _WIN32
-#	define SYSTEM_MANAGER_OFFSET 8
+	#define SYSTEM_MANAGER_OFFSET 8
 #else
-#	define SYSTEM_MANAGER_OFFSET 4
+	#define SYSTEM_MANAGER_OFFSET 4
 #endif
-
-#pragma pack(push, 1)
-class CSAMPSystemAddress
-{
-	public:
-		unsigned int        uiSystemAddress;    // 0x0000 - 0x0004
-		unsigned short      usPort;             // 0x0004 - 0x0006
-		unsigned short      usPlayerId;         // 0x0006 - 0x0008
-
-		CSAMPSystemAddress()
-		{	
-			uiSystemAddress = 0xFFFFFFFF;
-			usPort = 0xFFFF;
-		};
-
-		CSAMPSystemAddress& operator = (const CSAMPSystemAddress& systemAddress)
-		{
-			uiSystemAddress = systemAddress.uiSystemAddress;
-			usPort = systemAddress.usPort;
-			usPlayerId = systemAddress.usPlayerId;
-			return *this;
-		};
-};
-#pragma pack(pop)
 
 class CSAMPRemoteSystem {};
 class CSAMPRemoteSystemManager{};
@@ -59,14 +35,14 @@ class CSAMPRakPeer
 			return (CSAMPRemoteSystem *)(pRemoteSystemManager + CAddress::OFFSET_RemoteSystemSize * usIndex);
 		}
 
-		void SetConnectedPlayer(CSAMPSystemAddress systemAddress)
+		void SetConnectedPlayer(PlayerID systemAddress)
 		{
 			// Get the remote system
-			CSAMPRemoteSystem *pRemoteSystem = GetRemoteSystem(systemAddress.usPlayerId);
+			CSAMPRemoteSystem *pRemoteSystem = GetRemoteSystem(systemAddress.id);
 			// Mark the player as active
 			*(bool *)(pRemoteSystem) = true;
 			// Set his sytem address
-			*(CSAMPSystemAddress *)(pRemoteSystem + 1) = systemAddress;
+			*(PlayerID *)(pRemoteSystem + 1) = systemAddress;
 			// Set the connect mode
 			*(int *)(pRemoteSystem + CAddress::OFFSET_RemoteSystem__ConnectMode) = 8; // 8 = CONNECTED
 			*(BYTE *)(pRemoteSystem + CAddress::OFFSET_RemoteSystem__Unknown) = 2;
@@ -80,7 +56,7 @@ class CSAMPRakPeer
 			// Mark the player as inactive
 			*(bool *)(pRemoteSystem) = false;
 			// Reset stats
-			*(CSAMPSystemAddress *)(pRemoteSystem + 1) = CSAMPSystemAddress();
+			*(PlayerID *)(pRemoteSystem + 1) = PlayerID();
 			*(int *)(pRemoteSystem + CAddress::OFFSET_RemoteSystem__ConnectMode) = 0;
 			*(BYTE *)(pRemoteSystem + CAddress::OFFSET_RemoteSystem__Unknown) = 0;
 			*(BYTE *)(pRemoteSystem + CAddress::OFFSET_RemoteSystem__Unknown + 1) = 0;

@@ -20,7 +20,7 @@ CPlayer__SpawnForWorld_t        CSAMPFunctions::pfn__CPlayer__SpawnForWorld = NU
 CPlayer__Kill_t                 CSAMPFunctions::pfn__CPlayer__Kill = NULL;
 CPlayer__EnterVehicle_t         CSAMPFunctions::pfn__CPlayer__EnterVehicle = NULL;
 CPlayer__ExitVehicle_t          CSAMPFunctions::pfn__CPlayer__ExitVehicle = NULL;
-CConfig__GetValueAsInteger_t    CSAMPFunctions::pfn__CConfig__GetValueAsInteger = NULL;
+CConsole__GetIntVariable_t    CSAMPFunctions::pfn__CConsole__GetIntVariable = NULL;
 GetVehicleModelInfo_t           CSAMPFunctions::pfn__GetVehicleModelInfo = NULL;
 RakNet__Send_t                  CSAMPFunctions::pfn__RakNet__Send = NULL;
 RakNet__RPC_t                   CSAMPFunctions::pfn__RakNet__RPC = NULL;
@@ -40,7 +40,7 @@ void CSAMPFunctions::Initialize()
 	pfn__CPlayer__EnterVehicle = (CPlayer__EnterVehicle_t)(CAddress::FUNC_CPlayer__EnterVehicle);
 	pfn__CPlayer__ExitVehicle = (CPlayer__ExitVehicle_t)(CAddress::FUNC_CPlayer__ExitVehicle);
 
-	pfn__CConfig__GetValueAsInteger = (CConfig__GetValueAsInteger_t)(CAddress::FUNC_CConfig__GetValueAsInteger);
+	pfn__CConsole__GetIntVariable = (CConsole__GetIntVariable_t)(CAddress::FUNC_CConsole__GetIntVariable);
 
 	pfn__GetVehicleModelInfo = (GetVehicleModelInfo_t)(CAddress::FUNC_GetVehicleModelInfo);
 }
@@ -95,12 +95,12 @@ int CSAMPFunctions::NewPlayer(char *szName)
 	pCreateNPCParams->WriteString(szName, strlen(szName));
 	pCreateNPCParams->Write<int>(iAuthentication);
 	// Get the RakPeer pointer
-	CSAMPRakPeer *pRakPeer = (CSAMPRakPeer *)(CAddress::VAR_RakPeerPtr);
+	CSAMPRakPeer *pRakPeer = (CSAMPRakPeer *)pRakServer;
 	// Create a fake player system address
-	CSAMPSystemAddress systemAddress;
-	systemAddress.uiSystemAddress = 0x0100007F; // Localhost
-	systemAddress.usPort = rand() % 9999; // Random port
-	systemAddress.usPlayerId = iPlayerId;
+	PlayerID systemAddress;
+	systemAddress.binaryAddress = 0x0100007F; // Localhost
+	systemAddress.port = 9000 + iPlayerId;
+	systemAddress.id = iPlayerId;
 	// Set the RPC params system address
 	pCreateNPCParams->SetSystemAddress(systemAddress);
 	// Set a fake connected player in the RakPeer instance
@@ -145,16 +145,12 @@ CVector *CSAMPFunctions::GetVehicleModelInfoEx(int iModelId, int iInfoType)
 
 int CSAMPFunctions::GetMaxPlayers()
 {
-	// Call the function
-	void *pConfig = (void *)CAddress::VAR_ConfigPtr;
-	return pfn__CConfig__GetValueAsInteger(pConfig, "maxplayers");
+	return pfn__CConsole__GetIntVariable(pConsole, "maxplayers");
 }
 
 int CSAMPFunctions::GetMaxNPC()
 {
-	// Call the function
-	void *pConfig = (void *)CAddress::VAR_ConfigPtr;
-	return pfn__CConfig__GetValueAsInteger(pConfig, "maxnpc");
+	return pfn__CConsole__GetIntVariable(pConsole, "maxnpc");
 }
 
 void CSAMPFunctions::PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE iWeaponId, CVector vecPoint)
@@ -199,11 +195,10 @@ void CSAMPFunctions::PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE
 	// Write it to BitStream
 	RakNet::BitStream bsSend;
 	bsSend.Write((BYTE)CAddress::OFFSET_SendBullet_RPC);
-	bsSend.Write((unsigned short)iPlayerId);
+	bsSend.Write((WORD)iPlayerId);
 	bsSend.Write((char *)&bulletSyncData, sizeof(CBulletSyncData));
 
 	// Send it
-	CSAMPRakPeer *pSAMPRakPeer = (CSAMPRakPeer *)CAddress::VAR_RakPeerPtr;
-	pfn__RakNet__Send((void *)pSAMPRakPeer, &bsSend, HIGH_PRIORITY, RELIABLE_ORDERED, 0, UNASSIGNED_PLAYER_ID, 1);
+	pRakServer->Send(&bsSend, HIGH_PRIORITY, RELIABLE_ORDERED, 0, UNASSIGNED_PLAYER_ID, true);
 }
 

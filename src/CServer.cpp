@@ -10,9 +10,9 @@
 
 #include "Main.h"
 
-CSAMPRPCParams      *pCreateNPCParams;
-extern logprintf_t  logprintf;
-extern CNetGame  *pNetGame;
+CSAMPRPCParams *pCreateNPCParams;
+extern logprintf_t logprintf;
+extern CNetGame *pNetGame;
 
 CServer::CServer(eSAMPVersion version)
 {

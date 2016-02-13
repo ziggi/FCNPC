@@ -28,7 +28,7 @@ typedef void (THISCALL *CPlayer__SpawnForWorld_t)(void *pPlayer);
 typedef void (THISCALL *CPlayer__Kill_t)(void *pPlayer, int iKillerId, int iWeapon);
 typedef void (THISCALL *CPlayer__EnterVehicle_t)(void *pPlayer, int iVehicleId, int iSeatId);
 typedef void (THISCALL *CPlayer__ExitVehicle_t)(void *pPlayer, int iVehicleId);
-typedef int  (THISCALL *CConfig__GetValueAsInteger_t)(void *pConfig, char *szKey);
+typedef int  (THISCALL *CConsole__GetIntVariable_t)(void *pConfig, char *szKey);
 typedef bool (THISCALL *RakNet__Send_t)(void* ppRakServer, RakNet::BitStream* parameters, PacketPriority priority, PacketReliability reliability, unsigned orderingChannel, PlayerID playerId, bool broadcast);
 typedef bool (THISCALL *RakNet__RPC_t)(void* ppRakServer, int* uniqueID, RakNet::BitStream* parameters, PacketPriority priority, PacketReliability reliability, unsigned orderingChannel, PlayerID playerId, bool broadcast, bool shiftTimestamp);
 typedef Packet* (THISCALL *RakNet__Receive_t)(void* ppRakServer);
@@ -63,7 +63,7 @@ class CSAMPFunctions
 		static CPlayer__Kill_t					pfn__CPlayer__Kill;
 		static CPlayer__EnterVehicle_t			pfn__CPlayer__EnterVehicle;
 		static CPlayer__ExitVehicle_t			pfn__CPlayer__ExitVehicle;
-		static CConfig__GetValueAsInteger_t		pfn__CConfig__GetValueAsInteger;
+		static CConsole__GetIntVariable_t		pfn__CConsole__GetIntVariable;
 		static GetVehicleModelInfo_t			pfn__GetVehicleModelInfo;
 		static RakNet__Send_t					pfn__RakNet__Send;
 		static RakNet__RPC_t					pfn__RakNet__RPC;
