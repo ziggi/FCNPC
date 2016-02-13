@@ -73,7 +73,7 @@ typedef void(*VARCHANGEFUNC)();
 typedef struct _MATRIX4X4 
 {
 	CVector right;
-	DWORD flags;
+	DWORD  flags;
 	CVector up;
 	float  pad_u;
 	CVector at;
@@ -92,12 +92,12 @@ struct ConsoleVariable_s
 
 struct C3DText  // size 0x21
 {
-	char*			szText;                // + 0x00
-    DWORD			dwColor;               // + 0x04
+	char*			szText;                                     // + 0x00
+    DWORD			dwColor;                         // + 0x04
 	CVector			vecPos;
-	float			fDrawDistance;         // + 0x14
-    bool			bLineOfSight;          // + 0x18
-    int				iWorld;                // + 0x19
+	float			fDrawDistance;                     // + 0x14
+    bool			bLineOfSight;            // + 0x18
+    int				iWorld;                  // + 0x19
     WORD			attachedToPlayerID;    // + 0x1D
 	WORD			attachedToVehicleID;   // + 0x1F
 };
@@ -129,7 +129,7 @@ struct CVehicleSyncData
 	WORD			wUDAnalog;				// 0x0021 - 0x0023
 	WORD			wLRAnalog;				// 0x0023 - 0x0025
 	WORD			wKeys;					// 0x0025 - 0x0027
-	float			fQuaternion[4];			// 0x0027 - 0x0037
+	float			fQuaternion[3];			// 0x0027 - 0x0037
 	CVector			vecPosition;			// 0x0037 - 0x0043
 	CVector			vecVelocity;			// 0x0043 - 0x004F
 	float			fHealth;				// 0x004F - 0x0053
@@ -172,7 +172,7 @@ struct CSyncData
 	float			fQuaternion[4];			// 0x0088 - 0x008C
 	BYTE			byteHealth;				// 0x0098 - 0x0099
 	BYTE			byteArmour;				// 0x0099 - 0x009A
-	BYTE			byteWeapon : 6;			// 0x009A - 0x009B
+	BYTE			byteWeapon : 6;				// 0x009A - 0x009B
 	BYTE			_unk_ : 2;
 	BYTE			byteSpecialAction;		// 0x009B - 0x009C
 	CVector			vecVelocity;			// 0x009C - 0x00A8
@@ -193,13 +193,13 @@ struct CSyncData
 struct CUnoccupiedSyncData // size 0x43
 {
 	WORD			wVehicleID;				// + 0x0000
-	BYTE			bytePassengerSlot;		// + 0x0002
+	BYTE			bytePassengerSlot;			// + 0x0002
 	CVector			vecRool;				// + 0x0003
 	CVector			vecDirection;			// + 0x000F
 	CVector			vecPosition;			// + 0x001B
 	CVector			vecVelocity;			// + 0x0027
 	CVector			vecTurnVelocity;		// + 0x0033
-	float			fHealth;				// + 0x003F
+	float			fHealth;					// + 0x003F
 };
 
 struct CSpectatingSyncData		// size 0x12
@@ -663,6 +663,18 @@ struct CSAMPGangZonePool
 // CActor
 /* -------------------------------------------------------- */
 
+struct CAnim // 140
+{
+	char szAnimLib[64]; // 0 - 64
+	char szAnimName[64]; // 64 - 128
+	float fDelta;		// 128 - 132
+	BYTE byteLoop;		// 132 - 133
+	BYTE byteLockX;			// 133 - 134
+	BYTE byteLockY;			// 134 - 135
+	BYTE byteFreeze;		// 135 - 136
+	int iTime;				//  136 - 140
+};
+
 struct CActor
 {
 	BYTE pad0;				// 0
@@ -671,9 +683,9 @@ struct CActor
 	float fSpawnAngle;		// 17 - 21
 	DWORD pad4;				// 21 - 25
 	DWORD pad5;				// 25 - 29
-	BYTE pad6;				// 29 - 30
-	char animation[140];	// 30 - 170
-	WORD pad7;				// 170 - 171
+	BYTE byteLoopAnim;		// 29 - 30
+	CAnim anim;
+	WORD wTime;				// 170 - 171
 	float fHealth;			// 172 - 176
 	DWORD pad;				// 176 - 180
 	float fAngle;			// 180 - 184
@@ -963,7 +975,7 @@ struct Packet
 class RakServer
 {
 public:
-	~RakServer();
+	~RakServer(); // THIS NOT
 	virtual void _0();
 	virtual bool Start(unsigned short AllowedPlayers, unsigned int depreciated, int threadSleepTimer, unsigned short port, const char *forceHostAddress = 0) = 0; // 4
 	virtual void DisableSecurity( void ); // 8
@@ -1046,14 +1058,13 @@ public:
 	virtual bool _0(); 
 	virtual void _4();
 	virtual bool Start(unsigned short AllowedPlayers, unsigned int depreciated, int threadSleepTimer, unsigned short port, const char *forceHostAddress = 0) = 0;
-//	virtual void _C();
-	virtual bool Send(RakNet::BitStream* parameters, int priority, int reliability, unsigned orderingChannel, PlayerID playerId, bool broadcast);
+	virtual void _C();
 	virtual void _10();
 	virtual void _14();
 	virtual void _18();
 	virtual void _1C();
-	virtual void _20();
-	virtual bool Send__(RakNet::BitStream* parameters, int priority, int reliability, unsigned orderingChannel, PlayerID playerId, bool broadcast);
+	virtual bool SendGECI(RakNet::BitStream* parameters, int priority, int reliability, unsigned orderingChannel, PlayerID playerId, bool broadcast);
+	virtual bool Send(RakNet::BitStream* parameters, int priority, int reliability, unsigned orderingChannel, PlayerID playerId, bool broadcast);
 	virtual void _28();
 	virtual void _2C();
 	virtual void _30();
