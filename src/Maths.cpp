@@ -49,9 +49,9 @@ void CMath::GetQuaternionFromMatrix(MATRIX4X4 m, float *fQuaternion)
 	fQuaternion[2] = sqrt(Max((float)0, 1.0f - m.right.fX + m.up.fY - m.at.fZ)) * 0.5f;
 	fQuaternion[3] = sqrt(Max((float)0, 1.0f - m.right.fX - m.up.fY + m.at.fZ)) * 0.5f;
 
-	fQuaternion[1] = static_cast < float > (_copysign(fQuaternion[1], m.at.fY - m.up.fZ));
-	fQuaternion[2] = static_cast < float > (_copysign(fQuaternion[2], m.right.fZ - m.at.fX));
-	fQuaternion[3] = static_cast < float > (_copysign(fQuaternion[3], m.up.fX - m.right.fY));
+	fQuaternion[1] = static_cast < float > (copysign(fQuaternion[1], m.at.fY - m.up.fZ));
+	fQuaternion[2] = static_cast < float > (copysign(fQuaternion[2], m.right.fZ - m.at.fX));
+	fQuaternion[3] = static_cast < float > (copysign(fQuaternion[3], m.up.fX - m.right.fY));
 }
 
 // based on ToMatrix function from MTA SA
