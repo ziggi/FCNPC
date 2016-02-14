@@ -43,6 +43,9 @@ forward FCNPC_OnFinishNodePoint(npcid, point);
 forward FCNPC_OnChangeNode(npcid, nodeid);
 forward FCNPC_OnFinishNode(npcid);
 
+forward FCNPC_OnStreamIn(npcid, forplayerid);
+forward FCNPC_OnStreamOut(npcid, forplayerid);
+
 // Natives
 native FCNPC_SetUpdateRate(rate);
 native FCNPC_InitZMap(file[]);

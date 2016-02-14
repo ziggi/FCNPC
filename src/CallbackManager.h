@@ -33,6 +33,8 @@ class CCallbackManager
 		static int	OnChangeNode(int iGameId, int iNodeId);
 		static int	OnFinishNodePoint(int iGameId, int iNodePoint);
 		static void	OnFinishNode(int iGameId);
+		static void	OnStreamIn(int iNPCId, int iForPlayerId);
+		static void	OnStreamOut(int iNPCId, int iForPlayerId);
 
 		static std::list<AMX *>		m_listAMX;
 		

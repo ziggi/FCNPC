@@ -241,3 +241,37 @@ void CCallbackManager::OnFinishNode(int iGameId)
 		}
 	}
 }
+
+void CCallbackManager::OnStreamIn(int iNPCId, int iForPlayerId)
+{
+	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++)
+	{
+		// Get the function index
+		int iIndex;
+		if (!amx_FindPublic((*i), "FCNPC_OnStreamIn", &iIndex))
+		{
+			// Push the parameters
+			amx_Push((*i), iForPlayerId);
+			amx_Push((*i), iNPCId);
+			// Execute the callback
+			amx_Exec((*i), NULL, iIndex);
+		}
+	}
+}
+
+void CCallbackManager::OnStreamOut(int iNPCId, int iForPlayerId)
+{
+	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++)
+	{
+		// Get the function index
+		int iIndex;
+		if (!amx_FindPublic((*i), "FCNPC_OnStreamOut", &iIndex))
+		{
+			// Push the parameters
+			amx_Push((*i), iForPlayerId);
+			amx_Push((*i), iNPCId);
+			// Execute the callback
+			amx_Exec((*i), NULL, iIndex);
+		}
+	}
+}

@@ -14,15 +14,34 @@ extern CServer      *pServer;
 extern logprintf_t  logprintf;
 extern void         *pAMXFunctions;
 
-// Parameters for "OnPlayerGiveDamage" function
-bool bGiveDamage;
 BYTE bytePushCount;
-int iPlayerId;
-int iDamagerId;
-float fHealthLoss;
-int iWeapon;
-int iBodypart;
 
+// give damage
+bool bGiveDamage;
+
+struct t_OnPlayerGiveDamage {
+	int iPlayerId;
+	int iDamagerId;
+	float fHealthLoss;
+	int iWeapon;
+	int iBodypart;
+};
+
+t_OnPlayerGiveDamage pGiveDamage;
+
+// stream in/out
+struct t_OnPlayerStream {
+	int iPlayerId;
+	int iForPlayerId;
+};
+
+t_OnPlayerStream pStreamIn;
+t_OnPlayerStream pStreamOut;
+
+bool bStreamIn;
+bool bStreamOut;
+
+// subhook
 subhook_t hookFindPublic;
 subhook_t hookPush;
 subhook_t hookExec;
@@ -43,11 +62,13 @@ int amx_FindPublic_Hook(AMX *amx, const char *funcname, int *index)
 {
 	// Is it "OnPlayerGiveDamage"
 	if (!strcmp(funcname, "OnPlayerGiveDamage"))
-	{
-		// Set parameter flags
 		bGiveDamage = true;
-		bytePushCount = 0;
-	}
+	else if (!strcmp(funcname, "OnPlayerStreamIn"))
+		bStreamIn = true;
+	else if (!strcmp(funcname, "OnPlayerStreamOut"))
+		bStreamOut = true;
+
+	bytePushCount = 0;
 
 	pfn_amx_FindPublic = (amx_FindPublic_t)(subhook_get_trampoline(hookFindPublic));
 
@@ -62,23 +83,53 @@ int amx_Push_Hook(AMX *amx, cell value)
 		switch (bytePushCount)
 		{
 			case 4:
-				iPlayerId = value;
+				pGiveDamage.iPlayerId = value;
 				break;
 
 			case 3:
-				iDamagerId = value;
+				pGiveDamage.iDamagerId = value;
 				break;
 
 			case 2:
-				fHealthLoss = amx_ctof(value);
+				pGiveDamage.fHealthLoss = amx_ctof(value);
 				break;
 
 			case 1:
-				iWeapon = value;
+				pGiveDamage.iWeapon = value;
 				break;
 
 			case 0:
-				iBodypart = value;
+				pGiveDamage.iBodypart = value;
+				break;
+		}
+		// Increase the parameters count
+		bytePushCount++;
+	}
+	else if (bStreamIn)
+	{
+		switch (bytePushCount)
+		{
+			case 1:
+				pStreamIn.iPlayerId = value;
+				break;
+
+			case 0:
+				pStreamIn.iForPlayerId = value;
+				break;
+		}
+		// Increase the parameters count
+		bytePushCount++;
+	}
+	else if (bStreamOut)
+	{
+		switch (bytePushCount)
+		{
+			case 1:
+				pStreamOut.iPlayerId = value;
+				break;
+
+			case 0:
+				pStreamOut.iForPlayerId = value;
 				break;
 		}
 		// Increase the parameters count
@@ -100,8 +151,33 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 	{
 		bGiveDamage = false;
 
-		if (pServer->GetPlayerManager()->IsPlayerConnectedEx(iDamagerId))
-			pServer->GetPlayerManager()->GetAt(iDamagerId)->ProcessDamage(iPlayerId, fHealthLoss, iWeapon, iBodypart);
+		if (pServer->GetPlayerManager()->IsPlayerConnectedEx(pGiveDamage.iDamagerId))
+		{
+			pServer->GetPlayerManager()->GetAt(pGiveDamage.iDamagerId)->ProcessDamage(
+				pGiveDamage.iPlayerId, pGiveDamage.fHealthLoss, pGiveDamage.iWeapon, pGiveDamage.iBodypart);
+		}
+	}
+	else if (bStreamIn)
+	{
+		bStreamIn = false;
+
+		logprintf("asd: %d - %d | %d - %d",
+			pStreamIn.iPlayerId, pServer->GetPlayerManager()->IsPlayerConnectedEx(pStreamIn.iPlayerId),
+			pStreamIn.iForPlayerId, pServer->GetPlayerManager()->IsPlayerConnectedEx(pStreamIn.iForPlayerId));
+
+		if (pServer->GetPlayerManager()->IsPlayerConnectedEx(pStreamIn.iPlayerId))
+		{
+			CCallbackManager::OnStreamIn(pStreamIn.iPlayerId, pStreamIn.iForPlayerId);
+		}
+	}
+	else if (bStreamOut)
+	{
+		bStreamOut = false;
+
+		if (pServer->GetPlayerManager()->IsPlayerConnectedEx(pStreamIn.iPlayerId))
+		{
+			CCallbackManager::OnStreamOut(pStreamIn.iPlayerId, pStreamIn.iForPlayerId);
+		}
 	}
 
 	return ret;
