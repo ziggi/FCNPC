@@ -84,6 +84,9 @@ class CPlayerData
 		void SetSpecialAction(int iActionId);
 		int GetSpecialAction();
 
+		void SetAnimation(int iAnimationId, float fDelta, bool bLoop, bool bLockX, bool bLockY, bool bFreeze, int iTime);
+		void GetAnimation(int *iAnimationId, float *fDelta, bool *bLoop, bool *bLockX, bool *bLockY, bool *bFreeze, int *iTime);
+
 		bool GoTo(CVector vecPoint, int iType, bool bUseZMap, float fRadius = 0.0f);
 		void StopMoving();
 		bool IsMoving();

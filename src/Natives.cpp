@@ -563,6 +563,78 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetSpecialAction(AMX *amx, cell *params)
 	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetSpecialAction();
 }
 
+// native FCNPC_SetAnimation(npcid, animationid, Float:fDelta = 4.1, loop = 0, lockx = 1, locky = 1, freeze = 0, time = 1);
+cell AMX_NATIVE_CALL CNatives::FCNPC_SetAnimation(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(8, "FCNPC_SetAnimation");
+
+	// Get parms
+	int iNPCId = (int)params[1];
+	int iAnimationId = (int)params[2];
+	float fDelta = amx_ctof(params[3]);
+	bool bLoop = (bool)params[4];
+	bool bLockX = (bool)params[5];
+	bool bLockY = (bool)params[6];
+	bool bFreeze = (bool)params[7];
+	int iTime = (int)params[8];
+
+	// Make sure the player is valid
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
+		return 0;
+
+	// Set the player animation
+	pServer->GetPlayerManager()->GetAt(iNPCId)->
+		SetAnimation(iAnimationId, fDelta, bLoop, bLockX, bLockY, bFreeze, iTime);
+	return 1;
+}
+
+// native FCNPC_GetAnimation(npcid, &animationid = 0, &Float:fDelta = 4.1, &loop = 0, &lockx = 1, &locky = 1, &freeze = 0, &time = 1);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetAnimation(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(8, "FCNPC_GetAnimation");
+	// Get the NPC id
+	int iNPCId = (int)params[1];
+	// Make sure the player is valid
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
+		return 0;
+
+	// Get parms
+	int iAnimationId;
+	float fDelta;
+	bool bLoop;
+	bool bLockX;
+	bool bLockY;
+	bool bFreeze;
+	int iTime;
+
+	// Get the player animation
+	pServer->GetPlayerManager()->GetAt(iNPCId)->
+		GetAnimation(&iAnimationId, &fDelta, &bLoop, &bLockX, &bLockY, &bFreeze, &iTime);
+
+	cell *pAddress = NULL;
+	amx_GetAddr(amx, params[2], &pAddress);
+	*pAddress = iAnimationId;
+
+	amx_GetAddr(amx, params[3], &pAddress);
+	*pAddress = amx_ftoc(fDelta);
+
+	amx_GetAddr(amx, params[4], &pAddress);
+	*pAddress = bLoop;
+
+	amx_GetAddr(amx, params[5], &pAddress);
+	*pAddress = bLockX;
+
+	amx_GetAddr(amx, params[6], &pAddress);
+	*pAddress = bLockY;
+
+	amx_GetAddr(amx, params[7], &pAddress);
+	*pAddress = bFreeze;
+
+	amx_GetAddr(amx, params[8], &pAddress);
+	*pAddress = iTime;
+	return 1;
+}
+
 cell AMX_NATIVE_CALL CNatives::FCNPC_GoTo(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(8, "FCNPC_GoTo");

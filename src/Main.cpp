@@ -138,6 +138,9 @@ AMX_NATIVE_INFO PluginNatives[ ] =
 	{ "FCNPC_SetSpecialAction", CNatives::FCNPC_SetSpecialAction},
 	{ "FCNPC_GetSpecialAction", CNatives::FCNPC_GetSpecialAction},
 
+	{ "FCNPC_SetAnimation", CNatives::FCNPC_SetAnimation},
+	{ "FCNPC_GetAnimation", CNatives::FCNPC_GetAnimation},
+
 	{ "FCNPC_ToggleReloading", CNatives::FCNPC_ToggleReloading },
 	{ "FCNPC_ToggleInfiniteAmmo", CNatives::FCNPC_ToggleInfiniteAmmo },
 

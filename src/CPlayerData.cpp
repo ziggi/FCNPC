@@ -951,6 +951,28 @@ int CPlayerData::GetSpecialAction()
 	return m_pPlayer->syncData.byteSpecialAction;
 }
 
+void CPlayerData::SetAnimation(int iAnimationId, float fDelta, bool bLoop, bool bLockX, bool bLockY, bool bFreeze, int iTime)
+{
+	m_pPlayer->syncData.wAnimIndex = (WORD)iAnimationId;
+
+	if (iAnimationId == 0) {
+		m_pPlayer->syncData.wAnimFlags = 0;
+	} else {
+		m_pPlayer->syncData.wAnimFlags = ((BYTE)fDelta & 0xFF) | (bLoop << 8) | (bLockX << 9) | (bLockY << 10) | (bFreeze << 11) | (iTime << 12);
+	}
+}
+
+void CPlayerData::GetAnimation(int *iAnimationId, float *fDelta, bool *bLoop, bool *bLockX, bool *bLockY, bool *bFreeze, int *iTime)
+{
+	*iAnimationId = m_pPlayer->syncData.wAnimIndex;
+	*fDelta = m_pPlayer->syncData.wAnimFlags & 0xFF;
+	*bLoop = m_pPlayer->syncData.wAnimFlags >> 8 & 0x1 != 0;
+	*bLockX = m_pPlayer->syncData.wAnimFlags >> 9 & 0x1 != 0;
+	*bLockY = m_pPlayer->syncData.wAnimFlags >> 10 & 0x1 != 0;
+	*bFreeze = m_pPlayer->syncData.wAnimFlags >> 11 & 0x1 != 0;
+	*iTime = m_pPlayer->syncData.wAnimFlags >> 12 & 0xF;
+}
+
 void CPlayerData::SetVelocity(CVector vecVelocity)
 {
 	// Check the player state
