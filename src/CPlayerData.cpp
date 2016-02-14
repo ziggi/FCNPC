@@ -985,7 +985,7 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseZMap, float fRadius
 {
 	// Validate the mouvement type
 	if (iType == MOVE_TYPE_AUTO)
-		iType = GetState() == PLAYER_STATE_DRIVER ? MOVE_TYPE_DRIVE : MOVE_TYPE_WALK;
+		iType = GetState() == PLAYER_STATE_DRIVER ? MOVE_TYPE_DRIVE : MOVE_TYPE_RUN;
 
 	if (iType > MOVE_TYPE_DRIVE || iType < MOVE_TYPE_WALK)
 		return false;

@@ -90,8 +90,8 @@ native FCNPC_GetSpecialAction(npcid);
 native FCNPC_ToggleReloading(npcid, bool:toggle);
 native FCNPC_ToggleInfiniteAmmo(npcid, bool:toggle);
 
-native FCNPC_GoTo(npcid, Float:X, Float:Y, Float:Z, type = -1, Float:speed = 0.5, bool:UseZMap = false, Float:radius = 0.0);
-native FCNPC_GoToPlayer(npcid, playereid, type = -1, Float:speed = 0.5, bool:UseZMap = false, Float:radius = 0.0);
+native FCNPC_GoTo(npcid, Float:X, Float:Y, Float:Z, type = MOVE_TYPE_AUTO, Float:speed = 0.5, bool:UseZMap = false, Float:radius = 0.0);
+native FCNPC_GoToPlayer(npcid, playerid, type = MOVE_TYPE_AUTO, Float:speed = 0.5, bool:UseZMap = false, Float:radius = 0.0);
 native FCNPC_Stop(npcid);
 native FCNPC_IsMoving(npcid);
 
