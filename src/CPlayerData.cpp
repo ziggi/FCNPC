@@ -921,6 +921,17 @@ WORD CPlayerData::GetAmmo()
 	return m_wAmmo;
 }
 
+void CPlayerData::SetWeaponSkill(int iSkill, int iLevel)
+{
+	m_pPlayer->wSkillLevel[iSkill] = iLevel;
+	Respawn();
+}
+
+WORD CPlayerData::GetWeaponSkill(int iSkill)
+{
+	return m_pPlayer->wSkillLevel[iSkill];
+}
+
 void CPlayerData::SetSpecialAction(int iActionId)
 {
 	// Validate the action id

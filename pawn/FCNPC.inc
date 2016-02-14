@@ -80,6 +80,8 @@ native FCNPC_SetWeapon(npcid, weaponid);
 native FCNPC_GetWeapon(npcid);
 native FCNPC_SetAmmo(npcid, ammo);
 native FCNPC_GetAmmo(npcid);
+native FCNPC_SetWeaponSkillLevel(npcid, skill, level);
+native FCNPC_GetWeaponSkillLevel(npcid, skill);
 
 native FCNPC_SetKeys(npcid, Keys);
 native FCNPC_GetKeys(npcid, &UDAnalog, &LRAnalog, &Keys);

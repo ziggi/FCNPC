@@ -70,6 +70,8 @@ class CPlayerData
 		BYTE GetWeapon();
 		void SetAmmo(WORD wAmmo);
 		WORD GetAmmo();
+		void SetWeaponSkill(int iSkill, int iLevel);
+		WORD GetWeaponSkill(int iSkill);
 
 		void SetSkin(int iSkin);
 		int GetSkin();

@@ -706,6 +706,39 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetAmmo(AMX *amx, cell *params)
 	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetAmmo();
 }
 
+cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponSkillLevel(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(3, "FCNPC_SetWeaponSkillLevel");
+	// Get params
+	int iNPCId = (int)params[1];
+	int iSkill = (int)params[2];
+	int iLevel = (int)params[3];
+	// Make sure the player is valid
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
+		return 0;
+
+	if (iSkill < 0 || iSkill > 10)
+		return 0;
+
+	// Set the player ammo
+	pServer->GetPlayerManager()->GetAt(iNPCId)->SetWeaponSkill(iSkill, iLevel);
+	return 1;
+}
+
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponSkillLevel(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_GetWeaponSkillLevel");
+	// Get params
+	int iNPCId = (int)params[1];
+	int iSkill = (int)params[2];
+	// Make sure the player is valid
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
+		return 0;
+
+	// Get the player ammo
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetWeaponSkill(iSkill);
+}
+
 cell AMX_NATIVE_CALL CNatives::FCNPC_AimAt(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(5, "FCNPC_AimAt");

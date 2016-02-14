@@ -50,6 +50,8 @@ class CNatives
 		static cell AMX_NATIVE_CALL FCNPC_GetWeapon(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL FCNPC_SetAmmo(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL FCNPC_GetAmmo(AMX *amx, cell *params);
+		static cell AMX_NATIVE_CALL FCNPC_SetWeaponSkillLevel(AMX *amx, cell *params);
+		static cell AMX_NATIVE_CALL FCNPC_GetWeaponSkillLevel(AMX *amx, cell *params);
 
 		static cell AMX_NATIVE_CALL FCNPC_SetKeys(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL FCNPC_GetKeys(AMX *amx, cell *params);
