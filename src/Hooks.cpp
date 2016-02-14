@@ -161,10 +161,6 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 	{
 		bStreamIn = false;
 
-		logprintf("asd: %d - %d | %d - %d",
-			pStreamIn.iPlayerId, pServer->GetPlayerManager()->IsPlayerConnectedEx(pStreamIn.iPlayerId),
-			pStreamIn.iForPlayerId, pServer->GetPlayerManager()->IsPlayerConnectedEx(pStreamIn.iForPlayerId));
-
 		if (pServer->GetPlayerManager()->IsPlayerConnectedEx(pStreamIn.iPlayerId))
 		{
 			CCallbackManager::OnStreamIn(pStreamIn.iPlayerId, pStreamIn.iForPlayerId);
