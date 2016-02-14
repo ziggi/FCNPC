@@ -130,7 +130,6 @@ bool CPlayback::Process(CPlayerData *pPlayerData)
 			CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[pPlayerData->GetVehicleId()];
 			// Set the data
 			pVehicle->vecPosition = vehicleSyncData.vecPosition;
-			CMath::GetMatrixFromQuaternion(vehicleSyncData.fQuaternion, &pVehicle->vehMatrix);
 			pVehicle->vecVelocity = vehicleSyncData.vecVelocity;
 			// Apply the sync data
 			pPlayerData->SetState(PLAYER_STATE_DRIVER);
