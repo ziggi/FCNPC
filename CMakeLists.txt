@@ -27,8 +27,8 @@ else ()
 		${CMAKE_CURRENT_SOURCE_DIR}/src/fopen_s/*.h
 	)
 
-	set (CMAKE_C_FLAGS "-m32 -fPIC -O2 -w -DSAMPGDK_AMALGAMATION -fno-stack-protector -fpack-struct=1")
-	set (CMAKE_CXX_FLAGS "-m32 -fPIC -O2 -w -DSAMPGDK_AMALGAMATION -fno-stack-protector -fpack-struct=1")
+	set (CMAKE_C_FLAGS "-m32 -fPIC -O2 -w -fno-stack-protector -fpack-struct=1")
+	set (CMAKE_CXX_FLAGS "-m32 -fPIC -O2 -w -fno-stack-protector -fpack-struct=1")
 	set (CMAKE_SHARED_LINKER_FLAGS "-fshort-wchar -shared")
 endif (WIN32)
 
