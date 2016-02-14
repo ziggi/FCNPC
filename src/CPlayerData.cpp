@@ -517,6 +517,9 @@ void CPlayerData::Process()
 				// Reset entering variables
 				m_bEntering = false;
 				m_bJacking = false;
+				// Set the angle
+				CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[m_wVehicleToEnter];
+				SetAngle(CMath::GetAngle(-pVehicle->vehMatrix.up.fX, pVehicle->vehMatrix.up.fY));
 				// Call the vehicle entry complete callback
 				CCallbackManager::OnVehicleEntryComplete((int)m_playerId, (int)m_wVehicleToEnter, (int)m_byteSeatToEnter);
 				// Set the player vehicle and seat
@@ -1334,6 +1337,9 @@ bool CPlayerData::PutInVehicle(int iVehicleId, int iSeatId)
 
 	// Set the player state
 	SetState(iSeatId == 0 ? PLAYER_STATE_DRIVER : PLAYER_STATE_PASSENGER);
+
+	// Set the angle
+	SetAngle(CMath::GetAngle(-pVehicle->vehMatrix.up.fX, pVehicle->vehMatrix.up.fY));
 	return true;
 }
 
