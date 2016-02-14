@@ -720,7 +720,7 @@ public ProcessMissionTimer(mission)
 						new Float:x, Float:y, Float:z;
 						GetPlayerPos(target, x, y, z);
 						// Shoot him
-			            FCNPC_AimAt(Mission[mission][npcs][i], x, y, z, 1);
+			            FCNPC_AimAt(Mission[mission][npcs][i], x, y, z, true);
 			            // Mark as shooting
 			            Mission[mission][npc_target][i] = target;
 			        }
@@ -735,7 +735,7 @@ public ProcessMissionTimer(mission)
 					{
 						// Shoot him
 						GetPlayerPos(Mission[mission][npc_target][i], x, y, z);
-			        	FCNPC_AimAt(Mission[mission][npcs][i], x, y, z, 1);
+			        	FCNPC_AimAt(Mission[mission][npcs][i], x, y, z, true);
 					}
 					else
 					{
@@ -793,7 +793,7 @@ public ProcessMissionTimer(mission)
 				new Float:x, Float:y, Float:z;
 				GetPlayerPos(target, x, y, z);
 				// Shoot him
-    			FCNPC_AimAt(Mission[mission][npcs][0], x, y, z, 1);
+    			FCNPC_AimAt(Mission[mission][npcs][0], x, y, z, true);
        			// Mark as shooting
           		Mission[mission][npc_target][0] = target;
           		LastBossTick = GetTickCount();
@@ -809,7 +809,7 @@ public ProcessMissionTimer(mission)
 			{
 				// Shoot him
 				GetPlayerPos(Mission[mission][npc_target][0], x, y, z);
-		       	FCNPC_AimAt(Mission[mission][npcs][0], x, y, z, 1);
+		       	FCNPC_AimAt(Mission[mission][npcs][0], x, y, z, true);
 			}
 			else
 			{

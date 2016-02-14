@@ -49,6 +49,7 @@ extern logprintf_t          logprintf;
 #define UPDATE_STATE_DRIVER     2
 #define UPDATE_STATE_PASSENGER  3
 // Mouvement type
+#define MOVE_TYPE_AUTO      -1
 #define MOVE_TYPE_WALK      0
 #define MOVE_TYPE_RUN       1
 #define MOVE_TYPE_SPRINT    2

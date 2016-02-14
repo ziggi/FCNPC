@@ -140,6 +140,7 @@ AMX_NATIVE_INFO PluginNatives[ ] =
 	{ "FCNPC_ToggleInfiniteAmmo", CNatives::FCNPC_ToggleInfiniteAmmo },
 
 	{ "FCNPC_GoTo", CNatives::FCNPC_GoTo},
+	{ "FCNPC_GoToPlayer", CNatives::FCNPC_GoToPlayer},
 	{ "FCNPC_Stop", CNatives::FCNPC_Stop},
 	{ "FCNPC_IsMoving", CNatives::FCNPC_IsMoving},
 

@@ -12,6 +12,7 @@
 #pragma library FCNPC
 
 // Definitions
+#define MOVE_TYPE_AUTO      -1
 #define MOVE_TYPE_WALK      0
 #define MOVE_TYPE_RUN       1
 #define MOVE_TYPE_SPRINT    2
@@ -89,12 +90,13 @@ native FCNPC_GetSpecialAction(npcid);
 native FCNPC_ToggleReloading(npcid, bool:toggle);
 native FCNPC_ToggleInfiniteAmmo(npcid, bool:toggle);
 
-native FCNPC_GoTo(npcid, Float:X, Float:Y, Float:Z, type, Float:speed, UseZMap);
+native FCNPC_GoTo(npcid, Float:X, Float:Y, Float:Z, type = -1, Float:speed = 0.5, bool:UseZMap = false, Float:radius = 0.0);
+native FCNPC_GoToPlayer(npcid, playereid, type = -1, Float:speed = 0.5, bool:UseZMap = false, Float:radius = 0.0);
 native FCNPC_Stop(npcid);
 native FCNPC_IsMoving(npcid);
 
-native FCNPC_AimAt(npcid, Float:X, Float:Y, Float:Z, shoot);
-native FCNPC_AimAtPlayer(npcid, playerid, shoot);
+native FCNPC_AimAt(npcid, Float:X, Float:Y, Float:Z, bool:shoot = false);
+native FCNPC_AimAtPlayer(npcid, playerid, bool:shoot = false);
 native FCNPC_StopAim(npcid);
 native FCNPC_MeleeAttack(npcid, delay);
 native FCNPC_StopAttack(npcid);
@@ -102,7 +104,7 @@ native FCNPC_IsAiming(npcid);
 native FCNPC_IsShooting(npcid);
 native FCNPC_IsReloading(npcid);
 
-native FCNPC_EnterVehicle(npcid, vehicleid, seatid, type);
+native FCNPC_EnterVehicle(npcid, vehicleid, seatid, type = MOVE_TYPE_WALK);
 native FCNPC_ExitVehicle(npcid);
 
 native FCNPC_PutInVehicle(npcid, vehicleid, seatid);

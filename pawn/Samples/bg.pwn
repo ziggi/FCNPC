@@ -102,7 +102,7 @@ public UpdateGuards()
 					// Set the moving velocity if he is a driver
 					if(FCNPC_GetVehicleID(Bodyguard[i][j][id]) != INVALID_VEHICLE_ID)
 					{
-				    	FCNPC_GoTo(Bodyguard[i][j][id], x, y, z, MOVE_TYPE_DRIVE, 0.8, 1);
+				    	FCNPC_GoTo(Bodyguard[i][j][id], x, y, z, MOVE_TYPE_DRIVE, 0.8, true);
 				    	if(IsPlayerInAnyVehicle(i))
 				    	{
                             new Float:vx, Float:vy, Float:vz;
@@ -111,7 +111,7 @@ public UpdateGuards()
 				    	}
     				}
     				else
-    				    FCNPC_GoTo(Bodyguard[i][j][id], x, y, z, MOVE_TYPE_RUN, 0.0, 1);
+    				    FCNPC_GoTo(Bodyguard[i][j][id], x, y, z, MOVE_TYPE_RUN, 0.0, true);
 	    		}
     			else
 		   			FCNPC_Stop(Bodyguard[i][j][id]);
@@ -123,7 +123,7 @@ public UpdateGuards()
    				new Float:x, Float:y, Float:z;
 				GetPlayerPos(Bodyguard[i][j][aimat], x, y, z);
 				// Aim at him
- 				FCNPC_AimAt(Bodyguard[i][j][id], x, y, z, 0);
+ 				FCNPC_AimAt(Bodyguard[i][j][id], x, y, z, false);
 			}
 			// Process guard shooting
 			else if(Bodyguard[i][j][shootat] != INVALID_PLAYER_ID)
@@ -139,7 +139,7 @@ public UpdateGuards()
 					new Float:x, Float:y, Float:z;
  					GetPlayerPos(Bodyguard[i][j][shootat], x, y, z);
  					// Shoot him
- 					FCNPC_AimAt(Bodyguard[i][j][id], x, y, z, 1);
+ 					FCNPC_AimAt(Bodyguard[i][j][id], x, y, z, true);
  				}
 			}
 		}

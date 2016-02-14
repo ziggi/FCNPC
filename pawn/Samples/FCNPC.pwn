@@ -70,7 +70,7 @@ public OnFilterScriptInit()
 		FCNPC_SetWeapon(npcid, random(11) + 22);
 		FCNPC_SetAmmo(npcid, 500);
 		// Move the NPC
-		FCNPC_GoTo(npcid, Mouvement[0][0], Mouvement[0][1], Mouvement[0][2], MOVE_TYPE_RUN, 0, 1);
+		FCNPC_GoTo(npcid, Mouvement[0][0], Mouvement[0][1], Mouvement[0][2], MOVE_TYPE_RUN, 0, true);
 	}
 //	FCNPC_Destroy(npcid);
 }
@@ -98,7 +98,7 @@ public FCNPC_OnReachDestination(npcid)
         NPC[npcid][stage] = 0;
         
 	new mstage = NPC[npcid][stage];
-	FCNPC_GoTo(npcid, Mouvement[mstage][0], Mouvement[mstage][1], Mouvement[mstage][2], MOVE_TYPE_RUN, 0, 1);
+	FCNPC_GoTo(npcid, Mouvement[mstage][0], Mouvement[mstage][1], Mouvement[mstage][2], MOVE_TYPE_RUN, 0, true);
 	return 1;
 }
 

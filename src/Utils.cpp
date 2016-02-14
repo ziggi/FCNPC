@@ -116,3 +116,11 @@ DWORD CUtils::FindPattern(char *szPattern, char *szMask)
 	// Return null
 	return NULL;
 }
+
+float CUtils::RandomFloat(float min, float max)
+{
+	assert(max > min); 
+	float random = ((float) rand()) / (float) RAND_MAX;
+	float range = max - min;  
+	return (random*range) + min;
+}

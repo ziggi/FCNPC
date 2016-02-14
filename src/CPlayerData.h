@@ -82,7 +82,7 @@ class CPlayerData
 		void SetSpecialAction(int iActionId);
 		int GetSpecialAction();
 
-		void GoTo(CVector vecPoint, int iType, bool bUseZMap);
+		bool GoTo(CVector vecPoint, int iType, bool bUseZMap, float fRadius = 0.0f);
 		void StopMoving();
 		bool IsMoving();
 

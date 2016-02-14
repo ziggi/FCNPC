@@ -981,34 +981,42 @@ void CPlayerData::GetKeys(WORD *pwUDAnalog, WORD *pwLRAnalog, DWORD *pdwKeys)
 	*pdwKeys = m_pPlayer->dwKeys;
 }
 
-void CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseZMap)
+bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseZMap, float fRadius)
 {
 	// Validate the mouvement type
-	if(iType > MOVE_TYPE_DRIVE || iType < MOVE_TYPE_WALK)
-		return;
+	if (iType == MOVE_TYPE_AUTO)
+		iType = GetState() == PLAYER_STATE_DRIVER ? MOVE_TYPE_DRIVE : MOVE_TYPE_WALK;
+
+	if (iType > MOVE_TYPE_DRIVE || iType < MOVE_TYPE_WALK)
+		return false;
 
 	// Save the destination point
 	m_vecDestination = vecPoint;
+	// Add radius
+	if (fRadius != 0.0f)
+	{
+		m_vecDestination -= CVector(CUtils::RandomFloat(-fRadius, fRadius), CUtils::RandomFloat(-fRadius, fRadius), 0.0);
+	}
 	// Get the moving type key and speed
 	DWORD dwMoveKey = 0;
 	float fMoveSpeed = MOVE_SPEED_RUN;
-	if(iType == MOVE_TYPE_WALK)
+	if (iType == MOVE_TYPE_WALK)
 	{
 		fMoveSpeed = MOVE_SPEED_WALK;
 		dwMoveKey = 0x400;
 	}
-	else if(iType == MOVE_TYPE_SPRINT)
+	else if (iType == MOVE_TYPE_SPRINT)
 	{
 		fMoveSpeed = MOVE_SPEED_SPRINT;
 		dwMoveKey = 0x8;
 	}
-	else if(iType == MOVE_TYPE_DRIVE)
+	else if (iType == MOVE_TYPE_DRIVE)
 	{
 		fMoveSpeed = m_pPlayer->vecVelocity.fX;
 		dwMoveKey = 0;
 	}
 	// Set the moving keys
-	if(iType != MOVE_TYPE_DRIVE)
+	if (iType != MOVE_TYPE_DRIVE)
 		SetKeys(0x8000, 0x0000, dwMoveKey);
 	else
 		SetKeys(0x0000, 0x0000, 0);
@@ -1035,6 +1043,7 @@ void CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseZMap)
 	m_bMoving = true;
 	// Save the ZMap usage
 	m_bUseZMap = bUseZMap;
+	return true;
 }
 
 void CPlayerData::StopMoving()
