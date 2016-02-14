@@ -100,11 +100,10 @@ int CSAMPFunctions::NewPlayer(char *szName)
 	PlayerID systemAddress;
 	systemAddress.binaryAddress = 0x0100007F; // Localhost
 	systemAddress.port = 9000 + iPlayerId;
-	systemAddress.id = iPlayerId;
 	// Set the RPC params system address
 	pCreateNPCParams->SetSystemAddress(systemAddress);
 	// Set a fake connected player in the RakPeer instance
-	pRakPeer->SetConnectedPlayer(systemAddress);
+	pRakPeer->SetConnectedPlayer(systemAddress, iPlayerId);
 	// Create the NPC
 	pfn__CreateNPC_RPC(pCreateNPCParams);
 	// Remove the fake player from the RakPeer instance

@@ -799,7 +799,6 @@ struct PlayerID
 {
 	unsigned int binaryAddress;
 	unsigned short port;
-	unsigned short id;
 };
 
 const PlayerID UNASSIGNED_PLAYER_ID =

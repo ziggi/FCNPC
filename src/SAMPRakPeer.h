@@ -35,10 +35,10 @@ class CSAMPRakPeer
 			return (CSAMPRemoteSystem *)(pRemoteSystemManager + CAddress::OFFSET_RemoteSystemSize * usIndex);
 		}
 
-		void SetConnectedPlayer(PlayerID systemAddress)
+		void SetConnectedPlayer(PlayerID systemAddress, int iPlayerId)
 		{
 			// Get the remote system
-			CSAMPRemoteSystem *pRemoteSystem = GetRemoteSystem(systemAddress.id);
+			CSAMPRemoteSystem *pRemoteSystem = GetRemoteSystem((unsigned short)iPlayerId);
 			// Mark the player as active
 			*(bool *)(pRemoteSystem) = true;
 			// Set his sytem address
