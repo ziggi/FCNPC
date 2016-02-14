@@ -1372,14 +1372,31 @@ int CPlayerData::GetSeatId()
 	return m_pPlayer->byteSeatId;
 }
 
-void CPlayerData::SetVehicleSiren(int iVehicleId, bool bState)
+void CPlayerData::SetVehicleSiren(bool bState)
 {
 	m_pPlayer->vehicleSyncData.byteSirenState = bState ? 1 : 0;
 }
 
-bool CPlayerData::GetVehicleSiren(int iVehicleId)
+bool CPlayerData::GetVehicleSiren()
 {
 	return m_pPlayer->vehicleSyncData.byteSirenState != 0;
+}
+
+void CPlayerData::SetVehicleHealth(float fHealth)
+{
+	// Validate the health
+	if (fHealth < 0.0f)
+		fHealth = 0.0f;
+	else if (fHealth > 1000.0f)
+		fHealth = 1000.0f;
+
+	m_pPlayer->vehicleSyncData.fHealth = fHealth;
+	pNetGame->pVehiclePool->pVehicle[ m_pPlayer->vehicleSyncData.wVehicleId ]->fHealth = fHealth;
+}
+
+float CPlayerData::GetVehicleHealth()
+{
+	return m_pPlayer->vehicleSyncData.fHealth;
 }
 
 bool CPlayerData::StartPlayingPlayback(char *szFile)

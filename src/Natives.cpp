@@ -978,12 +978,12 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVehicleSiren(AMX *amx, cell *params)
 	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
-	// Make the player exit the vehicle
+	// Make sure the player is in vehicle
 	if (pServer->GetPlayerManager()->GetAt(iNPCId)->GetVehicleId() == INVALID_ENTITY_ID)
 		return 0;
 
 	// Change siren state
-	pServer->GetPlayerManager()->GetAt(iNPCId)->SetVehicleSiren(iNPCId, iSiren);
+	pServer->GetPlayerManager()->GetAt(iNPCId)->SetVehicleSiren(iSiren);
 	return 1;
 }
 
@@ -999,12 +999,56 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleSiren(AMX *amx, cell *params)
 	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
-	// Make the player exit the vehicle
+	// Make sure the player is in vehicle
 	if (pServer->GetPlayerManager()->GetAt(iNPCId)->GetVehicleId() == INVALID_ENTITY_ID)
 		return 0;
 
 	// Return siren state
-	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetVehicleSiren(iNPCId) ? 1 : 0;
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetVehicleSiren() ? 1 : 0;
+}
+
+// native FCNPC_SetVehicleHealth(npcid, Float:health);
+cell AMX_NATIVE_CALL CNatives::FCNPC_SetVehicleHealth(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_SetVehicleHealth");
+
+	// Get params
+	int iNPCId = (int)params[1];
+	float fHealth = amx_ctof(params[2]);
+
+	// Make sure the player is valid
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
+		return 0;
+
+	// Make sure the player is in vehicle
+	if (pServer->GetPlayerManager()->GetAt(iNPCId)->GetVehicleId() == INVALID_ENTITY_ID)
+		return 0;
+
+	// Change vehicle health
+	pServer->GetPlayerManager()->GetAt(iNPCId)->SetVehicleHealth(fHealth);
+	return 1;
+}
+
+// native Float:FCNPC_GetVehicleHealth(npcid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleHealth(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_GetVehicleHealth");
+
+	// Get params
+	int iNPCId = (int)params[1];
+	float fHealth = 0.0f;
+
+	// Make sure the player is valid
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
+		return amx_ftoc(fHealth);
+
+	// Make sure the player is in vehicle
+	if (pServer->GetPlayerManager()->GetAt(iNPCId)->GetVehicleId() == INVALID_ENTITY_ID)
+		return amx_ftoc(fHealth);
+
+	// Get the vehicle health
+	fHealth = pServer->GetPlayerManager()->GetAt(iNPCId)->GetVehicleHealth();
+	return amx_ftoc(fHealth);
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleReloading(AMX *amx, cell *params)

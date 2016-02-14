@@ -110,8 +110,10 @@ class CPlayerData
 		bool IsInVehicle();
 		int GetVehicleId();
 		int GetSeatId();
-		void SetVehicleSiren(int iVehicleId, bool bState);
-		bool GetVehicleSiren(int iVehicleId);
+		void SetVehicleSiren(bool bState);
+		bool GetVehicleSiren();
+		void SetVehicleHealth(float fHealth);
+		float GetVehicleHealth();
 
 		bool StartPlayingPlayback(char *szFile);
 		void StopPlayingPlayback();
