@@ -1372,6 +1372,16 @@ int CPlayerData::GetSeatId()
 	return m_pPlayer->byteSeatId;
 }
 
+void CPlayerData::SetVehicleSiren(int iVehicleId, bool bState)
+{
+	m_pPlayer->vehicleSyncData.byteSirenState = bState ? 1 : 0;
+}
+
+bool CPlayerData::GetVehicleSiren(int iVehicleId)
+{
+	return m_pPlayer->vehicleSyncData.byteSirenState != 0;
+}
+
 bool CPlayerData::StartPlayingPlayback(char *szFile)
 {
 	// Make sure the player is not already Playing

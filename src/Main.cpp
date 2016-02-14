@@ -161,6 +161,8 @@ AMX_NATIVE_INFO PluginNatives[ ] =
 	{ "FCNPC_RemoveFromVehicle", CNatives::FCNPC_RemoveFromVehicle},
 	{ "FCNPC_GetVehicleID", CNatives::FCNPC_GetVehicleID},
 	{ "FCNPC_GetVehicleSeat", CNatives::FCNPC_GetVehicleSeat},
+	{ "FCNPC_SetVehicleSiren", CNatives::FCNPC_SetVehicleSiren},
+	{ "FCNPC_GetVehicleSiren", CNatives::FCNPC_GetVehicleSiren},
 
 	{ "FCNPC_StartPlayingPlayback", CNatives::FCNPC_StartPlayingPlayback},
 	{ "FCNPC_StopPlayingPlayback", CNatives::FCNPC_StopPlayingPlayback},

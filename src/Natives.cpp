@@ -965,6 +965,48 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleSeat(AMX *amx, cell *params)
 	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetSeatId();
 }
 
+// native FCNPC_SetVehicleSiren(npcid, bool:status);
+cell AMX_NATIVE_CALL CNatives::FCNPC_SetVehicleSiren(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_SetVehicleSiren");
+
+	// Get params
+	int iNPCId = (int)params[1];
+	int iSiren = (int)params[2];
+
+	// Make sure the player is valid
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
+		return 0;
+
+	// Make the player exit the vehicle
+	if (pServer->GetPlayerManager()->GetAt(iNPCId)->GetVehicleId() == INVALID_ENTITY_ID)
+		return 0;
+
+	// Change siren state
+	pServer->GetPlayerManager()->GetAt(iNPCId)->SetVehicleSiren(iNPCId, iSiren);
+	return 1;
+}
+
+// native FCNPC_GetVehicleSiren(npcid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleSiren(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_GetVehicleSiren");
+
+	// Get params
+	int iNPCId = (int)params[1];
+
+	// Make sure the player is valid
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
+		return 0;
+
+	// Make the player exit the vehicle
+	if (pServer->GetPlayerManager()->GetAt(iNPCId)->GetVehicleId() == INVALID_ENTITY_ID)
+		return 0;
+
+	// Return siren state
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetVehicleSiren(iNPCId) ? 1 : 0;
+}
+
 cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleReloading(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_ToggleReloading");

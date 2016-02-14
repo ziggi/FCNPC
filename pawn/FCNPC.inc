@@ -113,6 +113,8 @@ native FCNPC_PutInVehicle(npcid, vehicleid, seatid);
 native FCNPC_RemoveFromVehicle(npcid);
 native FCNPC_GetVehicleID(npcid);
 native FCNPC_GetVehicleSeat(npcid);
+native FCNPC_SetVehicleSiren(npcid, bool:status);
+native FCNPC_GetVehicleSiren(npcid);
 
 native FCNPC_StartPlayingPlayback(npcid, file[]);
 native FCNPC_StopPlayingPlayback(npcid);
