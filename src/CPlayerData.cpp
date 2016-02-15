@@ -1405,7 +1405,7 @@ void CPlayerData::SetVehicleSiren(bool bState)
 	m_pPlayer->vehicleSyncData.byteSirenState = bState ? 1 : 0;
 }
 
-bool CPlayerData::GetVehicleSiren()
+bool CPlayerData::IsVehicleSiren()
 {
 	return m_pPlayer->vehicleSyncData.byteSirenState != 0;
 }

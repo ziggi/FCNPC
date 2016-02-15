@@ -120,7 +120,7 @@ native FCNPC_RemoveFromVehicle(npcid);
 native FCNPC_GetVehicleID(npcid);
 native FCNPC_GetVehicleSeat(npcid);
 native FCNPC_SetVehicleSiren(npcid, bool:status);
-native FCNPC_GetVehicleSiren(npcid);
+native FCNPC_IsVehicleSiren(npcid);
 native FCNPC_SetVehicleHealth(npcid, Float:health);
 native Float:FCNPC_GetVehicleHealth(npcid);
 

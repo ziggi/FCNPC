@@ -1059,10 +1059,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVehicleSiren(AMX *amx, cell *params)
 	return 1;
 }
 
-// native FCNPC_GetVehicleSiren(npcid);
-cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleSiren(AMX *amx, cell *params)
+// native FCNPC_IsVehicleSiren(npcid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_IsVehicleSiren(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "FCNPC_GetVehicleSiren");
+	CHECK_PARAMS(1, "FCNPC_IsVehicleSiren");
 
 	// Get params
 	int iNPCId = (int)params[1];
@@ -1076,7 +1076,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleSiren(AMX *amx, cell *params)
 		return 0;
 
 	// Return siren state
-	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetVehicleSiren() ? 1 : 0;
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->IsVehicleSiren() ? 1 : 0;
 }
 
 // native FCNPC_SetVehicleHealth(npcid, Float:health);

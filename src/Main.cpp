@@ -165,7 +165,7 @@ AMX_NATIVE_INFO PluginNatives[ ] =
 	{ "FCNPC_GetVehicleID", CNatives::FCNPC_GetVehicleID},
 	{ "FCNPC_GetVehicleSeat", CNatives::FCNPC_GetVehicleSeat},
 	{ "FCNPC_SetVehicleSiren", CNatives::FCNPC_SetVehicleSiren},
-	{ "FCNPC_GetVehicleSiren", CNatives::FCNPC_GetVehicleSiren},
+	{ "FCNPC_IsVehicleSiren", CNatives::FCNPC_IsVehicleSiren},
 	{ "FCNPC_SetVehicleHealth", CNatives::FCNPC_SetVehicleHealth},
 	{ "FCNPC_GetVehicleHealth", CNatives::FCNPC_GetVehicleHealth},
 

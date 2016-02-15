@@ -114,7 +114,7 @@ class CPlayerData
 		int GetVehicleId();
 		int GetSeatId();
 		void SetVehicleSiren(bool bState);
-		bool GetVehicleSiren();
+		bool IsVehicleSiren();
 		void SetVehicleHealth(float fHealth);
 		float GetVehicleHealth();
 
