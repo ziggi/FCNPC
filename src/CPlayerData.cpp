@@ -894,12 +894,6 @@ void CPlayerData::SetInterior(int iInterior)
 {
 	// Set the player interior
 	m_pPlayer->iInteriorId = iInterior;
-	// Send RPC
-	RakNet::BitStream bsData;
-	bsData.Write(m_pPlayer->wPlayerId);
-	bsData.Write(iInterior);
-
-	pRakServer->RPC(&RPC_SetPlayerInterior, &bsData, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_PLAYER_ID, true, false);
 }
 
 int CPlayerData::GetInterior()

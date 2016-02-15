@@ -24,7 +24,6 @@ int RPC_SetPlayerSkin = 0x99;
 int RPC_SetPlayerName = 0x0B;
 int RPC_SetFightingStyle = 0x59;
 int RPC_ScrApplyAnimation = 0x56;
-int RPC_SetPlayerInterior = 0x9C;
 int RPC_SetPlayerSkillLevel = 0x22;
 int RPC_ClientMessage = 0x5D;
 int RPC_ScrDisplayGameText = 0x49;
