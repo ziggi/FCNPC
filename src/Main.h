@@ -73,6 +73,7 @@
 #include "SAMPRPCParams.h"
 #include "SAMPFunctions.h"
 #include "Structs.h"
+#include "RPCs.h"
 // SA includes
 #include "SANode.h"
 #include "Maths.h"

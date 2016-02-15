@@ -874,8 +874,15 @@ void CPlayerData::SetSkin(int iSkin)
 
 	// Set the player skin
 	m_pPlayer->spawn.iSkin = iSkin;
-	// Respawn the player
-	Respawn();
+	// Send RPC
+	if (m_pPlayer->bReadyToSpawn)
+	{
+		RakNet::BitStream bsData;
+		bsData.Write(m_pPlayer->wPlayerId);
+		bsData.Write(iSkin);
+
+		pRakServer->RPC(&RPC_SetPlayerSkin, &bsData, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_PLAYER_ID, true, false);
+	}
 }
 
 int CPlayerData::GetSkin()
