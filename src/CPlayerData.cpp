@@ -950,7 +950,16 @@ WORD CPlayerData::GetAmmo()
 void CPlayerData::SetWeaponSkill(int iSkill, int iLevel)
 {
 	m_pPlayer->wSkillLevel[iSkill] = iLevel;
-	Respawn();
+
+	if (m_pPlayer->byteState != 9 && m_pPlayer->byteState != 0)
+	{
+		RakNet::BitStream bsData;
+		bsData.Write(m_pPlayer->wPlayerId);
+		bsData.Write(iSkill);
+		bsData.Write(iLevel);
+
+		pRakServer->RPC(&RPC_SetPlayerSkillLevel, &bsData, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_PLAYER_ID, true, false);
+	}
 }
 
 WORD CPlayerData::GetWeaponSkill(int iSkill)
