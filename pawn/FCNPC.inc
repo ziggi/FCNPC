@@ -124,6 +124,10 @@ native FCNPC_GetVehicleSiren(npcid);
 native FCNPC_SetVehicleHealth(npcid, Float:health);
 native Float:FCNPC_GetVehicleHealth(npcid);
 
+// not working
+//native FCNPC_SetPassengerDriveBy(npcid, bool:status);
+//native FCNPC_IsPassengerDriveBy(npcid);
+
 native FCNPC_StartPlayingPlayback(npcid, file[]);
 native FCNPC_StopPlayingPlayback(npcid);
 native FCNPC_PausePlayingPlayback(npcid);

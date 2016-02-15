@@ -1427,6 +1427,16 @@ float CPlayerData::GetVehicleHealth()
 	return m_pPlayer->vehicleSyncData.fHealth;
 }
 
+void CPlayerData::SetPassengerDriveBy(bool bState)
+{
+	m_pPlayer->passengerSyncData.byteDriveBy = bState ? 1 : 0;
+}
+
+bool CPlayerData::IsPassengerDriveBy()
+{
+	return m_pPlayer->passengerSyncData.byteDriveBy != 0;
+}
+
 bool CPlayerData::StartPlayingPlayback(char *szFile)
 {
 	// Make sure the player is not already Playing

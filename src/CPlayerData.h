@@ -118,6 +118,9 @@ class CPlayerData
 		void SetVehicleHealth(float fHealth);
 		float GetVehicleHealth();
 
+		void SetPassengerDriveBy(bool bState);
+		bool IsPassengerDriveBy();
+
 		bool StartPlayingPlayback(char *szFile);
 		void StopPlayingPlayback();
 		void PausePlayingPlayback();

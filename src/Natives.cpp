@@ -1044,7 +1044,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVehicleSiren(AMX *amx, cell *params)
 
 	// Get params
 	int iNPCId = (int)params[1];
-	int iSiren = (int)params[2];
+	bool bSiren = (bool)params[2];
 
 	// Make sure the player is valid
 	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
@@ -1055,7 +1055,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVehicleSiren(AMX *amx, cell *params)
 		return 0;
 
 	// Change siren state
-	pServer->GetPlayerManager()->GetAt(iNPCId)->SetVehicleSiren(iSiren);
+	pServer->GetPlayerManager()->GetAt(iNPCId)->SetVehicleSiren(bSiren);
 	return 1;
 }
 
@@ -1121,6 +1121,48 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleHealth(AMX *amx, cell *params)
 	// Get the vehicle health
 	fHealth = pServer->GetPlayerManager()->GetAt(iNPCId)->GetVehicleHealth();
 	return amx_ftoc(fHealth);
+}
+
+// FCNPC_SetPassengerDriveBy(npcid, bool:status);
+cell AMX_NATIVE_CALL CNatives::FCNPC_SetPassengerDriveBy(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_SetPassengerDriveBy");
+
+	// Get params
+	int iNPCId = (int)params[1];
+	int bDriveBy = (bool)params[2];
+
+	// Make sure the player is valid
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
+		return 0;
+
+	// Make sure the player is in vehicle
+	if (pServer->GetPlayerManager()->GetAt(iNPCId)->GetVehicleId() == INVALID_ENTITY_ID)
+		return 0;
+
+	// Change siren state
+	pServer->GetPlayerManager()->GetAt(iNPCId)->SetPassengerDriveBy(bDriveBy);
+	return 1;
+}
+
+//native FCNPC_IsPassengerDriveBy(npcid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_IsPassengerDriveBy(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_IsPassengerDriveBy");
+
+	// Get params
+	int iNPCId = (int)params[1];
+
+	// Make sure the player is valid
+	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
+		return 0;
+
+	// Make sure the player is in vehicle
+	if (pServer->GetPlayerManager()->GetAt(iNPCId)->GetVehicleId() == INVALID_ENTITY_ID)
+		return 0;
+
+	// Get the vehicle health
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->IsPassengerDriveBy();
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleReloading(AMX *amx, cell *params)

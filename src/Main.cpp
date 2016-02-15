@@ -169,6 +169,9 @@ AMX_NATIVE_INFO PluginNatives[ ] =
 	{ "FCNPC_SetVehicleHealth", CNatives::FCNPC_SetVehicleHealth},
 	{ "FCNPC_GetVehicleHealth", CNatives::FCNPC_GetVehicleHealth},
 
+	{ "FCNPC_SetPassengerDriveBy", CNatives::FCNPC_SetPassengerDriveBy},
+	{ "FCNPC_IsPassengerDriveBy", CNatives::FCNPC_IsPassengerDriveBy},
+
 	{ "FCNPC_StartPlayingPlayback", CNatives::FCNPC_StartPlayingPlayback},
 	{ "FCNPC_StopPlayingPlayback", CNatives::FCNPC_StopPlayingPlayback},
 	{ "FCNPC_PausePlayingPlayback", CNatives::FCNPC_PausePlayingPlayback},

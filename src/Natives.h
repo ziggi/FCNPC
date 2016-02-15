@@ -90,6 +90,9 @@ class CNatives
 		static cell AMX_NATIVE_CALL FCNPC_SetVehicleHealth(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL FCNPC_GetVehicleHealth(AMX *amx, cell *params);
 
+		static cell AMX_NATIVE_CALL FCNPC_SetPassengerDriveBy(AMX *amx, cell *params);
+		static cell AMX_NATIVE_CALL FCNPC_IsPassengerDriveBy(AMX *amx, cell *params);
+
 		static cell AMX_NATIVE_CALL FCNPC_StartPlayingPlayback(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL FCNPC_StopPlayingPlayback(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL FCNPC_PausePlayingPlayback(AMX *amx, cell *params);
