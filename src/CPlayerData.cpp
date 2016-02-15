@@ -901,6 +901,16 @@ int CPlayerData::GetInterior()
 	return m_pPlayer->iInteriorId;
 }
 
+void CPlayerData::SetVirtualWorld(int iVirtualWorld)
+{
+	pNetGame->pPlayerPool->dwVirtualWorld[m_pPlayer->wPlayerId] = iVirtualWorld;
+}
+
+int CPlayerData::GetVirtualWorld()
+{
+	return pNetGame->pPlayerPool->dwVirtualWorld[m_pPlayer->wPlayerId];
+}
+
 void CPlayerData::SetWeapon(BYTE byteWeaponId)
 {
 	// Validate the weapon id

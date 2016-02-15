@@ -250,7 +250,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVirtualWorld(AMX *amx, cell *params)
 		return 0;
 
 	// Set the player virtual world
-	pNetGame->pPlayerPool->dwVirtualWorld[iNPCId] = iVirtualWorld;
+	pServer->GetPlayerManager()->GetAt(iNPCId)->SetVirtualWorld(iVirtualWorld);
 	return 1;
 }
 
@@ -264,7 +264,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVirtualWorld(AMX *amx, cell *params)
 		return 0;
 
 	// Get the player virtual world
-	return pNetGame->pPlayerPool->dwVirtualWorld[iNPCId];
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetVirtualWorld();
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetQuaternion(AMX *amx, cell *params)

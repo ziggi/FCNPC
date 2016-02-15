@@ -77,6 +77,8 @@ class CPlayerData
 		int GetSkin();
 		void SetInterior(int iInterior);
 		int GetInterior();
+		void SetVirtualWorld(int iVirtualWorld);
+		int GetVirtualWorld();
 
 		void SetKeys(WORD wUDAnalog, WORD wLRAnalog, DWORD dwKeys);
 		void GetKeys(WORD *pwUDAnalog, WORD *pwLRAnalog, DWORD *pdwKeys);
