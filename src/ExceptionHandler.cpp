@@ -65,13 +65,13 @@ long WINAPI CExceptionHandler::ExceptionHandlerCallback(_EXCEPTION_POINTERS *pEx
 	fprintf(pFile, "FUNC_CPlayer__SpawnForWorld: 0x%x\n", CAddress::FUNC_CPlayer__SpawnForWorld);
 	fprintf(pFile, "FUNC_GetVehicleModelInfo: 0x%x\n", CAddress::FUNC_GetVehicleModelInfo);
 	fprintf(pFile, "FUNC_CConsole__GetIntVariable: 0x%x\n", CAddress::FUNC_CConsole__GetIntVariable);
-	fprintf(pFile, "FUNC_CreateNPC_RPC: 0x%x\n", CAddress::FUNC_CreateNPC_RPC);
+	fprintf(pFile, "FUNC_ClientJoin_RPC: 0x%x\n", CAddress::FUNC_ClientJoin_RPC);
 
 	fprintf(pFile, "\n\nPointers:\n");
 	fprintf(pFile, "VAR_ServerAuthentication: 0x%x\n", CAddress::VAR_ServerAuthentication);
+	fprintf(pFile, "VAR_NetVersion: 0x%x\n", CAddress::VAR_NetVersion);
 
 	fprintf(pFile, "\n\nOffsets:\n");
-	fprintf(pFile, "OFFSET_NetVersion: 0x%x\n", CAddress::OFFSET_NetVersion);
 	fprintf(pFile, "OFFSET_RemoteSystemManager: 0x%x\n", CAddress::OFFSET_RemoteSystemManager);
 	fprintf(pFile, "OFFSET_RemoteSystemSize: 0x%x\n", CAddress::OFFSET_RemoteSystemSize);
 	fprintf(pFile, "OFFSET_RemoteSystem__ConnectMode: 0x%x\n", CAddress::OFFSET_RemoteSystem__ConnectMode);
@@ -120,13 +120,13 @@ void CExceptionHandler::ExceptionHandlerCallback(int signum)
 	fprintf(pFile, "FUNC_CPlayer__SpawnForWorld: 0x%x\n", CAddress::FUNC_CPlayer__SpawnForWorld);
 	fprintf(pFile, "FUNC_GetVehicleModelInfo: 0x%x\n", CAddress::FUNC_GetVehicleModelInfo);
 	fprintf(pFile, "FUNC_CConsole__GetIntVariable: 0x%x\n", CAddress::FUNC_CConsole__GetIntVariable);
-	fprintf(pFile, "FUNC_CreateNPC_RPC: 0x%x\n", CAddress::FUNC_CreateNPC_RPC);
+	fprintf(pFile, "FUNC_ClientJoin_RPC: 0x%x\n", CAddress::FUNC_ClientJoin_RPC);
 
 	fprintf(pFile, "\n\nPointers:\n");
 	fprintf(pFile, "VAR_ServerAuthentication: 0x%x\n", CAddress::VAR_ServerAuthentication);
+	fprintf(pFile, "VAR_NetVersion: 0x%x\n", CAddress::VAR_NetVersion);
 
 	fprintf(pFile, "\n\nOffsets:\n");
-	fprintf(pFile, "OFFSET_NetVersion: 0x%x\n", CAddress::OFFSET_NetVersion);
 	fprintf(pFile, "OFFSET_RemoteSystemManager: 0x%x\n", CAddress::OFFSET_RemoteSystemManager);
 	fprintf(pFile, "OFFSET_RemoteSystemSize: 0x%x\n", CAddress::OFFSET_RemoteSystemSize);
 	fprintf(pFile, "OFFSET_RemoteSystem__ConnectMode: 0x%x\n", CAddress::OFFSET_RemoteSystem__ConnectMode);

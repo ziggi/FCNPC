@@ -18,10 +18,10 @@ struct Packet;
 struct PlayerId;
 
 // Functions definitions
-typedef void ( *CreateNPC_RPC_t)(CSAMPRPCParams *pRPCParams);
-typedef int  ( *GetNetGame_t)();
-typedef int  ( *GetConsole_t)();
-typedef int  ( *GetRakServer_t)();
+typedef void (*ClientJoin_RPC_t)(RPCParameters *parameters);
+typedef int  (*GetNetGame_t)();
+typedef int  (*GetConsole_t)();
+typedef int  (*GetRakServer_t)();
 
 typedef void (THISCALL *CPlayerPool__DeletePlayer_t)(void *pPlayerPool, int iPlayerId, int iReason);
 typedef void (THISCALL *CPlayer__SpawnForWorld_t)(void *pPlayer);
@@ -57,7 +57,7 @@ class CSAMPFunctions
 		static int		GetRakServer() { return pfn__GetRakServer(); }
 
 		// Functions
-		static CreateNPC_RPC_t					pfn__CreateNPC_RPC;
+		static ClientJoin_RPC_t					pfn__ClientJoin_RPC;
 		static CPlayerPool__DeletePlayer_t		pfn__CPlayerPool__DeletePlayer;
 		static CPlayer__SpawnForWorld_t			pfn__CPlayer__SpawnForWorld;
 		static CPlayer__Kill_t					pfn__CPlayer__Kill;

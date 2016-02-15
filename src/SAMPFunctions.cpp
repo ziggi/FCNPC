@@ -14,13 +14,13 @@
 extern logprintf_t logprintf;
 
 // Functions
-CreateNPC_RPC_t                 CSAMPFunctions::pfn__CreateNPC_RPC = NULL;
+ClientJoin_RPC_t                CSAMPFunctions::pfn__ClientJoin_RPC = NULL;
 CPlayerPool__DeletePlayer_t     CSAMPFunctions::pfn__CPlayerPool__DeletePlayer = NULL;
 CPlayer__SpawnForWorld_t        CSAMPFunctions::pfn__CPlayer__SpawnForWorld = NULL;
 CPlayer__Kill_t                 CSAMPFunctions::pfn__CPlayer__Kill = NULL;
 CPlayer__EnterVehicle_t         CSAMPFunctions::pfn__CPlayer__EnterVehicle = NULL;
 CPlayer__ExitVehicle_t          CSAMPFunctions::pfn__CPlayer__ExitVehicle = NULL;
-CConsole__GetIntVariable_t    CSAMPFunctions::pfn__CConsole__GetIntVariable = NULL;
+CConsole__GetIntVariable_t      CSAMPFunctions::pfn__CConsole__GetIntVariable = NULL;
 GetVehicleModelInfo_t           CSAMPFunctions::pfn__GetVehicleModelInfo = NULL;
 RakNet__Send_t                  CSAMPFunctions::pfn__RakNet__Send = NULL;
 RakNet__RPC_t                   CSAMPFunctions::pfn__RakNet__RPC = NULL;
@@ -32,7 +32,7 @@ GetRakServer_t                  CSAMPFunctions::pfn__GetRakServer = NULL;
 void CSAMPFunctions::Initialize()
 {
 	// Initialize function pointers
-	pfn__CreateNPC_RPC = (CreateNPC_RPC_t)(CAddress::FUNC_CreateNPC_RPC);
+	pfn__ClientJoin_RPC = (ClientJoin_RPC_t)(CAddress::FUNC_ClientJoin_RPC);
 	pfn__CPlayerPool__DeletePlayer = (CPlayerPool__DeletePlayer_t)(CAddress::FUNC_CPlayerPool__DeletePlayer);
 	
 	pfn__CPlayer__SpawnForWorld = (CPlayer__SpawnForWorld_t)(CAddress::FUNC_CPlayer__SpawnForWorld);
@@ -87,27 +87,29 @@ int CSAMPFunctions::NewPlayer(char *szName)
 		return INVALID_ENTITY_ID;
 
 	// Get the SAMP authentication
-	int iAuthentication = *(int *)(CAddress::VAR_ServerAuthentication) ^ CAddress::OFFSET_NetVersion;
-	// Set the RPC parameters writing pointer
-	pCreateNPCParams->SetWritePointer(5);
-	// Write to the RPC params
-	pCreateNPCParams->Write<BYTE>(strlen(szName));
-	pCreateNPCParams->WriteString(szName, strlen(szName));
-	pCreateNPCParams->Write<int>(iAuthentication);
-	// Get the RakPeer pointer
-	CSAMPRakPeer *pRakPeer = (CSAMPRakPeer *)pRakServer;
-	// Create a fake player system address
-	PlayerID systemAddress;
-	systemAddress.binaryAddress = 0x0100007F; // Localhost
-	systemAddress.port = 9000 + iPlayerId;
-	// Set the RPC params system address
-	pCreateNPCParams->SetSystemAddress(systemAddress);
-	// Set a fake connected player in the RakPeer instance
-	pRakPeer->SetConnectedPlayer(systemAddress, iPlayerId);
-	// Create the NPC
-	pfn__CreateNPC_RPC(pCreateNPCParams);
-	// Remove the fake player from the RakPeer instance
-	pRakPeer->SetDisonnectedPlayer(iPlayerId);
+	PlayerID systemAddress = { 0x0100007F, 9000 + iPlayerId };
+	int iVersion = *(int *)(CAddress::VAR_ServerAuthentication) ^ CAddress::VAR_NetVersion;
+	BYTE byteMod = 1;
+	BYTE byteNameLen = (BYTE)strlen(szName);
+
+	RakNet::BitStream bsSend;
+	bsSend.Write(CAddress::VAR_NetVersion);
+	bsSend.Write(byteMod);
+	bsSend.Write(byteNameLen);
+	bsSend.Write(szName, byteNameLen);
+	bsSend.Write(iVersion);
+	
+	RPCParameters pNPCParams;
+	pNPCParams.input = bsSend.GetData();
+	pNPCParams.numberOfBitsOfData = bsSend.GetNumberOfBitsUsed();
+	pNPCParams.sender = systemAddress;
+
+	((CSAMPRakPeer *)pRakServer)->SetConnectedPlayer(systemAddress, iPlayerId);
+
+	pfn__ClientJoin_RPC(&pNPCParams);
+
+	((CSAMPRakPeer *)pRakServer)->SetDisonnectedPlayer(iPlayerId);
+
 	// Return the player id
 	return iPlayerId;
 }

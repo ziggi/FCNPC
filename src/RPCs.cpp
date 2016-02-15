@@ -28,6 +28,7 @@ int RPC_SetPlayerSkillLevel = 0x22;
 int RPC_ClientMessage = 0x5D;
 int RPC_ScrDisplayGameText = 0x49;
 int RPC_Chat = 0x65;
+int RPC_NewPlayer = 0x89;
 
 int RPC_UpdateScoresPingsIPs = 0x9B;
 int RPC_PickedUpPickup = 0x83;

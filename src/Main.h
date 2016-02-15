@@ -70,7 +70,6 @@
 #include "ThreadFunctions.h"
 // SAMP includes
 #include "SAMPRakPeer.h"
-#include "SAMPRPCParams.h"
 #include "SAMPFunctions.h"
 #include "Structs.h"
 #include "RPCs.h"
@@ -89,7 +88,6 @@
 
 // externals
 extern CServer          *pServer;
-extern CSAMPRPCParams   *pCreateNPCParams;
 extern void             **ppPluginData;
 extern CNetGame         *pNetGame;
 extern void             *pConsole;

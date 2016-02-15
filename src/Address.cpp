@@ -20,7 +20,7 @@ DWORD CAddress::FUNC_Logprintf_037_R2_1 = 0x080A91D0;
 #endif
 
 // Functions
-DWORD CAddress::FUNC_CreateNPC_RPC = NULL;
+DWORD CAddress::FUNC_ClientJoin_RPC = NULL;
 DWORD CAddress::FUNC_CPlayerPool__DeletePlayer = NULL;
 
 DWORD CAddress::FUNC_CPlayer__SpawnForWorld = NULL;
@@ -34,9 +34,9 @@ DWORD CAddress::FUNC_GetVehicleModelInfo = NULL;
 
 // Variables
 DWORD CAddress::VAR_ServerAuthentication = NULL;
+DWORD CAddress::VAR_NetVersion = NULL;
 
 // Offsets
-DWORD CAddress::OFFSET_NetVersion = NULL;
 DWORD CAddress::OFFSET_RemoteSystemManager = NULL;
 DWORD CAddress::OFFSET_RemoteSystemSize = NULL;
 DWORD CAddress::OFFSET_RemoteSystem__ConnectMode = NULL;
@@ -56,9 +56,9 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 		FUNC_CPlayer__SpawnForWorld = 0x485900;
 		FUNC_GetVehicleModelInfo = 0x486e10;
 		FUNC_CConsole__GetIntVariable = 0x488db0;
-		FUNC_CreateNPC_RPC = 0x48f040;
+		FUNC_ClientJoin_RPC = 0x48f040;
 		VAR_ServerAuthentication = 0x4f6cf0;
-		OFFSET_NetVersion = 0xfd9;
+		VAR_NetVersion = 0xfd9;
 		OFFSET_RemoteSystemManager = 0x33c;
 		OFFSET_RemoteSystemSize = 0xcb8;
 		OFFSET_RemoteSystem__ConnectMode = 0xcb0;
@@ -74,9 +74,9 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 		FUNC_CPlayer__SpawnForWorld = 0x486d30;
 		FUNC_GetVehicleModelInfo = 0x488240;
 		FUNC_CConsole__GetIntVariable = 0x48b5b0;
-		FUNC_CreateNPC_RPC = 0x4918f0;
+		FUNC_ClientJoin_RPC = 0x4918f0;
 		VAR_ServerAuthentication = 0x4f5fe8;
-		OFFSET_NetVersion = 0xfd9;
+		VAR_NetVersion = 0xfd9;
 		OFFSET_RemoteSystemManager = 0x33c;
 		OFFSET_RemoteSystemSize = 0xcb8;
 		OFFSET_RemoteSystem__ConnectMode = 0xcb0;
@@ -93,13 +93,13 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 		FUNC_CPlayer__SpawnForWorld = CUtils::FindPattern("\x83\x3B\x00\x74\x08\x57\x8B\xCE", "xxxxxxxx") - 0x33;
 		FUNC_GetVehicleModelInfo = CUtils::FindPattern("\x8B\x44\x24\x04\x3D\x90\x01\x00\x00\x0F\x8C\x83\x00\x00\x00\x3D\x63\x02\x00\x00\x7F\x7C", "xxxxxxxxxxxxxxxxxxxxxx");
 		FUNC_CConsole__GetIntVariable = CUtils::FindPattern("\x85\xC0\x74\x0D\x83\x38\x01\x75\x08\x8B\x48\x08\x8B\x01", "xxxxxxxxxxxxxx") - 0x0A;
-		FUNC_CreateNPC_RPC = CUtils::FindPattern("\x83\xC1\x08\x8B\x11\x66\x8B\x49\x04\x89\x54\x24\x14\x99\x83\xE2\x07\x03\xC2\xC1\xF8\x03\x53\x40\x50\x66\x89", "xxxxxxxxxxxxxxxxxxxxxxxxxxx") - 0x3E;
+		FUNC_ClientJoin_RPC = CUtils::FindPattern("\x83\xC1\x08\x8B\x11\x66\x8B\x49\x04\x89\x54\x24\x14\x99\x83\xE2\x07\x03\xC2\xC1\xF8\x03\x53\x40\x50\x66\x89", "xxxxxxxxxxxxxxxxxxxxxxxxxxx") - 0x3E;
 
 		// Variables
 		VAR_ServerAuthentication = *(DWORD *)(CUtils::FindPattern("\x8B\x4C\x24\x28\xA1\xE8\x5F\x4F\x00\x81\xF1\xD9\x0F\x00\x00\x3B\xC1", "xxxxx????xx????xx") + 5);
+		VAR_NetVersion = *(DWORD *)(CUtils::FindPattern("\x8B\x4C\x24\x28\xA1\xE8\x5F\x4F\x00\x81\xF1\xD9\x0F\x00\x00\x3B\xC1", "xxxxx????xx????xx") + 11);
 
 		// Offsets
-		OFFSET_NetVersion = *(DWORD *)(CUtils::FindPattern("\x8B\x4C\x24\x28\xA1\xE8\x5F\x4F\x00\x81\xF1\xD9\x0F\x00\x00\x3B\xC1", "xxxxx????xx????xx") + 11);
 		OFFSET_RemoteSystemManager = *(DWORD *)(CUtils::FindPattern("\x8B\x96\x3C\x03\x00\x00\x8A\x0C\x17\x84\xC9\x8D\x04\x17", "xx????xx?xxxx?") + 2);
 		OFFSET_RemoteSystemSize = *(DWORD *)(CUtils::FindPattern("\x0F\xB7\x56\x08\x43\x81\xC7\xB8\x0C\x00\x00\x3B\xDA", "xxxxxxx????xx") + 7);
 		OFFSET_RemoteSystem__ConnectMode = *(DWORD *)(CUtils::FindPattern("\x83\xB8\xB0\x0C\x00\x00\x08\x75\x1A\x40\x8B\xD0\x8B\x44\x24\x04", "xx????xxxxxxxxxx") + 2);
@@ -118,9 +118,9 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 		FUNC_CPlayer__SpawnForWorld = 0x80ccb50;
 		FUNC_GetVehicleModelInfo = 0x80d58a0;
 		FUNC_CConsole__GetIntVariable = 0x80a0040;
-		FUNC_CreateNPC_RPC = 0x80afcf0;
+		FUNC_ClientJoin_RPC = 0x80afcf0;
 		VAR_ServerAuthentication = 0x81a06e8;
-		OFFSET_NetVersion = 0xfd9;
+		VAR_NetVersion = 0xfd9;
 		OFFSET_RemoteSystemManager = 0x334;
 		OFFSET_RemoteSystemSize = 0xc69;
 		OFFSET_RemoteSystem__ConnectMode = 0xc62;
@@ -136,9 +136,9 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 		FUNC_CPlayer__SpawnForWorld = 0x80ccfc0;
 		FUNC_GetVehicleModelInfo = 0x80d5d30;
 		FUNC_CConsole__GetIntVariable = 0x80a0070;
-		FUNC_CreateNPC_RPC = 0x80b0030;
+		FUNC_ClientJoin_RPC = 0x80b0030;
 		VAR_ServerAuthentication = 0x81aa8a8;
-		OFFSET_NetVersion = 0xfd9;
+		VAR_NetVersion = 0xfd9;
 		OFFSET_RemoteSystemManager = 0x334;
 		OFFSET_RemoteSystemSize = 0xc69;
 		OFFSET_RemoteSystem__ConnectMode = 0xc62;
@@ -149,7 +149,7 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 	case SAMP_VERSION_UNKNOWN:
 		// Functions
 		FUNC_CPlayerPool__DeletePlayer = CUtils::FindPattern("\x55\x89\xE5\x81\xEC\x68\x01\x00\x00\x89\x5D\xF4\x0F\xB7\x5D\x0C\x0F\xB6\x45\x10", "xxxxxxxxxxxxxxxxxxx");
-		FUNC_CreateNPC_RPC = CUtils::FindPattern("\x55\x89\xE5\x81\xEC\xC8\x03\x00\x00\x89\x5D\xF4\x8B\x4D\x08\x89\x75\xF8\x89\x7D\xFC", "xxxxxxxxxxxxxxxxxxxx");
+		FUNC_ClientJoin_RPC = CUtils::FindPattern("\x55\x89\xE5\x81\xEC\xC8\x03\x00\x00\x89\x5D\xF4\x8B\x4D\x08\x89\x75\xF8\x89\x7D\xFC", "xxxxxxxxxxxxxxxxxxxx");
 		FUNC_CPlayer__SpawnForWorld = CUtils::FindPattern("\x55\x89\xE5\x56\x53\x83\xEC\x10\x8B\x75\x08\xA1\x14\x07\x1A\x08", "xxxxxxxxxxxx????");
 		FUNC_CPlayer__Kill = CUtils::FindPattern("\x55\x89\xE5\x81\xEC\x68\x01\x00\x00\x0F\xB6\x45\x0C\x89\x7D\xFC\x8B\x7D\x08\x8D\x95\xC8\xFE\xFF\xFF", "xxxxxxxxxxxxxxxxxxxxxxxxx");
 		FUNC_CPlayer__EnterVehicle = CUtils::FindPattern("\x55\x89\xE5\x81\xEC\x68\x01\x00\x00\x89\x5D\xF4\x8B\x45\x08\x0F\xB6\x5D\x10\x89\x75\xF8\x89\x7D\xFC", "xxxxxxxxxxxxxxxxxxxxxxxxx");
@@ -159,9 +159,9 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 
 		// Variables
 		VAR_ServerAuthentication = *(DWORD *)(CUtils::FindPattern("\x8B\x85\x7C\xFC\xFF\xFF\x35", "xxxxxxx") + 13);
+		VAR_NetVersion = *(DWORD *)(CUtils::FindPattern("\x8B\x85\x7C\xFC\xFF\xFF\x35", "xxxxxxx") + 7);
 
 		// Offsets
-		OFFSET_NetVersion = *(DWORD *)(CUtils::FindPattern("\x8B\x85\x7C\xFC\xFF\xFF\x35", "xxxxxxx") + 7);
 		OFFSET_RemoteSystemManager = *(DWORD *)(CUtils::FindPattern("\x8B\x87\x34\x03\x00\x00\x80\x3C\x03\x00\x74\xE6\x8D\x55\x0C\x8D\x44\x18\x01\x89\x54\x24\x04", "xx????xxxxx?xxxxxxxxxxx") + 2);	
 		OFFSET_RemoteSystemSize = *(DWORD *)(CUtils::FindPattern("\x46\x0F\xB7\xC2\x81\xC3\x69\x0C\x00\x00\x39\xF0", "xxxxx????xxx") + 6);	
 		OFFSET_RemoteSystem__ConnectMode = *(DWORD *)(CUtils::FindPattern("\x83\xBC\x18\x62\x0C\x00\x00\x08\x75\xD1\x01\xD8\x8B\x50\x01\x89\x11", "xxx????xx?xxxxxxx") + 3);

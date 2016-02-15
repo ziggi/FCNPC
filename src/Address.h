@@ -38,7 +38,7 @@ class CAddress
 		static DWORD           FUNC_Logprintf_037_R2_1;
 
 		// Functions
-		static DWORD           FUNC_CreateNPC_RPC;
+		static DWORD           FUNC_ClientJoin_RPC;
 		static DWORD           FUNC_CPlayerPool__DeletePlayer;
 
 		static DWORD           FUNC_CPlayer__SpawnForWorld;
@@ -52,9 +52,9 @@ class CAddress
 
 		// Variables
 		static DWORD           VAR_ServerAuthentication;
+		static DWORD           VAR_NetVersion;
 
 		// Offsets
-		static DWORD           OFFSET_NetVersion;
 		static DWORD           OFFSET_RemoteSystemManager;
 		static DWORD           OFFSET_RemoteSystemSize;
 		static DWORD           OFFSET_RemoteSystem__ConnectMode;

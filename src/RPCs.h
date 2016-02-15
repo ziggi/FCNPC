@@ -58,6 +58,7 @@ extern int RPC_ScrApplyAnimation;
 extern int RPC_ClientMessage;
 extern int RPC_ScrDisplayGameText;
 extern int RPC_Chat;
+extern int RPC_NewPlayer;
 
 extern int RPC_UpdateScoresPingsIPs;
 extern int RPC_PickedUpPickup;

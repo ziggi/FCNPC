@@ -10,7 +10,6 @@
 
 #include "Main.h"
 
-CSAMPRPCParams *pCreateNPCParams;
 extern logprintf_t logprintf;
 extern CNetGame *pNetGame;
 
@@ -22,7 +21,6 @@ CServer::CServer(eSAMPVersion version)
 	m_pNodeManager = NULL;
 	m_pDamageThread = NULL;
 	m_pZMap = NULL;
-	pCreateNPCParams = NULL;
 	// Initialize the update rate
 	m_dwUpdateRate = DEFAULT_UPDATE_RATE;
 }
@@ -34,7 +32,6 @@ CServer::~CServer()
 	SAFE_DELETE(m_pNodeManager);
 	SAFE_DELETE(m_pDamageThread);
 	SAFE_DELETE(m_pZMap);
-	SAFE_DELETE(pCreateNPCParams);
 }
 
 BYTE CServer::Initialize()
@@ -69,14 +66,6 @@ BYTE CServer::Initialize()
 	if(!m_pDamageThread || !m_pDamageThread->Start())
 		return 4;*/
 
-	// Create RPC params instance (We do it here only once saves us from news and deletes for each NPC)
-	pCreateNPCParams = new CSAMPRPCParams();
-	if(!pCreateNPCParams)
-		return 5;
-
-	// Push all the basic parameters
-	pCreateNPCParams->Write<int>(CAddress::OFFSET_NetVersion);
-	pCreateNPCParams->Write<BYTE>(1);
 	// Check the maxnpc from the config
 	if(CSAMPFunctions::GetMaxNPC() == 0)
 		// Display a warning
