@@ -872,17 +872,32 @@ void CPlayerData::SetSkin(int iSkin)
 	if(iSkin > 311 || iSkin < 0)
 		return;
 
-	// Set the player skin
-	m_pPlayer->spawn.iSkin = iSkin;
 	// Send RPC
 	if (m_pPlayer->bReadyToSpawn)
 	{
-		RakNet::BitStream bsData;
-		bsData.Write(m_pPlayer->wPlayerId);
-		bsData.Write(iSkin);
+		// RPC send not working, set skin to 0 (CJ), but fixed after restreaming
+		//RakNet::BitStream bsData;
+		//bsData.Write(m_pPlayer->wPlayerId);
+		//bsData.Write(iSkin);
 
-		pRakServer->RPC(&RPC_SetPlayerSkin, &bsData, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_PLAYER_ID, true, false);
+		for (int i = 0; i < MAX_PLAYERS; i++)
+		{
+			if (pNetGame->pPlayerPool->bIsPlayerConnectedEx[i] && i != m_playerId)
+			{
+				CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[i];
+				pPlayer->byteStreamedIn[m_playerId] = 0;
+
+				//if (pPlayer && pPlayer->byteStreamedIn[m_playerId])
+				//	pRakServer->RPC(&RPC_SetPlayerSkin, &bsData, HIGH_PRIORITY, RELIABLE_ORDERED, 2, pRakServer->GetPlayerIDFromIndex(i), false, false);
+			}
+		}
+
+		//pRakServer->RPC(&RPC_SetPlayerSkin, &bsData, HIGH_PRIORITY, RELIABLE_ORDERED, 2, pRakServer->GetPlayerIDFromIndex(m_playerId), false, false);
+		
 	}
+
+	// Set the player skin
+	m_pPlayer->spawn.iSkin = iSkin;
 }
 
 int CPlayerData::GetSkin()
