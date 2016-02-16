@@ -89,7 +89,7 @@ class CPlayerData
 		void SetAnimation(int iAnimationId, float fDelta, bool bLoop, bool bLockX, bool bLockY, bool bFreeze, int iTime);
 		void GetAnimation(int *iAnimationId, float *fDelta, bool *bLoop, bool *bLockX, bool *bLockY, bool *bFreeze, int *iTime);
 
-		bool GoTo(CVector vecPoint, int iType, bool bUseZMap, float fRadius = 0.0f);
+		bool GoTo(CVector vecPoint, int iType, bool bUseZMap, float fRadiu, bool bGetAngle);
 		void StopMoving();
 		bool IsMoving();
 

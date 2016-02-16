@@ -1073,7 +1073,7 @@ void CPlayerData::GetKeys(WORD *pwUDAnalog, WORD *pwLRAnalog, DWORD *pdwKeys)
 	*pdwKeys = m_pPlayer->dwKeys;
 }
 
-bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseZMap, float fRadius)
+bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseZMap, float fRadius, bool bGetAngle)
 {
 	// Validate the mouvement type
 	if (iType == MOVE_TYPE_AUTO)
@@ -1122,7 +1122,8 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseZMap, float fRadius
 	float fDistance = CMath::GetDistanceBetween3DPoints(vecPosition, m_vecDestination);	
 	// Set the player to the destination angle
 	vecFront /= fDistance;
-	SetAngle(CMath::RadiansToDegree(atan2(vecFront.fY, vecFront.fX)));
+	if (bGetAngle)
+		SetAngle(CMath::RadiansToDegree(atan2(vecFront.fY, vecFront.fX)));
 	// Set the moving velocity
 	vecFront *= (fMoveSpeed / 100.0f); // Step per 1ms
 	SetVelocity(vecFront);
