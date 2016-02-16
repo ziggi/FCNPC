@@ -40,6 +40,7 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_bPlaying = false;
 	m_bPlayingNode = false;
 	m_bMeleeAttack = false;
+	m_bMeleeFightstyle = false;
 	m_byteWeaponId = 0;
 	m_wAmmo = 0;
 	m_iNodePoint = 0;
@@ -599,19 +600,33 @@ void CPlayerData::Process()
 			}
 		}
 		// Process melee attack
-		else if(m_bMeleeAttack)
+		else if (m_bMeleeAttack)
 		{
+			int keycode = KEY_HANDBRAKE;
 			// Get the time spent since last melee and compare it with the melee delay
-			if((GetTickCount() - m_dwShootTickCount) >= m_dwMeleeDelay)
+			if ((GetTickCount() - m_dwShootTickCount) >= m_dwMeleeDelay)
 			{
+				// get the key code
+				int keycode;
+
+				if (m_bMeleeFightstyle)
+					keycode |= KEY_SECONDARY_ATTACK;
+				else
+					keycode = KEY_FIRE;
+
 				// Set the melee keys
-				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, 4);
+				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, keycode);
 				// Update the tick count
 				m_dwShootTickCount = GetTickCount();
 			}
 			else
+			{
 				// Reset keys
-				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, 0);
+				if (!m_bMeleeFightstyle)
+					keycode = 0;
+
+				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, keycode);
+			}
 		}
 		// Process death
 		if(GetHealth() <= 0.0f && GetState() != PLAYER_STATE_WASTED && GetState() != PLAYER_STATE_SPAWNED)
@@ -1218,35 +1233,39 @@ void CPlayerData::StopAim()
 	SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, 0);
 }
 
-void CPlayerData::MeleeAttack(DWORD dwTime)
+bool CPlayerData::MeleeAttack(DWORD dwTime, bool bUseFightstyle)
 {
 	// Make sure the player is not melee attacking
-	if(m_bMeleeAttack)
-		return;
+	if (m_bMeleeAttack)
+		return false;
 
 	// Validate the player state
-	if(GetState() != PLAYER_STATE_ONFOOT)
-		return;
+	if (GetState() != PLAYER_STATE_ONFOOT)
+		return false;
 
 	// Validate the player weapon
-	if(m_pPlayer->syncData.byteWeapon >= 0 && m_pPlayer->syncData.byteWeapon <= 15)
-	{
-		// Set the attacking delay
-		m_dwMeleeDelay = dwTime;
-		if(dwTime <= pServer->GetUpdateRate())
-			m_dwMeleeDelay = pServer->GetUpdateRate() + 5;
+	if (m_pPlayer->syncData.byteWeapon < 0 || m_pPlayer->syncData.byteWeapon > 15)
+		return false;
 
-		// Get the starting tick
-		m_dwShootTickCount = GetTickCount();
-		// Set the melee flag
-		m_bMeleeAttack = true;
-		// Reset the aiming flag
-		m_bAiming = false;
-		m_wHitId = INVALID_ENTITY_ID;
-		m_byteHitType = BULLET_HIT_TYPE_NONE;
-		// Set the melee keys
-		SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, 4);
-	}
+	// Set the attacking delay
+	m_dwMeleeDelay = dwTime;
+	if (dwTime <= pServer->GetUpdateRate())
+		m_dwMeleeDelay = pServer->GetUpdateRate() + 5;
+
+	// Get the starting tick
+	m_dwShootTickCount = GetTickCount();
+	// Set the melee flag
+	m_bMeleeAttack = true;
+	// Set the melee use fightstyle flag
+	m_bMeleeFightstyle = bUseFightstyle;
+	// Reset the aiming flag
+	m_bAiming = false;
+	m_wHitId = INVALID_ENTITY_ID;
+	m_byteHitType = BULLET_HIT_TYPE_NONE;
+	// Set the melee keys
+	SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, 4);
+
+	return true;
 }
 
 void CPlayerData::StopAttack()
@@ -1257,6 +1276,7 @@ void CPlayerData::StopAttack()
 
 	// Reset attacking flag
 	m_bMeleeAttack = false;
+	m_bMeleeFightstyle = false;
 	// Reset keys
 	SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, 0);
 }

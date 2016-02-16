@@ -862,20 +862,22 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAtPlayer(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_MeleeAttack(npcid, delay = 100, bool:fightstyle = true);
 cell AMX_NATIVE_CALL CNatives::FCNPC_MeleeAttack(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "FCNPC_MeleeAttack");
-	// Get the NPC id
+	CHECK_PARAMS(3, "FCNPC_MeleeAttack");
+
+	// Get parms
 	int iNPCId = (int)params[1];
-	// Get the attack time
 	int iTime = (int)params[2];
+	int bUseFightstyle = (bool)params[3];
+
 	// Make sure the player is valid
 	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Set the player melee attack
-	pServer->GetPlayerManager()->GetAt(iNPCId)->MeleeAttack(iTime);
-	return 1;
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->MeleeAttack(iTime, bUseFightstyle) ? 1 : 0;
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_StopAttack(AMX *amx, cell *params)

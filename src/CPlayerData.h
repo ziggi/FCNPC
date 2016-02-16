@@ -99,7 +99,7 @@ class CPlayerData
 		void AimAt(CVector vecPoint, bool bShoot);
 		void AimAtPlayer(WORD wHitId, bool bShoot);
 		void StopAim();
-		void MeleeAttack(DWORD dwTime);
+		bool MeleeAttack(DWORD dwTime, bool bUseFightstyle);
 		void StopAttack();
 		bool IsAiming();
 		bool IsShooting();
@@ -147,6 +147,7 @@ class CPlayerData
 		bool m_bPlaying;
 		bool m_bPlayingNode;
 		bool m_bMeleeAttack;
+		bool m_bMeleeFightstyle;
 		float m_fLastDistance;
 		DWORD m_dwUpdateTick;
 		DWORD m_dwMoveTickCount;
