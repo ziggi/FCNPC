@@ -663,61 +663,59 @@ struct CSAMPGangZonePool
 // CActor
 /* -------------------------------------------------------- */
 
-struct CAnim // 140
+struct CActorAnim // 140
 {
-	char szAnimLib[64]; // 0 - 64
-	char szAnimName[64]; // 64 - 128
-	float fDelta;		// 128 - 132
-	BYTE byteLoop;		// 132 - 133
-	BYTE byteLockX;			// 133 - 134
-	BYTE byteLockY;			// 134 - 135
-	BYTE byteFreeze;		// 135 - 136
-	int iTime;				//  136 - 140
+	char			szAnimLib[64]; // 0 - 64
+	char			szAnimName[64]; // 64 - 128
+	float			fDelta;		// 128 - 132
+	BYTE			byteLoop;		// 132 - 133
+	BYTE			byteLockX;			// 133 - 134
+	BYTE			byteLockY;			// 134 - 135
+	BYTE			byteFreeze;		// 135 - 136
+	int				iTime;				//  136 - 140
 };
 
 struct CActor
 {
-	BYTE pad0;				// 0
-	int iSkinID;			// 1 - 5
-	CVector vecSpawnPos;	// 5 - 17
-	float fSpawnAngle;		// 17 - 21
-	DWORD pad4;				// 21 - 25
-	DWORD pad5;				// 25 - 29
-	BYTE byteLoopAnim;		// 29 - 30
-	CAnim anim;
-	WORD wTime;				// 170 - 171
-	float fHealth;			// 172 - 176
-	DWORD pad;				// 176 - 180
-	float fAngle;			// 180 - 184
-	CVector vecPos;			// 184 - 196
-	DWORD pad8[3];			// 196 - 208
-	BYTE byteInvulnerable;	// 208 - 209
-	WORD wActorID;			// 209 - 211
+	BYTE			pad0;				// 0
+	int				iSkinID;			// 1 - 5
+	CVector			vecSpawnPos;	// 5 - 17
+	float			fSpawnAngle;		// 17 - 21
+	DWORD			pad4;				// 21 - 25
+	DWORD			pad5;				// 25 - 29
+	BYTE			byteLoopAnim;		// 29 - 30
+	CActorAnim		anim;
+	WORD			wTime;				// 170 - 171
+	float			fHealth;			// 172 - 176
+	DWORD			pad;				// 176 - 180
+	float			fAngle;			// 180 - 184
+	CVector			vecPos;			// 184 - 196
+	DWORD			pad8[3];			// 196 - 208
+	BYTE			byteInvulnerable;	// 208 - 209
+	WORD			wActorID;			// 209 - 211
 };
 
 struct CActorPool
 {
-	int iActorVirtualWorld[MAX_ACTORS];
-	BOOL bValidActor[MAX_ACTORS];
-	CActor* pActor[MAX_ACTORS];
-	DWORD dwActorPoolSize;
+	int				iActorVirtualWorld[MAX_ACTORS];
+	BOOL			bValidActor[MAX_ACTORS];
+	CActor*			pActor[MAX_ACTORS];
+	DWORD			dwActorPoolSize;
 };
 
-class CGameMode
+struct CGameMode
 {
-public:
-	AMX m_amx;
-	bool m_bInitialised;
-	bool m_bSleeping;
-	float m_fSleepTime;
+	AMX				amx;
+	bool			bInitialised;
+	bool			bSleeping;
+	float			fSleepTime;
 };
 
-class CFilterScripts
+struct CFilterScripts
 {
-public:
-	void*				pFilterScripts[MAX_FILTER_SCRIPTS];
-	char				szFilterScriptName[MAX_FILTER_SCRIPTS][255];
-	int					iFilterScriptCount;
+	AMX*			pFilterScripts[MAX_FILTER_SCRIPTS];
+	char			szFilterScriptName[MAX_FILTER_SCRIPTS][255];
+	int				iFilterScriptCount;
 };
 
 struct ScriptTimer_s // sizeof = 0x11B (283)
@@ -737,61 +735,60 @@ typedef std::map<DWORD, ScriptTimer_s*> DwordTimerMap;
 class CScriptTimers
 {
 public:
-	DwordTimerMap m_Timers;
-	DWORD m_dwTimerCount;
+	DwordTimerMap			Timers;
+	DWORD					dwTimerCount;
 };
-
 
 struct CNetGame
 {
-		CGameMode				*pGameModePool;			// 0
-		CFilterScripts			*pFilterScriptPool;		// 4
-		CPlayerPool				*pPlayerPool;			// 8
-		CVehiclePool			*pVehiclePool;			// 12
-		CPickupPool				*pPickupPool;			// 16
-		CObjectPool				*pObjectPool;			// 20
-		CMenuPool				*pMenuPool;				// 24
-		CTextDrawPool			*pTextDrawPool;			// 28
-		C3DTextPool				*p3DTextPool;			// 32
-		CGangZonePool			*pGangZonePool;			// 36 
-		CActorPool				*pActorPool;			// 40 
-		int						iCurrentGameModeIndex;	// 44
-		int						iCurrentGameModeRepeat;	// 48
-		BOOL					bFirstGameModeLoaded;	// 52
-		BOOL					unkasdasd;				// 56
-		CScriptTimers			*pScriptTimers;			// 60
-		RakServer				*pRak;					// 64
-		DWORD					dwSomethingTick;
-		DWORD					dwUnk;
-		DWORD					dwUnk1;
-		BOOL					bLanMode;				// 
-		BOOL					bShowPlayerMarkers;		// 84
-		BYTE					byteShowNameTags;		// 
-		BYTE					bTirePopping;			// 
-		BYTE					byteAllowWeapons;		// 
-		BYTE					byteStuntBonus;			// 91 - 92
-		BYTE					byteDefaultCameraCollision; // 92 - 93
-		BYTE					byteWeather;			// 93 - 94
-		int						iGameState;				// 94 - 98
-		float					fGravity;				// 98 - 102
-		int						iDeathDropMoney;		// 102 - 106
-		BYTE					unklofasz;				// 106 - 107
-		BYTE					byteMode;				// 107 - 108
-		BYTE					bLimitGlobalChatRadius;	// 108 - 109
-		BYTE					bUseCJWalk;				// 109 - 110
-		float					fGlobalChatRadius;		// 110 - 114
-		float					fNameTagDrawDistance;	// 114 - 118
-		BYTE					byteDisableEnterExits;	// 118 - 119
-		BYTE					byteNameTagLOS;			// 119 - 120
-		BYTE					bManulVehicleEngineAndLights; // 120 - 121
-		BYTE					bLimitPlayerMarkers;	// 121 - 122
-		float					fPlayerMarkesLimit;		// 122 - 126 
-		BOOL					bVehicleFriendlyFire;	// 126 - 130
+	CGameMode				*pGameModePool;			// 0
+	CFilterScripts			*pFilterScriptPool;		// 4
+	CPlayerPool				*pPlayerPool;			// 8
+	CVehiclePool			*pVehiclePool;			// 12
+	CPickupPool				*pPickupPool;			// 16
+	CObjectPool				*pObjectPool;			// 20
+	CMenuPool				*pMenuPool;				// 24
+	CTextDrawPool			*pTextDrawPool;			// 28
+	C3DTextPool				*p3DTextPool;			// 32
+	CGangZonePool			*pGangZonePool;			// 36 
+	CActorPool				*pActorPool;			// 40 
+	int						iCurrentGameModeIndex;	// 44
+	int						iCurrentGameModeRepeat;	// 48
+	BOOL					bFirstGameModeLoaded;	// 52
+	BOOL					unkasdasd;				// 56
+	CScriptTimers			*pScriptTimers;			// 60
+	RakServer				*pRak;					// 64
+	DWORD					dwSomethingTick;
+	DWORD					dwUnk;
+	DWORD					dwUnk1;
+	BOOL					bLanMode;				// 
+	BOOL					bShowPlayerMarkers;		// 84
+	BYTE					byteShowNameTags;		// 
+	BYTE					bTirePopping;			// 
+	BYTE					byteAllowWeapons;		// 
+	BYTE					byteStuntBonus;			// 91 - 92
+	BYTE					byteDefaultCameraCollision; // 92 - 93
+	BYTE					byteWeather;			// 93 - 94
+	int						iGameState;				// 94 - 98
+	float					fGravity;				// 98 - 102
+	int						iDeathDropMoney;		// 102 - 106
+	BYTE					unklofasz;				// 106 - 107
+	BYTE					byteMode;				// 107 - 108
+	BYTE					bLimitGlobalChatRadius;	// 108 - 109
+	BYTE					bUseCJWalk;				// 109 - 110
+	float					fGlobalChatRadius;		// 110 - 114
+	float					fNameTagDrawDistance;	// 114 - 118
+	BYTE					byteDisableEnterExits;	// 118 - 119
+	BYTE					byteNameTagLOS;			// 119 - 120
+	BYTE					bManulVehicleEngineAndLights; // 120 - 121
+	BYTE					bLimitPlayerMarkers;	// 121 - 122
+	float					fPlayerMarkesLimit;		// 122 - 126 
+	BOOL					bVehicleFriendlyFire;	// 126 - 130
 #ifndef _WIN32
-		double					dElapsedTime;			// size = 8
+	double					dElapsedTime;			// size = 8
 #endif
-		int						iSpawnsAvailable;		// 130 - 134
-		CPlayerSpawnInfo		AvailableSpawns[300];	// 129 - 13929
+	int						iSpawnsAvailable;		// 130 - 134
+	CPlayerSpawnInfo		AvailableSpawns[300];	// 129 - 13929
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
