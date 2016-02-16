@@ -77,7 +77,7 @@ void CPlayerData::Destroy()
 	// Set the player state to none
 	SetState(PLAYER_STATE_NONE);
 	// Remove the player from the SAMP playerpool
-	CSAMPFunctions::DeletePlayer(m_playerId);
+	CFunctions::DeletePlayer(m_playerId);
 	// Reset the setup flag
 	m_bSetup = false;
 }
@@ -114,7 +114,7 @@ bool CPlayerData::Spawn(int iSkinId)
 	// Set the player skin
 	m_pPlayer->spawn.iSkin = iSkinId;
 	// Call the SAMP spawn functions
-	CSAMPFunctions::SpawnPlayer((int)m_playerId);
+	CFunctions::SpawnPlayer((int)m_playerId);
 	// Set the player stats
 	SetHealth(100.0f);
 	SetArmour(0.0f);
@@ -151,7 +151,7 @@ bool CPlayerData::Respawn()
 	BYTE byteSpecialAction = m_pPlayer->syncData.byteSpecialAction;
 	// Call the SAMP spawn functions
 	m_pPlayer->bReadyToSpawn = TRUE;
-	CSAMPFunctions::SpawnPlayer((int)m_playerId);
+	CFunctions::SpawnPlayer((int)m_playerId);
 	// Set the player state onfoot
 	SetState(PLAYER_STATE_ONFOOT);
 	// Reset vehicle and seat id
@@ -404,7 +404,7 @@ void CPlayerData::Kill(int iKillerId, int iWeapon)
 	StopMoving();
 	StopAim();
 	// Kill the NPC
-	CSAMPFunctions::KillPlayer(m_playerId, iWeapon, iKillerId);
+	CFunctions::KillPlayer(m_playerId, iWeapon, iKillerId);
 	// Set the NPC state
 	SetState(PLAYER_STATE_WASTED);
 	// Call the NPC death callback
@@ -482,7 +482,7 @@ void CPlayerData::Process()
 						m_bJacking = true;
 
 					// Call the SAMP enter vehicle function
-					CSAMPFunctions::PlayerEnterVehicle((int)m_playerId, (int)m_wVehicleToEnter, (int)m_byteSeatToEnter);
+					CFunctions::PlayerEnterVehicle((int)m_playerId, (int)m_wVehicleToEnter, (int)m_byteSeatToEnter);
 				}
 				else
 				{
@@ -593,7 +593,7 @@ void CPlayerData::Process()
 					else
 					{
 						// Send the bullet
-						CSAMPFunctions::PlayerShoot((int)m_playerId, m_wHitId, m_byteHitType, m_byteWeaponId, m_vecAimAt);
+						CFunctions::PlayerShoot((int)m_playerId, m_wHitId, m_byteHitType, m_byteWeaponId, m_vecAimAt);
 					}
 
 					// Update the shoot tick
@@ -724,7 +724,7 @@ void CPlayerData::Process()
 			CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[m_pPlayer->wVehicleId];
 			CVector vecVehiclePos = pVehicle->vecPosition;
 			// Get the seat position
-			CVector *pvecSeat = CSAMPFunctions::GetVehicleModelInfoEx(pVehicle->customSpawn.iModelID,
+			CVector *pvecSeat = CFunctions::GetVehicleModelInfoEx(pVehicle->customSpawn.iModelID,
 				m_pPlayer->byteSeatId == 0 || m_pPlayer->byteSeatId == 1 ? VEHICLE_MODEL_INFO_FRONTSEAT : VEHICLE_MODEL_INFO_REARSEAT);
 	
 			// Adjust the seat vector
@@ -995,6 +995,22 @@ void CPlayerData::SetSpecialAction(int iActionId)
 int CPlayerData::GetSpecialAction()
 {
 	return m_pPlayer->syncData.byteSpecialAction;
+}
+
+void CPlayerData::SetFightingStyle(int iStyleId)
+{
+	m_pPlayer->byteFightingStyle = iStyleId;
+
+	RakNet::BitStream bsData;
+	bsData.Write(m_pPlayer->wPlayerId);
+	bsData.Write(iStyleId);
+
+	CFunctions::AddedPlayersRPC(&RPC_SetFightingStyle, &bsData, m_playerId);
+}
+
+int CPlayerData::GetFightingStyle()
+{
+	return m_pPlayer->byteFightingStyle;
 }
 
 void CPlayerData::SetAnimation(int iAnimationId, float fDelta, bool bLoop, bool bLockX, bool bLockY, bool bFreeze, int iTime)
@@ -1345,7 +1361,7 @@ bool CPlayerData::EnterVehicle(int iVehicleId, int iSeatId, int iType)
 	m_wVehicleToEnter = (WORD)iVehicleId;
 	m_byteSeatToEnter = (BYTE)iSeatId;
 	// Get the seat position
-	CVector *pvecSeat = CSAMPFunctions::GetVehicleModelInfoEx(pVehicle->customSpawn.iModelID,
+	CVector *pvecSeat = CFunctions::GetVehicleModelInfoEx(pVehicle->customSpawn.iModelID,
 		iSeatId == 0 || iSeatId == 1 ? VEHICLE_MODEL_INFO_FRONTSEAT : VEHICLE_MODEL_INFO_REARSEAT);
 
 	// Adjust the seat vector
@@ -1377,7 +1393,7 @@ bool CPlayerData::ExitVehicle()
 		return false;
 
 	// Call the SAMP exit vehicle function
-	CSAMPFunctions::PlayerExitVehicle(m_playerId, m_pPlayer->wVehicleId);
+	CFunctions::PlayerExitVehicle(m_playerId, m_pPlayer->wVehicleId);
 	// Set the player state
 	SetState(PLAYER_STATE_EXIT_VEHICLE);
 	// Set the exit start tick

@@ -35,7 +35,7 @@ typedef Packet* (THISCALL *RakNet__Receive_t)(void* ppRakServer);
 
 typedef CVector *( *GetVehicleModelInfo_t)(int iModelId, int iInfoType);
 
-class CSAMPFunctions
+class CFunctions
 {
 	public:
 		static void		Initialize();
@@ -55,6 +55,11 @@ class CSAMPFunctions
 		static int		GetNetGame() { return pfn__GetNetGame(); }
 		static int		GetConsole() { return pfn__GetConsole(); }
 		static int		GetRakServer() { return pfn__GetRakServer(); }
+
+		static void		GlobalRPC(int* szUniqueID, RakNet::BitStream* bsParams, int iExcludePlayerId = INVALID_PLAYER_ID, char PacketStream = 2);
+		static void		AddedPlayersRPC(int* szUniqueID, RakNet::BitStream* bsParams, int iPlayerId, char PacketStream = 2);
+		static void		AddedVehicleRPC(int* szUniqueID, RakNet::BitStream* bsParams, int iVehicleId, int iExcludePlayerId = INVALID_PLAYER_ID, char PacketStream = 2);
+		static void		PlayerRPC(int* szUniqueID, RakNet::BitStream* bsParams, int iPlayerId, char PacketStream = 2);
 
 		// Functions
 		static ClientJoin_RPC_t					pfn__ClientJoin_RPC;

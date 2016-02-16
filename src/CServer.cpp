@@ -42,11 +42,11 @@ BYTE CServer::Initialize()
 		return 1;
 
 	// Initialize necessary samp functions
-	CSAMPFunctions::PreInitialize();
+	CFunctions::PreInitialize();
 	// Initialize addresses
 	CAddress::Initialize(CServer::GetVersion());
 	// Initialize SAMP Functions
-	CSAMPFunctions::Initialize();
+	CFunctions::Initialize();
 	// Install hooks
 	CHooks::InstallHooks();
 	// Install patches
@@ -67,11 +67,11 @@ BYTE CServer::Initialize()
 		return 4;*/
 
 	// Check the maxnpc from the config
-	if(CSAMPFunctions::GetMaxNPC() == 0)
+	if(CFunctions::GetMaxNPC() == 0)
 		// Display a warning
 		logprintf("Warning: the maxnpc limit is 0 (you will not be able to create NPCs unless you change it)");
 	// Check the maxnpc and maxplayers in the config
-	else if(CSAMPFunctions::GetMaxPlayers() < CSAMPFunctions::GetMaxNPC())
+	else if(CFunctions::GetMaxPlayers() < CFunctions::GetMaxNPC())
 		// Display a warning
 		logprintf("Warning: the maxplayers limit is less than maxnpc (possible crash)");
 

@@ -86,6 +86,9 @@ class CPlayerData
 		void SetSpecialAction(int iActionId);
 		int GetSpecialAction();
 
+		void SetFightingStyle(int iStyleId);
+		int GetFightingStyle();
+
 		void SetAnimation(int iAnimationId, float fDelta, bool bLoop, bool bLockX, bool bLockY, bool bFreeze, int iTime);
 		void GetAnimation(int *iAnimationId, float *fDelta, bool *bLoop, bool *bLockX, bool *bLockY, bool *bFreeze, int *iTime);
 

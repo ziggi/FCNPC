@@ -62,6 +62,9 @@ class CNatives
 		static cell AMX_NATIVE_CALL FCNPC_SetAnimation(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL FCNPC_GetAnimation(AMX *amx, cell *params);
 
+		static cell AMX_NATIVE_CALL FCNPC_SetFightingStyle(AMX *amx, cell *params);
+		static cell AMX_NATIVE_CALL FCNPC_GetFightingStyle(AMX *amx, cell *params);
+
 		static cell AMX_NATIVE_CALL FCNPC_GoTo(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL FCNPC_GoToPlayer(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL FCNPC_Stop(AMX *amx, cell *params);

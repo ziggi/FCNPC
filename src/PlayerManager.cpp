@@ -45,7 +45,7 @@ WORD CPlayerManager::AddPlayer(char *szName)
 		return INVALID_ENTITY_ID;
 
 	// Create the player in SAMP server
-	int iGameId = CSAMPFunctions::NewPlayer(szName);
+	int iGameId = CFunctions::NewPlayer(szName);
 	if(iGameId == INVALID_ENTITY_ID)
 		return INVALID_ENTITY_ID;
 
@@ -54,7 +54,7 @@ WORD CPlayerManager::AddPlayer(char *szName)
 	if(!m_pPlayerData[iGameId])
 	{
 		// Delete the player from samp's playerpool
-		CSAMPFunctions::DeletePlayer(iGameId);
+		CFunctions::DeletePlayer(iGameId);
 		return INVALID_ENTITY_ID;
 	}
 	// Try to setup the player
@@ -63,7 +63,7 @@ WORD CPlayerManager::AddPlayer(char *szName)
 		// Delete the player instance
 		SAFE_DELETE(m_pPlayerData[iGameId]);
 		// Delete the player from samp's playerpool
-		CSAMPFunctions::DeletePlayer(iGameId);
+		CFunctions::DeletePlayer(iGameId);
 		return INVALID_ENTITY_ID;
 	}
 	// Mark connected
@@ -96,7 +96,7 @@ bool CPlayerManager::DeletePlayer(WORD playerId)
 void CPlayerManager::Process()
 {
 	// Process all the players
-	for(WORD i = (CSAMPFunctions::GetMaxPlayers() - 1); i != 0; i--)
+	for(WORD i = (CFunctions::GetMaxPlayers() - 1); i != 0; i--)
 	{
 		if(m_bConnected[i])
 			m_pPlayerData[i]->Process();
@@ -112,7 +112,7 @@ bool CPlayerManager::SetupPlayer(WORD playerId)
 bool CPlayerManager::IsNPC(int iPlayerId)
 {
 	// Loop through all the players
-	for(WORD i = (CSAMPFunctions::GetMaxPlayers() - 1); i != 0; i--)
+	for(WORD i = (CFunctions::GetMaxPlayers() - 1); i != 0; i--)
 	{
 		if(m_bConnected[i] && i == iPlayerId)
 			return true;

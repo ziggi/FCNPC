@@ -70,7 +70,7 @@
 #include "ThreadFunctions.h"
 // SAMP includes
 #include "SAMPRakPeer.h"
-#include "SAMPFunctions.h"
+#include "CFunctions.h"
 #include "Structs.h"
 #include "RPCs.h"
 // SA includes

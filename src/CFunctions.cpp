@@ -14,22 +14,22 @@
 extern logprintf_t logprintf;
 
 // Functions
-ClientJoin_RPC_t                CSAMPFunctions::pfn__ClientJoin_RPC = NULL;
-CPlayerPool__DeletePlayer_t     CSAMPFunctions::pfn__CPlayerPool__DeletePlayer = NULL;
-CPlayer__SpawnForWorld_t        CSAMPFunctions::pfn__CPlayer__SpawnForWorld = NULL;
-CPlayer__Kill_t                 CSAMPFunctions::pfn__CPlayer__Kill = NULL;
-CPlayer__EnterVehicle_t         CSAMPFunctions::pfn__CPlayer__EnterVehicle = NULL;
-CPlayer__ExitVehicle_t          CSAMPFunctions::pfn__CPlayer__ExitVehicle = NULL;
-CConsole__GetIntVariable_t      CSAMPFunctions::pfn__CConsole__GetIntVariable = NULL;
-GetVehicleModelInfo_t           CSAMPFunctions::pfn__GetVehicleModelInfo = NULL;
-RakNet__Send_t                  CSAMPFunctions::pfn__RakNet__Send = NULL;
-RakNet__RPC_t                   CSAMPFunctions::pfn__RakNet__RPC = NULL;
-RakNet__Receive_t               CSAMPFunctions::pfn__RakNet__Receive = NULL;
-GetNetGame_t                    CSAMPFunctions::pfn__GetNetGame = NULL;
-GetConsole_t                    CSAMPFunctions::pfn__GetConsole = NULL;
-GetRakServer_t                  CSAMPFunctions::pfn__GetRakServer = NULL;
+ClientJoin_RPC_t                CFunctions::pfn__ClientJoin_RPC = NULL;
+CPlayerPool__DeletePlayer_t     CFunctions::pfn__CPlayerPool__DeletePlayer = NULL;
+CPlayer__SpawnForWorld_t        CFunctions::pfn__CPlayer__SpawnForWorld = NULL;
+CPlayer__Kill_t                 CFunctions::pfn__CPlayer__Kill = NULL;
+CPlayer__EnterVehicle_t         CFunctions::pfn__CPlayer__EnterVehicle = NULL;
+CPlayer__ExitVehicle_t          CFunctions::pfn__CPlayer__ExitVehicle = NULL;
+CConsole__GetIntVariable_t      CFunctions::pfn__CConsole__GetIntVariable = NULL;
+GetVehicleModelInfo_t           CFunctions::pfn__GetVehicleModelInfo = NULL;
+RakNet__Send_t                  CFunctions::pfn__RakNet__Send = NULL;
+RakNet__RPC_t                   CFunctions::pfn__RakNet__RPC = NULL;
+RakNet__Receive_t               CFunctions::pfn__RakNet__Receive = NULL;
+GetNetGame_t                    CFunctions::pfn__GetNetGame = NULL;
+GetConsole_t                    CFunctions::pfn__GetConsole = NULL;
+GetRakServer_t                  CFunctions::pfn__GetRakServer = NULL;
 
-void CSAMPFunctions::Initialize()
+void CFunctions::Initialize()
 {
 	// Initialize function pointers
 	pfn__ClientJoin_RPC = (ClientJoin_RPC_t)(CAddress::FUNC_ClientJoin_RPC);
@@ -45,7 +45,7 @@ void CSAMPFunctions::Initialize()
 	pfn__GetVehicleModelInfo = (GetVehicleModelInfo_t)(CAddress::FUNC_GetVehicleModelInfo);
 }
 
-void CSAMPFunctions::PreInitialize()
+void CFunctions::PreInitialize()
 {
 	pfn__GetNetGame = (GetNetGame_t)(ppPluginData[PLUGIN_DATA_NETGAME]);
 	pNetGame = (CNetGame*)pfn__GetNetGame();
@@ -67,7 +67,7 @@ void CSAMPFunctions::PreInitialize()
 	pfn__RakNet__Receive = (RakNet__Receive_t)(pRakServer_VTBL[RAKNET_RECEIVE_OFFSET]);
 }
 
-int CSAMPFunctions::GetFreePlayerSlot()
+int CFunctions::GetFreePlayerSlot()
 {
 	// Loop through all the players
 	for(int i = (GetMaxPlayers() - 1); i != 0; i--)
@@ -79,7 +79,7 @@ int CSAMPFunctions::GetFreePlayerSlot()
 	return INVALID_ENTITY_ID;
 }
 
-int CSAMPFunctions::NewPlayer(char *szName)
+int CFunctions::NewPlayer(char *szName)
 {
 	// Get a free player slot
 	int iPlayerId;
@@ -114,47 +114,47 @@ int CSAMPFunctions::NewPlayer(char *szName)
 	return iPlayerId;
 }
 
-void CSAMPFunctions::DeletePlayer(int iPlayerId)
+void CFunctions::DeletePlayer(int iPlayerId)
 {
 	pfn__CPlayerPool__DeletePlayer(pNetGame->pPlayerPool, iPlayerId, 0);
 }
 
-void CSAMPFunctions::SpawnPlayer(int iPlayerId)
+void CFunctions::SpawnPlayer(int iPlayerId)
 {
 	pfn__CPlayer__SpawnForWorld(pNetGame->pPlayerPool->pPlayer[iPlayerId]);	
 }
 
-void CSAMPFunctions::KillPlayer(int iPlayerId, int iKillerId, int iWeapon)
+void CFunctions::KillPlayer(int iPlayerId, int iKillerId, int iWeapon)
 {
 	pfn__CPlayer__Kill(pNetGame->pPlayerPool->pPlayer[iPlayerId], iKillerId, iWeapon);	
 }
 
-void CSAMPFunctions::PlayerEnterVehicle(int iPlayerId, int iVehicleId, int iSeatId)
+void CFunctions::PlayerEnterVehicle(int iPlayerId, int iVehicleId, int iSeatId)
 {
 	pfn__CPlayer__EnterVehicle(pNetGame->pPlayerPool->pPlayer[iPlayerId], iVehicleId, iSeatId);	
 }
 
-void CSAMPFunctions::PlayerExitVehicle(int iPlayerId, int iVehicleId)
+void CFunctions::PlayerExitVehicle(int iPlayerId, int iVehicleId)
 {
 	pfn__CPlayer__ExitVehicle(pNetGame->pPlayerPool->pPlayer[iPlayerId], iVehicleId);	
 }
 
-CVector *CSAMPFunctions::GetVehicleModelInfoEx(int iModelId, int iInfoType)
+CVector *CFunctions::GetVehicleModelInfoEx(int iModelId, int iInfoType)
 {
 	return pfn__GetVehicleModelInfo(iModelId, iInfoType);
 }
 
-int CSAMPFunctions::GetMaxPlayers()
+int CFunctions::GetMaxPlayers()
 {
 	return pfn__CConsole__GetIntVariable(pConsole, "maxplayers");
 }
 
-int CSAMPFunctions::GetMaxNPC()
+int CFunctions::GetMaxNPC()
 {
 	return pfn__CConsole__GetIntVariable(pConsole, "maxnpc");
 }
 
-void CSAMPFunctions::PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE iWeaponId, CVector vecPoint)
+void CFunctions::PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE iWeaponId, CVector vecPoint)
 {
 	// Validate the player
 	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iPlayerId))
@@ -203,3 +203,58 @@ void CSAMPFunctions::PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE
 	pRakServer->Send(&bsSend, HIGH_PRIORITY, RELIABLE_ORDERED, 0, UNASSIGNED_PLAYER_ID, true);
 }
 
+void CFunctions::GlobalRPC(int* szUniqueID, RakNet::BitStream* bsParams, int iExcludePlayerId, char PacketStream)
+{
+	PacketReliability reliable = RELIABLE_ORDERED;
+
+	if (PacketStream == 3)
+		reliable = RELIABLE;
+
+	if (iExcludePlayerId == INVALID_PLAYER_ID)
+		pRakServer->RPC(szUniqueID, bsParams, HIGH_PRIORITY, reliable, PacketStream, UNASSIGNED_PLAYER_ID, true, false);
+	else
+		pRakServer->RPC(szUniqueID, bsParams, HIGH_PRIORITY, reliable, PacketStream, pRakServer->GetPlayerIDFromIndex(iExcludePlayerId), true, false);
+
+}
+
+void CFunctions::AddedPlayersRPC(int* szUniqueID, RakNet::BitStream* bsParams, int iPlayerId, char PacketStream)
+{
+	CPlayer *pPlayer;
+
+	for (int i = 0; i < MAX_PLAYERS; i++)
+	{
+		if (pNetGame->pPlayerPool->bIsPlayerConnectedEx[i] && i != iPlayerId)
+		{
+			pPlayer = pNetGame->pPlayerPool->pPlayer[i];
+
+			if (pPlayer && pPlayer->byteStreamedIn[iPlayerId])
+				pRakServer->RPC(szUniqueID, bsParams, HIGH_PRIORITY, RELIABLE_ORDERED, PacketStream, pRakServer->GetPlayerIDFromIndex(i), false, false);
+		}
+	}
+}
+
+void CFunctions::AddedVehicleRPC(int* szUniqueID, RakNet::BitStream* bsParams, int iVehicleId, int iExcludePlayerId, char PacketStream)
+{
+	CPlayer *pPlayer;
+
+	for (int i = 0; i < MAX_PLAYERS; i++)
+	{
+		if (pNetGame->pPlayerPool->bIsPlayerConnectedEx[i] && i != iExcludePlayerId)
+		{
+			pPlayer = pNetGame->pPlayerPool->pPlayer[i];
+
+			if (pPlayer && pPlayer->byteVehicleStreamedIn[iVehicleId])
+				pRakServer->RPC(szUniqueID, bsParams, HIGH_PRIORITY, RELIABLE_ORDERED, PacketStream, pRakServer->GetPlayerIDFromIndex(i), false, false);
+		}
+	}
+}
+
+void CFunctions::PlayerRPC(int* szUniqueID, RakNet::BitStream* bsParams, int iPlayerId, char PacketStream)
+{
+	PacketReliability reliable = RELIABLE_ORDERED;
+	
+	if (PacketStream == 2)
+		reliable = RELIABLE;
+
+	pRakServer->RPC(szUniqueID, bsParams, HIGH_PRIORITY, reliable, PacketStream, pRakServer->GetPlayerIDFromIndex(iPlayerId), false, false);
+}

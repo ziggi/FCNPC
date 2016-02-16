@@ -635,6 +635,40 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetAnimation(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_SetFightingStyle(npcid, style);
+cell AMX_NATIVE_CALL CNatives::FCNPC_SetFightingStyle(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_SetFightingStyle");
+
+	// Get params
+	int iNPCId = (int)params[1];
+	int iStyle = (int)params[2];
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
+		return 0;
+
+	// Set the player special action
+	pServer->GetPlayerManager()->GetAt(iNPCId)->SetFightingStyle(iStyle);
+	return 1;
+}
+
+// native FCNPC_GetFightingStyle(npcid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetFightingStyle(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_GetFightingStyle");
+
+	// Get params
+	int iNPCId = (int)params[1];
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
+		return 0;
+
+	// Get the player special action
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetFightingStyle();
+}
+
 // native FCNPC_GoTo(npcid, Float:X, Float:Y, Float:Z, type = MOVE_TYPE_AUTO, Float:speed = 0.5, bool:UseZMap = false, Float:radius = 0.0, bool:getangle = true);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GoTo(AMX *amx, cell *params)
 {
