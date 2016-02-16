@@ -50,6 +50,8 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_byteSeatToEnter = 0;
 	m_wHitId = INVALID_ENTITY_ID;
 	m_byteHitType = BULLET_HIT_TYPE_NONE;
+	m_vecSurfing = CVector();
+	m_wSurfingInfo = 0;
 }
 
 CPlayerData::~CPlayerData()
@@ -239,10 +241,10 @@ void CPlayerData::Update(int iState)
 		m_pPlayer->syncData.vecPosition = m_pPlayer->vecPosition;
 		// Set the sync velocity vector
 		m_pPlayer->syncData.vecVelocity = m_pPlayer->vecVelocity;
-		// Reset the sync surfing vector
-		m_pPlayer->syncData.vecSurfing = CVector(0.0f, 0.0f, 0.0f);
-		// Reset the sync surfing information
-		m_pPlayer->syncData.wSurfingInfo = 0;
+		// Set the sync surfing vector
+		m_pPlayer->syncData.vecSurfing = m_vecSurfing;
+		// Set the sync surfing information
+		m_pPlayer->syncData.wSurfingInfo = m_wSurfingInfo;
 		// Set the sync weapon index
 		m_pPlayer->syncData.byteWeapon = m_byteWeaponId;
 		// Set the sync health and armour
@@ -1485,6 +1487,43 @@ void CPlayerData::SetPassengerDriveBy(bool bState)
 bool CPlayerData::IsPassengerDriveBy()
 {
 	return m_pPlayer->passengerSyncData.byteDriveBy != 0;
+}
+
+void CPlayerData::SetSurfingOffsets(CVector vecOffsets)
+{
+	m_vecSurfing = vecOffsets;
+}
+
+void CPlayerData::GetSurfingOffsets(CVector *vecOffsets)
+{
+	*vecOffsets = m_vecSurfing;
+}
+
+void CPlayerData::SetSurfingVehicle(int iVehicleId)
+{
+	m_wSurfingInfo = iVehicleId;
+}
+
+int CPlayerData::GetSurfingVehicle()
+{
+	return m_wSurfingInfo;
+}
+
+void CPlayerData::SetSurfingObject(int iObjectId)
+{
+	m_wSurfingInfo = MAX_VEHICLES + iObjectId;
+	pNetGame->pObjectPool->bObjectSlotState[iObjectId] = true;
+}
+
+int CPlayerData::GetSurfingObject()
+{
+	int objectid = m_wSurfingInfo - MAX_VEHICLES;
+	if (objectid >= 0 && objectid < MAX_OBJECTS)
+	{
+		if (pNetGame->pObjectPool->bObjectSlotState[objectid])
+			return objectid;
+	}
+	return INVALID_OBJECT_ID;
 }
 
 bool CPlayerData::StartPlayingPlayback(char *szFile)

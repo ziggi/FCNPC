@@ -165,12 +165,19 @@ AMX_NATIVE_INFO PluginNatives[ ] =
 	{ "FCNPC_GetVehicleID", CNatives::FCNPC_GetVehicleID},
 	{ "FCNPC_GetVehicleSeat", CNatives::FCNPC_GetVehicleSeat},
 	{ "FCNPC_SetVehicleSiren", CNatives::FCNPC_SetVehicleSiren},
-	{ "FCNPC_IsVehicleSiren", CNatives::FCNPC_IsVehicleSiren},
-	{ "FCNPC_SetVehicleHealth", CNatives::FCNPC_SetVehicleHealth},
-	{ "FCNPC_GetVehicleHealth", CNatives::FCNPC_GetVehicleHealth},
+	{ "FCNPC_IsVehicleSiren", CNatives::FCNPC_IsVehicleSiren },
+	{ "FCNPC_SetVehicleHealth", CNatives::FCNPC_SetVehicleHealth },
+	{ "FCNPC_GetVehicleHealth", CNatives::FCNPC_GetVehicleHealth },
 
 	{ "FCNPC_SetPassengerDriveBy", CNatives::FCNPC_SetPassengerDriveBy},
 	{ "FCNPC_IsPassengerDriveBy", CNatives::FCNPC_IsPassengerDriveBy},
+
+	{ "FCNPC_SetSurfingOffsets", CNatives::FCNPC_SetSurfingOffsets },
+	{ "FCNPC_GetSurfingOffsets", CNatives::FCNPC_GetSurfingOffsets },
+	{ "FCNPC_SetSurfingVehicle", CNatives::FCNPC_SetSurfingVehicle },
+	{ "FCNPC_GetSurfingVehicle", CNatives::FCNPC_GetSurfingVehicle },
+	{ "FCNPC_SetSurfingObject", CNatives::FCNPC_SetSurfingObject },
+	{ "FCNPC_GetSurfingObject", CNatives::FCNPC_GetSurfingObject },
 
 	{ "FCNPC_StartPlayingPlayback", CNatives::FCNPC_StartPlayingPlayback},
 	{ "FCNPC_StopPlayingPlayback", CNatives::FCNPC_StopPlayingPlayback},

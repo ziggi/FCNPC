@@ -1095,7 +1095,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVehicleHealth(AMX *amx, cell *params)
 	float fHealth = amx_ctof(params[2]);
 
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
 	// Make sure the player is in vehicle
@@ -1117,7 +1117,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleHealth(AMX *amx, cell *params)
 	float fHealth = 0.0f;
 
 	// Make sure the player is valid
-	if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return amx_ftoc(fHealth);
 
 	// Make sure the player is in vehicle
@@ -1127,6 +1127,132 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleHealth(AMX *amx, cell *params)
 	// Get the vehicle health
 	fHealth = pServer->GetPlayerManager()->GetAt(iNPCId)->GetVehicleHealth();
 	return amx_ftoc(fHealth);
+}
+
+
+// native FCNPC_SetSurfingOffsets(npcid, Float:fX, Float:fY, Float:fZ);
+cell AMX_NATIVE_CALL CNatives::FCNPC_SetSurfingOffsets(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(4, "FCNPC_SetSurfingOffsets");
+
+	// Get params
+	int iNPCId = (int)params[1];
+	int fX = amx_ctof(params[2]);
+	int fY = amx_ctof(params[3]);
+	int fZ = amx_ctof(params[4]);
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
+		return 0;
+
+	// Change vehicle health
+	pServer->GetPlayerManager()->GetAt(iNPCId)->SetSurfingOffsets(CVector(fX, fY, fZ));
+	return 1;
+}
+
+// native FCNPC_GetSurfingOffsets(npcid, &Float:fX, &Float:fY, &Float:fZ);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetSurfingOffsets(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(4, "FCNPC_GetSurfingOffsets");
+
+	// Get the NPC id
+	int iNPCId = (int)params[1];
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
+		return 0;
+
+	CVector vecOffsets;
+	pServer->GetPlayerManager()->GetAt(iNPCId)->GetSurfingOffsets(&vecOffsets);
+
+	cell *pAddress = NULL;
+	amx_GetAddr(amx, params[2], &pAddress);
+	*pAddress = amx_ftoc(vecOffsets.fX);
+
+	amx_GetAddr(amx, params[3], &pAddress);
+	*pAddress = amx_ftoc(vecOffsets.fY);
+
+	amx_GetAddr(amx, params[4], &pAddress);
+	*pAddress = amx_ftoc(vecOffsets.fZ);
+
+	return 1;
+}
+
+// native FCNPC_SetSurfingVehicle(npcid, vehicleid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_SetSurfingVehicle(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_SetSurfingVehicle");
+
+	// Get params
+	int iNPCId = (int)params[1];
+	int iVehicleId = (int)params[2];
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
+		return 0;
+
+	// Valid vehicle
+	if (iVehicleId < 1 || iVehicleId > MAX_VEHICLES)
+		return 0;
+
+	// Set the surfing vehicle
+	pServer->GetPlayerManager()->GetAt(iNPCId)->SetSurfingVehicle(iVehicleId);
+	return 1;
+}
+
+// native FCNPC_GetSurfingVehicle(npcid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetSurfingVehicle(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_GetSurfingVehicle");
+
+	// Get params
+	int iNPCId = (int)params[1];
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
+		return INVALID_VEHICLE_ID;
+
+	// Get the surfing vehicle
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetSurfingVehicle();
+}
+
+
+// native FCNPC_SetSurfingObject(npcid, objectid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_SetSurfingObject(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_SetSurfingObject");
+
+	// Get params
+	int iNPCId = (int)params[1];
+	int iObjectId = (int)params[2];
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
+		return 0;
+
+	// Validate the object
+	if (iObjectId < 1 || iObjectId > MAX_OBJECTS)
+		return 0;
+
+	// Set the surfing object
+	pServer->GetPlayerManager()->GetAt(iNPCId)->SetSurfingObject(iObjectId);
+	return 1;
+}
+
+// native FCNPC_GetSurfingObject(npcid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetSurfingObject(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_GetSurfingObject");
+
+	// Get params
+	int iNPCId = (int)params[1];
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
+		return INVALID_OBJECT_ID;
+
+	// Get the surfing object
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetSurfingObject();
 }
 
 // FCNPC_SetPassengerDriveBy(npcid, bool:status);

@@ -123,6 +123,13 @@ class CPlayerData
 		void SetPassengerDriveBy(bool bState);
 		bool IsPassengerDriveBy();
 
+		void SetSurfingOffsets(CVector vecOffsets);
+		void GetSurfingOffsets(CVector *vecOffsets);
+		void SetSurfingVehicle(int iVehicleId);
+		int GetSurfingVehicle();
+		void SetSurfingObject(int iObjectId);
+		int GetSurfingObject();
+
 		bool StartPlayingPlayback(char *szFile);
 		void StopPlayingPlayback();
 		void PausePlayingPlayback();
@@ -175,6 +182,8 @@ class CPlayerData
 		CNode *m_pNode;
 		CVector m_vecAimAt;
 		CPlayer *m_pPlayer;
+		CVector m_vecSurfing;
+		WORD m_wSurfingInfo;
 
 };
 

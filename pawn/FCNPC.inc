@@ -128,6 +128,13 @@ native Float:FCNPC_GetVehicleHealth(npcid);
 //native FCNPC_SetPassengerDriveBy(npcid, bool:status);
 //native FCNPC_IsPassengerDriveBy(npcid);
 
+native FCNPC_SetSurfingOffsets(npcid, Float:fX, Float:fY, Float:fZ);
+native FCNPC_GetSurfingOffsets(npcid, &Float:fX, &Float:fY, &Float:fZ);
+native FCNPC_SetSurfingVehicle(npcid, vehicleid);
+native FCNPC_GetSurfingVehicle(npcid);
+native FCNPC_SetSurfingObject(npcid, objectid);
+native FCNPC_GetSurfingObject(npcid);
+
 native FCNPC_StartPlayingPlayback(npcid, file[]);
 native FCNPC_StopPlayingPlayback(npcid);
 native FCNPC_PausePlayingPlayback(npcid);
