@@ -648,9 +648,19 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetFightingStyle(AMX *amx, cell *params)
 	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
 		return 0;
 
-	// Set the player special action
-	pServer->GetPlayerManager()->GetAt(iNPCId)->SetFightingStyle(iStyle);
-	return 1;
+	switch (iStyle)
+	{
+		case FIGHT_STYLE_NORMAL:
+		case FIGHT_STYLE_BOXING:
+		case FIGHT_STYLE_KUNGFU:
+		case FIGHT_STYLE_KNEEHEAD:
+		case FIGHT_STYLE_GRABKICK:
+		case FIGHT_STYLE_ELBOW:
+			pServer->GetPlayerManager()->GetAt(iNPCId)->SetFightingStyle(iStyle);
+			return 1;
+	}
+
+	return 0;
 }
 
 // native FCNPC_GetFightingStyle(npcid);

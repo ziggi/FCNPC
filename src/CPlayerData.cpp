@@ -118,7 +118,7 @@ bool CPlayerData::Spawn(int iSkinId)
 	// Set the player stats
 	SetHealth(100.0f);
 	SetArmour(0.0f);
-	SetSpecialAction(0);
+	SetSpecialAction(SPECIAL_ACTION_NONE);
 	SetWeapon(0);
 	SetAmmo(0);
 	// Set the player state onfoot
@@ -959,18 +959,17 @@ WORD CPlayerData::GetAmmo()
 
 void CPlayerData::SetWeaponSkill(int iSkill, int iLevel)
 {
-	m_pPlayer->wSkillLevel[iSkill] = iLevel;
-
-	if (m_pPlayer->byteState != 9 && m_pPlayer->byteState != 0)
+	if (m_pPlayer->byteState < 11)
 	{
+		m_pPlayer->wSkillLevel[iSkill] = iLevel;
+
 		RakNet::BitStream bsData;
 		bsData.Write(m_pPlayer->wPlayerId);
 		bsData.Write(iSkill);
 		bsData.Write(iLevel);
 
 		CFunctions::PlayerRPC(&RPC_SetPlayerSkillLevel, &bsData, m_playerId);
-
-		if (m_pPlayer->byteState != PLAYER_STATE_SPECTATING)
+		if (m_pPlayer->byteState > 0 && m_pPlayer->byteState != PLAYER_STATE_SPECTATING)
 			CFunctions::AddedPlayersRPC(&RPC_SetPlayerSkillLevel, &bsData, m_playerId);
 	}
 }
@@ -996,13 +995,13 @@ int CPlayerData::GetSpecialAction()
 	return m_pPlayer->syncData.byteSpecialAction;
 }
 
-void CPlayerData::SetFightingStyle(int iStyleId)
+void CPlayerData::SetFightingStyle(int iStyle)
 {
-	m_pPlayer->byteFightingStyle = iStyleId;
-
+	m_pPlayer->byteFightingStyle = iStyle;
+	
 	RakNet::BitStream bsData;
 	bsData.Write(m_pPlayer->wPlayerId);
-	bsData.Write(iStyleId);
+	bsData.Write(iStyle);
 
 	CFunctions::AddedPlayersRPC(&RPC_SetFightingStyle, &bsData, m_playerId);
 	CFunctions::PlayerRPC(&RPC_SetFightingStyle, &bsData, m_playerId);
@@ -1020,6 +1019,7 @@ void CPlayerData::SetAnimation(int iAnimationId, float fDelta, bool bLoop, bool 
 	if (iAnimationId == 0) {
 		m_pPlayer->syncData.wAnimFlags = 0;
 	} else {
+		// TODO: convert fDelta to minifloat (8-bit float) format
 		m_pPlayer->syncData.wAnimFlags = ((BYTE)fDelta & 0xFF) | (bLoop << 8) | (bLockX << 9) | (bLockY << 10) | (bFreeze << 11) | (iTime << 12);
 	}
 }
