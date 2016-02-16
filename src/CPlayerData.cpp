@@ -884,6 +884,8 @@ void CPlayerData::SetSkin(int iSkin)
 		//RakNet::BitStream bsData;
 		//bsData.Write(m_pPlayer->wPlayerId);
 		//bsData.Write(iSkin);
+		//CFunctions::PlayerRPC(&RPC_SetPlayerSkin, &bsData, m_playerId);
+		//CFunctions::AddedPlayersRPC(&RPC_SetPlayerSkin, &bsData, m_playerId);
 
 		for (int i = 0; i < MAX_PLAYERS; i++)
 		{
@@ -891,14 +893,8 @@ void CPlayerData::SetSkin(int iSkin)
 			{
 				CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[i];
 				pPlayer->byteStreamedIn[m_playerId] = 0;
-
-				//if (pPlayer && pPlayer->byteStreamedIn[m_playerId])
-				//	pRakServer->RPC(&RPC_SetPlayerSkin, &bsData, HIGH_PRIORITY, RELIABLE_ORDERED, 2, pRakServer->GetPlayerIDFromIndex(i), false, false);
 			}
 		}
-
-		//pRakServer->RPC(&RPC_SetPlayerSkin, &bsData, HIGH_PRIORITY, RELIABLE_ORDERED, 2, pRakServer->GetPlayerIDFromIndex(m_playerId), false, false);
-		
 	}
 
 	// Set the player skin
@@ -972,7 +968,10 @@ void CPlayerData::SetWeaponSkill(int iSkill, int iLevel)
 		bsData.Write(iSkill);
 		bsData.Write(iLevel);
 
-		pRakServer->RPC(&RPC_SetPlayerSkillLevel, &bsData, HIGH_PRIORITY, RELIABLE, 0, UNASSIGNED_PLAYER_ID, true, false);
+		CFunctions::PlayerRPC(&RPC_SetPlayerSkillLevel, &bsData, m_playerId);
+
+		if (m_pPlayer->byteState != PLAYER_STATE_SPECTATING)
+			CFunctions::AddedPlayersRPC(&RPC_SetPlayerSkillLevel, &bsData, m_playerId);
 	}
 }
 
@@ -1006,6 +1005,7 @@ void CPlayerData::SetFightingStyle(int iStyleId)
 	bsData.Write(iStyleId);
 
 	CFunctions::AddedPlayersRPC(&RPC_SetFightingStyle, &bsData, m_playerId);
+	CFunctions::PlayerRPC(&RPC_SetFightingStyle, &bsData, m_playerId);
 }
 
 int CPlayerData::GetFightingStyle()
