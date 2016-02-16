@@ -60,6 +60,9 @@ class CFunctions
 		static void		AddedPlayersRPC(int* szUniqueID, RakNet::BitStream* bsParams, int iPlayerId, char PacketStream = 2);
 		static void		AddedVehicleRPC(int* szUniqueID, RakNet::BitStream* bsParams, int iVehicleId, int iExcludePlayerId = INVALID_PLAYER_ID, char PacketStream = 2);
 		static void		PlayerRPC(int* szUniqueID, RakNet::BitStream* bsParams, int iPlayerId, char PacketStream = 2);
+		
+		static void		GlobalPacket(RakNet::BitStream* bsParams);
+		static void		PlayerPacket(RakNet::BitStream* bsParams, int iPlayerId);
 
 		// Functions
 		static ClientJoin_RPC_t					pfn__ClientJoin_RPC;

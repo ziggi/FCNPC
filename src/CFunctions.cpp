@@ -200,7 +200,7 @@ void CFunctions::PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE iWe
 	bsSend.Write((char *)&bulletSyncData, sizeof(CBulletSyncData));
 
 	// Send it
-	pRakServer->Send(&bsSend, HIGH_PRIORITY, RELIABLE_ORDERED, 0, UNASSIGNED_PLAYER_ID, true);
+	CFunctions::GlobalPacket(&bsSend);
 }
 
 void CFunctions::GlobalRPC(int* szUniqueID, RakNet::BitStream* bsParams, int iExcludePlayerId, char PacketStream)
@@ -257,4 +257,14 @@ void CFunctions::PlayerRPC(int* szUniqueID, RakNet::BitStream* bsParams, int iPl
 		reliable = RELIABLE;
 
 	pRakServer->RPC(szUniqueID, bsParams, HIGH_PRIORITY, reliable, PacketStream, pRakServer->GetPlayerIDFromIndex(iPlayerId), false, false);
+}
+
+void CFunctions::GlobalPacket(RakNet::BitStream* bsParams)
+{
+	pRakServer->Send(bsParams, HIGH_PRIORITY, UNRELIABLE_SEQUENCED, 1, UNASSIGNED_PLAYER_ID, true);
+}
+
+void CFunctions::PlayerPacket(RakNet::BitStream* bsParams, int iPlayerId)
+{
+	pRakServer->Send(bsParams, HIGH_PRIORITY, UNRELIABLE_SEQUENCED, 1, pRakServer->GetPlayerIDFromIndex(iPlayerId), false);
 }
