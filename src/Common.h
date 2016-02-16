@@ -71,6 +71,9 @@ extern logprintf_t          logprintf;
 #define NODE_TYPE_PED                   0
 #define NODE_TYPE_VEHICLE               1
 #define NODE_TYPE_BOAT                  2
+// Keys
+#define KEY_NONE (0)
+#define KEY_AIM  (128)
 
 // from sampgdk
 #define MAX_PLAYER_NAME (24)

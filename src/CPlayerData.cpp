@@ -543,7 +543,7 @@ void CPlayerData::Process()
 				// Reset the reloading flag
 				m_bReloading = false;
 				// Start shooting again
-				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, 4 + 0x80);
+				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_FIRE | KEY_AIM);
 				// Update the shoot tick
 				m_dwShootTickCount = dwThisTick;
 			}
@@ -557,7 +557,7 @@ void CPlayerData::Process()
 				// Check for infinite ammo flag
 				if (!m_bHasInfiniteAmmo)
 					// Stop shooting and aim only
-					SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, 0x80);
+					SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM);
 				else
 					// This is done so the NPC would keep reloading even if the infinite ammo flag is set
 					m_wAmmo = 500;
@@ -586,7 +586,7 @@ void CPlayerData::Process()
 						// Set reloading flag
 						m_bReloading = true;
 						// Stop shooting and aim only
-						SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, 0x80);
+						SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM);
 					}
 					else
 					{
@@ -602,30 +602,18 @@ void CPlayerData::Process()
 		// Process melee attack
 		else if (m_bMeleeAttack)
 		{
-			int keycode = KEY_HANDBRAKE;
 			// Get the time spent since last melee and compare it with the melee delay
 			if ((GetTickCount() - m_dwShootTickCount) >= m_dwMeleeDelay)
 			{
-				// get the key code
-				int keycode;
-
-				if (m_bMeleeFightstyle)
-					keycode |= KEY_SECONDARY_ATTACK;
-				else
-					keycode = KEY_FIRE;
-
 				// Set the melee keys
-				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, keycode);
+				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_bMeleeFightstyle ? KEY_AIM | KEY_SECONDARY_ATTACK : KEY_FIRE);
 				// Update the tick count
 				m_dwShootTickCount = GetTickCount();
 			}
 			else
 			{
 				// Reset keys
-				if (!m_bMeleeFightstyle)
-					keycode = 0;
-
-				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, keycode);
+				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_bMeleeFightstyle ? KEY_AIM : KEY_NONE);
 			}
 		}
 		// Process death
@@ -1090,28 +1078,28 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseZMap, float fRadius
 		m_vecDestination -= CVector(CUtils::RandomFloat(-fRadius, fRadius), CUtils::RandomFloat(-fRadius, fRadius), 0.0);
 	}
 	// Get the moving type key and speed
-	DWORD dwMoveKey = 0;
+	DWORD dwMoveKey = KEY_NONE;
 	float fMoveSpeed = MOVE_SPEED_RUN;
 	if (iType == MOVE_TYPE_WALK)
 	{
 		fMoveSpeed = MOVE_SPEED_WALK;
-		dwMoveKey = 0x400;
+		dwMoveKey = KEY_WALK;
 	}
 	else if (iType == MOVE_TYPE_SPRINT)
 	{
 		fMoveSpeed = MOVE_SPEED_SPRINT;
-		dwMoveKey = 0x8;
+		dwMoveKey = KEY_SPRINT;
 	}
 	else if (iType == MOVE_TYPE_DRIVE)
 	{
 		fMoveSpeed = m_pPlayer->vecVelocity.fX;
-		dwMoveKey = 0;
+		dwMoveKey = KEY_NONE;
 	}
 	// Set the moving keys
 	if (iType != MOVE_TYPE_DRIVE)
-		SetKeys(0x8000, 0x0000, dwMoveKey);
+		SetKeys(0x8000, KEY_NONE, dwMoveKey);
 	else
-		SetKeys(0x0000, 0x0000, 0);
+		SetKeys(KEY_NONE, KEY_NONE, KEY_NONE);
 
 	// Get the player position
 	CVector vecPosition;
@@ -1205,7 +1193,7 @@ void CPlayerData::AimAt(CVector vecPoint, bool bShoot)
 	m_pPlayer->aimSyncData.vecPosition = vecPosition;
 	// Set keys
 	if (!m_bAiming)
-		SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, bShoot ? 4 + 0x80 : 0x80);
+		SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, bShoot ? KEY_FIRE | KEY_AIM : KEY_AIM);
 
 	// Mark as aiming
 	m_bAiming = true;
@@ -1231,7 +1219,7 @@ void CPlayerData::StopAim()
 	m_wHitId = INVALID_ENTITY_ID;
 	m_byteHitType = BULLET_HIT_TYPE_NONE;
 	// Reset keys
-	SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, 0);
+	SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_NONE);
 }
 
 bool CPlayerData::MeleeAttack(DWORD dwTime, bool bUseFightstyle)
@@ -1264,7 +1252,7 @@ bool CPlayerData::MeleeAttack(DWORD dwTime, bool bUseFightstyle)
 	m_wHitId = INVALID_ENTITY_ID;
 	m_byteHitType = BULLET_HIT_TYPE_NONE;
 	// Set the melee keys
-	SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, 4);
+	SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_FIRE);
 
 	return true;
 }
@@ -1279,7 +1267,7 @@ void CPlayerData::StopAttack()
 	m_bMeleeAttack = false;
 	m_bMeleeFightstyle = false;
 	// Reset keys
-	SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, 0);
+	SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_NONE);
 }
 
 bool CPlayerData::IsAiming()
@@ -1526,7 +1514,7 @@ void CPlayerData::StopPlayingPlayback()
 	SAFE_DELETE(m_pPlayback);
 	// Reset the player data
 	SetVelocity(CVector(0.0f, 0.0f, 0.0f));
-	SetKeys(0, 0, 0);
+	SetKeys(KEY_NONE, KEY_NONE, KEY_NONE);
 	// Reset the Playing flag
 	m_bPlaying = false;
 	// Call the playback finish callback
@@ -1600,7 +1588,7 @@ void CPlayerData::StopPlayingNode()
 	// Reset the node instance
 	m_pNode = NULL;
 	// Reset the player data
-	SetKeys(0, 0, 0);
+	SetKeys(KEY_NONE, KEY_NONE, KEY_NONE);
 	SetVelocity(CVector(0.0f, 0.0f, 0.0f));
 	m_vecNodeVelocity = CVector();
 	// Reset the node flag
