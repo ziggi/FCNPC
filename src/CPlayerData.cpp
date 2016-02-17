@@ -453,7 +453,7 @@ void CPlayerData::Process()
 				// Set the new position
 				CVector vecNewPosition = vecPosition + (vecVelocity * (float)dwTime);
 				// Set the Z ground (is using MapAndreas)
-				if (m_bUseMapAndreas && pServer->GetMapAndreas()->IsInited())
+				if (m_bUseMapAndreas && pServer->IsMapAndreasInited())
 					vecNewPosition.fZ = pServer->GetMapAndreas()->FindZ_For2DCoord(vecNewPosition.fX, vecNewPosition.fY) + 0.5f;
 				
 				// Set the position
@@ -470,7 +470,7 @@ void CPlayerData::Process()
 				// Set the new position
 				CVector vecNewPosition = vecPosition + (vecVelocity * (float)dwTime);
 				// Set the Z ground (is using MapAndreas)
-				if (m_bUseMapAndreas && pServer->GetMapAndreas()->IsInited())
+				if (m_bUseMapAndreas && pServer->IsMapAndreasInited())
 					vecNewPosition.fZ = pServer->GetMapAndreas()->FindZ_For2DCoord(vecNewPosition.fX, vecNewPosition.fY) + 0.5f;
 					
 				// Set the position
@@ -666,7 +666,7 @@ void CPlayerData::Process()
 				// Set the new position
 				CVector vecNewPosition = vecPosition + (vecVelocity * (float)dwTime);
 				// Set the Z ground (is using MapAndreas)
-				if (m_bUseMapAndreas && pServer->GetMapAndreas()->IsInited())
+				if (m_bUseMapAndreas && pServer->IsMapAndreasInited())
 					vecNewPosition.fZ = pServer->GetMapAndreas()->FindZ_For2DCoord(vecNewPosition.fX, vecNewPosition.fY) + 0.5f;
 				
 				// Set the vehicle position
@@ -683,7 +683,7 @@ void CPlayerData::Process()
 				// Set the new position
 				CVector vecNewPosition = vecPosition + (vecVelocity * (float)dwTime);
 				// Set the Z ground (is using MapAndreas)
-				if (m_bUseMapAndreas && pServer->GetMapAndreas()->IsInited())
+				if (m_bUseMapAndreas && pServer->IsMapAndreasInited())
 					vecNewPosition.fZ = pServer->GetMapAndreas()->FindZ_For2DCoord(vecNewPosition.fX, vecNewPosition.fY) + 0.5f;
 				
 				// Set the position

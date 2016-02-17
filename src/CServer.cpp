@@ -159,6 +159,21 @@ bool CServer::DoesNameExist(char *szName)
 	return false;
 }
 
+void CServer::SetMapAndreas(CMapAndreas *pMapAndreas)
+{
+	m_pMapAndreas = pMapAndreas;
+}
+
+CMapAndreas *CServer::GetMapAndreas()
+{
+	return m_pMapAndreas;
+}
+
+bool CServer::IsMapAndreasInited()
+{
+	return m_pMapAndreas != NULL && m_pMapAndreas->IsInited();
+}
+
 bool CServer::IsVehicleSeatOccupied(int iPlayerId, WORD wVehicleId, BYTE byteSeatId)
 {
 	// Loop through all the players

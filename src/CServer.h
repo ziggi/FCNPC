@@ -40,8 +40,9 @@ class CServer
 		void    SetUpdateRate(DWORD dwRate) { m_dwUpdateRate = dwRate; };
 		DWORD   GetUpdateRate() { return m_dwUpdateRate; };
 
-		void        SetMapAndreas(CMapAndreas *pMapAndreas) { m_pMapAndreas = pMapAndreas; };
-		CMapAndreas *GetMapAndreas() { return m_pMapAndreas; };
+		void        SetMapAndreas(CMapAndreas *pMapAndreas);
+		CMapAndreas *GetMapAndreas();
+		bool        IsMapAndreasInited();
 
 		bool    IsVehicleSeatOccupied(int iPlayerId, WORD wVehicleId, BYTE byteSeatId);
 
