@@ -59,7 +59,6 @@ class CAddress
 		static DWORD           OFFSET_RemoteSystemSize;
 		static DWORD           OFFSET_RemoteSystem__ConnectMode;
 		static DWORD           OFFSET_RemoteSystem__Unknown;
-		static BYTE            OFFSET_SendBullet_RPC;
 		
 		// Arrays
 

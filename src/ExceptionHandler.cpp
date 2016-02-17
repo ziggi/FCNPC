@@ -76,7 +76,6 @@ long WINAPI CExceptionHandler::ExceptionHandlerCallback(_EXCEPTION_POINTERS *pEx
 	fprintf(pFile, "OFFSET_RemoteSystemSize: 0x%x\n", CAddress::OFFSET_RemoteSystemSize);
 	fprintf(pFile, "OFFSET_RemoteSystem__ConnectMode: 0x%x\n", CAddress::OFFSET_RemoteSystem__ConnectMode);
 	fprintf(pFile, "OFFSET_RemoteSystem__Unknown: 0x%x\n", CAddress::OFFSET_RemoteSystem__Unknown);
-	fprintf(pFile, "OFFSET_SendBullet_RPC: 0x%x\n", CAddress::OFFSET_SendBullet_RPC);
 	fprintf(pFile, "======================== FCNPC Exception Handler ===============================");
 	// Close the file
 	fclose(pFile);
@@ -131,7 +130,6 @@ void CExceptionHandler::ExceptionHandlerCallback(int signum)
 	fprintf(pFile, "OFFSET_RemoteSystemSize: 0x%x\n", CAddress::OFFSET_RemoteSystemSize);
 	fprintf(pFile, "OFFSET_RemoteSystem__ConnectMode: 0x%x\n", CAddress::OFFSET_RemoteSystem__ConnectMode);
 	fprintf(pFile, "OFFSET_RemoteSystem__Unknown: 0x%x\n", CAddress::OFFSET_RemoteSystem__Unknown);
-	fprintf(pFile, "OFFSET_SendBullet_RPC: 0x%x\n", CAddress::OFFSET_SendBullet_RPC);
 	fprintf(pFile, "======================== FCNPC Exception Handler ===============================");
 	// Close the file
 	fclose(pFile);

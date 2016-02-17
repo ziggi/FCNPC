@@ -195,7 +195,7 @@ void CFunctions::PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE iWe
 
 	// Write it to BitStream
 	RakNet::BitStream bsSend;
-	bsSend.Write((BYTE)CAddress::OFFSET_SendBullet_RPC);
+	bsSend.Write((BYTE)ID_BULLET_SYNC);
 	bsSend.Write((WORD)iPlayerId);
 	bsSend.Write((char *)&bulletSyncData, sizeof(CBulletSyncData));
 

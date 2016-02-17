@@ -41,7 +41,6 @@ DWORD CAddress::OFFSET_RemoteSystemManager = NULL;
 DWORD CAddress::OFFSET_RemoteSystemSize = NULL;
 DWORD CAddress::OFFSET_RemoteSystem__ConnectMode = NULL;
 DWORD CAddress::OFFSET_RemoteSystem__Unknown = NULL;
-BYTE  CAddress::OFFSET_SendBullet_RPC = NULL;
 
 void CAddress::Initialize(eSAMPVersion sampVersion)
 {
@@ -63,7 +62,6 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 		OFFSET_RemoteSystemSize = 0xcb8;
 		OFFSET_RemoteSystem__ConnectMode = 0xcb0;
 		OFFSET_RemoteSystem__Unknown = 0xcb5;
-		OFFSET_SendBullet_RPC = 0xce;
 		break;
 
 	case SAMP_VERSION_037_R2_1:
@@ -81,7 +79,6 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 		OFFSET_RemoteSystemSize = 0xcb8;
 		OFFSET_RemoteSystem__ConnectMode = 0xcb0;
 		OFFSET_RemoteSystem__Unknown = 0xcb5;
-		OFFSET_SendBullet_RPC = 0xce;
 		break;
 
 	case SAMP_VERSION_UNKNOWN:
@@ -104,7 +101,6 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 		OFFSET_RemoteSystemSize = *(DWORD *)(CUtils::FindPattern("\x0F\xB7\x56\x08\x43\x81\xC7\xB8\x0C\x00\x00\x3B\xDA", "xxxxxxx????xx") + 7);
 		OFFSET_RemoteSystem__ConnectMode = *(DWORD *)(CUtils::FindPattern("\x83\xB8\xB0\x0C\x00\x00\x08\x75\x1A\x40\x8B\xD0\x8B\x44\x24\x04", "xx????xxxxxxxxxx") + 2);
 		OFFSET_RemoteSystem__Unknown = *(DWORD *)(CUtils::FindPattern("\x80\xB8\xB5\x0C\x00\x00\x02\x0F\x85\x4C\x01\x00\x00\x8B\x7C\x24\x3C\x8B\xCF", "xx????xx??????xx?xx") + 2);
-		OFFSET_SendBullet_RPC = *(BYTE *)(CUtils::FindPattern("\x6A\x01\x6A\x08\x8D\x4C\x24\x10\x51\x8D\x4C\x24\x28\x88\x5C\x24\x14\xE8\x30\x2A\xFD\xFF\x8B\x0D\xB8\x5F\x4F\x00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxx") + 28);
 		break;
 	}
 #else
@@ -125,7 +121,6 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 		OFFSET_RemoteSystemSize = 0xc69;
 		OFFSET_RemoteSystem__ConnectMode = 0xc62;
 		OFFSET_RemoteSystem__Unknown = 0xc67;
-		OFFSET_SendBullet_RPC = 0xce;
 		break;
 
 	case SAMP_VERSION_037_R2_1:
@@ -143,7 +138,6 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 		OFFSET_RemoteSystemSize = 0xc69;
 		OFFSET_RemoteSystem__ConnectMode = 0xc62;
 		OFFSET_RemoteSystem__Unknown = 0xc67;
-		OFFSET_SendBullet_RPC = 0xce;
 		break;
 
 	case SAMP_VERSION_UNKNOWN:
@@ -166,7 +160,6 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 		OFFSET_RemoteSystemSize = *(DWORD *)(CUtils::FindPattern("\x46\x0F\xB7\xC2\x81\xC3\x69\x0C\x00\x00\x39\xF0", "xxxxx????xxx") + 6);	
 		OFFSET_RemoteSystem__ConnectMode = *(DWORD *)(CUtils::FindPattern("\x83\xBC\x18\x62\x0C\x00\x00\x08\x75\xD1\x01\xD8\x8B\x50\x01\x89\x11", "xxx????xx?xxxxxxx") + 3);
 		OFFSET_RemoteSystem__Unknown = *(DWORD *)(CUtils::FindPattern("\x80\xB8\x67\x0C\x00\x00\x02\x74\x1D\x8B\x45\xD8\x89\x04\x24", "xxxxxx?x?xxxxxx") + 2);
-		OFFSET_SendBullet_RPC = *(BYTE *)(CUtils::FindPattern("\xC6\x85\xC5\xFE\xFF\xFF\xCE\xB8\x01\x00\x00\x00\x89\x44\x24\x0C\xB8\x08\x00\x00\x00\x89\x44\x24\x08\x8D\x85\xC5\xFE\xFF\xFF", "xxxxxx?xxxxxxxxxxxxxxxxxxxxxxxx") + 6);
 		break;
 	}
 #endif
