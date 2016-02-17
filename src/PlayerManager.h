@@ -19,14 +19,8 @@ class CPlayerManager
 		CPlayerManager();
 		~CPlayerManager();
 
-		bool IsPlayerConnectedEx(WORD playerId)
-		{
-			if (playerId > MAX_PLAYERS || playerId < 0)
-				return false;
-			else
-				return m_bConnected[playerId];
-		};
-		inline CPlayerData *GetAt(WORD playerId) { return m_pPlayerData[playerId]; };
+		bool IsPlayerConnectedEx(WORD playerId);
+		CPlayerData *GetAt(WORD playerId);
 		bool SetupPlayer(WORD playerId);
 		
 		WORD AddPlayer(char *szName);

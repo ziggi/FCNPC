@@ -103,6 +103,19 @@ void CPlayerManager::Process()
 	}
 }
 
+bool CPlayerManager::IsPlayerConnectedEx(WORD playerId)
+{
+	if (playerId >= MAX_PLAYERS || playerId < 0)
+		return false;
+	else
+		return m_bConnected[playerId];
+}
+
+CPlayerData *CPlayerManager::GetAt(WORD playerId)
+{
+	return m_pPlayerData[playerId];
+}
+
 bool CPlayerManager::SetupPlayer(WORD playerId)
 {
 	// Setup the NPC
@@ -111,11 +124,5 @@ bool CPlayerManager::SetupPlayer(WORD playerId)
 
 bool CPlayerManager::IsNPC(int iPlayerId)
 {
-	// Loop through all the players
-	for (WORD i = (CFunctions::GetMaxPlayers() - 1); i != 0; i--)
-	{
-		if (m_bConnected[i] && i == iPlayerId)
-			return true;
-	}
-	return false;
+	return m_bConnected[iPlayerId];
 }

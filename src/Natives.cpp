@@ -122,6 +122,15 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsDead(AMX *amx, cell *params)
 	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetState() == PLAYER_STATE_WASTED ? 1 : 0;
 }
 
+cell AMX_NATIVE_CALL CNatives::FCNPC_IsValid(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_IsValid");
+	// Get the NPC id
+	int iNPCId = (int)params[1];
+	// Return the player is valid
+	return pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId) ? 1 : 0;
+}
+
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetPosition(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(4, "FCNPC_SetPosition");

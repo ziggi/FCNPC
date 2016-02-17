@@ -103,6 +103,7 @@ AMX_NATIVE_INFO PluginNatives[ ] =
 	{ "FCNPC_IsSpawned", CNatives::FCNPC_IsSpawned},
 	{ "FCNPC_Kill", CNatives::FCNPC_Kill},
 	{ "FCNPC_IsDead", CNatives::FCNPC_IsDead},
+	{ "FCNPC_IsValid", CNatives::FCNPC_IsValid},
 
 	{ "FCNPC_SetPosition", CNatives::FCNPC_SetPosition},
 	{ "FCNPC_GetPosition", CNatives::FCNPC_GetPosition},
