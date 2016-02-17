@@ -20,7 +20,7 @@ CServer::CServer(eSAMPVersion version)
 	m_pPlayerDataManager = NULL;
 	m_pNodeManager = NULL;
 	m_pDamageThread = NULL;
-	m_pZMap = NULL;
+	m_pMapAndreas = NULL;
 	// Initialize the update rate
 	m_dwUpdateRate = DEFAULT_UPDATE_RATE;
 }
@@ -31,16 +31,11 @@ CServer::~CServer()
 	SAFE_DELETE(m_pPlayerDataManager);
 	SAFE_DELETE(m_pNodeManager);
 	SAFE_DELETE(m_pDamageThread);
-	SAFE_DELETE(m_pZMap);
+	SAFE_DELETE(m_pMapAndreas);
 }
 
 BYTE CServer::Initialize()
 {
-	// Create the ZMap instance
-	m_pZMap = new CZMap();
-	if (!m_pZMap)
-		return 1;
-
 	// Initialize necessary samp functions
 	CFunctions::PreInitialize();
 	// Initialize addresses

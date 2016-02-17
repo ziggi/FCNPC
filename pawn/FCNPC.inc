@@ -48,7 +48,7 @@ forward FCNPC_OnStreamOut(npcid, forplayerid);
 
 // Natives
 native FCNPC_SetUpdateRate(rate);
-native FCNPC_InitZMap(file[]);
+native FCNPC_InitMapAndreas(address);
 
 native FCNPC_Create(name[]);
 native FCNPC_Destroy(npcid);
@@ -106,8 +106,8 @@ native FCNPC_GetFightingStyle(npcid);
 native FCNPC_ToggleReloading(npcid, bool:toggle);
 native FCNPC_ToggleInfiniteAmmo(npcid, bool:toggle);
 
-native FCNPC_GoTo(npcid, Float:X, Float:Y, Float:Z, type = MOVE_TYPE_AUTO, Float:speed = 0.5, bool:UseZMap = false, Float:radius = 0.0, bool:getangle = true);
-native FCNPC_GoToPlayer(npcid, playerid, type = MOVE_TYPE_AUTO, Float:speed = 0.5, bool:UseZMap = false, Float:radius = 0.0, bool:getangle = true);
+native FCNPC_GoTo(npcid, Float:X, Float:Y, Float:Z, type = MOVE_TYPE_AUTO, Float:speed = 0.5, bool:UseMapAndreas = false, Float:radius = 0.0, bool:getangle = true);
+native FCNPC_GoToPlayer(npcid, playerid, type = MOVE_TYPE_AUTO, Float:speed = 0.5, bool:UseMapAndreas = false, Float:radius = 0.0, bool:getangle = true);
 native FCNPC_Stop(npcid);
 native FCNPC_IsMoving(npcid);
 
@@ -160,5 +160,3 @@ native FCNPC_GetNodePointCount(nodeid);
 native FCNPC_GetNodeInfo(nodeid, &vehnodes, &pednodes, &navinode);
 native FCNPC_PlayNode(npcid, nodeid, type);
 native FCNPC_StopPlayingNode(npcid);
-
-native FCNPC_GetZGround(Float:x, Float:y, &Float:z);

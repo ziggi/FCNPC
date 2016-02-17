@@ -20,8 +20,9 @@ class CGangZonePool;
 #include "Address.h"
 #include "PlayerManager.h"
 #include "NodeManager.h"
-#include "ZMap.h"
 #include <list>
+
+class CMapAndreas;
 
 class CServer
 {
@@ -39,7 +40,8 @@ class CServer
 		void    SetUpdateRate(DWORD dwRate) { m_dwUpdateRate = dwRate; };
 		DWORD   GetUpdateRate() { return m_dwUpdateRate; };
 
-		CZMap   *GetZMap() { return m_pZMap; };
+		void        SetMapAndreas(CMapAndreas *pMapAndreas) { m_pMapAndreas = pMapAndreas; };
+		CMapAndreas *GetMapAndreas() { return m_pMapAndreas; };
 
 		bool    IsVehicleSeatOccupied(int iPlayerId, WORD wVehicleId, BYTE byteSeatId);
 
@@ -50,7 +52,7 @@ class CServer
 		CPlayerManager      *m_pPlayerDataManager;
 		CNodeManager        *m_pNodeManager;
 		CThread             *m_pDamageThread;
-		CZMap               *m_pZMap;
+		CMapAndreas         *m_pMapAndreas;
 		DWORD               m_dwUpdateRate;
 };
 

@@ -1736,43 +1736,14 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StopPlayingNode(AMX *amx, cell *params)
 	return 1;
 }
 
-cell AMX_NATIVE_CALL CNatives::FCNPC_GetZGround(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL CNatives::FCNPC_InitMapAndreas(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "FCNPC_GetZGround");
-	// Get the X coord
-	float fX = amx_ctof(params[1]);
-	// Get the Y coord
-	float fY = amx_ctof(params[2]);
-	// Get the Z ground
-	float fZ = pServer->GetZMap()->GetGroundForCoord(CVector(fX, fY, 0.0f));
-	// Get the argument pointer and set its value
-	cell *pAddress = NULL;
-	amx_GetAddr(amx, params[3], &pAddress);
-	*pAddress = amx_ftoc(fZ);
+	CHECK_PARAMS(1, "FCNPC_InitMapAndreas");
+	
+	// Get the params
+	CMapAndreas *pAddress = (CMapAndreas*)params[1];
 
+	// Set the address
+	pServer->SetMapAndreas(new CMapAndreas(pAddress));
 	return 1;
-}
-
-cell AMX_NATIVE_CALL CNatives::FCNPC_InitZMap(AMX *amx, cell *params)
-{
-	CHECK_PARAMS(1, "FCNPC_InitZMap");
-	// Get the filename length
-	int iLength = 0;
-	cell *pAddress = NULL;
-	amx_GetAddr(amx, params[1], &pAddress);
-	amx_StrLen(pAddress, &iLength);
-	// Make sure the length is valid
-	if (!iLength)
-		return 0;
-
-	// Make room for the string end
-	iLength++;
-	// Allocate the filename string
-	char *szFilename = new char [iLength];
-	// Get the filename
-	amx_GetString(szFilename, pAddress, 0, iLength);
-	// Set the file path
-	pServer->GetZMap()->SetPath(szFilename);
-	// Try to initialize the ZMap
-	return (cell)pServer->GetZMap()->Initialize();
 }

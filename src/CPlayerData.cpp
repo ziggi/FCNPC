@@ -29,7 +29,7 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_bSetup = false;
 	m_bSpawned = false;
 	m_bMoving = false;
-	m_bUseZMap = false;
+	m_bUseMapAndreas = false;
 	m_bAiming = false;
 	m_bReloading = false;
 	m_bEntering = false;
@@ -452,9 +452,9 @@ void CPlayerData::Process()
 				DWORD dwTime = (dwThisTick - m_dwMoveTickCount);
 				// Set the new position
 				CVector vecNewPosition = vecPosition + (vecVelocity * (float)dwTime);
-				// Set the Z ground (is using ZMap)
-				if (m_bUseZMap && pServer->GetZMap()->IsInitialized())
-					vecNewPosition.fZ = pServer->GetZMap()->GetGroundForCoord(vecNewPosition) + 0.5f;
+				// Set the Z ground (is using MapAndreas)
+				if (m_bUseMapAndreas && pServer->GetMapAndreas()->IsInited())
+					vecNewPosition.fZ = pServer->GetMapAndreas()->FindZ_For2DCoord(vecNewPosition.fX, vecNewPosition.fY) + 0.5f;
 				
 				// Set the position
 				SetPosition(vecNewPosition);
@@ -469,9 +469,9 @@ void CPlayerData::Process()
 				dwTime -= (dwThisTick - m_dwMoveStartTime) - m_dwMoveTime;
 				// Set the new position
 				CVector vecNewPosition = vecPosition + (vecVelocity * (float)dwTime);
-				// Set the Z ground (is using ZMap)
-				if (m_bUseZMap && pServer->GetZMap()->IsInitialized())
-					vecNewPosition.fZ = pServer->GetZMap()->GetGroundForCoord(vecNewPosition) + 0.5f;
+				// Set the Z ground (is using MapAndreas)
+				if (m_bUseMapAndreas && pServer->GetMapAndreas()->IsInited())
+					vecNewPosition.fZ = pServer->GetMapAndreas()->FindZ_For2DCoord(vecNewPosition.fX, vecNewPosition.fY) + 0.5f;
 					
 				// Set the position
 				SetPosition(vecNewPosition);
@@ -665,9 +665,9 @@ void CPlayerData::Process()
 				DWORD dwTime = (dwThisTick - m_dwMoveTickCount);
 				// Set the new position
 				CVector vecNewPosition = vecPosition + (vecVelocity * (float)dwTime);
-				// Set the Z ground (is using ZMap)
-				if (m_bUseZMap && pServer->GetZMap()->IsInitialized())
-					vecNewPosition.fZ = pServer->GetZMap()->GetGroundForCoord(vecNewPosition) + 0.5f;
+				// Set the Z ground (is using MapAndreas)
+				if (m_bUseMapAndreas && pServer->GetMapAndreas()->IsInited())
+					vecNewPosition.fZ = pServer->GetMapAndreas()->FindZ_For2DCoord(vecNewPosition.fX, vecNewPosition.fY) + 0.5f;
 				
 				// Set the vehicle position
 				SetPosition(vecNewPosition);
@@ -682,9 +682,9 @@ void CPlayerData::Process()
 				dwTime -= (dwThisTick - m_dwMoveStartTime) - m_dwMoveTime;
 				// Set the new position
 				CVector vecNewPosition = vecPosition + (vecVelocity * (float)dwTime);
-				// Set the Z ground (is using ZMap)
-				if (m_bUseZMap && pServer->GetZMap()->IsInitialized())
-					vecNewPosition.fZ = pServer->GetZMap()->GetGroundForCoord(vecNewPosition) + 0.5f;
+				// Set the Z ground (is using MapAndreas)
+				if (m_bUseMapAndreas && pServer->GetMapAndreas()->IsInited())
+					vecNewPosition.fZ = pServer->GetMapAndreas()->FindZ_For2DCoord(vecNewPosition.fX, vecNewPosition.fY) + 0.5f;
 				
 				// Set the position
 				SetPosition(vecNewPosition);
@@ -1095,7 +1095,7 @@ void CPlayerData::GetKeys(WORD *pwUDAnalog, WORD *pwLRAnalog, DWORD *pdwKeys)
 	*pdwKeys = m_pPlayer->dwKeys;
 }
 
-bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseZMap, float fRadius, bool bGetAngle)
+bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float fRadius, bool bGetAngle)
 {
 	// Validate the mouvement type
 	if (iType == MOVE_TYPE_AUTO)
@@ -1156,8 +1156,8 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseZMap, float fRadius
 	m_dwMoveStartTime = GetTickCount();
 	// Mark as moving
 	m_bMoving = true;
-	// Save the ZMap usage
-	m_bUseZMap = bUseZMap;
+	// Save the MapAndreas usage
+	m_bUseMapAndreas = bUseMapAndreas;
 	return true;
 }
 
@@ -1175,8 +1175,8 @@ void CPlayerData::StopMoving()
 	m_dwMoveTime = 0;
 	m_dwMoveStartTime = 0;
 	memset(&m_vecDestination, 0, sizeof(CVector));
-	// Reset the ZMap usage
-	m_bUseZMap = false;
+	// Reset the MapAndreas usage
+	m_bUseMapAndreas = false;
 }
 
 bool CPlayerData::IsMoving()

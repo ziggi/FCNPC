@@ -94,7 +94,7 @@ PLUGIN_EXPORT void PLUGIN_CALL Unload( )
 AMX_NATIVE_INFO PluginNatives[ ] =
 {
 	{ "FCNPC_SetUpdateRate", CNatives::FCNPC_SetUpdateRate},
-	{ "FCNPC_InitZMap", CNatives::FCNPC_InitZMap},
+	{ "FCNPC_InitMapAndreas", CNatives::FCNPC_InitMapAndreas},
 	
 	{ "FCNPC_Create", CNatives::FCNPC_Create},
 	{ "FCNPC_Destroy", CNatives::FCNPC_Destroy},
@@ -205,7 +205,6 @@ AMX_NATIVE_INFO PluginNatives[ ] =
 	{ "FCNPC_PlayNode", CNatives::FCNPC_PlayNode},
 	{ "FCNPC_StopPlayingNode", CNatives::FCNPC_StopPlayingNode},
 
-	{ "FCNPC_GetZGround", CNatives::FCNPC_GetZGround},
 	{ 0, 0 }
 };
 

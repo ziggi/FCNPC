@@ -96,7 +96,7 @@ class CPlayerData
 		void SetAnimation(int iAnimationId, float fDelta, bool bLoop, bool bLockX, bool bLockY, bool bFreeze, int iTime);
 		void GetAnimation(int *iAnimationId, float *fDelta, bool *bLoop, bool *bLockX, bool *bLockY, bool *bFreeze, int *iTime);
 
-		bool GoTo(CVector vecPoint, int iType, bool bUseZMap, float fRadius = 0.0, bool bGetAngle = true);
+		bool GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float fRadius = 0.0, bool bGetAngle = true);
 		void StopMoving();
 		bool IsMoving();
 
@@ -154,7 +154,7 @@ class CPlayerData
 		char m_szName[MAX_PLAYER_NAME];
 		bool m_bSpawned;
 		bool m_bMoving;
-		bool m_bUseZMap;
+		bool m_bUseMapAndreas;
 		bool m_bAiming;
 		bool m_bReloading;
 		bool m_bEntering;
