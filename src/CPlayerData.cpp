@@ -1533,11 +1533,28 @@ void CPlayerData::SetSurfingObject(int iObjectId)
 
 int CPlayerData::GetSurfingObject()
 {
-	int objectid = m_wSurfingInfo - MAX_VEHICLES;
-	if (objectid >= 0 && objectid < MAX_OBJECTS)
+	int iObjectId = m_wSurfingInfo - MAX_VEHICLES;
+	if (iObjectId >= 0 && iObjectId < MAX_OBJECTS)
 	{
-		if (pNetGame->pObjectPool->bObjectSlotState[objectid])
-			return objectid;
+		if (pNetGame->pObjectPool->bObjectSlotState[iObjectId])
+			return iObjectId;
+	}
+	return INVALID_OBJECT_ID;
+}
+
+void CPlayerData::SetSurfingPlayerObject(int iObjectId)
+{
+	m_wSurfingInfo = MAX_VEHICLES + iObjectId;
+	pNetGame->pObjectPool->bPlayerObjectSlotState[m_playerId][iObjectId] = true;
+}
+
+int CPlayerData::GetSurfingPlayerObject()
+{
+	int iObjectId = m_wSurfingInfo - MAX_VEHICLES;
+	if (iObjectId >= 0 && iObjectId < MAX_OBJECTS)
+	{
+		if (pNetGame->pObjectPool->bPlayerObjectSlotState[m_playerId][iObjectId])
+			return iObjectId;
 	}
 	return INVALID_OBJECT_ID;
 }

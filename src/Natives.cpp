@@ -1260,7 +1260,6 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetSurfingVehicle(AMX *amx, cell *params)
 	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetSurfingVehicle();
 }
 
-
 // native FCNPC_SetSurfingObject(npcid, objectid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetSurfingObject(AMX *amx, cell *params)
 {
@@ -1297,6 +1296,44 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetSurfingObject(AMX *amx, cell *params)
 
 	// Get the surfing object
 	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetSurfingObject();
+}
+
+// native FCNPC_SetSurfingPlayerObject(npcid, objectid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_SetSurfingPlayerObject(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_SetSurfingPlayerObject");
+
+	// Get params
+	int iNPCId = (int)params[1];
+	int iObjectId = (int)params[2];
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
+		return 0;
+
+	// Validate the object
+	if (iObjectId < 1 || iObjectId > MAX_OBJECTS)
+		return 0;
+
+	// Set the surfing object
+	pServer->GetPlayerManager()->GetAt(iNPCId)->SetSurfingPlayerObject(iObjectId);
+	return 1;
+}
+
+// native FCNPC_GetSurfingPlayerObject(npcid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetSurfingPlayerObject(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_GetSurfingPlayerObject");
+
+	// Get params
+	int iNPCId = (int)params[1];
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
+		return INVALID_OBJECT_ID;
+
+	// Get the surfing object
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetSurfingPlayerObject();
 }
 
 // FCNPC_SetPassengerDriveBy(npcid, bool:status);

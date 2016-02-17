@@ -132,6 +132,8 @@ class CPlayerData
 		int GetSurfingVehicle();
 		void SetSurfingObject(int iObjectId);
 		int GetSurfingObject();
+		void SetSurfingPlayerObject(int iObjectId);
+		int GetSurfingPlayerObject();
 
 		bool StartPlayingPlayback(char *szFile);
 		void StopPlayingPlayback();
