@@ -58,6 +58,7 @@ native FCNPC_IsSpawned(npcid);
 native FCNPC_Kill(npcid);
 native FCNPC_IsDead(npcid);
 native FCNPC_IsValid(npcid);
+native FCNPC_IsStreamedIn(npcid, forplayerid);
 
 native FCNPC_SetPosition(npcid, Float:X, Float:Y, Float:Z);
 native FCNPC_GetPosition(npcid, &Float:X, &Float:Y, &Float:Z);

@@ -131,6 +131,29 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsValid(AMX *amx, cell *params)
 	return pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId) ? 1 : 0;
 }
 
+cell AMX_NATIVE_CALL CNatives::FCNPC_IsStreamedIn(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_IsStreamedIn");
+
+	// Get the params
+	int iNPCId = (int)params[1];
+	int iForPlayerId = (int)params[2];
+
+	// Make sure the npc is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
+		return 0;
+
+	// Make sure the player is valid
+	if (iForPlayerId < 0 || iForPlayerId > MAX_PLAYERS)
+		return 0;
+
+	if (!pNetGame->pPlayerPool->bIsPlayerConnectedEx[iForPlayerId] || iForPlayerId == iNPCId)
+		return 0;
+
+	// Return the player is streamed
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->IsStreamedIn(iForPlayerId) ? 1 : 0;
+}
+
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetPosition(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(4, "FCNPC_SetPosition");

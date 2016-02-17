@@ -36,12 +36,13 @@ class CPlayerData
 		void Process();
 		bool Spawn(int iSkinId);
 		bool Respawn();
+		void SetSpawnPosition(CVector vecPosition);
 		void Kill(int iKillerId, int iWeapon);
 		void Update(int iState);
 		void UpdateSync(int iState);
 		void UpdateAim();
 		bool IsSpawned();
-		void SetSpawnPosition(CVector vecPosition);
+		bool IsStreamedIn(int iForPlayerId);
 
 		void SetOnFootSync(CSyncData *syncData);
 		void SetVehicleSync(CVehicleSyncData *syncData);

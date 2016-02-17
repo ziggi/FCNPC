@@ -374,6 +374,11 @@ bool CPlayerData::IsSpawned()
 	return m_bSpawned;
 }
 
+bool CPlayerData::IsStreamedIn(int iForPlayerId)
+{
+	return pNetGame->pPlayerPool->pPlayer[iForPlayerId]->byteStreamedIn[m_playerId] != 0;
+}
+
 bool CPlayerData::SetState(BYTE byteState)
 {
 	// Make sure the state is valid
