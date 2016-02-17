@@ -63,6 +63,8 @@ native FCNPC_IsStreamedIn(npcid, forplayerid);
 native FCNPC_SetPosition(npcid, Float:X, Float:Y, Float:Z);
 native FCNPC_GetPosition(npcid, &Float:X, &Float:Y, &Float:Z);
 native FCNPC_SetAngle(npcid, Float:Angle);
+native FCNPC_SetAngleToPos(npcid, Float:X, Float:Y);
+native FCNPC_SetAngleToPlayer(npcid, playerid);
 native Float:FCNPC_GetAngle(npcid);
 native FCNPC_SetQuaternion(npcid, Float:W, Float:X, Float:Y, Float:Z);
 native FCNPC_GetQuaternion(npcid, &Float:W, &Float:X, &Float:Y, &Float:Z);
