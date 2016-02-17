@@ -38,7 +38,7 @@ BYTE CServer::Initialize()
 {
 	// Create the ZMap instance
 	m_pZMap = new CZMap();
-	if(!m_pZMap)
+	if (!m_pZMap)
 		return 1;
 
 	// Initialize necessary samp functions
@@ -53,25 +53,25 @@ BYTE CServer::Initialize()
 	CPatches::InstallPatches();
 	// Create the player manager instance
 	m_pPlayerDataManager = new CPlayerManager();
-	if(!m_pPlayerDataManager)
+	if (!m_pPlayerDataManager)
 		return 2;
 
 	// Create the node manager instance
 	m_pNodeManager = new CNodeManager();
-	if(!m_pNodeManager)
+	if (!m_pNodeManager)
 		return 3;
 
 /*	// Create threads
 	m_pDamageThread = new CThread(CThreadFunctions::DamageThread);
-	if(!m_pDamageThread || !m_pDamageThread->Start())
+	if (!m_pDamageThread || !m_pDamageThread->Start())
 		return 4;*/
 
 	// Check the maxnpc from the config
-	if(CFunctions::GetMaxNPC() == 0)
+	if (CFunctions::GetMaxNPC() == 0)
 		// Display a warning
 		logprintf("Warning: the maxnpc limit is 0 (you will not be able to create NPCs unless you change it)");
 	// Check the maxnpc and maxplayers in the config
-	else if(CFunctions::GetMaxPlayers() < CFunctions::GetMaxNPC())
+	else if (CFunctions::GetMaxPlayers() < CFunctions::GetMaxNPC())
 		// Display a warning
 		logprintf("Warning: the maxplayers limit is less than maxnpc (possible crash)");
 
@@ -84,10 +84,10 @@ BYTE CServer::Initialize()
 	int iReturn = 1;
 	// Loop through all the AMX instances
 	int iIndex = -1;
-	for(std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++)
+	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++)
 	{
 		// Get the function index
-		if(!amx_FindPublic((*i), szCallback, &iIndex))
+		if (!amx_FindPublic((*i), szCallback, &iIndex))
 		{
 			logprintf("found public");
 			// Copy the format string
@@ -100,14 +100,14 @@ BYTE CServer::Initialize()
 			while(*_szFormat != NULL)
 			{
 				logprintf("proc format (%s) on %c", _szFormat, *_szFormat);
-				if(*_szFormat == 'i') // Integer
+				if (*_szFormat == 'i') // Integer
 					amx_Push((*i), (cell)va_arg(vArgs, int));
-				else if(*_szFormat == 'f') // Float
+				else if (*_szFormat == 'f') // Float
 				{
 					float fValue = va_arg(vArgs, float);
 					amx_Push((*i), amx_ftoc(fValue));
 				}
-				else if(*_szFormat == 's') // String
+				else if (*_szFormat == 's') // String
 				{
 					logprintf("string it is");
 					const char *szValue = va_arg(vArgs, const char *);
@@ -137,11 +137,11 @@ BYTE CServer::Initialize()
 			amx_Exec((*i), &cReturn, iIndex);
 			logprintf("called");
 			// Release the string heap
-			if(cStringAddr)
+			if (cStringAddr)
 				amx_Release((*i), cStringAddr);
 
 			// Save it for the last return
-			if(!cReturn)
+			if (!cReturn)
 				iReturn = cReturn;
 		}
 	}
@@ -151,14 +151,14 @@ BYTE CServer::Initialize()
 bool CServer::DoesNameExist(char *szName)
 {
 	// Loop through all the players
-	for(int i = 0; i < MAX_PLAYERS; i++)
+	for (int i = 0; i < MAX_PLAYERS; i++)
 	{
 		// Ignore non connected players
-		if(!pNetGame->pPlayerPool->bIsPlayerConnectedEx[i])
+		if (!pNetGame->pPlayerPool->bIsPlayerConnectedEx[i])
 			continue;
 
 		// Compare names
-		if(!strcmp(szName, pNetGame->pPlayerPool->szName[i]))
+		if (!strcmp(szName, pNetGame->pPlayerPool->szName[i]))
 			return true;
 	}
 	return false;
@@ -167,16 +167,16 @@ bool CServer::DoesNameExist(char *szName)
 bool CServer::IsVehicleSeatOccupied(int iPlayerId, WORD wVehicleId, BYTE byteSeatId)
 {
 	// Loop through all the players
-	for(int i = 0; i < MAX_PLAYERS; i++)
+	for (int i = 0; i < MAX_PLAYERS; i++)
 	{
 		// Ignore non connected players and the same player
-		if(!pNetGame->pPlayerPool->bIsPlayerConnectedEx[i] || iPlayerId == i)
+		if (!pNetGame->pPlayerPool->bIsPlayerConnectedEx[i] || iPlayerId == i)
 			continue;
 
 		// Get the player interface
 		CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[i];
 		// Check vehicle and seat
-		if(pPlayer->wVehicleId == wVehicleId && pPlayer->byteSeatId == byteSeatId)
+		if (pPlayer->wVehicleId == wVehicleId && pPlayer->byteSeatId == byteSeatId)
 			return true;
 	}
 	return false;

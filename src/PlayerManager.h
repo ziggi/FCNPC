@@ -21,7 +21,7 @@ class CPlayerManager
 
 		bool IsPlayerConnectedEx(WORD playerId)
 		{
-			if(playerId > MAX_PLAYERS || playerId < 0)
+			if (playerId > MAX_PLAYERS || playerId < 0)
 				return false;
 			else
 				return m_bConnected[playerId];

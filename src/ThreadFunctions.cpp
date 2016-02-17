@@ -28,18 +28,18 @@ void CThreadFunctions::DamageThread(void *pThread)
 	while(bServerInit)
 	{
 		// Loop through all the players
-		for(int i = 0; i < MAX_PLAYERS; i++)
+		for (int i = 0; i < MAX_PLAYERS; i++)
 		{
 			// Ignore non connected players
-			if(!pPlayerPool->bIsPlayerConnectedEx[i] ||
+			if (!pPlayerPool->bIsPlayerConnectedEx[i] ||
 				(pServer->GetPlayerManager()->IsNPC(i) && !pServer->GetPlayerManager()->GetAt(i)->IsSpawned()))
 				continue;
 
 			// Loop through all the npcs
-			for(int j = (MAX_PLAYERS - 1); j != 0; j--)
+			for (int j = (MAX_PLAYERS - 1); j != 0; j--)
 			{
 				// Ignore non connected NPCs
-				if(!pServer->GetPlayerManager()->IsPlayerConnectedEx(j) || !pServer->GetPlayerManager()->GetAt(j)->IsSpawned())
+				if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(j) || !pServer->GetPlayerManager()->GetAt(j)->IsSpawned())
 					continue;
 
 				// Process damage for players

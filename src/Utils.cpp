@@ -102,7 +102,7 @@ DWORD CUtils::FindPattern(char *szPattern, char *szMask)
 	// Get the pattern length
 	DWORD dwPatternLength = (DWORD)strlen(szMask);
 	// Loop through all the process
-	for(DWORD i = 0; i < dwSize - dwPatternLength; i++)
+	for (DWORD i = 0; i < dwSize - dwPatternLength; i++)
 	{
 		bool bFound = true;
 		// Loop through the pattern caracters
@@ -110,7 +110,7 @@ DWORD CUtils::FindPattern(char *szPattern, char *szMask)
 			bFound &= szMask[j] == '?' || szPattern[j] == *(char*)(dwBase + i + j);
 
 		// If found return the current address
-		if(bFound)
+		if (bFound)
 			return dwBase + i;
 	}
 	// Return null

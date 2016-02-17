@@ -73,7 +73,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 #endif
 	// Create the server instance
 	pServer = new CServer(version);
-	if(!pServer)
+	if (!pServer)
 	{
 		logprintf("Failed. (Cant create server instance)");
 		return false;
@@ -206,11 +206,11 @@ AMX_NATIVE_INFO PluginNatives[ ] =
 
 PLUGIN_EXPORT int PLUGIN_CALL AmxLoad(AMX *pAMX)
 {
-	if(!bServerInit)
+	if (!bServerInit)
 	{
 		// Initialize the server
 		BYTE byteError = 0;
-		if((byteError = pServer->Initialize()) != 0)
+		if ((byteError = pServer->Initialize()) != 0)
 		{
 			// Get the error
 			char szError[64];
@@ -239,7 +239,7 @@ PLUGIN_EXPORT int PLUGIN_CALL AmxUnload(AMX *pAMX)
 PLUGIN_EXPORT void PLUGIN_CALL ProcessTick()
 {
 	// Check if we need to process
-	if((GetTickCount() - dwStartTick) >= 5)
+	if ((GetTickCount() - dwStartTick) >= 5)
 	{
 		// Process the player manager
 		pServer->GetPlayerManager()->Process();

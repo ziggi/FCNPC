@@ -33,17 +33,17 @@ CThread::~CThread()
 bool CThread::Start()
 {
 	// Exit if we are already running
-	if(m_bStarted)
+	if (m_bStarted)
 		return false;
 
 	// Start the thread
 #ifdef _WIN32
 	m_hThread = CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)ThreadFunction, (LPVOID)this, NULL, NULL);
-	if(!m_hThread)
+	if (!m_hThread)
 		return false;
 #else
 	pthread_create(&m_Thread, NULL, ThreadFunction, (void *)this);
-	if(!m_Thread)
+	if (!m_Thread)
 		return false;
 #endif
 
@@ -53,7 +53,7 @@ bool CThread::Start()
 void CThread::Stop()
 {
 	// If the thread is not started then dont bother go any further
-	if(!m_bStarted)
+	if (!m_bStarted)
 		return;
 
 	// Terminate and delete the thread

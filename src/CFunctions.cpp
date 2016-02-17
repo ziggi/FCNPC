@@ -70,21 +70,21 @@ void CFunctions::PreInitialize()
 int CFunctions::GetFreePlayerSlot()
 {
 	// Loop through all the players
-	for(int i = (GetMaxPlayers() - 1); i != 0; i--)
+	for (int i = (GetMaxPlayers() - 1); i != 0; i--)
 	{
 		// Is he not connected ?
-		if(!pNetGame->pPlayerPool->bIsPlayerConnectedEx[i])
+		if (!pNetGame->pPlayerPool->bIsPlayerConnectedEx[i])
 			return i;
 	}
-	return INVALID_ENTITY_ID;
+	return INVALID_PLAYER_ID;
 }
 
 int CFunctions::NewPlayer(char *szName)
 {
 	// Get a free player slot
 	int iPlayerId;
-	if((iPlayerId = GetFreePlayerSlot()) == INVALID_ENTITY_ID)
-		return INVALID_ENTITY_ID;
+	if ((iPlayerId = GetFreePlayerSlot()) == INVALID_PLAYER_ID)
+		return INVALID_PLAYER_ID;
 
 	// Get the SAMP authentication
 	PlayerID systemAddress = { 0x0100007F, 9000 + iPlayerId };

@@ -24,7 +24,7 @@ class CVector
 private:
 	bool IsNearZeroFloat( const float param )
 	{
-		//if(!_finite(param))
+		//if (!_finite(param))
 		//	return 1;
 		return (fabs(param) < FLOAT_EPSILON);
 	}
@@ -83,7 +83,7 @@ public:
 
 	bool IsNearZero ( void ) 
 	{
-		//if(!isfinite(fX) || !isfinite(fY) || !isfinite(fZ))
+		//if (!isfinite(fX) || !isfinite(fY) || !isfinite(fZ))
 		//	return 1;
 		return (IsNearZeroFloat(fX) && IsNearZeroFloat(fY) && IsNearZeroFloat(fZ));
 	}
@@ -230,3 +230,4 @@ CVector const g_vecRightNormal ( 0.0f, 1.0f, 0.0f );
 CVector const g_vecUpNormal ( 0.0f, 0.0f, 1.0f );
 
 #endif
+

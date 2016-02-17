@@ -118,7 +118,7 @@ float CMath::DegreeToRadians(float fDegree)
 bool CMath::IsInRange(float fRange1, float fRange2, float fRadius)
 {
 	float fDis = (fRange1 - fRange2);
-	if((fDis < fRadius) && (fDis > -fRadius))
+	if ((fDis < fRadius) && (fDis > -fRadius))
 		return true;
 
 	return false;

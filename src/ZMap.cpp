@@ -21,7 +21,7 @@ CZMap::CZMap()
 CZMap::~CZMap()
 {
 	// Close the file if its opened
-	if(m_pFile)
+	if (m_pFile)
 	{
 		fclose(m_pFile);
 		m_pFile = NULL;
@@ -32,12 +32,12 @@ CZMap::~CZMap()
 bool CZMap::Initialize()
 {
 	// Close the previous file (if its already open)
-	if(m_pFile)
+	if (m_pFile)
 		fclose(m_pFile);
 
 	// Try to open the file
 	fopen_s(&m_pFile, m_szFilePath, "rb");
-	if(!m_pFile)
+	if (!m_pFile)
 		return false;
 
 	m_bIsInitialized = true;
@@ -47,11 +47,11 @@ bool CZMap::Initialize()
 float CZMap::GetGroundForCoord(CVector vecCoord) // From MapAndreas plugin by Kalcor
 {
 	// Make sure the ZMap is initialized
-	if(!m_bIsInitialized)
+	if (!m_bIsInitialized)
 		return 0.0f;
 
 	// Validate the coordinates
-	if(vecCoord.fX < -3000.0f || vecCoord.fX > 3000.0f || vecCoord.fY > 3000.0f || vecCoord.fY < -3000.0f)
+	if (vecCoord.fX < -3000.0f || vecCoord.fX > 3000.0f || vecCoord.fY > 3000.0f || vecCoord.fY < -3000.0f)
 		return 0.0f;
 
 	// Get the the coordinates grid

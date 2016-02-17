@@ -17,7 +17,7 @@ void CPatches::InstallFunctionDisablePatch(DWORD dwFunction, BYTE byteReturn = 0
 	// Write a retn patch
 	*(BYTE *)(dwFunction) = 0xC3;
 	// Write the return value
-	if(byteReturn != 0)
+	if (byteReturn != 0)
 		*(BYTE *)(dwFunction + 1) = byteReturn;
 }
 

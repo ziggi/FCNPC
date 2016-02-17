@@ -13,11 +13,11 @@
 DWORD CWeaponInfo::GetWeaponClipSize(int iWeaponId)
 {
 	// Validate the weapon id
-	if(iWeaponId < 0)
+	if (iWeaponId < 0)
 		return -1;
 
 	// Dont process melee weapons
-	if(iWeaponId < 19)
+	if (iWeaponId < 19)
 		return 0;
 
 	// Get the clip size from the weapon id
@@ -155,7 +155,7 @@ WORD CWeaponInfo::GetWeaponRateOfFire(int iWeaponId)
 float CWeaponInfo::GetWeaponDamage(int iWeaponId)
 {
 	// Validate the weapon id
-	if(iWeaponId < 0)
+	if (iWeaponId < 0)
 		return 0.0f;
 
 	// Get the clip size from the weapon id

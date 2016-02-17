@@ -45,10 +45,10 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_wAmmo = 0;
 	m_iNodePoint = 0;
 	m_iNodeLastPoint = 0;
-	m_iLastDamager = INVALID_ENTITY_ID;
-	m_wVehicleToEnter = INVALID_ENTITY_ID;
+	m_iLastDamager = INVALID_PLAYER_ID;
+	m_wVehicleToEnter = INVALID_VEHICLE_ID;
 	m_byteSeatToEnter = 0;
-	m_wHitId = INVALID_ENTITY_ID;
+	m_wHitId = INVALID_PLAYER_ID;
 	m_byteHitType = BULLET_HIT_TYPE_NONE;
 	m_vecSurfing = CVector();
 	m_wSurfingInfo = 0;
@@ -67,11 +67,11 @@ int CPlayerData::GetId()
 void CPlayerData::Destroy()
 {
 	// Stop Playing any playback
-	if(m_bPlaying)
+	if (m_bPlaying)
 		StopPlayingPlayback();
 
 	// Stop playing any node
-	if(m_bPlayingNode)
+	if (m_bPlayingNode)
 		StopPlayingNode();
 
 	// Set the player state to none
@@ -84,13 +84,13 @@ void CPlayerData::Destroy()
 
 bool CPlayerData::Setup()
 {
-	if(m_playerId == INVALID_ENTITY_ID)
+	if (m_playerId == INVALID_PLAYER_ID)
 		return false;
 
 	// Get the player interface
 	m_pPlayer = pNetGame->pPlayerPool->pPlayer[m_playerId];
 	// Validate the interface
-	if(!m_pPlayer)
+	if (!m_pPlayer)
 		return false;
 
 	// Set the setup flag
@@ -105,7 +105,7 @@ bool CPlayerData::Setup()
 bool CPlayerData::Spawn(int iSkinId)
 {
 	// Make sure the player is not already spawned
-	if(m_bSpawned)
+	if (m_bSpawned)
 		return false;
 
 	// Mark spawned
@@ -124,8 +124,8 @@ bool CPlayerData::Spawn(int iSkinId)
 	// Set the player state onfoot
 	SetState(PLAYER_STATE_ONFOOT);
 	// Reset stats
-	m_iLastDamager = INVALID_ENTITY_ID;
-	m_pPlayer->wVehicleId = INVALID_ENTITY_ID;
+	m_iLastDamager = INVALID_PLAYER_ID;
+	m_pPlayer->wVehicleId = INVALID_VEHICLE_ID;
 	m_pPlayer->byteSeatId = 0;
 	// Call the NPC spawn callback
 	CCallbackManager::OnSpawn((int)m_playerId);
@@ -135,11 +135,11 @@ bool CPlayerData::Spawn(int iSkinId)
 bool CPlayerData::Respawn()
 {
 	// Make sure the player is already spawned
-	if(!m_bSpawned)
+	if (!m_bSpawned)
 		return false;
 
 	// Pause Playing any playback
-	if(m_bPlaying)
+	if (m_bPlaying)
 		m_pPlayback->SetPaused(true);
 
 	// Get the last player stats
@@ -155,10 +155,10 @@ bool CPlayerData::Respawn()
 	// Set the player state onfoot
 	SetState(PLAYER_STATE_ONFOOT);
 	// Reset vehicle and seat id
-	m_pPlayer->wVehicleId = INVALID_ENTITY_ID;
+	m_pPlayer->wVehicleId = INVALID_VEHICLE_ID;
 	m_pPlayer->byteSeatId = 0;
 	// Set the player stats back
-	if(fHealth == 0.0f)
+	if (fHealth == 0.0f)
 	{
 		SetHealth(100.0f);
 		SetArmour(0.0f);
@@ -170,15 +170,15 @@ bool CPlayerData::Respawn()
 	}
 	SetPosition(vecPosition);
 	SetSpecialAction(byteSpecialAction);
-	if(wVehicleId != INVALID_ENTITY_ID)
+	if (wVehicleId != INVALID_VEHICLE_ID)
 		PutInVehicle(wVehicleId, byteSeat);
 
 	// Resume any playback
-	if(m_bPlaying)
+	if (m_bPlaying)
 		m_pPlayback->SetPaused(false);
 
 	// Reset stats
-	m_iLastDamager = INVALID_ENTITY_ID;
+	m_iLastDamager = INVALID_PLAYER_ID;
 	// Call the NPC spawn callback
 	CCallbackManager::OnRespawn((int)m_playerId);
 	return true;
@@ -213,7 +213,7 @@ void CPlayerData::SetName(char *szName)
 void CPlayerData::UpdateSync(int iState)
 {
 	// Make sure the state is valid
-	if(iState < UPDATE_STATE_NONE || iState > UPDATE_STATE_PASSENGER)
+	if (iState < UPDATE_STATE_NONE || iState > UPDATE_STATE_PASSENGER)
 		return;
 
 	// Set the new update state
@@ -223,19 +223,19 @@ void CPlayerData::UpdateSync(int iState)
 void CPlayerData::Update(int iState)
 {
 	// Validate the player
-	if(!m_bSetup || !m_bSpawned)
+	if (!m_bSetup || !m_bSpawned)
 		return;
 
 	// Make sure the state is valid
-	if(iState < UPDATE_STATE_NONE || iState > UPDATE_STATE_PASSENGER)
+	if (iState < UPDATE_STATE_NONE || iState > UPDATE_STATE_PASSENGER)
 		return;
 
 	// Check the time spent since the last update
-	if((GetTickCount() - m_dwUpdateTick) < pServer->GetUpdateRate())
+	if ((GetTickCount() - m_dwUpdateTick) < pServer->GetUpdateRate())
 		return;
 
 	// Update onfoot state
-	if(iState == UPDATE_STATE_ONFOOT && (GetState() == PLAYER_STATE_ONFOOT || GetState() == PLAYER_STATE_ENTER_VEHICLE_DRIVER || GetState() == PLAYER_STATE_ENTER_VEHICLE_PASSENGER))
+	if (iState == UPDATE_STATE_ONFOOT && (GetState() == PLAYER_STATE_ONFOOT || GetState() == PLAYER_STATE_ENTER_VEHICLE_DRIVER || GetState() == PLAYER_STATE_ENTER_VEHICLE_PASSENGER))
 	{
 		// Set the sync position
 		m_pPlayer->syncData.vecPosition = m_pPlayer->vecPosition;
@@ -260,10 +260,10 @@ void CPlayerData::Update(int iState)
 		m_pPlayer->iUpdateState = iState;
 	}
 	// Update driver state
-	else if(iState == UPDATE_STATE_DRIVER && GetState() == PLAYER_STATE_DRIVER)
+	else if (iState == UPDATE_STATE_DRIVER && GetState() == PLAYER_STATE_DRIVER)
 	{
 		// Dont process if we dont have any vehicle
-		if(m_pPlayer->wVehicleId == INVALID_ENTITY_ID)
+		if (m_pPlayer->wVehicleId == INVALID_VEHICLE_ID)
 			return;
 
 		// Get the player vehicle interface
@@ -288,10 +288,10 @@ void CPlayerData::Update(int iState)
 		m_pPlayer->iUpdateState = iState;
 	}
 	// Update passenger state
-	else if(iState == UPDATE_STATE_PASSENGER && GetState() == PLAYER_STATE_PASSENGER)
+	else if (iState == UPDATE_STATE_PASSENGER && GetState() == PLAYER_STATE_PASSENGER)
 	{
 		// Dont process if we dont have any vehicle
-		if(m_pPlayer->wVehicleId == INVALID_ENTITY_ID)
+		if (m_pPlayer->wVehicleId == INVALID_VEHICLE_ID)
 			return;
 
 		// Get the player vehicle interface
@@ -321,11 +321,11 @@ void CPlayerData::Update(int iState)
 
 void CPlayerData::UpdateAim()
 {
-	if(m_bAiming)
+	if (m_bAiming)
 	{
 		// Set the camera mode
 		m_pPlayer->aimSyncData.byteCameraMode = CWeaponInfo::IsDoubleHanded(m_pPlayer->syncData.byteWeapon) ? 53 : 7;
-		if(m_pPlayer->syncData.byteWeapon == 0 || m_pPlayer->syncData.byteWeapon == 1)
+		if (m_pPlayer->syncData.byteWeapon == 0 || m_pPlayer->syncData.byteWeapon == 1)
 			m_pPlayer->aimSyncData.byteCameraMode = 4;
 		else if (m_pPlayer->syncData.byteWeapon == 34) // Sniper rifle
 			m_pPlayer->aimSyncData.byteCameraMode = 7;
@@ -338,7 +338,7 @@ void CPlayerData::UpdateAim()
 			m_pPlayer->aimSyncData.byteWeaponState = WS_NO_BULLETS;
 
 		// Update vector pos
-		if (m_byteHitType == BULLET_HIT_TYPE_PLAYER && m_wHitId != INVALID_ENTITY_ID)
+		if (m_byteHitType == BULLET_HIT_TYPE_PLAYER && m_wHitId != INVALID_PLAYER_ID)
 		{
 			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[m_wHitId];
 			if (pPlayer)
@@ -377,7 +377,7 @@ bool CPlayerData::IsSpawned()
 bool CPlayerData::SetState(BYTE byteState)
 {
 	// Make sure the state is valid
-	if(byteState > PLAYER_STATE_SPAWNED)
+	if (byteState > PLAYER_STATE_SPAWNED)
 		return false;
 
 	// Set the new state
@@ -393,11 +393,11 @@ BYTE CPlayerData::GetState()
 void CPlayerData::Kill(int iKillerId, int iWeapon)
 {
 	// Stop Playing any playback
-	if(m_bPlaying)
+	if (m_bPlaying)
 		StopPlayingPlayback();
 
 	// Stop playing any node
-	if(m_bPlayingNode)
+	if (m_bPlayingNode)
 		StopPlayingNode();
 
 	// Stop moving and aiming
@@ -414,23 +414,23 @@ void CPlayerData::Kill(int iKillerId, int iWeapon)
 void CPlayerData::Process()
 {
 	// Make sure the player is setup
-	if(!m_bSetup)
+	if (!m_bSetup)
 		return;
 
 	// Process Playing
-	if(m_bPlaying)
+	if (m_bPlaying)
 	{
 		// Process the player playback
-		if(!m_pPlayback->Process(this))
+		if (!m_pPlayback->Process(this))
 			StopPlayingPlayback();
 
 		return;
 	}
 	// Update the player depending on his state
-	if(GetState() == PLAYER_STATE_ONFOOT)
+	if (GetState() == PLAYER_STATE_ONFOOT)
 	{
 		// Process the player mouvement
-		if(m_bMoving)
+		if (m_bMoving)
 		{
 			// Get the player position
 			CVector vecPosition;
@@ -439,7 +439,7 @@ void CPlayerData::Process()
 			CVector vecVelocity;
 			GetVelocity(&vecVelocity);
 			// Make sure we still need to move
-			if((GetTickCount() - m_dwMoveStartTime) < m_dwMoveTime)
+			if ((GetTickCount() - m_dwMoveStartTime) < m_dwMoveTime)
 			{
 				// Get the time spent since the last update
 				DWORD dwThisTick = GetTickCount();
@@ -447,7 +447,7 @@ void CPlayerData::Process()
 				// Set the new position
 				CVector vecNewPosition = vecPosition + (vecVelocity * (float)dwTime);
 				// Set the Z ground (is using ZMap)
-				if(m_bUseZMap && pServer->GetZMap()->IsInitialized())
+				if (m_bUseZMap && pServer->GetZMap()->IsInitialized())
 					vecNewPosition.fZ = pServer->GetZMap()->GetGroundForCoord(vecNewPosition) + 0.5f;
 				
 				// Set the position
@@ -464,7 +464,7 @@ void CPlayerData::Process()
 				// Set the new position
 				CVector vecNewPosition = vecPosition + (vecVelocity * (float)dwTime);
 				// Set the Z ground (is using ZMap)
-				if(m_bUseZMap && pServer->GetZMap()->IsInitialized())
+				if (m_bUseZMap && pServer->GetZMap()->IsInitialized())
 					vecNewPosition.fZ = pServer->GetZMap()->GetGroundForCoord(vecNewPosition) + 0.5f;
 					
 				// Set the position
@@ -472,13 +472,13 @@ void CPlayerData::Process()
 				// Stop the player
 				StopMoving();
 				// Are we entering a vehicle ?
-				if(m_wVehicleToEnter != INVALID_ENTITY_ID)
+				if (m_wVehicleToEnter != INVALID_VEHICLE_ID)
 				{
 					// Wait until the entry animation is finished
 					m_dwEnterExitTickCount = GetTickCount();
 					m_bEntering = true;
 					// Check whether the player is jacking the vehicle or not
-					if(pServer->IsVehicleSeatOccupied((int)m_playerId, (int)m_wVehicleToEnter, (int)m_byteSeatToEnter))
+					if (pServer->IsVehicleSeatOccupied((int)m_playerId, (int)m_wVehicleToEnter, (int)m_byteSeatToEnter))
 						m_bJacking = true;
 
 					// Call the SAMP enter vehicle function
@@ -487,10 +487,10 @@ void CPlayerData::Process()
 				else
 				{
 					// Are we playing a node ?
-					if(m_bPlayingNode)
+					if (m_bPlayingNode)
 					{
 						// Check the return value of the point finish callback
-						if(CCallbackManager::OnFinishNodePoint((int)m_playerId, m_iNodePoint))
+						if (CCallbackManager::OnFinishNodePoint((int)m_playerId, m_iNodePoint))
 						{
 							// Process the next position
 							int iNewPoint = m_pNode->Process(this, m_iNodePoint, m_iNodeLastPoint, m_iNodeType, m_vecNodeVelocity);
@@ -508,12 +508,12 @@ void CPlayerData::Process()
 			}
 		}
 		// Are we performing the entry animation ?
-		if(m_bEntering)
+		if (m_bEntering)
 		{
 			// Get the time spent since the last update
 			DWORD dwThisTick = GetTickCount();
 			DWORD dwTime = (dwThisTick - m_dwEnterExitTickCount);
-			if(dwTime > (DWORD)(m_bJacking ? 5800 : 2500))
+			if (dwTime > (DWORD)(m_bJacking ? 5800 : 2500))
 			{
 				// Change the player state
 				SetState(m_byteSeatToEnter == 0 ? PLAYER_STATE_DRIVER : PLAYER_STATE_PASSENGER);
@@ -529,12 +529,12 @@ void CPlayerData::Process()
 				m_pPlayer->wVehicleId = m_wVehicleToEnter;
 				m_pPlayer->byteSeatId = m_byteSeatToEnter;
 				// Reset entering values
-				m_wVehicleToEnter = INVALID_ENTITY_ID;
+				m_wVehicleToEnter = INVALID_VEHICLE_ID;
 				m_byteSeatToEnter = 0;
 			}
 		}
 		// Process player reloading
-		if(m_bReloading)
+		if (m_bReloading)
 		{
 			// Get the time spent since the reload start
 			DWORD dwThisTick = GetTickCount();
@@ -551,7 +551,7 @@ void CPlayerData::Process()
 			}
 		}
 		// Process player shooting
-		else if(m_bAiming && m_pPlayer->dwKeys & 4)
+		else if (m_bAiming && m_pPlayer->dwKeys & 4)
 		{	
 			// Do we still have ammo ?
 			if (m_wAmmo == 0)
@@ -619,11 +619,11 @@ void CPlayerData::Process()
 			}
 		}
 		// Process death
-		if(GetHealth() <= 0.0f && GetState() != PLAYER_STATE_WASTED && GetState() != PLAYER_STATE_SPAWNED)
+		if (GetHealth() <= 0.0f && GetState() != PLAYER_STATE_WASTED && GetState() != PLAYER_STATE_SPAWNED)
 		{
 			// Get the last damager weapon
 			BYTE byteWeapon = -1;
-			if(m_iLastDamager != INVALID_ENTITY_ID)
+			if (m_iLastDamager != INVALID_PLAYER_ID)
 			{
 				byteWeapon = pNetGame->pPlayerPool->pPlayer[m_iLastDamager]->syncData.byteWeapon;
 			}
@@ -634,13 +634,13 @@ void CPlayerData::Process()
 		Update(UPDATE_STATE_ONFOOT);
 	}
 	// Process driver state
-	else if(GetState() == PLAYER_STATE_DRIVER)
+	else if (GetState() == PLAYER_STATE_DRIVER)
 	{
 		// Process driving
-		if(m_bMoving)
+		if (m_bMoving)
 		{
 			// Validate the player vehicle
-			if(m_pPlayer->wVehicleId == INVALID_ENTITY_ID)
+			if (m_pPlayer->wVehicleId == INVALID_VEHICLE_ID)
 				return;
 
 			// Get the player vehicle interface
@@ -652,7 +652,7 @@ void CPlayerData::Process()
 			CVector vecVelocity;
 			GetVelocity(&vecVelocity);
 			// Make sure we still need to move
-			if((GetTickCount() - m_dwMoveStartTime) < m_dwMoveTime)
+			if ((GetTickCount() - m_dwMoveStartTime) < m_dwMoveTime)
 			{
 				// Get the time spent since the last update
 				DWORD dwThisTick = GetTickCount();
@@ -660,7 +660,7 @@ void CPlayerData::Process()
 				// Set the new position
 				CVector vecNewPosition = vecPosition + (vecVelocity * (float)dwTime);
 				// Set the Z ground (is using ZMap)
-				if(m_bUseZMap && pServer->GetZMap()->IsInitialized())
+				if (m_bUseZMap && pServer->GetZMap()->IsInitialized())
 					vecNewPosition.fZ = pServer->GetZMap()->GetGroundForCoord(vecNewPosition) + 0.5f;
 				
 				// Set the vehicle position
@@ -677,7 +677,7 @@ void CPlayerData::Process()
 				// Set the new position
 				CVector vecNewPosition = vecPosition + (vecVelocity * (float)dwTime);
 				// Set the Z ground (is using ZMap)
-				if(m_bUseZMap && pServer->GetZMap()->IsInitialized())
+				if (m_bUseZMap && pServer->GetZMap()->IsInitialized())
 					vecNewPosition.fZ = pServer->GetZMap()->GetGroundForCoord(vecNewPosition) + 0.5f;
 				
 				// Set the position
@@ -685,10 +685,10 @@ void CPlayerData::Process()
 				// Stop the player
 				StopMoving();
 				// Are we playing a node ?
-				if(m_bPlayingNode)
+				if (m_bPlayingNode)
 				{
 					// Check the return value of the point finish callback
-					if(CCallbackManager::OnFinishNodePoint((int)m_playerId, m_iNodePoint))
+					if (CCallbackManager::OnFinishNodePoint((int)m_playerId, m_iNodePoint))
 					{
 						// Process the next position
 						int iNewPoint = m_pNode->Process(this, m_iNodePoint, m_iNodeLastPoint, m_iNodeType, m_vecNodeVelocity);
@@ -708,15 +708,15 @@ void CPlayerData::Process()
 		Update(UPDATE_STATE_DRIVER);
 	}
 	// Process passenger state
-	else if(GetState() == PLAYER_STATE_PASSENGER)
+	else if (GetState() == PLAYER_STATE_PASSENGER)
 	{
 		// Update the player
 		Update(UPDATE_STATE_PASSENGER);
 	}
 	// Process vehicle exiting
-	if(GetState() == PLAYER_STATE_EXIT_VEHICLE)
+	if (GetState() == PLAYER_STATE_EXIT_VEHICLE)
 	{
-		if((GetTickCount() - m_dwEnterExitTickCount) > 1500)
+		if ((GetTickCount() - m_dwEnterExitTickCount) > 1500)
 		{
 			// Reset the player state
 			SetState(PLAYER_STATE_ONFOOT);
@@ -745,7 +745,7 @@ void CPlayerData::Process()
 			// Set his angle
 			SetAngle(fAngle);
 			// Reset the player vehicle and seat id
-			m_pPlayer->wVehicleId = INVALID_ENTITY_ID;
+			m_pPlayer->wVehicleId = INVALID_VEHICLE_ID;
 			m_pPlayer->byteSeatId = 0;	
 			// Call the vehicle exit complete callback
 			CCallbackManager::OnVehicleExitComplete((int)m_playerId);
@@ -756,7 +756,7 @@ void CPlayerData::Process()
 void CPlayerData::SetPosition(CVector vecPosition)
 {
 	// Check the player state
-	if(GetState() == PLAYER_STATE_DRIVER && m_pPlayer->wVehicleId != INVALID_ENTITY_ID)
+	if (GetState() == PLAYER_STATE_DRIVER && m_pPlayer->wVehicleId != INVALID_VEHICLE_ID)
 	{
 		// Get the player vehicle interface
 		CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[m_pPlayer->wVehicleId];
@@ -770,7 +770,7 @@ void CPlayerData::SetPosition(CVector vecPosition)
 void CPlayerData::GetPosition(CVector *pvecPosition)
 {
 	// Check the player state
-	if((GetState() == PLAYER_STATE_DRIVER ||  GetState() == PLAYER_STATE_PASSENGER) && m_pPlayer->wVehicleId != INVALID_ENTITY_ID)
+	if ((GetState() == PLAYER_STATE_DRIVER || GetState() == PLAYER_STATE_PASSENGER) && m_pPlayer->wVehicleId != INVALID_VEHICLE_ID)
 	{
 		// Get the player vehicle interface
 		CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[m_pPlayer->wVehicleId];
@@ -784,7 +784,7 @@ void CPlayerData::GetPosition(CVector *pvecPosition)
 void CPlayerData::SetQuaternion(float *fQuaternion)
 {
 	// Check the player state
-	if (GetState() == PLAYER_STATE_DRIVER && m_pPlayer->wVehicleId != INVALID_ENTITY_ID)
+	if (GetState() == PLAYER_STATE_DRIVER && m_pPlayer->wVehicleId != INVALID_VEHICLE_ID)
 	{
 		// get vehicle interface
 		CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[m_pPlayer->wVehicleId];
@@ -800,7 +800,7 @@ void CPlayerData::SetQuaternion(float *fQuaternion)
 void CPlayerData::GetQuaternion(float *fQuaternion)
 {
 	// Check the player state
-	if((GetState() == PLAYER_STATE_DRIVER ||  GetState() == PLAYER_STATE_PASSENGER) && m_pPlayer->wVehicleId != INVALID_ENTITY_ID)
+	if ((GetState() == PLAYER_STATE_DRIVER || GetState() == PLAYER_STATE_PASSENGER) && m_pPlayer->wVehicleId != INVALID_VEHICLE_ID)
 	{
 		// Get the player vehicle interface
 		CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[m_pPlayer->wVehicleId];
@@ -836,9 +836,9 @@ float CPlayerData::GetAngle()
 void CPlayerData::SetHealth(float fHealth)
 {
 	// Validate the health
-	if(fHealth < 0.0f)
+	if (fHealth < 0.0f)
 		fHealth = 0.0f;
-	else if(fHealth > 200.0f)
+	else if (fHealth > 200.0f)
 		fHealth = 200.0f;
 
 	// Set the player health
@@ -853,9 +853,9 @@ float CPlayerData::GetHealth()
 void CPlayerData::SetArmour(float fArmour)
 {
 	// Validate the armour
-	if(fArmour < 0.0f)
+	if (fArmour < 0.0f)
 		fArmour = 0.0f;
-	else if(fArmour > 200.0f)
+	else if (fArmour > 200.0f)
 		fArmour = 200.0f;
 
 	// Set the player armour
@@ -870,11 +870,11 @@ float CPlayerData::GetArmour()
 void CPlayerData::SetSkin(int iSkin)
 {
 	// Make sure the skin has changed
-	if(iSkin == m_pPlayer->spawn.iSkin)
+	if (iSkin == m_pPlayer->spawn.iSkin)
 		return;
 
 	// Validate the skin
-	if(iSkin > 311 || iSkin < 0)
+	if (iSkin > 311 || iSkin < 0)
 		return;
 
 	// Send RPC
@@ -930,7 +930,7 @@ int CPlayerData::GetVirtualWorld()
 void CPlayerData::SetWeapon(BYTE byteWeaponId)
 {
 	// Validate the weapon id
-	if(byteWeaponId > 46)
+	if (byteWeaponId > 46)
 		return;
 
 	// Set the player weapon id
@@ -945,7 +945,7 @@ BYTE CPlayerData::GetWeapon()
 void CPlayerData::SetAmmo(WORD wAmmo)
 {
 	// Validate the ammo
-	if(wAmmo > 0xFFFF)
+	if (wAmmo > 0xFFFF)
 		return;
 
 	// Set the player ammo
@@ -982,7 +982,7 @@ WORD CPlayerData::GetWeaponSkill(int iSkill)
 void CPlayerData::SetSpecialAction(int iActionId)
 {
 	// Validate the action id
-	if(iActionId < 0 || (iActionId > 13 && (iActionId != 20 && iActionId != 21 && iActionId != 22
+	if (iActionId < 0 || (iActionId > 13 && (iActionId != 20 && iActionId != 21 && iActionId != 22
 		&& iActionId != 23 && iActionId != 24 && iActionId != 25 && iActionId != 68)))
 		return;
 
@@ -1038,7 +1038,7 @@ void CPlayerData::GetAnimation(int *iAnimationId, float *fDelta, bool *bLoop, bo
 void CPlayerData::SetVelocity(CVector vecVelocity)
 {
 	// Check the player state
-	if(GetState() == PLAYER_STATE_DRIVER && m_pPlayer->wVehicleId != INVALID_ENTITY_ID)
+	if (GetState() == PLAYER_STATE_DRIVER && m_pPlayer->wVehicleId != INVALID_VEHICLE_ID)
 	{
 		// Get the player vehicle interface
 		CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[m_pPlayer->wVehicleId];
@@ -1052,7 +1052,7 @@ void CPlayerData::SetVelocity(CVector vecVelocity)
 void CPlayerData::GetVelocity(CVector *pvecVelocity)
 {
 	// Check the player state
-	if((GetState() == PLAYER_STATE_DRIVER ||  GetState() == PLAYER_STATE_PASSENGER) && m_pPlayer->wVehicleId != INVALID_ENTITY_ID)
+	if ((GetState() == PLAYER_STATE_DRIVER || GetState() == PLAYER_STATE_PASSENGER) && m_pPlayer->wVehicleId != INVALID_VEHICLE_ID)
 	{
 		// Get the player vehicle interface
 		CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[m_pPlayer->wVehicleId];
@@ -1148,7 +1148,7 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseZMap, float fRadius
 void CPlayerData::StopMoving()
 {
 	// Make sure the player is moving
-	if(!m_bMoving)
+	if (!m_bMoving)
 		return;
 
 	// Reset moving flag
@@ -1181,7 +1181,7 @@ void CPlayerData::ToggleInfiniteAmmo(bool bToggle)
 void CPlayerData::AimAt(CVector vecPoint, bool bShoot)
 {
 	// Set the aiming flag
-	if(!m_bAiming)
+	if (!m_bAiming)
 	{
 		// Get the shooting start tick
 		m_dwShootTickCount = GetTickCount();
@@ -1228,13 +1228,13 @@ void CPlayerData::AimAtPlayer(WORD wHitId, bool bShoot)
 void CPlayerData::StopAim()
 {
 	// Make sure the player is aiming
-	if(!m_bAiming)
+	if (!m_bAiming)
 		return;
 
 	// Reset aiming flags
 	m_bAiming = false;
 	m_bReloading = false;
-	m_wHitId = INVALID_ENTITY_ID;
+	m_wHitId = INVALID_PLAYER_ID;
 	m_byteHitType = BULLET_HIT_TYPE_NONE;
 	// Reset keys
 	SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_NONE);
@@ -1267,7 +1267,7 @@ bool CPlayerData::MeleeAttack(DWORD dwTime, bool bUseFightstyle)
 	m_bMeleeFightstyle = bUseFightstyle;
 	// Reset the aiming flag
 	m_bAiming = false;
-	m_wHitId = INVALID_ENTITY_ID;
+	m_wHitId = INVALID_PLAYER_ID;
 	m_byteHitType = BULLET_HIT_TYPE_NONE;
 	// Set the melee keys
 	SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_FIRE);
@@ -1278,7 +1278,7 @@ bool CPlayerData::MeleeAttack(DWORD dwTime, bool bUseFightstyle)
 void CPlayerData::StopAttack()
 {
 	// Make sure the player is attacking
-	if(!m_bMeleeAttack)
+	if (!m_bMeleeAttack)
 		return;
 
 	// Reset attacking flag
@@ -1308,17 +1308,17 @@ void CPlayerData::ProcessDamage(int iDamagerId, float fHealthLoss, int iWeaponId
 	// Call the on take damage callback
 	int iReturn = CCallbackManager::OnTakeDamage((int)m_playerId, iDamagerId, iWeaponId, iBodypart, fHealthLoss);
 	// Check the returned value
-	if(iReturn)
+	if (iReturn)
 	{
 		// Check the armour
-		if(GetArmour() > 0.0f)
+		if (GetArmour() > 0.0f)
 		{
 			// Save the old armour
 			float fArmour = GetArmour();
 			// Decrease the armor
 			SetArmour(fArmour - fHealthLoss);
 			// If the damage is bigger than the armour then decrease the health aswell
-			if(fArmour - fHealthLoss < 0.0f)
+			if (fArmour - fHealthLoss < 0.0f)
 				SetHealth(GetHealth() - (fHealthLoss - fArmour));
 		}
 		else
@@ -1385,11 +1385,11 @@ bool CPlayerData::EnterVehicle(int iVehicleId, int iSeatId, int iType)
 bool CPlayerData::ExitVehicle()
 {
 	// Validate the player state
-	if(GetState() != PLAYER_STATE_DRIVER && GetState() != PLAYER_STATE_PASSENGER)
+	if (GetState() != PLAYER_STATE_DRIVER && GetState() != PLAYER_STATE_PASSENGER)
 		return false;
 
 	// Validate the player vehicle
-	if(!pNetGame->pVehiclePool->pVehicle[m_pPlayer->wVehicleId])
+	if (!pNetGame->pVehiclePool->pVehicle[m_pPlayer->wVehicleId])
 		return false;
 
 	// Call the SAMP exit vehicle function
@@ -1436,11 +1436,11 @@ bool CPlayerData::PutInVehicle(int iVehicleId, int iSeatId)
 bool CPlayerData::RemoveFromVehicle()
 {
 	// Validate the player state
-	if(GetState() != PLAYER_STATE_DRIVER && GetState() != PLAYER_STATE_PASSENGER)
+	if (GetState() != PLAYER_STATE_DRIVER && GetState() != PLAYER_STATE_PASSENGER)
 		return false;
 
 	// Validate the player vehicle
-	if(!pNetGame->pVehiclePool->pVehicle[m_pPlayer->wVehicleId])
+	if (!pNetGame->pVehiclePool->pVehicle[m_pPlayer->wVehicleId])
 		return false;
 
 	// Set the player state
@@ -1448,14 +1448,14 @@ bool CPlayerData::RemoveFromVehicle()
 	CVector vecVehiclePos = pNetGame->pVehiclePool->pVehicle[m_pPlayer->wVehicleId]->vecPosition;
 	SetPosition(CVector(vecVehiclePos.fX + 2.0f, vecVehiclePos.fY + 2.0f, vecVehiclePos.fZ));
 	// Reset the player vehicle and seat id
-	m_pPlayer->wVehicleId = INVALID_ENTITY_ID;
+	m_pPlayer->wVehicleId = INVALID_VEHICLE_ID;
 	m_pPlayer->byteSeatId = 0;
 	return true;
 }
 
 bool CPlayerData::IsInVehicle()
 {
-	return m_pPlayer->wVehicleId == INVALID_ENTITY_ID;
+	return m_pPlayer->wVehicleId == INVALID_VEHICLE_ID;
 }
 
 int CPlayerData::GetVehicleId()
@@ -1562,13 +1562,13 @@ int CPlayerData::GetSurfingPlayerObject()
 bool CPlayerData::StartPlayingPlayback(char *szFile)
 {
 	// Make sure the player is not already Playing
-	if(m_bPlaying)
+	if (m_bPlaying)
 		return false;
 
 	// Create a new playback instance
 	m_pPlayback = new CPlayback(szFile);
 	// Initialize it
-	if(!m_pPlayback || !m_pPlayback->Initialize())
+	if (!m_pPlayback || !m_pPlayback->Initialize())
 		return false;
 
 	// Mark as Playing
@@ -1579,7 +1579,7 @@ bool CPlayerData::StartPlayingPlayback(char *szFile)
 void CPlayerData::StopPlayingPlayback()
 {
 	// Make sure the player is Playing
-	if(!m_bPlaying)
+	if (!m_bPlaying)
 		return;
 
 	// Delete the playback instance
@@ -1596,7 +1596,7 @@ void CPlayerData::StopPlayingPlayback()
 void CPlayerData::PausePlayingPlayback()
 {
 	// Make sure the player is Playing
-	if(!m_bPlaying)
+	if (!m_bPlaying)
 		return;
 
 	// Pause the playback
@@ -1606,7 +1606,7 @@ void CPlayerData::PausePlayingPlayback()
 void CPlayerData::ResumePlayingPlayback()
 {
 	// Make sure the player is Playing
-	if(!m_bPlaying)
+	if (!m_bPlaying)
 		return;
 
 	// Resume the playback
@@ -1616,11 +1616,11 @@ void CPlayerData::ResumePlayingPlayback()
 bool CPlayerData::PlayNode(int iNodeId, int iType)
 {	
 	// Stop the player playback if he's playing one
-	if(m_bPlaying)
+	if (m_bPlaying)
 		StopPlayingPlayback();
 
 	// Stop the last node if any node exists
-	if(m_bPlayingNode)
+	if (m_bPlayingNode)
 		StopPlayingNode();
 
 	// Get the node instance
@@ -1654,7 +1654,7 @@ bool CPlayerData::PlayNode(int iNodeId, int iType)
 void CPlayerData::StopPlayingNode()
 {
 	// Make sure the player is playing a node
-	if(!m_bPlayingNode)
+	if (!m_bPlayingNode)
 		return;
 
 	// Reset the node instance
@@ -1675,7 +1675,7 @@ void CPlayerData::StopPlayingNode()
 int CPlayerData::ChangeNode(int iNodeId, unsigned short usLinkId)
 {
 	// Make sure the player is playing a node
-	if(!m_bPlayingNode)
+	if (!m_bPlayingNode)
 		return 0;
 
 	// Get the node instance

@@ -19,7 +19,7 @@ CPlayerManager::CPlayerManager()
 	// Reset values
 	m_players = 0;
 	// Reset player values
-	for(WORD i = 0; i < MAX_PLAYERS; i++)
+	for (WORD i = 0; i < MAX_PLAYERS; i++)
 	{
 		m_bConnected[i] = false;
 		m_pPlayerData[i] = NULL;
@@ -31,9 +31,9 @@ CPlayerManager::~CPlayerManager()
 	// Reset values
 	m_players = 0;
 	// Reset player values
-	for(WORD i = 0; i < MAX_PLAYERS; i++)
+	for (WORD i = 0; i < MAX_PLAYERS; i++)
 	{
-		if(m_bConnected[i])
+		if (m_bConnected[i])
 			SAFE_DELETE(m_pPlayerData[i]);
 	}
 }
@@ -41,30 +41,30 @@ CPlayerManager::~CPlayerManager()
 WORD CPlayerManager::AddPlayer(char *szName)
 {
 	// Make sure the name is valid
-	if(strlen(szName) > MAX_PLAYER_NAME || pServer->DoesNameExist(szName))
-		return INVALID_ENTITY_ID;
+	if (strlen(szName) > MAX_PLAYER_NAME || pServer->DoesNameExist(szName))
+		return INVALID_PLAYER_ID;
 
 	// Create the player in SAMP server
 	int iGameId = CFunctions::NewPlayer(szName);
-	if(iGameId == INVALID_ENTITY_ID)
-		return INVALID_ENTITY_ID;
+	if (iGameId == INVALID_PLAYER_ID)
+		return INVALID_PLAYER_ID;
 
 	// Create the player instance
 	m_pPlayerData[iGameId] = new CPlayerData(iGameId, szName);
-	if(!m_pPlayerData[iGameId])
+	if (!m_pPlayerData[iGameId])
 	{
 		// Delete the player from samp's playerpool
 		CFunctions::DeletePlayer(iGameId);
-		return INVALID_ENTITY_ID;
+		return INVALID_PLAYER_ID;
 	}
 	// Try to setup the player
-	if(!SetupPlayer(iGameId))
+	if (!SetupPlayer(iGameId))
 	{
 		// Delete the player instance
 		SAFE_DELETE(m_pPlayerData[iGameId]);
 		// Delete the player from samp's playerpool
 		CFunctions::DeletePlayer(iGameId);
-		return INVALID_ENTITY_ID;
+		return INVALID_PLAYER_ID;
 	}
 	// Mark connected
 	m_bConnected[iGameId] = true;
@@ -79,7 +79,7 @@ WORD CPlayerManager::AddPlayer(char *szName)
 bool CPlayerManager::DeletePlayer(WORD playerId)
 {
 	// If he's not connected then dont go any further
-	if(!m_bConnected[playerId])
+	if (!m_bConnected[playerId])
 		return false;
 
 	// Destroy the player
@@ -96,9 +96,9 @@ bool CPlayerManager::DeletePlayer(WORD playerId)
 void CPlayerManager::Process()
 {
 	// Process all the players
-	for(WORD i = (CFunctions::GetMaxPlayers() - 1); i != 0; i--)
+	for (WORD i = (CFunctions::GetMaxPlayers() - 1); i != 0; i--)
 	{
-		if(m_bConnected[i])
+		if (m_bConnected[i])
 			m_pPlayerData[i]->Process();
 	}
 }
@@ -112,9 +112,9 @@ bool CPlayerManager::SetupPlayer(WORD playerId)
 bool CPlayerManager::IsNPC(int iPlayerId)
 {
 	// Loop through all the players
-	for(WORD i = (CFunctions::GetMaxPlayers() - 1); i != 0; i--)
+	for (WORD i = (CFunctions::GetMaxPlayers() - 1); i != 0; i--)
 	{
-		if(m_bConnected[i] && i == iPlayerId)
+		if (m_bConnected[i] && i == iPlayerId)
 			return true;
 	}
 	return false;

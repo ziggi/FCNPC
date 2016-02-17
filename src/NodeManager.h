@@ -21,7 +21,7 @@ class CNodeManager
 
 		bool IsNodeOpen(int iNodeId)
 		{
-			if(iNodeId >= MAX_NODES || iNodeId < 0)
+			if (iNodeId >= MAX_NODES || iNodeId < 0)
 				return false;
 			else
 				return m_bOpened[iNodeId];
