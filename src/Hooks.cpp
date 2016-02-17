@@ -60,7 +60,6 @@ amx_Exec_t pfn_amx_Exec = NULL;
 
 int amx_FindPublic_Hook(AMX *amx, const char *funcname, int *index)
 {
-	// Is it "OnPlayerGiveDamage"
 	if (!strcmp(funcname, "OnPlayerGiveDamage"))
 		bGiveDamage = true;
 	else if (!strcmp(funcname, "OnPlayerStreamIn"))
@@ -145,12 +144,19 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 {
 	pfn_amx_Exec = (amx_Exec_t)(subhook_get_trampoline(hookExec));
 
-	int ret = pfn_amx_Exec(amx, retval, index);
+	int ret = 0;
 
 	if (bGiveDamage)
 	{
 		bGiveDamage = false;
 
+		if (pServer->GetPlayerManager()->GetAt(pGiveDamage.iDamagerId)->IsInvulnerable())
+			return ret;
+		
+		// call hooked callback
+		ret = pfn_amx_Exec(amx, retval, index);
+
+		// call custom callback
 		if (pServer->GetPlayerManager()->IsPlayerConnectedEx(pGiveDamage.iDamagerId))
 		{
 			pServer->GetPlayerManager()->GetAt(pGiveDamage.iDamagerId)->ProcessDamage(
@@ -160,7 +166,11 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 	else if (bStreamIn)
 	{
 		bStreamIn = false;
+		
+		// call hooked callback
+		ret = pfn_amx_Exec(amx, retval, index);
 
+		// call custom callback
 		if (pServer->GetPlayerManager()->IsPlayerConnectedEx(pStreamIn.iPlayerId))
 		{
 			CCallbackManager::OnStreamIn(pStreamIn.iPlayerId, pStreamIn.iForPlayerId);
@@ -170,10 +180,18 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 	{
 		bStreamOut = false;
 
+		// call hooked callback
+		ret = pfn_amx_Exec(amx, retval, index);
+
+		// call custom callback
 		if (pServer->GetPlayerManager()->IsPlayerConnectedEx(pStreamIn.iPlayerId))
 		{
 			CCallbackManager::OnStreamOut(pStreamIn.iPlayerId, pStreamIn.iForPlayerId);
 		}
+	}
+	else
+	{
+		ret = pfn_amx_Exec(amx, retval, index);
 	}
 
 	return ret;

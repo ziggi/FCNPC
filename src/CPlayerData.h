@@ -67,6 +67,9 @@ class CPlayerData
 		void SetArmour(float fArmour);
 		float GetArmour();
 
+		void SetInvulnerable(bool bInvulnerable);
+		bool IsInvulnerable();
+
 		void SetWeapon(BYTE byteWeaponId);
 		BYTE GetWeapon();
 		void SetAmmo(WORD wAmmo);
@@ -161,6 +164,7 @@ class CPlayerData
 		bool m_bPlayingNode;
 		bool m_bMeleeAttack;
 		bool m_bMeleeFightstyle;
+		bool m_bIsInvulnerable;
 		float m_fLastDistance;
 		DWORD m_dwUpdateTick;
 		DWORD m_dwMoveTickCount;

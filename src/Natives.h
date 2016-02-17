@@ -41,6 +41,9 @@ class CNatives
 		static cell AMX_NATIVE_CALL FCNPC_SetArmour(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL FCNPC_GetArmour(AMX *amx, cell *params);
 
+		static cell AMX_NATIVE_CALL FCNPC_SetInvulnerable(AMX *amx, cell *params);
+		static cell AMX_NATIVE_CALL FCNPC_IsInvulnerable(AMX *amx, cell *params);
+
 		static cell AMX_NATIVE_CALL FCNPC_SetSkin(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL FCNPC_GetSkin(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL FCNPC_SetInterior(AMX *amx, cell *params);

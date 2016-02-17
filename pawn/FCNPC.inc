@@ -78,6 +78,9 @@ native Float:FCNPC_GetHealth(npcid);
 native FCNPC_SetArmour(npcid, Float:armour);
 native Float:FCNPC_GetArmour(npcid);
 
+native FCNPC_SetInvulnerable(npcid, bool:invulnerable = true);
+native FCNPC_IsInvulnerable(npcid);
+
 native FCNPC_SetSkin(npcid, skinid);
 native FCNPC_GetSkin(npcid);
 

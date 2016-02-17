@@ -479,6 +479,40 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetArmour(AMX *amx, cell *params)
 	return amx_ftoc(fArmour);
 }
 
+// native FCNPC_SetInvulnerable(npcid, bool:invulnerable = true);
+cell AMX_NATIVE_CALL CNatives::FCNPC_SetInvulnerable(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_SetInvulnerable");
+	
+	// Get the params
+	int iNPCId = (int)params[1];
+	bool bInvulnerable = (bool)params[2];
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
+		return 0;
+
+	// Set the player invulnerable
+	pServer->GetPlayerManager()->GetAt(iNPCId)->SetInvulnerable(bInvulnerable);
+	return 1;
+}
+
+// native FCNPC_IsInvulnerable(npcid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_IsInvulnerable(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_IsInvulnerable");
+
+	// Get the NPC id
+	int iNPCId = (int)params[1];
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId))
+		return 0;
+
+	// Get the player invulnerable
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->IsInvulnerable() ? 1 : 0;
+}
+
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetSkin(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_SetSkin");

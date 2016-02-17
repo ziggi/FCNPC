@@ -41,6 +41,7 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_bPlayingNode = false;
 	m_bMeleeAttack = false;
 	m_bMeleeFightstyle = false;
+	m_bIsInvulnerable = false;
 	m_byteWeaponId = 0;
 	m_wAmmo = 0;
 	m_iNodePoint = 0;
@@ -870,6 +871,16 @@ void CPlayerData::SetArmour(float fArmour)
 float CPlayerData::GetArmour()
 {
 	return m_pPlayer->fArmour;
+}
+
+void CPlayerData::SetInvulnerable(bool bInvulnerable)
+{
+	m_bIsInvulnerable = bInvulnerable;
+}
+
+bool CPlayerData::IsInvulnerable()
+{
+	return m_bIsInvulnerable;
 }
 
 void CPlayerData::SetSkin(int iSkin)
