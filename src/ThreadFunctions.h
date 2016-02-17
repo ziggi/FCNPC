@@ -1,5 +1,5 @@
 /* =========================================
-			
+
 		FCNPC - Fully Controllable NPC
 			----------------------
 
@@ -15,8 +15,8 @@
 
 class CThreadFunctions
 {
-	public:
-		static void DamageThread(void *pThread);
+public:
+	static void DamageThread(void *pThread);
 };
 
 #endif

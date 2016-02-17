@@ -1,5 +1,5 @@
 /* =========================================
-			
+
 		FCNPC - Fully Controllable NPC
 			----------------------
 
@@ -18,11 +18,11 @@
 
 class CWeaponInfo
 {
-	public:
-		static DWORD    GetWeaponClipSize(int iWeaponId);
-		static float    GetWeaponDamage(int iWeaponId);
-		static WORD     GetWeaponRateOfFire(int iWeaponId);
-		static bool     IsDoubleHanded(BYTE byteWeaponId);
+public:
+	static DWORD    GetWeaponClipSize(int iWeaponId);
+	static float    GetWeaponDamage(int iWeaponId);
+	static WORD     GetWeaponRateOfFire(int iWeaponId);
+	static bool     IsDoubleHanded(BYTE byteWeaponId);
 };
 
 #endif

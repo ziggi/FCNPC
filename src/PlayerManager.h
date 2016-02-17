@@ -1,5 +1,5 @@
 /* =========================================
-			
+
 		FCNPC - Fully Controllable NPC
 			----------------------
 
@@ -15,25 +15,25 @@
 
 class CPlayerManager
 {
-	public:
-		CPlayerManager();
-		~CPlayerManager();
+public:
+	CPlayerManager();
+	~CPlayerManager();
 
-		bool IsPlayerConnectedEx(WORD playerId);
-		CPlayerData *GetAt(WORD playerId);
-		bool SetupPlayer(WORD playerId);
-		
-		WORD AddPlayer(char *szName);
-		bool DeletePlayer(WORD playerId);
+	bool IsPlayerConnectedEx(WORD playerId);
+	CPlayerData *GetAt(WORD playerId);
+	bool SetupPlayer(WORD playerId);
 
-		void Process();
+	WORD AddPlayer(char *szName);
+	bool DeletePlayer(WORD playerId);
 
-		bool IsNPC(int iPlayerId);
+	void Process();
 
-	private:
-		WORD m_players;
-		bool m_bConnected[MAX_PLAYERS];
-		CPlayerData *m_pPlayerData[MAX_PLAYERS];
+	bool IsNPC(int iPlayerId);
+
+private:
+	WORD m_players;
+	bool m_bConnected[MAX_PLAYERS];
+	CPlayerData *m_pPlayerData[MAX_PLAYERS];
 };
 
 #endif

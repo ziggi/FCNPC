@@ -1,5 +1,5 @@
 /* =========================================
-			
+
 		FCNPC - Fully Controllable NPC
 			----------------------
 
@@ -38,18 +38,13 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	eSAMPVersion version;
 	char szVersion[64];
 
-	if ((DWORD)logprintf == CAddress::FUNC_Logprintf_037)
-	{
+	if ((DWORD)logprintf == CAddress::FUNC_Logprintf_037) {
 		version = SAMP_VERSION_037;
 		strlcpy(szVersion, "0.3.7", sizeof(szVersion));
-	}
-	else if ((DWORD)logprintf == CAddress::FUNC_Logprintf_037_R2_1)
-	{
+	} else if ((DWORD)logprintf == CAddress::FUNC_Logprintf_037_R2_1) {
 		version = SAMP_VERSION_037_R2_1;
 		strlcpy(szVersion, "0.3.7 R2-1", sizeof(szVersion));
-	}
-	else
-	{
+	} else {
 		version = SAMP_VERSION_UNKNOWN;
 		strlcpy(szVersion, "Unknown", sizeof(szVersion));
 	}
@@ -73,8 +68,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 #endif
 	// Create the server instance
 	pServer = new CServer(version);
-	if (!pServer)
-	{
+	if (!pServer) {
 		logprintf("Failed. (Cant create server instance)");
 		return false;
 	}
@@ -91,11 +85,10 @@ PLUGIN_EXPORT void PLUGIN_CALL Unload( )
 	logprintf("FCNPC Unloaded.");
 }
 // Natives table
-AMX_NATIVE_INFO PluginNatives[ ] =
-{
+AMX_NATIVE_INFO PluginNatives[ ] = {
 	{ "FCNPC_SetUpdateRate", CNatives::FCNPC_SetUpdateRate},
 	{ "FCNPC_InitMapAndreas", CNatives::FCNPC_InitMapAndreas},
-	
+
 	{ "FCNPC_Create", CNatives::FCNPC_Create},
 	{ "FCNPC_Destroy", CNatives::FCNPC_Destroy},
 	{ "FCNPC_Spawn", CNatives::FCNPC_Spawn},
@@ -212,12 +205,10 @@ AMX_NATIVE_INFO PluginNatives[ ] =
 
 PLUGIN_EXPORT int PLUGIN_CALL AmxLoad(AMX *pAMX)
 {
-	if (!bServerInit)
-	{
+	if (!bServerInit) {
 		// Initialize the server
 		BYTE byteError = 0;
-		if ((byteError = pServer->Initialize()) != 0)
-		{
+		if ((byteError = pServer->Initialize()) != 0) {
 			// Get the error
 			char szError[64];
 			CUtils::GetPluginError(byteError, szError, sizeof(szError));
@@ -238,15 +229,14 @@ PLUGIN_EXPORT int PLUGIN_CALL AmxLoad(AMX *pAMX)
 PLUGIN_EXPORT int PLUGIN_CALL AmxUnload(AMX *pAMX)
 {
 	// Unregister the AMX
-	CCallbackManager::UnregisterAMX(pAMX);	
+	CCallbackManager::UnregisterAMX(pAMX);
 	return AMX_ERR_NONE;
 }
 
 PLUGIN_EXPORT void PLUGIN_CALL ProcessTick()
 {
 	// Check if we need to process
-	if ((GetTickCount() - dwStartTick) >= 5)
-	{
+	if ((GetTickCount() - dwStartTick) >= 5) {
 		// Process the player manager
 		pServer->GetPlayerManager()->Process();
 		// Update the start tick

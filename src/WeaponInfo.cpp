@@ -1,5 +1,5 @@
 /* =========================================
-			
+
 		FCNPC - Fully Controllable NPC
 			----------------------
 
@@ -13,16 +13,17 @@
 DWORD CWeaponInfo::GetWeaponClipSize(int iWeaponId)
 {
 	// Validate the weapon id
-	if (iWeaponId < 0)
+	if (iWeaponId < 0) {
 		return -1;
+	}
 
 	// Dont process melee weapons
-	if (iWeaponId < 19)
+	if (iWeaponId < 19) {
 		return 0;
+	}
 
 	// Get the clip size from the weapon id
-	switch(iWeaponId)
-	{
+	switch(iWeaponId) {
 		// 9mm and Silenced 9mm
 		case 22:
 		case 23:
@@ -71,12 +72,12 @@ DWORD CWeaponInfo::GetWeaponClipSize(int iWeaponId)
 WORD CWeaponInfo::GetWeaponRateOfFire(int iWeaponId)
 {
 	// Validate the weapon id
-	if (iWeaponId < 0 || iWeaponId > 46)
+	if (iWeaponId < 0 || iWeaponId > 46) {
 		return -1;
+	}
 
 	// Get the clip size from the weapon id
-	switch (iWeaponId)
-	{
+	switch (iWeaponId) {
 		case 0: // Fist
 		case 1: // Brass knuckles
 		case 2: // Golf club
@@ -155,12 +156,12 @@ WORD CWeaponInfo::GetWeaponRateOfFire(int iWeaponId)
 float CWeaponInfo::GetWeaponDamage(int iWeaponId)
 {
 	// Validate the weapon id
-	if (iWeaponId < 0)
+	if (iWeaponId < 0) {
 		return 0.0f;
+	}
 
 	// Get the clip size from the weapon id
-	switch(iWeaponId)
-	{
+	switch(iWeaponId) {
 		case 0:
 		case 41:
 		case 42:
@@ -240,8 +241,9 @@ float CWeaponInfo::GetWeaponDamage(int iWeaponId)
 
 bool CWeaponInfo::IsDoubleHanded(BYTE byteWeaponId)
 {
-	if (byteWeaponId == 22 || byteWeaponId == 26 || byteWeaponId == 28 || byteWeaponId == 32)
+	if (byteWeaponId == 22 || byteWeaponId == 26 || byteWeaponId == 28 || byteWeaponId == 32) {
 		return true;
+	}
 
 	return false;
 }

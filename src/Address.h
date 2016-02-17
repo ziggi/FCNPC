@@ -1,5 +1,5 @@
 /* =========================================
-			
+
 		FCNPC - Fully Controllable NPC
 			----------------------
 
@@ -22,8 +22,7 @@
 	#define RAKNET_RECEIVE_OFFSET       11
 #endif
 
-enum eSAMPVersion
-{
+enum eSAMPVersion {
 	SAMP_VERSION_UNKNOWN,
 	SAMP_VERSION_037,
 	SAMP_VERSION_037_R2_1,
@@ -31,36 +30,36 @@ enum eSAMPVersion
 
 class CAddress
 {
-	public:
-		static void	Initialize(eSAMPVersion sampVersion);
+public:
+	static void	Initialize(eSAMPVersion sampVersion);
 
-		static DWORD           FUNC_Logprintf_037;
-		static DWORD           FUNC_Logprintf_037_R2_1;
+	static DWORD           FUNC_Logprintf_037;
+	static DWORD           FUNC_Logprintf_037_R2_1;
 
-		// Functions
-		static DWORD           FUNC_ClientJoin_RPC;
-		static DWORD           FUNC_CPlayerPool__DeletePlayer;
+	// Functions
+	static DWORD           FUNC_ClientJoin_RPC;
+	static DWORD           FUNC_CPlayerPool__DeletePlayer;
 
-		static DWORD           FUNC_CPlayer__SpawnForWorld;
-		static DWORD           FUNC_CPlayer__Kill;
-		static DWORD           FUNC_CPlayer__EnterVehicle;
-		static DWORD           FUNC_CPlayer__ExitVehicle;
+	static DWORD           FUNC_CPlayer__SpawnForWorld;
+	static DWORD           FUNC_CPlayer__Kill;
+	static DWORD           FUNC_CPlayer__EnterVehicle;
+	static DWORD           FUNC_CPlayer__ExitVehicle;
 
-		static DWORD           FUNC_CConsole__GetIntVariable;
+	static DWORD           FUNC_CConsole__GetIntVariable;
 
-		static DWORD           FUNC_GetVehicleModelInfo;
+	static DWORD           FUNC_GetVehicleModelInfo;
 
-		// Variables
-		static DWORD           VAR_ServerAuthentication;
-		static DWORD           VAR_NetVersion;
+	// Variables
+	static DWORD           VAR_ServerAuthentication;
+	static DWORD           VAR_NetVersion;
 
-		// Offsets
-		static DWORD           OFFSET_RemoteSystemManager;
-		static DWORD           OFFSET_RemoteSystemSize;
-		static DWORD           OFFSET_RemoteSystem__ConnectMode;
-		static DWORD           OFFSET_RemoteSystem__Unknown;
-		
-		// Arrays
+	// Offsets
+	static DWORD           OFFSET_RemoteSystemManager;
+	static DWORD           OFFSET_RemoteSystemSize;
+	static DWORD           OFFSET_RemoteSystem__ConnectMode;
+	static DWORD           OFFSET_RemoteSystem__Unknown;
+
+	// Arrays
 
 
 };

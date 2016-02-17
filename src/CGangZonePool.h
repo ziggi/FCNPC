@@ -19,7 +19,7 @@ public:
 public:
 	CGangZonePool();
 	~CGangZonePool();
-	
+
 	WORD New(float fMinX, float fMinY, float fMaxX, float fMaxY);
 	WORD New(WORD playerid, float fMinX, float fMinY, float fMaxX, float fMaxY);
 	void Delete(WORD wZone);
@@ -36,7 +36,9 @@ public:
 
 	bool GetSlotState(WORD wZone)
 	{
-		if (wZone >= 1024) return 0;
+		if (wZone >= 1024) {
+			return 0;
+		}
 		return pGangZone[wZone] != NULL;
 	};
 

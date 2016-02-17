@@ -1,5 +1,5 @@
 /* =========================================
-			
+
 		FCNPC - Fully Controllable NPC
 			----------------------
 
@@ -18,40 +18,46 @@ class CPlayerData;
 
 class CNode
 {
-	public:
-		CNode(int iNodeId);
-		~CNode();
+public:
+	CNode(int iNodeId);
+	~CNode();
 
-		bool Initialize();
-		int  Process(CPlayerData *pPlayerData, int iPointId, int iLastPoint, int iType, CVector vecVelocity);
-		int  ProcessNodeChange(CPlayerData *pPlayerData, unsigned short usLinkId, int iType, CVector vecVelocity);
+	bool Initialize();
+	int  Process(CPlayerData *pPlayerData, int iPointId, int iLastPoint, int iType, CVector vecVelocity);
+	int  ProcessNodeChange(CPlayerData *pPlayerData, unsigned short usLinkId, int iType, CVector vecVelocity);
 
-		void SetPaused(bool bPaused) { m_bPaused = bPaused; };
+	void SetPaused(bool bPaused)
+	{
+		m_bPaused = bPaused;
+	};
 
-		void				GetPosition(CVector *pVecPosition);
+	void				GetPosition(CVector *pVecPosition);
 
-		int					GetNodesNumber() { return m_nodeHeader.ulNodesNumber; };
-		void				GetHeaderInfo(unsigned long *pulVehicleNodes, unsigned long *pulPedNodes, unsigned long *pulNaviNodes);
+	int					GetNodesNumber()
+	{
+		return m_nodeHeader.ulNodesNumber;
+	};
+	void				GetHeaderInfo(unsigned long *pulVehicleNodes, unsigned long *pulPedNodes, unsigned long *pulNaviNodes);
 
-		unsigned short		GetLinkId();
-		unsigned short		GetAreaId();
-		unsigned short		GetPointId();
-		unsigned short		GetLinkCount();
-		unsigned char		GetPathWidth();
-		unsigned char		GetNodeType();
+	unsigned short		GetLinkId();
+	unsigned short		GetAreaId();
+	unsigned short		GetPointId();
+	unsigned short		GetLinkCount();
+	unsigned char		GetPathWidth();
+	unsigned char		GetNodeType();
 
-		unsigned short		GetLinkPoint();
+	unsigned short		GetLinkPoint();
 
-		void				SetLink(unsigned short usLinkId);
-		void				SetPoint(unsigned short usPointId);
+	void				SetLink(unsigned short usLinkId);
+	void				SetPoint(unsigned short usPointId);
 
-	private:
-		int					m_iNodeId;
-		FILE				*m_pFile;
-		bool				m_bPaused;
-		CSANodeHeader		m_nodeHeader;
-		CSAPathNode			m_nodePath;
-		CSALinkNode			m_nodeLink;
+private:
+	int					m_iNodeId;
+	FILE				*m_pFile;
+	bool				m_bPaused;
+	CSANodeHeader		m_nodeHeader;
+	CSAPathNode			m_nodePath;
+	CSALinkNode			m_nodeLink;
 };
 
 #endif

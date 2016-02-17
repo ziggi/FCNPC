@@ -1,5 +1,5 @@
 /* =========================================
-			
+
 		FCNPC - Fully Controllable NPC
 			----------------------
 
@@ -60,12 +60,13 @@ amx_Exec_t pfn_amx_Exec = NULL;
 
 int amx_FindPublic_Hook(AMX *amx, const char *funcname, int *index)
 {
-	if (!strcmp(funcname, "OnPlayerGiveDamage"))
+	if (!strcmp(funcname, "OnPlayerGiveDamage")) {
 		bGiveDamage = true;
-	else if (!strcmp(funcname, "OnPlayerStreamIn"))
+	} else if (!strcmp(funcname, "OnPlayerStreamIn")) {
 		bStreamIn = true;
-	else if (!strcmp(funcname, "OnPlayerStreamOut"))
+	} else if (!strcmp(funcname, "OnPlayerStreamOut")) {
 		bStreamOut = true;
+	}
 
 	bytePushCount = 0;
 
@@ -77,10 +78,8 @@ int amx_FindPublic_Hook(AMX *amx, const char *funcname, int *index)
 int amx_Push_Hook(AMX *amx, cell value)
 {
 	// Are we retrieving parameters ?
-	if (bGiveDamage)
-	{
-		switch (bytePushCount)
-		{
+	if (bGiveDamage) {
+		switch (bytePushCount) {
 			case 4:
 				pGiveDamage.iPlayerId = value;
 				break;
@@ -103,11 +102,8 @@ int amx_Push_Hook(AMX *amx, cell value)
 		}
 		// Increase the parameters count
 		bytePushCount++;
-	}
-	else if (bStreamIn)
-	{
-		switch (bytePushCount)
-		{
+	} else if (bStreamIn) {
+		switch (bytePushCount) {
 			case 1:
 				pStreamIn.iPlayerId = value;
 				break;
@@ -118,11 +114,8 @@ int amx_Push_Hook(AMX *amx, cell value)
 		}
 		// Increase the parameters count
 		bytePushCount++;
-	}
-	else if (bStreamOut)
-	{
-		switch (bytePushCount)
-		{
+	} else if (bStreamOut) {
+		switch (bytePushCount) {
 			case 1:
 				pStreamOut.iPlayerId = value;
 				break;
@@ -146,51 +139,42 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 
 	int ret = 0;
 
-	if (bGiveDamage)
-	{
+	if (bGiveDamage) {
 		bGiveDamage = false;
 
-		if (pServer->GetPlayerManager()->GetAt(pGiveDamage.iDamagerId)->IsInvulnerable())
+		if (pServer->GetPlayerManager()->GetAt(pGiveDamage.iDamagerId)->IsInvulnerable()) {
 			return ret;
-		
-		// call hooked callback
-		ret = pfn_amx_Exec(amx, retval, index);
-
-		// call custom callback
-		if (pServer->GetPlayerManager()->IsPlayerConnectedEx(pGiveDamage.iDamagerId))
-		{
-			pServer->GetPlayerManager()->GetAt(pGiveDamage.iDamagerId)->ProcessDamage(
-				pGiveDamage.iPlayerId, pGiveDamage.fHealthLoss, pGiveDamage.iWeapon, pGiveDamage.iBodypart);
 		}
-	}
-	else if (bStreamIn)
-	{
-		bStreamIn = false;
-		
+
 		// call hooked callback
 		ret = pfn_amx_Exec(amx, retval, index);
 
 		// call custom callback
-		if (pServer->GetPlayerManager()->IsPlayerConnectedEx(pStreamIn.iPlayerId))
-		{
+		if (pServer->GetPlayerManager()->IsPlayerConnectedEx(pGiveDamage.iDamagerId)) {
+			pServer->GetPlayerManager()->GetAt(pGiveDamage.iDamagerId)->ProcessDamage(
+			    pGiveDamage.iPlayerId, pGiveDamage.fHealthLoss, pGiveDamage.iWeapon, pGiveDamage.iBodypart);
+		}
+	} else if (bStreamIn) {
+		bStreamIn = false;
+
+		// call hooked callback
+		ret = pfn_amx_Exec(amx, retval, index);
+
+		// call custom callback
+		if (pServer->GetPlayerManager()->IsPlayerConnectedEx(pStreamIn.iPlayerId)) {
 			CCallbackManager::OnStreamIn(pStreamIn.iPlayerId, pStreamIn.iForPlayerId);
 		}
-	}
-	else if (bStreamOut)
-	{
+	} else if (bStreamOut) {
 		bStreamOut = false;
 
 		// call hooked callback
 		ret = pfn_amx_Exec(amx, retval, index);
 
 		// call custom callback
-		if (pServer->GetPlayerManager()->IsPlayerConnectedEx(pStreamIn.iPlayerId))
-		{
+		if (pServer->GetPlayerManager()->IsPlayerConnectedEx(pStreamIn.iPlayerId)) {
 			CCallbackManager::OnStreamOut(pStreamIn.iPlayerId, pStreamIn.iForPlayerId);
 		}
-	}
-	else
-	{
+	} else {
 		ret = pfn_amx_Exec(amx, retval, index);
 	}
 

@@ -1,5 +1,5 @@
 /* =========================================
-			
+
 		FCNPC - Fully Controllable NPC
 			----------------------
 
@@ -37,48 +37,57 @@ typedef CVector *( *GetVehicleModelInfo_t)(int iModelId, int iInfoType);
 
 class CFunctions
 {
-	public:
-		static void		Initialize();
-		static void		PreInitialize();
+public:
+	static void		Initialize();
+	static void		PreInitialize();
 
-		static int		GetFreePlayerSlot();
-		static int		NewPlayer(char *szName);
-		static void		DeletePlayer(int iPlayerId);
-		static void		SpawnPlayer(int iPlayerId);
-		static void		KillPlayer(int iPlayerId, int iKillerId, int iWeapon);
-		static void		PlayerEnterVehicle(int iPlayerId, int iVehicleId, int iSeatId);
-		static void		PlayerExitVehicle(int iPlayerId, int iVehicleId);
-		static CVector	*GetVehicleModelInfoEx(int iModelId, int iInfoType);
-		static int		GetMaxPlayers();
-		static int		GetMaxNPC();
-		static void		PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE iWeaponId, CVector vecPoint);
-		static int		GetNetGame() { return pfn__GetNetGame(); }
-		static int		GetConsole() { return pfn__GetConsole(); }
-		static int		GetRakServer() { return pfn__GetRakServer(); }
+	static int		GetFreePlayerSlot();
+	static int		NewPlayer(char *szName);
+	static void		DeletePlayer(int iPlayerId);
+	static void		SpawnPlayer(int iPlayerId);
+	static void		KillPlayer(int iPlayerId, int iKillerId, int iWeapon);
+	static void		PlayerEnterVehicle(int iPlayerId, int iVehicleId, int iSeatId);
+	static void		PlayerExitVehicle(int iPlayerId, int iVehicleId);
+	static CVector	*GetVehicleModelInfoEx(int iModelId, int iInfoType);
+	static int		GetMaxPlayers();
+	static int		GetMaxNPC();
+	static void		PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE iWeaponId, CVector vecPoint);
+	static int		GetNetGame()
+	{
+		return pfn__GetNetGame();
+	}
+	static int		GetConsole()
+	{
+		return pfn__GetConsole();
+	}
+	static int		GetRakServer()
+	{
+		return pfn__GetRakServer();
+	}
 
-		static void		GlobalRPC(int* szUniqueID, RakNet::BitStream* bsParams, int iExcludePlayerId = INVALID_PLAYER_ID, char PacketStream = 2);
-		static void		AddedPlayersRPC(int* szUniqueID, RakNet::BitStream* bsParams, int iPlayerId, char PacketStream = 2);
-		static void		AddedVehicleRPC(int* szUniqueID, RakNet::BitStream* bsParams, int iVehicleId, int iExcludePlayerId = INVALID_PLAYER_ID, char PacketStream = 2);
-		static void		PlayerRPC(int* szUniqueID, RakNet::BitStream* bsParams, int iPlayerId, char PacketStream = 2);
-		
-		static void		GlobalPacket(RakNet::BitStream* bsParams);
-		static void		PlayerPacket(RakNet::BitStream* bsParams, int iPlayerId);
+	static void		GlobalRPC(int* szUniqueID, RakNet::BitStream* bsParams, int iExcludePlayerId = INVALID_PLAYER_ID, char PacketStream = 2);
+	static void		AddedPlayersRPC(int* szUniqueID, RakNet::BitStream* bsParams, int iPlayerId, char PacketStream = 2);
+	static void		AddedVehicleRPC(int* szUniqueID, RakNet::BitStream* bsParams, int iVehicleId, int iExcludePlayerId = INVALID_PLAYER_ID, char PacketStream = 2);
+	static void		PlayerRPC(int* szUniqueID, RakNet::BitStream* bsParams, int iPlayerId, char PacketStream = 2);
 
-		// Functions
-		static ClientJoin_RPC_t					pfn__ClientJoin_RPC;
-		static CPlayerPool__DeletePlayer_t		pfn__CPlayerPool__DeletePlayer;
-		static CPlayer__SpawnForWorld_t			pfn__CPlayer__SpawnForWorld;
-		static CPlayer__Kill_t					pfn__CPlayer__Kill;
-		static CPlayer__EnterVehicle_t			pfn__CPlayer__EnterVehicle;
-		static CPlayer__ExitVehicle_t			pfn__CPlayer__ExitVehicle;
-		static CConsole__GetIntVariable_t		pfn__CConsole__GetIntVariable;
-		static GetVehicleModelInfo_t			pfn__GetVehicleModelInfo;
-		static RakNet__Send_t					pfn__RakNet__Send;
-		static RakNet__RPC_t					pfn__RakNet__RPC;
-		static RakNet__Receive_t				pfn__RakNet__Receive;
-		static GetNetGame_t						pfn__GetNetGame;
-		static GetConsole_t						pfn__GetConsole;
-		static GetRakServer_t					pfn__GetRakServer;
+	static void		GlobalPacket(RakNet::BitStream* bsParams);
+	static void		PlayerPacket(RakNet::BitStream* bsParams, int iPlayerId);
+
+	// Functions
+	static ClientJoin_RPC_t					pfn__ClientJoin_RPC;
+	static CPlayerPool__DeletePlayer_t		pfn__CPlayerPool__DeletePlayer;
+	static CPlayer__SpawnForWorld_t			pfn__CPlayer__SpawnForWorld;
+	static CPlayer__Kill_t					pfn__CPlayer__Kill;
+	static CPlayer__EnterVehicle_t			pfn__CPlayer__EnterVehicle;
+	static CPlayer__ExitVehicle_t			pfn__CPlayer__ExitVehicle;
+	static CConsole__GetIntVariable_t		pfn__CConsole__GetIntVariable;
+	static GetVehicleModelInfo_t			pfn__GetVehicleModelInfo;
+	static RakNet__Send_t					pfn__RakNet__Send;
+	static RakNet__RPC_t					pfn__RakNet__RPC;
+	static RakNet__Receive_t				pfn__RakNet__Receive;
+	static GetNetGame_t						pfn__GetNetGame;
+	static GetConsole_t						pfn__GetConsole;
+	static GetRakServer_t					pfn__GetRakServer;
 
 };
 

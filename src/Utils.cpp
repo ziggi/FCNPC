@@ -1,5 +1,5 @@
 /* =========================================
-			
+
 		FCNPC - Fully Controllable NPC
 			----------------------
 
@@ -37,8 +37,7 @@ int GetTickCount()
 
 void CUtils::GetPluginError(BYTE byteError, char *szError, size_t sSize)
 {
-	switch(byteError)
-	{
+	switch(byteError) {
 		case 1:
 			strlcpy(szError, "File \"scriptfiles/FCNPC/ZMap.hmap\" is not found", sSize);
 			break;
@@ -102,16 +101,17 @@ DWORD CUtils::FindPattern(char *szPattern, char *szMask)
 	// Get the pattern length
 	DWORD dwPatternLength = (DWORD)strlen(szMask);
 	// Loop through all the process
-	for (DWORD i = 0; i < dwSize - dwPatternLength; i++)
-	{
+	for (DWORD i = 0; i < dwSize - dwPatternLength; i++) {
 		bool bFound = true;
 		// Loop through the pattern caracters
-		for (DWORD j = 0; j < dwPatternLength; j++)
+		for (DWORD j = 0; j < dwPatternLength; j++) {
 			bFound &= szMask[j] == '?' || szPattern[j] == *(char*)(dwBase + i + j);
+		}
 
 		// If found return the current address
-		if (bFound)
+		if (bFound) {
 			return dwBase + i;
+		}
 	}
 	// Return null
 	return NULL;
@@ -119,8 +119,8 @@ DWORD CUtils::FindPattern(char *szPattern, char *szMask)
 
 float CUtils::RandomFloat(float min, float max)
 {
-	assert(max > min); 
+	assert(max > min);
 	float random = ((float) rand()) / (float) RAND_MAX;
-	float range = max - min;  
-	return (random*range) + min;
+	float range = max - min;
+	return (random * range) + min;
 }

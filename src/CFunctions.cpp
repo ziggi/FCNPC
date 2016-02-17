@@ -1,5 +1,5 @@
 /* =========================================
-			
+
 		FCNPC - Fully Controllable NPC
 			----------------------
 
@@ -34,7 +34,7 @@ void CFunctions::Initialize()
 	// Initialize function pointers
 	pfn__ClientJoin_RPC = (ClientJoin_RPC_t)(CAddress::FUNC_ClientJoin_RPC);
 	pfn__CPlayerPool__DeletePlayer = (CPlayerPool__DeletePlayer_t)(CAddress::FUNC_CPlayerPool__DeletePlayer);
-	
+
 	pfn__CPlayer__SpawnForWorld = (CPlayer__SpawnForWorld_t)(CAddress::FUNC_CPlayer__SpawnForWorld);
 	pfn__CPlayer__Kill = (CPlayer__Kill_t)(CAddress::FUNC_CPlayer__Kill);
 	pfn__CPlayer__EnterVehicle = (CPlayer__EnterVehicle_t)(CAddress::FUNC_CPlayer__EnterVehicle);
@@ -70,11 +70,11 @@ void CFunctions::PreInitialize()
 int CFunctions::GetFreePlayerSlot()
 {
 	// Loop through all the players
-	for (int i = (GetMaxPlayers() - 1); i != 0; i--)
-	{
+	for (int i = (GetMaxPlayers() - 1); i != 0; i--) {
 		// Is he not connected ?
-		if (!pNetGame->pPlayerPool->bIsPlayerConnectedEx[i])
+		if (!pNetGame->pPlayerPool->bIsPlayerConnectedEx[i]) {
 			return i;
+		}
 	}
 	return INVALID_PLAYER_ID;
 }
@@ -83,8 +83,9 @@ int CFunctions::NewPlayer(char *szName)
 {
 	// Get a free player slot
 	int iPlayerId;
-	if ((iPlayerId = GetFreePlayerSlot()) == INVALID_PLAYER_ID)
+	if ((iPlayerId = GetFreePlayerSlot()) == INVALID_PLAYER_ID) {
 		return INVALID_PLAYER_ID;
+	}
 
 	// Get the SAMP authentication
 	PlayerID systemAddress = { 0x0100007F, 9000 + iPlayerId };
@@ -98,7 +99,7 @@ int CFunctions::NewPlayer(char *szName)
 	bsSend.Write(byteNameLen);
 	bsSend.Write(szName, byteNameLen);
 	bsSend.Write(iVersion);
-	
+
 	RPCParameters pNPCParams;
 	pNPCParams.input = bsSend.GetData();
 	pNPCParams.numberOfBitsOfData = bsSend.GetNumberOfBitsUsed();
@@ -121,22 +122,22 @@ void CFunctions::DeletePlayer(int iPlayerId)
 
 void CFunctions::SpawnPlayer(int iPlayerId)
 {
-	pfn__CPlayer__SpawnForWorld(pNetGame->pPlayerPool->pPlayer[iPlayerId]);	
+	pfn__CPlayer__SpawnForWorld(pNetGame->pPlayerPool->pPlayer[iPlayerId]);
 }
 
 void CFunctions::KillPlayer(int iPlayerId, int iKillerId, int iWeapon)
 {
-	pfn__CPlayer__Kill(pNetGame->pPlayerPool->pPlayer[iPlayerId], iKillerId, iWeapon);	
+	pfn__CPlayer__Kill(pNetGame->pPlayerPool->pPlayer[iPlayerId], iKillerId, iWeapon);
 }
 
 void CFunctions::PlayerEnterVehicle(int iPlayerId, int iVehicleId, int iSeatId)
 {
-	pfn__CPlayer__EnterVehicle(pNetGame->pPlayerPool->pPlayer[iPlayerId], iVehicleId, iSeatId);	
+	pfn__CPlayer__EnterVehicle(pNetGame->pPlayerPool->pPlayer[iPlayerId], iVehicleId, iSeatId);
 }
 
 void CFunctions::PlayerExitVehicle(int iPlayerId, int iVehicleId)
 {
-	pfn__CPlayer__ExitVehicle(pNetGame->pPlayerPool->pPlayer[iPlayerId], iVehicleId);	
+	pfn__CPlayer__ExitVehicle(pNetGame->pPlayerPool->pPlayer[iPlayerId], iVehicleId);
 }
 
 CVector *CFunctions::GetVehicleModelInfoEx(int iModelId, int iInfoType)
@@ -157,8 +158,9 @@ int CFunctions::GetMaxNPC()
 void CFunctions::PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE iWeaponId, CVector vecPoint)
 {
 	// Validate the player
-	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iPlayerId))
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iPlayerId)) {
 		return;
+	}
 
 	// Get the player position
 	CVector vecPosition;
@@ -174,18 +176,16 @@ void CFunctions::PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE iWe
 	bulletSyncData.vecHitTarget = vecPoint;
 
 	// find player in vecPoint
-	if (bulletSyncData.byteHitType == BULLET_HIT_TYPE_NONE)
-	{
-		for (int i = 0; i < MAX_PLAYERS; i++)
-		{
-			if (!pNetGame->pPlayerPool->bIsPlayerConnectedEx[i] || iPlayerId == i)
+	if (bulletSyncData.byteHitType == BULLET_HIT_TYPE_NONE) {
+		for (int i = 0; i < MAX_PLAYERS; i++) {
+			if (!pNetGame->pPlayerPool->bIsPlayerConnectedEx[i] || iPlayerId == i) {
 				continue;
+			}
 
 			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[i];
 
 			if (CMath::GetDistanceFromRayToPoint(vecPoint, vecPosition, pPlayer->vecPosition) < 1.0f &&
-				CMath::GetDistanceBetween3DPoints(vecPosition, pPlayer->vecPosition) < MAX_DAMAGE_DISTANCE)
-			{
+			        CMath::GetDistanceBetween3DPoints(vecPosition, pPlayer->vecPosition) < MAX_DAMAGE_DISTANCE) {
 				bulletSyncData.byteHitType = BULLET_HIT_TYPE_PLAYER;
 				bulletSyncData.wHitID = i;
 				break;
@@ -207,13 +207,15 @@ void CFunctions::GlobalRPC(int* szUniqueID, RakNet::BitStream* bsParams, int iEx
 {
 	PacketReliability reliable = RELIABLE_ORDERED;
 
-	if (PacketStream == 3)
+	if (PacketStream == 3) {
 		reliable = RELIABLE;
+	}
 
-	if (iExcludePlayerId == INVALID_PLAYER_ID)
+	if (iExcludePlayerId == INVALID_PLAYER_ID) {
 		pRakServer->RPC(szUniqueID, bsParams, HIGH_PRIORITY, reliable, PacketStream, UNASSIGNED_PLAYER_ID, true, false);
-	else
+	} else {
 		pRakServer->RPC(szUniqueID, bsParams, HIGH_PRIORITY, reliable, PacketStream, pRakServer->GetPlayerIDFromIndex(iExcludePlayerId), true, false);
+	}
 
 }
 
@@ -221,14 +223,13 @@ void CFunctions::AddedPlayersRPC(int* szUniqueID, RakNet::BitStream* bsParams, i
 {
 	CPlayer *pPlayer;
 
-	for (int i = 0; i < MAX_PLAYERS; i++)
-	{
-		if (pNetGame->pPlayerPool->bIsPlayerConnectedEx[i] && i != iPlayerId)
-		{
+	for (int i = 0; i < MAX_PLAYERS; i++) {
+		if (pNetGame->pPlayerPool->bIsPlayerConnectedEx[i] && i != iPlayerId) {
 			pPlayer = pNetGame->pPlayerPool->pPlayer[i];
 
-			if (pPlayer && pPlayer->byteStreamedIn[iPlayerId])
+			if (pPlayer && pPlayer->byteStreamedIn[iPlayerId]) {
 				pRakServer->RPC(szUniqueID, bsParams, HIGH_PRIORITY, RELIABLE_ORDERED, PacketStream, pRakServer->GetPlayerIDFromIndex(i), false, false);
+			}
 		}
 	}
 }
@@ -237,14 +238,13 @@ void CFunctions::AddedVehicleRPC(int* szUniqueID, RakNet::BitStream* bsParams, i
 {
 	CPlayer *pPlayer;
 
-	for (int i = 0; i < MAX_PLAYERS; i++)
-	{
-		if (pNetGame->pPlayerPool->bIsPlayerConnectedEx[i] && i != iExcludePlayerId)
-		{
+	for (int i = 0; i < MAX_PLAYERS; i++) {
+		if (pNetGame->pPlayerPool->bIsPlayerConnectedEx[i] && i != iExcludePlayerId) {
 			pPlayer = pNetGame->pPlayerPool->pPlayer[i];
 
-			if (pPlayer && pPlayer->byteVehicleStreamedIn[iVehicleId])
+			if (pPlayer && pPlayer->byteVehicleStreamedIn[iVehicleId]) {
 				pRakServer->RPC(szUniqueID, bsParams, HIGH_PRIORITY, RELIABLE_ORDERED, PacketStream, pRakServer->GetPlayerIDFromIndex(i), false, false);
+			}
 		}
 	}
 }
@@ -252,9 +252,10 @@ void CFunctions::AddedVehicleRPC(int* szUniqueID, RakNet::BitStream* bsParams, i
 void CFunctions::PlayerRPC(int* szUniqueID, RakNet::BitStream* bsParams, int iPlayerId, char PacketStream)
 {
 	PacketReliability reliable = RELIABLE_ORDERED;
-	
-	if (PacketStream == 2)
+
+	if (PacketStream == 2) {
 		reliable = RELIABLE;
+	}
 
 	pRakServer->RPC(szUniqueID, bsParams, HIGH_PRIORITY, reliable, PacketStream, pRakServer->GetPlayerIDFromIndex(iPlayerId), false, false);
 }

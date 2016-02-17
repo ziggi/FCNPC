@@ -1,5 +1,5 @@
 /* =========================================
-			
+
 		FCNPC - Fully Controllable NPC
 			----------------------
 
@@ -26,35 +26,50 @@ class CMapAndreas;
 
 class CServer
 {
-	public:
-		CServer(eSAMPVersion version);
-		~CServer();
+public:
+	CServer(eSAMPVersion version);
+	~CServer();
 
-		BYTE Initialize();
+	BYTE Initialize();
 
-		CPlayerManager     *GetPlayerManager() { return m_pPlayerDataManager; };
-		CNodeManager       *GetNodeManager() { return m_pNodeManager; };
+	CPlayerManager     *GetPlayerManager()
+	{
+		return m_pPlayerDataManager;
+	};
+	CNodeManager       *GetNodeManager()
+	{
+		return m_pNodeManager;
+	};
 
-		bool    DoesNameExist(char *szName);
+	bool    DoesNameExist(char *szName);
 
-		void    SetUpdateRate(DWORD dwRate) { m_dwUpdateRate = dwRate; };
-		DWORD   GetUpdateRate() { return m_dwUpdateRate; };
+	void    SetUpdateRate(DWORD dwRate)
+	{
+		m_dwUpdateRate = dwRate;
+	};
+	DWORD   GetUpdateRate()
+	{
+		return m_dwUpdateRate;
+	};
 
-		void        SetMapAndreas(CMapAndreas *pMapAndreas);
-		CMapAndreas *GetMapAndreas();
-		bool        IsMapAndreasInited();
+	void        SetMapAndreas(CMapAndreas *pMapAndreas);
+	CMapAndreas *GetMapAndreas();
+	bool        IsMapAndreasInited();
 
-		bool    IsVehicleSeatOccupied(int iPlayerId, WORD wVehicleId, BYTE byteSeatId);
+	bool    IsVehicleSeatOccupied(int iPlayerId, WORD wVehicleId, BYTE byteSeatId);
 
-		eSAMPVersion GetVersion() { return m_Version; }
+	eSAMPVersion GetVersion()
+	{
+		return m_Version;
+	}
 
-	private:
-		eSAMPVersion        m_Version;
-		CPlayerManager      *m_pPlayerDataManager;
-		CNodeManager        *m_pNodeManager;
-		CThread             *m_pDamageThread;
-		CMapAndreas         *m_pMapAndreas;
-		DWORD               m_dwUpdateRate;
+private:
+	eSAMPVersion        m_Version;
+	CPlayerManager      *m_pPlayerDataManager;
+	CNodeManager        *m_pNodeManager;
+	CThread             *m_pDamageThread;
+	CMapAndreas         *m_pMapAndreas;
+	DWORD               m_dwUpdateRate;
 };
 
 #endif

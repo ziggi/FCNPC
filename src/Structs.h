@@ -1,32 +1,32 @@
-/*  
+/*
  *  Version: MPL 1.1
- *  
- *  The contents of this file are subject to the Mozilla Public License Version 
- *  1.1 (the "License"); you may not use this file except in compliance with 
- *  the License. You may obtain a copy of the License at 
+ *
+ *  The contents of this file are subject to the Mozilla Public License Version
+ *  1.1 (the "License"); you may not use this file except in compliance with
+ *  the License. You may obtain a copy of the License at
  *  http://www.mozilla.org/MPL/
- *  
+ *
  *  Software distributed under the License is distributed on an "AS IS" basis,
  *  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
  *  for the specific language governing rights and limitations under the
  *  License.
- *  
+ *
  *  The Original Code is the YSI 2.0 SA:MP plugin.
- *  
+ *
  *  The Initial Developer of the Original Code is Alex "Y_Less" Cole.
  *  Portions created by the Initial Developer are Copyright (C) 2008
  *  the Initial Developer. All Rights Reserved.
- *  
+ *
  *  Contributor(s):
- *  
+ *
  *  Peter Beverloo
  *  Marcus Bauer
  *  MaVe;
  *  Sammy91
  *  Incognito
- *  
+ *
  *  Special Thanks to:
- *  
+ *
  *  SA:MP Team past, present and future
  */
 
@@ -70,8 +70,7 @@ enum CON_VARTYPE { CON_VARTYPE_FLOAT, CON_VARTYPE_INT, CON_VARTYPE_BOOL, CON_VAR
 typedef void(*VARCHANGEFUNC)();
 
 /* -------------------------------------------------------- */
-typedef struct _MATRIX4X4 
-{
+typedef struct _MATRIX4X4 {
 	CVector right;
 	DWORD  flags;
 	CVector up;
@@ -82,23 +81,21 @@ typedef struct _MATRIX4X4
 	float  pad_p;
 } MATRIX4X4, *PMATRIX4X4;
 
-struct ConsoleVariable_s
-{
+struct ConsoleVariable_s {
 	CON_VARTYPE		VarType;
 	DWORD			VarFlags;
 	void*			VarPtr;
 	VARCHANGEFUNC	VarChangeFunc;
 };
 
-struct C3DText  // size 0x21
-{
+struct C3DText { // size 0x21
 	char*			szText;                                     // + 0x00
-    DWORD			dwColor;                         // + 0x04
+	DWORD			dwColor;                         // + 0x04
 	CVector			vecPos;
 	float			fDrawDistance;                     // + 0x14
-    bool			bLineOfSight;            // + 0x18
-    int				iWorld;                  // + 0x19
-    WORD			attachedToPlayerID;    // + 0x1D
+	bool			bLineOfSight;            // + 0x18
+	int				iWorld;                  // + 0x19
+	WORD			attachedToPlayerID;    // + 0x1D
 	WORD			attachedToVehicleID;   // + 0x1F
 };
 
@@ -107,8 +104,7 @@ struct C3DText  // size 0x21
 /* -------------------------------------------------------- */
 
 // Big thanks to OrMisicL
-struct CAimSyncData
-{
+struct CAimSyncData {
 	BYTE			byteCameraMode;			// 0
 	CVector			vecFront;				// 1 - 13
 	CVector			vecPosition;			// 13 - 25
@@ -123,8 +119,7 @@ struct CAimSyncData
 	// Size = 39
 };
 
-struct CVehicleSyncData
-{
+struct CVehicleSyncData {
 	WORD			wVehicleId;				// 0x001F - 0x0021
 	WORD			wUDAnalog;				// 0x0021 - 0x0023
 	WORD			wLRAnalog;				// 0x0023 - 0x0025
@@ -140,16 +135,14 @@ struct CVehicleSyncData
 	BYTE			byteSirenState;			// 0x0056 - 0x0057
 	BYTE			byteGearState;			// 0x0057 -	0x0058
 	WORD			wTrailerID;				// 0x0058 - 0x005A
-    union									// 
-    {
-            WORD			wHydraReactorAngle[2];                       
-            float           fTrainSpeed;
-    };
+	union {								//
+		WORD			wHydraReactorAngle[2];
+		float           fTrainSpeed;
+	};
 	// Size = 63
 };
 
-struct CPassengerSyncData
-{
+struct CPassengerSyncData {
 	WORD			wVehicleId;				// 0x005E - 0x0060
 	BYTE			byteSeatFlags : 7;
 	BYTE			byteDriveBy : 1;
@@ -163,8 +156,7 @@ struct CPassengerSyncData
 	// Size = 24
 };
 
-struct CSyncData
-{
+struct CSyncData {
 	WORD			wUDAnalog;				// 0x0076 - 0x0078
 	WORD			wLRAnalog;				// 0x0078 - 0x007A
 	WORD			wKeys;					// 0x007A - 0x007C
@@ -178,11 +170,9 @@ struct CSyncData
 	CVector			vecVelocity;			// 0x009C - 0x00A8
 	CVector			vecSurfing;				// 0x00A8 - 0x00B4
 	WORD			wSurfingInfo;			// 0x00B4 - 0x00B6
-	union 
-	{
+	union {
 		DWORD		dwAnimationData;		// 0x00B6 - 0x00BA
-		struct 
-		{
+		struct {
 			WORD	wAnimIndex;
 			WORD	wAnimFlags;
 		};
@@ -190,8 +180,7 @@ struct CSyncData
 	// Size = 68
 };
 
-struct CUnoccupiedSyncData // size 0x43
-{
+struct CUnoccupiedSyncData { // size 0x43
 	WORD			wVehicleID;				// + 0x0000
 	BYTE			bytePassengerSlot;			// + 0x0002
 	CVector			vecRool;				// + 0x0003
@@ -202,16 +191,14 @@ struct CUnoccupiedSyncData // size 0x43
 	float			fHealth;					// + 0x003F
 };
 
-struct CSpectatingSyncData		// size 0x12
-{
+struct CSpectatingSyncData {	// size 0x12
 	WORD			wLeftRightKeysOnSpectating;				// + 0x0000
 	WORD			wUpDownKeysOnSpectating;				// + 0x0002
 	WORD			wKeysOnSpectating;						// + 0x0004
 	CVector			vecPosition;							// + 0x0006
 };
 
-struct CTrailerSyncData // size 0x36 = 54
-{
+struct CTrailerSyncData { // size 0x36 = 54
 	WORD			wTrailerID;				// + 0x0000
 	CVector			vecRoll;				// + 0x0002
 	CVector			vecDirection;			// + 0x000E
@@ -220,15 +207,12 @@ struct CTrailerSyncData // size 0x36 = 54
 	DWORD			pad;
 };
 
-typedef struct CTextdraw
-{
-	union
-	{
+typedef struct CTextdraw {
+	union {
 		BYTE byteFlags;			// 25
-		struct
-		{
+		struct {
 			BYTE byteBox : 1;
-			BYTE byteLeft : 1; 
+			BYTE byteLeft : 1;
 			BYTE byteRight : 1;
 			BYTE byteCenter : 1;
 			BYTE byteProportional : 1;
@@ -255,35 +239,31 @@ typedef struct CTextdraw
 	WORD			color2; // 61 - 63
 } _CTextdraw;
 
-struct CPlayerTextDraw
-{
+struct CPlayerTextDraw {
 	BOOL			bSlotState[MAX_PLAYER_TEXT_DRAWS];
 	CTextdraw	    *TextDraw[MAX_PLAYER_TEXT_DRAWS];
 	char			*szFontText[MAX_PLAYER_TEXT_DRAWS];
 	bool			bHasText[MAX_PLAYER_TEXT_DRAWS];
 };
 
-struct CPlayerText3DLabels // size 0x9802
-{
+struct CPlayerText3DLabels { // size 0x9802
 	C3DText			TextLabels[ MAX_3DTEXT_PLAYER ];	// + 0x0000
 	BOOL			isCreated[ MAX_3DTEXT_PLAYER ];	// + 0x8400
 	BYTE			unknown9800[MAX_3DTEXT_PLAYER];				// + 0x9400
 	WORD			wOwnerID;
 };
 
-struct CAttachedObject // sizeof = 52 - 0x34
-{
-    int				iModelID;
-    int				iBoneiD;
-    CVector         vecPos;
-    CVector         vecRot;
-    CVector         vecScale;
+struct CAttachedObject { // sizeof = 52 - 0x34
+	int				iModelID;
+	int				iBoneiD;
+	CVector         vecPos;
+	CVector         vecRot;
+	CVector         vecScale;
 	DWORD			dwMaterialColor1;
 	DWORD			dwMaterialColor2;
 };
 
-struct CPlayerSpawnInfo // size  46
-{
+struct CPlayerSpawnInfo { // size  46
 	BYTE			byteTeam;				// 0 - 1
 	int				iSkin;					// 1 - 5
 	BYTE			unk;					// 5 - 6
@@ -293,35 +273,31 @@ struct CPlayerSpawnInfo // size  46
 	int				iSpawnWeaponsAmmo[3];	// 34 - 46
 };
 
-struct CBulletSyncData // sizeof = 40
-{
+struct CBulletSyncData { // sizeof = 40
 	BYTE			byteHitType;
 	WORD			wHitID;
 	CVector			vecHitOrigin;
 	CVector			vecHitTarget;
 	CVector			vecCenterOfHit;
 	BYTE			byteWeaponID;
-}; 
-
-struct CPVar
-{
-    char			szVarName[MAX_PVAR_NAME + 1];
-    BOOL			bIsReadOnly;
-    int				iVarType;
-    int				iValue;
-    float			fValue;
-    char*			szValue;
 };
 
-struct CPlayerVar
-{
-    CPVar			Vars[MAX_PVARS];
+struct CPVar {
+	char			szVarName[MAX_PVAR_NAME + 1];
+	BOOL			bIsReadOnly;
+	int				iVarType;
+	int				iValue;
+	float			fValue;
+	char*			szValue;
+};
+
+struct CPlayerVar {
+	CPVar			Vars[MAX_PVARS];
 	BOOL			bIsPVarActive[MAX_PVARS];
-    int				iUpperIndex;
+	int				iUpperIndex;
 };
 
-struct CPlayer
-{
+struct CPlayer {
 	CAimSyncData			aimSyncData;			// 0 - 39
 	CVehicleSyncData		vehicleSyncData;		// 39 -
 	CPassengerSyncData		passengerSyncData;		//
@@ -377,7 +353,7 @@ struct CPlayer
 	float					fCPSize;			// 11190 - 11194
 	BOOL					bIsInCP;			// 11194 - 11198
 	CVector					vecRaceCPPos;		// 11198 - 11210
-	CVector					vecRaceCPNextPos;	// 11210 - 11222 
+	CVector					vecRaceCPNextPos;	// 11210 - 11222
 	BYTE					byteRaceCPType;		// 11222 - 11223 // TODO -> replace
 	float					fRaceCPSize;		// 11223 - 11227
 	BOOL					bIsInRaceCP;		// 11227 - 11231
@@ -403,7 +379,7 @@ struct CPlayer
 	WORD					wTargetActorId;		// 11400 - 11402
 	DWORD					dwLastShotTick;		// 11402 - 11406
 	BYTE					dwLastShotWeapon;	// 11406 - 11407
-	CBulletSyncData			bulletSyncData;		// 11407 - 11447	
+	CBulletSyncData			bulletSyncData;		// 11407 - 11447
 	BYTE					m_byteTime;			// 11447 - 11448
 	float					m_fGameTime;		// 11448 - 11452
 	BYTE					byteSpectateType;	// 11452 - 11453
@@ -411,14 +387,13 @@ struct CPlayer
 	DWORD					dwLastStreaming;	// 11457 - 11461
 	DWORD					dwNPCRecordingType;	// 11461 - 11465
 	FILE					*pRecordingFile;	// 11465 - 11469
-	DWORD					dwFirstNPCWritingTime; // 11469 - 11473 
+	DWORD					dwFirstNPCWritingTime; // 11469 - 11473
 	PAD(unused, 9);								// 11473 - 11482
 	CPlayerVar*				pPlayerVars;		// 11482 - 11486
 	// Size = 9963
 };
 
-struct CPlayerPool // sizeof = 99520
-{
+struct CPlayerPool { // sizeof = 99520
 	DWORD			dwVirtualWorld[MAX_PLAYERS];			// 0 - 4000
 	DWORD			dwPlayersCount;							// 4000 - 4004
 	DWORD			dwlastMarkerUpdate;						// 4004 - 4008
@@ -427,7 +402,7 @@ struct CPlayerPool // sizeof = 99520
 	DWORD			dwMoney[MAX_PLAYERS];					// 8012 - 12012
 	DWORD			dwDrunkLevel[MAX_PLAYERS];				// 12012 - 16012
 	DWORD			dwLastScoreUpdate[MAX_PLAYERS];			// 16012 - 20012
-	char			szSerial[MAX_PLAYERS][101];				// 20012 - 121012				
+	char			szSerial[MAX_PLAYERS][101];				// 20012 - 121012
 	char			szVersion[MAX_PLAYERS][29];				// 121012 - 150012
 	BOOL			bIsPlayerConnectedEx[MAX_PLAYERS];		// 150012 - 154012
 	CPlayer			*pPlayer[MAX_PLAYERS];					// 154012 - 158012
@@ -443,27 +418,24 @@ struct CPlayerPool // sizeof = 99520
 // CVehicle
 /* -------------------------------------------------------- */
 
-struct CVehicleSpawn // size 36
-{
+struct CVehicleSpawn { // size 36
 	int				iModelID;
-    CVector			vecPos;   
-    float			fRot;
-    int				iColor1;  
-    int				iColor2;  
-    int				iRespawnTime;
-    int				iInterior;
+	CVector			vecPos;
+	float			fRot;
+	int				iColor1;
+	int				iColor2;
+	int				iRespawnTime;
+	int				iInterior;
 };
 
-struct CVehicleModInfo // sizeof = 26
-{
+struct CVehicleModInfo { // sizeof = 26
 	BYTE			byteModSlots[14];                // + 0x0000
-    BYTE			bytePaintJob;                    // + 0x000E
-    int				iColor1;                             // + 0x000F
-    int				iColor2;                             // + 0x0010
+	BYTE			bytePaintJob;                    // + 0x000E
+	int				iColor1;                             // + 0x000F
+	int				iColor2;                             // + 0x0010
 };
 
-struct CVehicleParams // sizeof = 16
-{
+struct CVehicleParams { // sizeof = 16
 	BYTE engine;
 	BYTE lights;
 	BYTE alarm;
@@ -482,8 +454,7 @@ struct CVehicleParams // sizeof = 16
 	BYTE window_backright; // 15 - 16
 };
 
-struct CVehicle
-{
+struct CVehicle {
 	CVector			vecPosition;		// 0 - 12
 	MATRIX4X4		vehMatrix;			// 12 - 76
 	CVector			vecVelocity;		// 76 - 88
@@ -494,7 +465,7 @@ struct CVehicle
 	WORD			wLastDriverID;		// 106 - 108
 	WORD			vehPassengers[7];	// 108 - 122
 	DWORD			vehActive;			// 122 - 126
-	DWORD			vehWasted;			// 126 - 130	
+	DWORD			vehWasted;			// 126 - 130
 	CVehicleSpawn	customSpawn;		// 130 - 166
 	float			fHealth;			// 166 - 170
 	DWORD			vehDoorStatus;		// 170 - 174
@@ -506,14 +477,13 @@ struct CVehicle
 	CVehicleModInfo vehModInfo;			// 183 - 206
 	char			szNumberplate[32 + 1]; // 206 - 239
 	CVehicleParams	vehParamEx;			// 239 - 255
-    BYTE			bDeathNotification; // 255 - 256
-    BYTE			bOccupied;			// 256 - 257
-    DWORD			vehOccupiedTick;	// 257 - 261
-    DWORD			vehRespawnTick;		// 261 -265
+	BYTE			bDeathNotification; // 255 - 256
+	BYTE			bOccupied;			// 256 - 257
+	DWORD			vehOccupiedTick;	// 257 - 261
+	DWORD			vehRespawnTick;		// 261 -265
 };
 
-struct CVehiclePool
-{
+struct CVehiclePool {
 	BYTE			byteVehicleModelsUsed[212];			// 0 - 212
 	int				iVirtualWorld[MAX_VEHICLES];		// 212 - 8212
 	BOOL			bVehicleSlotState[MAX_VEHICLES];	// 8212 - 16212
@@ -525,15 +495,13 @@ struct CVehiclePool
 // CPickup
 /* -------------------------------------------------------- */
 
-struct tPickup // size 0x14
-{
+struct tPickup { // size 0x14
 	int				iModel;
 	int				iType;
 	CVector			vecPos;
 };
 
-struct CPickupPool
-{
+struct CPickupPool {
 	tPickup			Pickup[MAX_PICKUPS];			// + 0x0000
 	BOOL			bActive[MAX_PICKUPS];			// + 0xA000
 	int				iWorld[MAX_PICKUPS];		// + 0xC000
@@ -544,8 +512,7 @@ struct CPickupPool
 // CObject
 /* -------------------------------------------------------- */
 
-struct CObjectMaterial // sizeof = 212
-{
+struct CObjectMaterial { // sizeof = 212
 	BYTE			byteUsed;				// 197 - 198
 	BYTE			byteSlot;				// 198 - 199
 	WORD			wModelID;				// 199 - 201
@@ -561,14 +528,13 @@ struct CObjectMaterial // sizeof = 212
 	BYTE			byteAlignment;			// 411 - 412
 };
 
-struct CObject // sizeof = 3700
-{
+struct CObject { // sizeof = 3700
 	WORD			wObjectID;			// 0 - 2
 	int				iModel;				// 2 - 6
 	BOOL			bActive;			// 6 - 10
 	MATRIX4X4		matWorld;			// 10 - 74 - pos - Object position
 	CVector			vecRot; 			// 74 - 86 - Object rotation
-	MATRIX4X4		matTarget;			// 86 - 150	- 
+	MATRIX4X4		matTarget;			// 86 - 150	-
 	BYTE			bIsMoving;			// 150 - 151
 	BYTE			bNoCameraCol;		// 151 - 152
 	float			fMoveSpeed;			// 152 - 156
@@ -584,9 +550,8 @@ struct CObject // sizeof = 3700
 	char			*szMaterialText[16];// 3637 - 3653
 };
 
-struct CObjectPool
-{
-	BOOL			bPlayerObjectSlotState[MAX_PLAYERS][MAX_OBJECTS];	// 0 
+struct CObjectPool {
+	BOOL			bPlayerObjectSlotState[MAX_PLAYERS][MAX_OBJECTS];	// 0
 	BOOL			bPlayersObject[MAX_OBJECTS];							// 4.000.000
 	CObject			*pPlayerObjects[MAX_PLAYERS][MAX_OBJECTS];		// 4.004.000
 	BOOL			bObjectSlotState[MAX_OBJECTS];						// 8.004.000
@@ -597,15 +562,13 @@ struct CObjectPool
 // CMenu
 /* -------------------------------------------------------- */
 
-struct MenuInteraction
-{
+struct MenuInteraction {
 	BOOL			Menu;
 	BOOL			Row[MAX_ITEMS];
 	char			unknown[12];
 };
-	
-struct CMenu	// size 0xB84
-{
+
+struct CMenu {	// size 0xB84
 	BYTE			menuID;														// + 0x0000
 	char			szTitle[ MAX_MENU_TEXT_SIZE ];								// + 0x0001
 	char			szItems[ MAX_ITEMS ][ MAX_COLUMNS ][ MAX_MENU_TEXT_SIZE ];	// + 0x0021
@@ -620,8 +583,7 @@ struct CMenu	// size 0xB84
 	BYTE			byteItemsCount[ MAX_COLUMNS ];								// + 0x0B82
 };
 
-struct CMenuPool
-{
+struct CMenuPool {
 	CMenu*			pMenu[ MAX_MENUS ];			//	+ 0x0000
 	BOOL			bIsCreated[ MAX_MENUS ];		//	+ 0x0200
 	BOOL			bPlayerMenu[MAX_PLAYERS];	//	+ 0x0400
@@ -630,8 +592,7 @@ struct CMenuPool
 /* -------------------------------------------------------- */
 // CTextDraw
 /* -------------------------------------------------------- */
-struct CTextDrawPool
-{
+struct CTextDrawPool {
 	BOOL			bSlotState[MAX_TEXT_DRAWS];
 	CTextdraw*		TextDraw[MAX_TEXT_DRAWS];
 	char*			szFontText[MAX_TEXT_DRAWS];
@@ -653,8 +614,7 @@ public:
 // CGangZone
 /* -------------------------------------------------------- */
 
-struct CSAMPGangZonePool
-{
+struct CSAMPGangZonePool {
 	float			fGangZone[MAX_GANG_ZONES][4];
 	BOOL			bSlotState[MAX_GANG_ZONES];
 };
@@ -663,8 +623,7 @@ struct CSAMPGangZonePool
 // CActor
 /* -------------------------------------------------------- */
 
-struct CActorAnim // 140
-{
+struct CActorAnim { // 140
 	char			szAnimLib[64]; // 0 - 64
 	char			szAnimName[64]; // 64 - 128
 	float			fDelta;		// 128 - 132
@@ -675,8 +634,7 @@ struct CActorAnim // 140
 	int				iTime;				//  136 - 140
 };
 
-struct CActor
-{
+struct CActor {
 	BYTE			pad0;				// 0
 	int				iSkinID;			// 1 - 5
 	CVector			vecSpawnPos;	// 5 - 17
@@ -695,31 +653,27 @@ struct CActor
 	WORD			wActorID;			// 209 - 211
 };
 
-struct CActorPool
-{
+struct CActorPool {
 	int				iActorVirtualWorld[MAX_ACTORS];
 	BOOL			bValidActor[MAX_ACTORS];
 	CActor*			pActor[MAX_ACTORS];
 	DWORD			dwActorPoolSize;
 };
 
-struct CGameMode
-{
+struct CGameMode {
 	AMX				amx;
 	bool			bInitialised;
 	bool			bSleeping;
 	float			fSleepTime;
 };
 
-struct CFilterScripts
-{
+struct CFilterScripts {
 	AMX*			pFilterScripts[MAX_FILTER_SCRIPTS];
 	char			szFilterScriptName[MAX_FILTER_SCRIPTS][255];
 	int				iFilterScriptCount;
 };
 
-struct ScriptTimer_s // sizeof = 0x11B (283)
-{
+struct ScriptTimer_s { // sizeof = 0x11B (283)
 	char szScriptFunc[255];
 	int iTotalTime;
 	int iRemainingTime;
@@ -739,8 +693,7 @@ public:
 	DWORD					dwTimerCount;
 };
 
-struct CNetGame
-{
+struct CNetGame {
 	CGameMode				*pGameModePool;			// 0
 	CFilterScripts			*pFilterScriptPool;		// 4
 	CPlayerPool				*pPlayerPool;			// 8
@@ -750,8 +703,8 @@ struct CNetGame
 	CMenuPool				*pMenuPool;				// 24
 	CTextDrawPool			*pTextDrawPool;			// 28
 	C3DTextPool				*p3DTextPool;			// 32
-	CGangZonePool			*pGangZonePool;			// 36 
-	CActorPool				*pActorPool;			// 40 
+	CGangZonePool			*pGangZonePool;			// 36
+	CActorPool				*pActorPool;			// 40
 	int						iCurrentGameModeIndex;	// 44
 	int						iCurrentGameModeRepeat;	// 48
 	BOOL					bFirstGameModeLoaded;	// 52
@@ -761,11 +714,11 @@ struct CNetGame
 	DWORD					dwSomethingTick;
 	DWORD					dwUnk;
 	DWORD					dwUnk1;
-	BOOL					bLanMode;				// 
+	BOOL					bLanMode;				//
 	BOOL					bShowPlayerMarkers;		// 84
-	BYTE					byteShowNameTags;		// 
-	BYTE					bTirePopping;			// 
-	BYTE					byteAllowWeapons;		// 
+	BYTE					byteShowNameTags;		//
+	BYTE					bTirePopping;			//
+	BYTE					byteAllowWeapons;		//
 	BYTE					byteStuntBonus;			// 91 - 92
 	BYTE					byteDefaultCameraCollision; // 92 - 93
 	BYTE					byteWeather;			// 93 - 94
@@ -782,7 +735,7 @@ struct CNetGame
 	BYTE					byteNameTagLOS;			// 119 - 120
 	BYTE					bManulVehicleEngineAndLights; // 120 - 121
 	BYTE					bLimitPlayerMarkers;	// 121 - 122
-	float					fPlayerMarkesLimit;		// 122 - 126 
+	float					fPlayerMarkesLimit;		// 122 - 126
 	BOOL					bVehicleFriendlyFire;	// 126 - 130
 #ifndef _WIN32
 	double					dElapsedTime;			// size = 8
@@ -792,20 +745,17 @@ struct CNetGame
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-struct PlayerID
-{
+struct PlayerID {
 	unsigned int binaryAddress;
 	unsigned short port;
 };
 
-const PlayerID UNASSIGNED_PLAYER_ID =
-{
+const PlayerID UNASSIGNED_PLAYER_ID = {
 	0xFFFFFFFF, 0xFFFF
 };
 
 /// All RPC functions have the same parameter list - this structure.
-struct RPCParameters
-{
+struct RPCParameters {
 	/// The data from the remote system
 	unsigned char *input;
 
@@ -826,8 +776,7 @@ struct RPCParameters
 };
 
 /// These enumerations are used to describe when packets are delivered.
-enum PacketPriority
-{
+enum PacketPriority {
 	SYSTEM_PRIORITY,   /// \internal Used by RakNet to send above-high priority messages.
 	HIGH_PRIORITY,   /// High priority messages are send before medium priority messages.
 	MEDIUM_PRIORITY,   /// Medium priority messages are send before low priority messages.
@@ -837,8 +786,7 @@ enum PacketPriority
 
 /// These enumerations are used to describe how packets are delivered.
 /// \note  Note to self: I write this with 3 bits in the stream.  If I add more remember to change that
-enum PacketReliability
-{
+enum PacketReliability {
 	UNRELIABLE = 6,   /// Same as regular UDP, except that it will also discard duplicate datagrams.  RakNet adds (6 to 17) + 21 bits of overhead, 16 of which is used to detect duplicate packets and 6 to 17 of which is used for message length.
 	UNRELIABLE_SEQUENCED,  /// Regular UDP with a sequence counter.  Out of order messages will be discarded.  This adds an additional 13 bits on top what is used for UNRELIABLE.
 	RELIABLE,   /// The message is sent reliably, but not necessarily in any order.  Same overhead as UNRELIABLE.
@@ -850,8 +798,8 @@ enum PacketReliability
 typedef unsigned char UniqueIDType;
 typedef unsigned short PlayerIndex;
 typedef unsigned char RPCIndex;
-const int MAX_RPC_MAP_SIZE=((RPCIndex)-1)-1;
-const int UNDEFINED_RPC_INDEX=((RPCIndex)-1);
+const int MAX_RPC_MAP_SIZE = ((RPCIndex) - 1) - 1;
+const int UNDEFINED_RPC_INDEX = ((RPCIndex) - 1);
 
 /// First byte of a network message
 typedef unsigned char MessageID;
@@ -859,8 +807,7 @@ typedef unsigned char MessageID;
 typedef unsigned int RakNetTime;
 typedef long long RakNetTimeNS;
 
-struct RakNetStatisticsStruct
-{
+struct RakNetStatisticsStruct {
 	///  Number of Messages in the send Buffer (high, medium, low priority)
 	unsigned messageSendBuffer[ NUMBER_OF_PRIORITIES ];
 	///  Number of messages sent (high, medium, low priority)
@@ -869,7 +816,7 @@ struct RakNetStatisticsStruct
 	unsigned messageDataBitsSent[ NUMBER_OF_PRIORITIES ];
 	///  Number of total bits used for user messages, including headers
 	unsigned messageTotalBitsSent[ NUMBER_OF_PRIORITIES ];
-	
+
 	///  Number of packets sent containing only acknowledgements
 	unsigned packetsContainingOnlyAcknowlegements;
 	///  Number of acknowledgements sent
@@ -878,10 +825,10 @@ struct RakNetStatisticsStruct
 	unsigned acknowlegementsPending;
 	///  Number of acknowledgements bits sent
 	unsigned acknowlegementBitsSent;
-	
+
 	///  Number of packets containing only acknowledgements and resends
 	unsigned packetsContainingOnlyAcknowlegementsAndResends;
-	
+
 	///  Number of messages resent
 	unsigned messageResends;
 	///  Number of bits resent of actual data
@@ -890,32 +837,32 @@ struct RakNetStatisticsStruct
 	unsigned messagesTotalBitsResent;
 	///  Number of messages waiting for ack (// TODO - rename this)
 	unsigned messagesOnResendQueue;
-	
+
 	///  Number of messages not split for sending
 	unsigned numberOfUnsplitMessages;
 	///  Number of messages split for sending
 	unsigned numberOfSplitMessages;
 	///  Total number of splits done for sending
 	unsigned totalSplits;
-	
+
 	///  Total packets sent
 	unsigned packetsSent;
-	
+
 	///  Number of bits added by encryption
 	unsigned encryptionBitsSent;
 	///  total bits sent
 	unsigned totalBitsSent;
-	
+
 	///  Number of sequenced messages arrived out of order
 	unsigned sequencedMessagesOutOfOrder;
 	///  Number of sequenced messages arrived in order
 	unsigned sequencedMessagesInOrder;
-	
+
 	///  Number of ordered messages arrived out of order
 	unsigned orderedMessagesOutOfOrder;
 	///  Number of ordered messages arrived in order
 	unsigned orderedMessagesInOrder;
-	
+
 	///  Packets with a good CRC received
 	unsigned packetsReceived;
 	///  Packets with a bad CRC received
@@ -945,8 +892,7 @@ struct RakNetStatisticsStruct
 };
 
 /// This represents a user message from another system.
-struct Packet
-{
+struct Packet {
 	/// Server only - this is the index into the player array that this playerId maps to
 	PlayerIndex playerIndex; // 0 - 2
 
@@ -978,10 +924,10 @@ public:
 	virtual void DisableSecurity( void ); // 8
 	virtual void SetPassword( const char *_password );	// 12
 	virtual bool HasPassword( void );	// 16
-	virtual void Disconnect( unsigned int blockDuration, unsigned char orderingChannel=0 );	// 20
+	virtual void Disconnect( unsigned int blockDuration, unsigned char orderingChannel = 0 );	// 20
 	virtual bool Send_ASD(const char *data, const int length, int priority, int reliability, char orderingChannel, PlayerID playerId, bool broadcast); // 24
 	virtual bool Send(RakNet::BitStream* parameters, int priority, int reliability, unsigned orderingChannel, PlayerID playerId, bool broadcast);	// 28
-	virtual void _20(); // 
+	virtual void _20(); //
 	virtual void _24();
 	virtual Packet* ReceiveEx( void );
 	virtual void Kick( const PlayerID playerId ); // 0x2C
@@ -1033,7 +979,7 @@ public:
 	virtual int GetIndexFromPlayerID( PlayerID playerId ); // E4
 	virtual PlayerID GetPlayerIDFromIndex( int index ); // E8 - 232 - 236
 	virtual void UNKNOWN(void); // 236 - 240
-	virtual void AddToBanList( const char *IP, unsigned int milliseconds=0 ); // 240 - 244
+	virtual void AddToBanList( const char *IP, unsigned int milliseconds = 0 ); // 240 - 244
 	virtual void RemoveFromBanList( const char *IP );
 	virtual void ClearBanList( void );
 	virtual bool IsBanned( const char *IP );
@@ -1052,7 +998,7 @@ class RakServer
 {
 public:
 	~RakServer();
-	virtual bool _0(); 
+	virtual bool _0();
 	virtual void _4();
 	virtual bool Start(unsigned short AllowedPlayers, unsigned int depreciated, int threadSleepTimer, unsigned short port, const char *forceHostAddress = 0) = 0;
 	virtual void _C();
@@ -1112,7 +1058,7 @@ public:
 	virtual void _E8();
 	virtual int GetIndexFromPlayerID( PlayerID playerId ); // EC
 	virtual PlayerID GetPlayerIDFromIndex( int index ); // F0 - 240 - 244
-	virtual void AddToBanList( const char *IP, unsigned int milliseconds=0 ); // 244 - 248
+	virtual void AddToBanList( const char *IP, unsigned int milliseconds = 0 ); // 244 - 248
 	virtual void RemoveFromBanList( const char *IP ); // 248 - 252
 	virtual void ClearBanList( void );
 	virtual bool IsBanned( const char *IP );

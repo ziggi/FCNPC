@@ -1,5 +1,5 @@
 /* =========================================
-			
+
 		FCNPC - Fully Controllable NPC
 			----------------------
 
@@ -12,11 +12,11 @@
 
 class CHooks
 {
-	public:
-		static void InstallHooks();
+public:
+	static void InstallHooks();
 
-		static void InstallCallHook(DWORD dwInstallAddress, DWORD dwHookFunction);
-		static void InstallJmpHook(DWORD dwInstallAddress, DWORD dwHookFunction);
+	static void InstallCallHook(DWORD dwInstallAddress, DWORD dwHookFunction);
+	static void InstallJmpHook(DWORD dwInstallAddress, DWORD dwHookFunction);
 };
 
 #endif

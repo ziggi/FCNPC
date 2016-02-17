@@ -1,5 +1,5 @@
 /* =========================================
-			
+
 		FCNPC - Fully Controllable NPC
 			----------------------
 
@@ -20,47 +20,47 @@ class CSAMPSystemAddress;
 #endif
 
 class CSAMPRemoteSystem {};
-class CSAMPRemoteSystemManager{};
+class CSAMPRemoteSystemManager {};
 
 #pragma pack(push, 1)
 class CSAMPRakPeer
 {
-	// +0xA = wMaxPlayers	
-	public:
-		CSAMPRemoteSystem *GetRemoteSystem(unsigned short usIndex)
-		{
-			// Get the remote system manager
-			CSAMPRemoteSystemManager *pRemoteSystemManager = *(CSAMPRemoteSystemManager **)(this + CAddress::OFFSET_RemoteSystemManager + SYSTEM_MANAGER_OFFSET);
-			// Get the remote system
-			return (CSAMPRemoteSystem *)(pRemoteSystemManager + CAddress::OFFSET_RemoteSystemSize * usIndex);
-		}
+	// +0xA = wMaxPlayers
+public:
+	CSAMPRemoteSystem *GetRemoteSystem(unsigned short usIndex)
+	{
+		// Get the remote system manager
+		CSAMPRemoteSystemManager *pRemoteSystemManager = *(CSAMPRemoteSystemManager **)(this + CAddress::OFFSET_RemoteSystemManager + SYSTEM_MANAGER_OFFSET);
+		// Get the remote system
+		return (CSAMPRemoteSystem *)(pRemoteSystemManager + CAddress::OFFSET_RemoteSystemSize * usIndex);
+	}
 
-		void SetConnectedPlayer(PlayerID systemAddress, int iPlayerId)
-		{
-			// Get the remote system
-			CSAMPRemoteSystem *pRemoteSystem = GetRemoteSystem((unsigned short)iPlayerId);
-			// Mark the player as active
-			*(bool *)(pRemoteSystem) = true;
-			// Set his sytem address
-			*(PlayerID *)(pRemoteSystem + 1) = systemAddress;
-			// Set the connect mode
-			*(int *)(pRemoteSystem + CAddress::OFFSET_RemoteSystem__ConnectMode) = 8; // 8 = CONNECTED
-			*(BYTE *)(pRemoteSystem + CAddress::OFFSET_RemoteSystem__Unknown) = 2;
-			*(BYTE *)(pRemoteSystem + CAddress::OFFSET_RemoteSystem__Unknown + 1) = 2;
-		};
+	void SetConnectedPlayer(PlayerID systemAddress, int iPlayerId)
+	{
+		// Get the remote system
+		CSAMPRemoteSystem *pRemoteSystem = GetRemoteSystem((unsigned short)iPlayerId);
+		// Mark the player as active
+		*(bool *)(pRemoteSystem) = true;
+		// Set his sytem address
+		*(PlayerID *)(pRemoteSystem + 1) = systemAddress;
+		// Set the connect mode
+		*(int *)(pRemoteSystem + CAddress::OFFSET_RemoteSystem__ConnectMode) = 8; // 8 = CONNECTED
+		*(BYTE *)(pRemoteSystem + CAddress::OFFSET_RemoteSystem__Unknown) = 2;
+		*(BYTE *)(pRemoteSystem + CAddress::OFFSET_RemoteSystem__Unknown + 1) = 2;
+	};
 
-		void SetDisonnectedPlayer(int iPlayerId)
-		{
-			// Get the remote system
-			CSAMPRemoteSystem *pRemoteSystem = GetRemoteSystem((unsigned short)iPlayerId);
-			// Mark the player as inactive
-			*(bool *)(pRemoteSystem) = false;
-			// Reset stats
-			*(PlayerID *)(pRemoteSystem + 1) = PlayerID();
-			*(int *)(pRemoteSystem + CAddress::OFFSET_RemoteSystem__ConnectMode) = 0;
-			*(BYTE *)(pRemoteSystem + CAddress::OFFSET_RemoteSystem__Unknown) = 0;
-			*(BYTE *)(pRemoteSystem + CAddress::OFFSET_RemoteSystem__Unknown + 1) = 0;
-		};
+	void SetDisonnectedPlayer(int iPlayerId)
+	{
+		// Get the remote system
+		CSAMPRemoteSystem *pRemoteSystem = GetRemoteSystem((unsigned short)iPlayerId);
+		// Mark the player as inactive
+		*(bool *)(pRemoteSystem) = false;
+		// Reset stats
+		*(PlayerID *)(pRemoteSystem + 1) = PlayerID();
+		*(int *)(pRemoteSystem + CAddress::OFFSET_RemoteSystem__ConnectMode) = 0;
+		*(BYTE *)(pRemoteSystem + CAddress::OFFSET_RemoteSystem__Unknown) = 0;
+		*(BYTE *)(pRemoteSystem + CAddress::OFFSET_RemoteSystem__Unknown + 1) = 0;
+	};
 
 };
 #pragma pack(pop)

@@ -1,5 +1,5 @@
 /* =========================================
-			
+
 		FCNPC - Fully Controllable NPC
 			----------------------
 
@@ -17,24 +17,27 @@ class CPlayerData;
 
 class CPlayback
 {
-	public:
-		CPlayback(char *szFile);
-		~CPlayback();
+public:
+	CPlayback(char *szFile);
+	~CPlayback();
 
-		bool Initialize();
-		bool Process(CPlayerData *pPlayerData);
+	bool Initialize();
+	bool Process(CPlayerData *pPlayerData);
 
-		void SetPaused(bool bPaused) { m_bPaused = bPaused; };
+	void SetPaused(bool bPaused)
+	{
+		m_bPaused = bPaused;
+	};
 
-	private:
-		char				m_szFile[MAX_PATH];
-		FILE				*m_pFile;
-		int					m_iPlaybackType;
-		DWORD				m_dwTime;
-		DWORD				m_dwStartTime;
-		bool				m_bPaused;
-		CSyncData			m_syncData;
-		CVehicleSyncData	m_vehicleSyncData;
+private:
+	char				m_szFile[MAX_PATH];
+	FILE				*m_pFile;
+	int					m_iPlaybackType;
+	DWORD				m_dwTime;
+	DWORD				m_dwStartTime;
+	bool				m_bPaused;
+	CSyncData			m_syncData;
+	CVehicleSyncData	m_vehicleSyncData;
 };
 
 #endif

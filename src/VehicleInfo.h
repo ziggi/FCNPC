@@ -1,5 +1,5 @@
 /* =========================================
-			
+
 		FCNPC - Fully Controllable NPC
 			----------------------
 
@@ -13,10 +13,10 @@
 
 class CVehicleInfo
 {
-	public:
-		static bool IsValidPassengerSeat(BYTE iSeatId, WORD iModelId);
-		static bool IsValidModel(WORD iModelId);
-		static WORD GetMaxPassengers(WORD iModelId);
+public:
+	static bool IsValidPassengerSeat(BYTE iSeatId, WORD iModelId);
+	static bool IsValidModel(WORD iModelId);
+	static WORD GetMaxPassengers(WORD iModelId);
 };
 
 #endif

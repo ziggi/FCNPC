@@ -8,8 +8,7 @@
 //#include "Main.h"
 
 #ifdef NEW_PICKUP_SYSTEM
-enum ePickupType : BYTE
-{
+enum ePickupType : BYTE {
 	GLOBAL,
 	PLAYER
 };
@@ -34,11 +33,11 @@ public:
 };
 
 #ifdef _WIN32 // xD.. C++11 doesn't like BitStream.h/.cpp on linux
-#include <unordered_map>
-typedef std::unordered_map<int, CPickup*> PickupMap;
+	#include <unordered_map>
+	typedef std::unordered_map<int, CPickup*> PickupMap;
 #else
-#include <map>
-typedef std::map<int, CPickup*> PickupMap;
+	#include <map>
+	typedef std::map<int, CPickup*> PickupMap;
 #endif
 
 class CPickupPool
@@ -59,7 +58,7 @@ public:
 	CPickup* FindPickup(WORD playerid, int pickupid);
 	int FindPickup(CPickup *pPickup);
 	int FindPickup(WORD playerid, CPickup *pPickup);
-	
+
 	void Process(void);
 
 	void SetStreamingEnabled(bool enabled);

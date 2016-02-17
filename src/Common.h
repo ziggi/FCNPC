@@ -1,5 +1,5 @@
 /* =========================================
-			
+
 		FCNPC - Fully Controllable NPC
 			----------------------
 
@@ -24,7 +24,7 @@ extern logprintf_t          logprintf;
 #define SAFE_RELEASE(ptr)   if (ptr) { ptr->Release(); ptr = NULL; }
 #define PAD(a, b)           char a[b]
 #ifndef CHECK_PARAMS
-	#define CHECK_PARAMS(m,n)                                                                                           \
+#define CHECK_PARAMS(m,n)                                                                                           \
 		do                                                                                                              \
 		{                                                                                                               \
 			if (params[0] != (m * 4))                                                                                   \

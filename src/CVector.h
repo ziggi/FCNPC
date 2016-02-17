@@ -31,57 +31,56 @@ private:
 
 public:
 	float fX, fY, fZ;
-	
+
 	CVector ()
 	{
 		this->fX = 0;
 		this->fY = 0;
 		this->fZ = 0;
 	};
-	
-	CVector ( float fX, float fY, float fZ) 
-	{ 
+
+	CVector ( float fX, float fY, float fZ)
+	{
 		this->fX = fX;
 		this->fY = fY;
 		this->fZ = fZ;
 	}
-	
-    float Normalize ( void ) 
-    { 
-        double t = sqrt(fX*fX + fY*fY + fZ*fZ);
-        if ( t > FLOAT_EPSILON )
-        {
-            double fX2 = fX / t;
-            double fY2 = fY / t;
-            double fZ2 = fZ / t;
-            fX = (float)fX2;
-            fY = (float)fY2;
-            fZ = (float)fZ2;
-        }
-        else
-            t = 0;
-        return static_cast < float > ( t );
-    }
+
+	float Normalize ( void )
+	{
+		double t = sqrt(fX * fX + fY * fY + fZ * fZ);
+		if ( t > FLOAT_EPSILON ) {
+			double fX2 = fX / t;
+			double fY2 = fY / t;
+			double fZ2 = fZ / t;
+			fX = (float)fX2;
+			fY = (float)fY2;
+			fZ = (float)fZ2;
+		} else {
+			t = 0;
+		}
+		return static_cast < float > ( t );
+	}
 
 	float Length ( void ) const
 	{
-		return sqrt ( (fX*fX) + (fY*fY) + (fZ*fZ) );
+		return sqrt ( (fX * fX) + (fY * fY) + (fZ * fZ) );
 	}
 
-    float DotProduct ( const CVector * param ) const
-    {
-        return fX*param->fX + fY*param->fY + fZ*param->fZ;
-    }
+	float DotProduct ( const CVector * param ) const
+	{
+		return fX * param->fX + fY * param->fY + fZ * param->fZ;
+	}
 
-    void CrossProduct ( const CVector * param ) 
-    { 
-        float _fX = fX, _fY = fY, _fZ = fZ;
-        fX = _fY * param->fZ - param->fY * _fZ;
-        fY = _fZ * param->fX - param->fZ * _fX;
-        fZ = _fX * param->fY - param->fX * _fY;
-    }
+	void CrossProduct ( const CVector * param )
+	{
+		float _fX = fX, _fY = fY, _fZ = fZ;
+		fX = _fY * param->fZ - param->fY * _fZ;
+		fY = _fZ * param->fX - param->fZ * _fX;
+		fZ = _fX * param->fY - param->fX * _fY;
+	}
 
-	bool IsNearZero ( void ) 
+	bool IsNearZero ( void )
 	{
 		//if (!isfinite(fX) || !isfinite(fY) || !isfinite(fZ))
 		//	return 1;
@@ -97,12 +96,15 @@ public:
 
 	void ZeroNearZero ( void )
 	{
-		if ( IsNearZeroFloat(fX) )
+		if ( IsNearZeroFloat(fX) ) {
 			fX = 0.0f;
-		if ( IsNearZeroFloat(fY) )
+		}
+		if ( IsNearZeroFloat(fY) ) {
 			fY = 0.0f;
-		if ( IsNearZeroFloat(fZ) )
+		}
+		if ( IsNearZeroFloat(fZ) ) {
 			fZ = 0.0f;
+		}
 	}
 
 	float GetAngleRadians ( void )
@@ -114,114 +116,116 @@ public:
 	{
 		static float radtodeg = 57.324840764331210191082802547771f; // 180/pi
 		float ret = (atan2(fY, -fX) * radtodeg) + 270.0f;
-		if (ret >= 360.0f) ret -= 360.0f;
+		if (ret >= 360.0f) {
+			ret -= 360.0f;
+		}
 		return ret;
 	}
-	
-    CVector operator + ( const CVector& vecRight ) const
-    {
-        return CVector ( fX + vecRight.fX, fY + vecRight.fY, fZ + vecRight.fZ );
-    }
 
-    CVector operator - ( const CVector& vecRight ) const
-    {
-        return CVector ( fX - vecRight.fX, fY - vecRight.fY, fZ - vecRight.fZ );
-    }
+	CVector operator + ( const CVector& vecRight ) const
+	{
+		return CVector ( fX + vecRight.fX, fY + vecRight.fY, fZ + vecRight.fZ );
+	}
 
-    CVector operator * ( const CVector& vecRight ) const
-    {
-        return CVector ( fX * vecRight.fX, fY * vecRight.fY, fZ * vecRight.fZ );
-    }
+	CVector operator - ( const CVector& vecRight ) const
+	{
+		return CVector ( fX - vecRight.fX, fY - vecRight.fY, fZ - vecRight.fZ );
+	}
 
-    CVector operator * ( float fRight ) const
-    {
-        return CVector ( fX * fRight, fY * fRight, fZ * fRight );
-    }
+	CVector operator * ( const CVector& vecRight ) const
+	{
+		return CVector ( fX * vecRight.fX, fY * vecRight.fY, fZ * vecRight.fZ );
+	}
 
-    CVector operator / ( const CVector& vecRight ) const
-    {
-        return CVector ( fX / vecRight.fX, fY / vecRight.fY, fZ / vecRight.fZ );
-    }
+	CVector operator * ( float fRight ) const
+	{
+		return CVector ( fX * fRight, fY * fRight, fZ * fRight );
+	}
+
+	CVector operator / ( const CVector& vecRight ) const
+	{
+		return CVector ( fX / vecRight.fX, fY / vecRight.fY, fZ / vecRight.fZ );
+	}
 
 	CVector operator / ( float fRight ) const
 	{
 		return CVector ( fX / fRight, fY / fRight, fZ / fRight );
 	}
 
-    CVector operator - () const
-    {
-        return CVector ( -fX, -fY, -fZ );
-    }
+	CVector operator - () const
+	{
+		return CVector ( -fX, -fY, -fZ );
+	}
 
-    void operator += ( float fRight )
-    {
-        fX += fRight;
-        fY += fRight;
-        fZ += fRight;
-    }
+	void operator += ( float fRight )
+	{
+		fX += fRight;
+		fY += fRight;
+		fZ += fRight;
+	}
 
-    void operator += ( const CVector& vecRight )
-    {
-        fX += vecRight.fX;
-        fY += vecRight.fY;
-        fZ += vecRight.fZ;
-    }
+	void operator += ( const CVector& vecRight )
+	{
+		fX += vecRight.fX;
+		fY += vecRight.fY;
+		fZ += vecRight.fZ;
+	}
 
-    void operator -= ( float fRight )
-    {
-        fX -= fRight;
-        fY -= fRight;
-        fZ -= fRight;
-    }
+	void operator -= ( float fRight )
+	{
+		fX -= fRight;
+		fY -= fRight;
+		fZ -= fRight;
+	}
 
-    void operator -= ( const CVector& vecRight )
-    {
-        fX -= vecRight.fX;
-        fY -= vecRight.fY;
-        fZ -= vecRight.fZ;
-    }
+	void operator -= ( const CVector& vecRight )
+	{
+		fX -= vecRight.fX;
+		fY -= vecRight.fY;
+		fZ -= vecRight.fZ;
+	}
 
-    void operator *= ( float fRight )
-    {
-        fX *= fRight;
-        fY *= fRight;
-        fZ *= fRight;
-    }
+	void operator *= ( float fRight )
+	{
+		fX *= fRight;
+		fY *= fRight;
+		fZ *= fRight;
+	}
 
-    void operator *= ( const CVector& vecRight )
-    {
-        fX *= vecRight.fX;
-        fY *= vecRight.fY;
-        fZ *= vecRight.fZ;
-    }
+	void operator *= ( const CVector& vecRight )
+	{
+		fX *= vecRight.fX;
+		fY *= vecRight.fY;
+		fZ *= vecRight.fZ;
+	}
 
-    void operator /= ( float fRight )
-    {
-        fX /= fRight;
-        fY /= fRight;
-        fZ /= fRight;
-    }
+	void operator /= ( float fRight )
+	{
+		fX /= fRight;
+		fY /= fRight;
+		fZ /= fRight;
+	}
 
-    void operator /= ( const CVector& vecRight )
-    {
-        fX /= vecRight.fX;
-        fY /= vecRight.fY;
-        fZ /= vecRight.fZ;
-    }
+	void operator /= ( const CVector& vecRight )
+	{
+		fX /= vecRight.fX;
+		fY /= vecRight.fY;
+		fZ /= vecRight.fZ;
+	}
 
-    bool operator== ( const CVector& param ) const
-    {
-        return ( ( fabs ( fX - param.fX ) < FLOAT_EPSILON ) &&
-                 ( fabs ( fY - param.fY ) < FLOAT_EPSILON ) &&
-                 ( fabs ( fZ - param.fZ ) < FLOAT_EPSILON ) );
-    }
+	bool operator== ( const CVector& param ) const
+	{
+		return ( ( fabs ( fX - param.fX ) < FLOAT_EPSILON ) &&
+		         ( fabs ( fY - param.fY ) < FLOAT_EPSILON ) &&
+		         ( fabs ( fZ - param.fZ ) < FLOAT_EPSILON ) );
+	}
 
-    bool operator!= ( const CVector& param ) const
-    {
-        return ( ( fabs ( fX - param.fX ) >= FLOAT_EPSILON ) ||
-                 ( fabs ( fY - param.fY ) >= FLOAT_EPSILON ) ||
-                 ( fabs ( fZ - param.fZ ) >= FLOAT_EPSILON ) );
-    }
+	bool operator!= ( const CVector& param ) const
+	{
+		return ( ( fabs ( fX - param.fX ) >= FLOAT_EPSILON ) ||
+		         ( fabs ( fY - param.fY ) >= FLOAT_EPSILON ) ||
+		         ( fabs ( fZ - param.fZ ) >= FLOAT_EPSILON ) );
+	}
 };
 
 // global vector normals

@@ -1,5 +1,5 @@
 /* =========================================
-			
+
 		FCNPC - Fully Controllable NPC
 			----------------------
 
@@ -25,30 +25,32 @@ CNode::CNode(int iNodeId)
 CNode::~CNode()
 {
 	// Close the file
-	if (m_pFile)
+	if (m_pFile) {
 		fclose(m_pFile);
+	}
 }
 
 bool CNode::Initialize()
 {
 	// Validate the node id
-	if (m_iNodeId < 0 || m_iNodeId >= MAX_NODES)
+	if (m_iNodeId < 0 || m_iNodeId >= MAX_NODES) {
 		return false;
+	}
 
 	// Format the file path
 	char szPath[MAX_PATH];
 	snprintf(szPath, sizeof(szPath), "scriptfiles/FCNPC/Nodes/NODES%d.DAT", m_iNodeId);
 	// Try to open the node file
 	fopen_s(&m_pFile, szPath, "rb");
-	if (!m_pFile)
+	if (!m_pFile) {
 		return false;
+	}
 
 	// Check the file size
 	fseek(m_pFile, 0, SEEK_END);
 	size_t sSize = ftell(m_pFile);
 	fseek(m_pFile, 0, SEEK_SET);
-	if (!sSize)
-	{
+	if (!sSize) {
 		fclose(m_pFile);
 		return false;
 	}
@@ -77,19 +79,18 @@ int CNode::Process(CPlayerData *pPlayerData, int iPointId, int iLastPoint, int i
 	unsigned short usLinkCount = GetLinkCount();
 	BYTE byteCount = 0;
 	// Do we need to change the node ?
-	while(!iChangeNode)
-	{
+	while(!iChangeNode) {
 		// Generate a random link id
 		unsigned short usLinkId = usStartLink + (rand() % usLinkCount);
 		// Set the node to the next random link
 		SetLink(usLinkId);
 		// Keep looping until we get a differente link point
-		while(m_nodeLink.usNodeId == iLastPoint && usLinkCount > 1)
-		{
+		while(m_nodeLink.usNodeId == iLastPoint && usLinkCount > 1) {
 			// Increase the attempts count
 			byteCount++;
-			if (byteCount > 10)
+			if (byteCount > 10) {
 				break;
+			}
 
 			// Generate a random link id
 			unsigned short usLinkId = usStartLink + (rand() % usLinkCount);
@@ -97,18 +98,15 @@ int CNode::Process(CPlayerData *pPlayerData, int iPointId, int iLastPoint, int i
 			SetLink(usLinkId);
 		}
 		// Check if we need to change the node id
-		if (m_nodeLink.usAreaId != m_iNodeId)
-		{
-			if (m_nodeLink.usAreaId != 65535)
-			{
-				if ((iChangeNode = CCallbackManager::OnChangeNode(pPlayerData->GetId(), (int)m_nodeLink.usAreaId)))
+		if (m_nodeLink.usAreaId != m_iNodeId) {
+			if (m_nodeLink.usAreaId != 65535) {
+				if ((iChangeNode = CCallbackManager::OnChangeNode(pPlayerData->GetId(), (int)m_nodeLink.usAreaId))) {
 					return pPlayerData->ChangeNode(m_nodeLink.usAreaId, usLinkId);
-			}
-			else
+				}
+			} else {
 				return 0;
-		}
-		else
-		{
+			}
+		} else {
 			// Set the next point
 			SetPoint(m_nodeLink.usNodeId);
 			// Get the point position
@@ -146,7 +144,7 @@ void CNode::GetPosition(CVector *pVecPosition)
 {
 	// Get the node position
 	*pVecPosition = CVector((float)(m_nodePath.sPositionX / 8),
-		(float)(m_nodePath.sPositionY / 8), (float)(m_nodePath.sPositionZ / 8) + 0.7f);
+	                        (float)(m_nodePath.sPositionY / 8), (float)(m_nodePath.sPositionZ / 8) + 0.7f);
 }
 
 unsigned short CNode::GetLinkId()
@@ -181,19 +179,20 @@ unsigned short CNode::GetLinkCount()
 
 unsigned char CNode::GetNodeType()
 {
-	if (m_nodeHeader.ulVehicleNodesNumber != 0 && m_nodeHeader.ulPedNodesNumber == 0)
+	if (m_nodeHeader.ulVehicleNodesNumber != 0 && m_nodeHeader.ulPedNodesNumber == 0) {
 		return m_nodePath.ucNodeType;
-	else if (m_nodeHeader.ulVehicleNodesNumber == 0 && m_nodeHeader.ulPedNodesNumber != 0)
+	} else if (m_nodeHeader.ulVehicleNodesNumber == 0 && m_nodeHeader.ulPedNodesNumber != 0) {
 		return NODE_TYPE_PED;
-	else
+	} else {
 		return m_nodePath.ucNodeType;
+	}
 }
 
 void CNode::SetLink(unsigned short usLinkId)
 {
 	// Set the file pointer to the link position
 	fseek(m_pFile, sizeof(CSANodeHeader) + ((m_nodeHeader.ulPedNodesNumber + m_nodeHeader.ulVehicleNodesNumber)
-		* sizeof(CSAPathNode)) + (m_nodeHeader.ulNaviNodesNumber * sizeof(CSANaviNode)) + (usLinkId * sizeof(CSALinkNode)), SEEK_SET);
+	                                        * sizeof(CSAPathNode)) + (m_nodeHeader.ulNaviNodesNumber * sizeof(CSANaviNode)) + (usLinkId * sizeof(CSALinkNode)), SEEK_SET);
 
 	// Read the node link
 	fread(&m_nodeLink, sizeof(CSALinkNode), 1, m_pFile);
@@ -202,8 +201,9 @@ void CNode::SetLink(unsigned short usLinkId)
 void CNode::SetPoint(unsigned short usPointId)
 {
 	// Validate the point
-	if (usPointId > m_nodeHeader.ulNodesNumber)
+	if (usPointId > m_nodeHeader.ulNodesNumber) {
 		return;
+	}
 
 	// Set the file pointer to the point position
 	fseek(m_pFile, sizeof(CSANodeHeader) + (usPointId * sizeof(CSAPathNode)), SEEK_SET);

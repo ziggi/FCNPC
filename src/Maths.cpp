@@ -1,5 +1,5 @@
 /* =========================================
-			
+
 		FCNPC - Fully Controllable NPC
 			----------------------
 
@@ -17,7 +17,7 @@ float CMath::GetDistanceBetween3DPoints(CVector vecPosition, CVector _vecPositio
 	float fSX = (_vecPosition.fX - vecPosition.fX) * (_vecPosition.fX - vecPosition.fX);
 	float fSY = (_vecPosition.fY - vecPosition.fY) * (_vecPosition.fY - vecPosition.fY);
 	float fSZ = (_vecPosition.fZ - vecPosition.fZ) * (_vecPosition.fZ - vecPosition.fZ);
-	return ((float)sqrt(fSX + fSY + fSZ));	
+	return ((float)sqrt(fSX + fSY + fSZ));
 }
 
 float CMath::GetDistanceFromRayToPoint(CVector p, CVector a, CVector b)
@@ -27,8 +27,9 @@ float CMath::GetDistanceFromRayToPoint(CVector p, CVector a, CVector b)
 
 	float c = n.DotProduct(&pa);
 
-	if (c > 0.0f)
+	if (c > 0.0f) {
 		return pa.DotProduct(&pa);
+	}
 
 	CVector e = pa - n * (c / n.DotProduct(&n));
 
@@ -82,7 +83,8 @@ void CMath::GetMatrixFromQuaternion(float *fQuaternion, MATRIX4X4 *m)
 	m->at.fZ = 1.0f - 2.0f * (xx + yy);
 }
 
-void CMath::QuaternionRotateZ(MATRIX4X4 *m, double angle) {
+void CMath::QuaternionRotateZ(MATRIX4X4 *m, double angle)
+{
 	double c = cos(angle);
 	double s = sin(angle);
 
@@ -118,8 +120,9 @@ float CMath::DegreeToRadians(float fDegree)
 bool CMath::IsInRange(float fRange1, float fRange2, float fRadius)
 {
 	float fDis = (fRange1 - fRange2);
-	if ((fDis < fRadius) && (fDis > -fRadius))
+	if ((fDis < fRadius) && (fDis > -fRadius)) {
 		return true;
+	}
 
 	return false;
 }
@@ -127,10 +130,11 @@ bool CMath::IsInRange(float fRange1, float fRange2, float fRadius)
 float CMath::GetAngle(float fRotationX, float fRotationY)
 {
 	float fReturn = atan2(fRotationX, fRotationY) * 180.0f / M_PI;
-	if (fReturn >= 360.0f)
+	if (fReturn >= 360.0f) {
 		fReturn -= 360.0f;
-	else if (fReturn < 0.0f)
+	} else if (fReturn < 0.0f) {
 		fReturn += 360.0f;
+	}
 
 	return fReturn;
 }

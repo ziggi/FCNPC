@@ -1,5 +1,5 @@
 /* =========================================
-			
+
 		FCNPC - Fully Controllable NPC
 			----------------------
 
@@ -25,8 +25,8 @@
 	#define WORD    unsigned short
 	#define TRUE    (1)
 	#define FALSE   (0)
-	#define STDCALL 
-	#define THISCALL 
+	#define STDCALL
+	#define THISCALL
 	#define MAX_PATH 260
 #else
 	#define STDCALL __stdcall
