@@ -1,4 +1,4 @@
-#include "main.h"
+#include "Main.h"
 
 int RPC_Gravity = 0x92;
 int RPC_Weather = 0x98;
