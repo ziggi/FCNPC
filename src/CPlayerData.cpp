@@ -975,13 +975,13 @@ WORD CPlayerData::GetWeaponSkill(int iSkill)
 
 void CPlayerData::SetWeaponState(int iState)
 {
-	m_pPlayer->aimSyncData.byteWeaponState = iState << 6;
+	m_pPlayer->aimSyncData.byteWeaponState = iState;
 }
 
 WORD CPlayerData::GetWeaponState()
 {
 	if (GetState() == PLAYER_STATE_ONFOOT) {
-		return m_pPlayer->aimSyncData.byteWeaponState >> 6;
+		return m_pPlayer->aimSyncData.byteWeaponState;
 	}
 
 	return WEAPONSTATE_UNKNOWN;
