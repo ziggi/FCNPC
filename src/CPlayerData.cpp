@@ -453,6 +453,29 @@ void CPlayerData::Process()
 	}
 
 	DWORD dwThisTick = GetTickCount();
+
+
+	// Process death
+	if (GetHealth() <= 0.0f && GetState() != PLAYER_STATE_WASTED && GetState() != PLAYER_STATE_SPAWNED) {
+		// Get the last damager weapon
+		BYTE byteWeapon = -1;
+		if (m_iLastDamager != INVALID_PLAYER_ID) {
+			byteWeapon = pNetGame->pPlayerPool->pPlayer[m_iLastDamager]->syncData.byteWeapon;
+		}
+
+		// check on vehicle
+		if (GetState() == PLAYER_STATE_DRIVER || GetState() == PLAYER_STATE_PASSENGER) {
+			RemoveFromVehicle();
+			m_dwKillVehicleTickCount = dwThisTick;
+		}
+
+		// Kill the player
+		if (dwThisTick - m_dwKillVehicleTickCount >= pServer->GetUpdateRate()) {
+			m_dwKillVehicleTickCount = 0;
+			Kill(m_iLastDamager, (int)byteWeapon);
+		}
+	}
+
 	// Update the player depending on his state
 	if (GetState() == PLAYER_STATE_ONFOOT) {
 		// Process the player mouvement
@@ -614,16 +637,6 @@ void CPlayerData::Process()
 				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_bMeleeFightstyle ? KEY_AIM : KEY_NONE);
 			}
 		}
-		// Process death
-		if (GetHealth() <= 0.0f && GetState() != PLAYER_STATE_WASTED && GetState() != PLAYER_STATE_SPAWNED) {
-			// Get the last damager weapon
-			BYTE byteWeapon = -1;
-			if (m_iLastDamager != INVALID_PLAYER_ID) {
-				byteWeapon = pNetGame->pPlayerPool->pPlayer[m_iLastDamager]->syncData.byteWeapon;
-			}
-			// Kill the player
-			Kill(m_iLastDamager, (int)byteWeapon);
-		}
 		// Update the player
 		Update(UPDATE_STATE_ONFOOT);
 	}
@@ -702,38 +715,9 @@ void CPlayerData::Process()
 		Update(UPDATE_STATE_PASSENGER);
 	}
 	// Process vehicle exiting
-	if (GetState() == PLAYER_STATE_EXIT_VEHICLE) {
+	else if (GetState() == PLAYER_STATE_EXIT_VEHICLE) {
 		if ((dwThisTick - m_dwEnterExitTickCount) > 1500) {
-			// Reset the player state
-			SetState(PLAYER_STATE_ONFOOT);
-			// Get the vehicle position
-			CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[m_pPlayer->wVehicleId];
-			CVector vecVehiclePos = pVehicle->vecPosition;
-			// Get the seat position
-			CVector *pvecSeat = CFunctions::GetVehicleModelInfoEx(pVehicle->customSpawn.iModelID,
-			                    m_pPlayer->byteSeatId == 0 || m_pPlayer->byteSeatId == 1 ? VEHICLE_MODEL_INFO_FRONTSEAT : VEHICLE_MODEL_INFO_REARSEAT);
-
-			// Adjust the seat vector
-			CVector vecSeat(pvecSeat->fX + 0.8f, pvecSeat->fY, pvecSeat->fZ);
-			if (m_pPlayer->byteSeatId == 0 || m_pPlayer->byteSeatId == 2) {
-				vecSeat.fX = -vecSeat.fX;
-			}
-
-			// Get vehicle angle
-			float fAngle = CMath::GetAngle(-pVehicle->vehMatrix.up.fX, pVehicle->vehMatrix.up.fY);
-			// This is absolutely bullshit
-			float _fAngle = fAngle * 0.01570796326794897f;
-			// Calculate the seat position based on vehicle angle
-			CVector vecSeatPosition(vecSeat.fX * cos(_fAngle) - vecSeat.fY * sin(_fAngle) + vecVehiclePos.fX,
-			                        vecSeat.fX * sin(_fAngle) + vecSeat.fY * cos(_fAngle) + vecVehiclePos.fY, vecSeat.fZ + vecVehiclePos.fZ);
-
-			// Set his position
-			SetPosition(vecSeatPosition);
-			// Set his angle
-			SetAngle(fAngle);
-			// Reset the player vehicle and seat id
-			m_pPlayer->wVehicleId = INVALID_VEHICLE_ID;
-			m_pPlayer->byteSeatId = 0;
+			RemoveFromVehicle();
 			// Call the vehicle exit complete callback
 			CCallbackManager::OnVehicleExitComplete((int)m_playerId);
 		}
@@ -1543,8 +1527,31 @@ bool CPlayerData::RemoveFromVehicle()
 
 	// Set the player state
 	SetState(PLAYER_STATE_ONFOOT);
-	CVector vecVehiclePos = pNetGame->pVehiclePool->pVehicle[m_pPlayer->wVehicleId]->vecPosition;
-	SetPosition(CVector(vecVehiclePos.fX + 2.0f, vecVehiclePos.fY + 2.0f, vecVehiclePos.fZ));
+	// Get the vehicle position
+	CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[m_pPlayer->wVehicleId];
+	CVector vecVehiclePos = pVehicle->vecPosition;
+	// Get the seat position
+	CVector *pvecSeat = CFunctions::GetVehicleModelInfoEx(pVehicle->customSpawn.iModelID,
+	                    m_pPlayer->byteSeatId == 0 || m_pPlayer->byteSeatId == 1 ? VEHICLE_MODEL_INFO_FRONTSEAT : VEHICLE_MODEL_INFO_REARSEAT);
+
+	// Adjust the seat vector
+	CVector vecSeat(pvecSeat->fX + 0.8f, pvecSeat->fY, pvecSeat->fZ);
+	if (m_pPlayer->byteSeatId == 0 || m_pPlayer->byteSeatId == 2) {
+		vecSeat.fX = -vecSeat.fX;
+	}
+
+	// Get vehicle angle
+	float fAngle = CMath::GetAngle(-pVehicle->vehMatrix.up.fX, pVehicle->vehMatrix.up.fY);
+	// This is absolutely bullshit
+	float _fAngle = fAngle * 0.01570796326794897f;
+	// Calculate the seat position based on vehicle angle
+	CVector vecSeatPosition(vecSeat.fX * cos(_fAngle) - vecSeat.fY * sin(_fAngle) + vecVehiclePos.fX,
+	                        vecSeat.fX * sin(_fAngle) + vecSeat.fY * cos(_fAngle) + vecVehiclePos.fY, vecSeat.fZ + vecVehiclePos.fZ);
+
+	// Set his position
+	SetPosition(vecSeatPosition);
+	// Set his angle
+	SetAngle(fAngle);
 	// Reset the player vehicle and seat id
 	m_pPlayer->wVehicleId = INVALID_VEHICLE_ID;
 	m_pPlayer->byteSeatId = 0;

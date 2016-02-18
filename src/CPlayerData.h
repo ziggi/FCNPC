@@ -189,6 +189,7 @@ private:
 	DWORD m_dwMoveStartTime;
 	DWORD m_dwMoveTime;
 	DWORD m_dwMeleeDelay;
+	DWORD m_dwKillVehicleTickCount;
 	CVector m_vecDestination;
 	BYTE m_byteWeaponId;
 	WORD m_wAmmo;
