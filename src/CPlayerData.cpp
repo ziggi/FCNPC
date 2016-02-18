@@ -911,12 +911,12 @@ int CPlayerData::GetInterior()
 
 void CPlayerData::SetVirtualWorld(int iVirtualWorld)
 {
-	pNetGame->pPlayerPool->dwVirtualWorld[m_pPlayer->wPlayerId] = iVirtualWorld;
+	pNetGame->pPlayerPool->dwVirtualWorld[m_playerId] = iVirtualWorld;
 }
 
 int CPlayerData::GetVirtualWorld()
 {
-	return pNetGame->pPlayerPool->dwVirtualWorld[m_pPlayer->wPlayerId];
+	return pNetGame->pPlayerPool->dwVirtualWorld[m_playerId];
 }
 
 void CPlayerData::SetWeapon(BYTE byteWeaponId)
@@ -957,7 +957,7 @@ void CPlayerData::SetWeaponSkill(int iSkill, int iLevel)
 		m_pPlayer->wSkillLevel[iSkill] = iLevel;
 
 		RakNet::BitStream bsData;
-		bsData.Write(m_pPlayer->wPlayerId);
+		bsData.Write(m_playerId);
 		bsData.Write(iSkill);
 		bsData.Write(iLevel);
 
@@ -1059,7 +1059,7 @@ void CPlayerData::SetFightingStyle(int iStyle)
 	m_pPlayer->byteFightingStyle = iStyle;
 
 	RakNet::BitStream bsData;
-	bsData.Write(m_pPlayer->wPlayerId);
+	bsData.Write(m_playerId);
 	bsData.Write(iStyle);
 
 	CFunctions::AddedPlayersRPC(&RPC_SetFightingStyle, &bsData, m_playerId);
