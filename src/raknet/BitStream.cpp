@@ -610,7 +610,16 @@ void BitStream::AddBitsAndReallocate( const int numberOfBitsToWrite )
 		}
 		else
 		{
-			data = ( unsigned char* ) realloc( data, amountToAllocate );
+			unsigned char *new_data = ( unsigned char* ) realloc( data, amountToAllocate );
+
+			if (new_data == NULL)
+			{
+				printf( "Memory Allocation Error. Not enough memory, operation aborted!" );
+			}
+			else
+			{
+				data = new_data;
+			}
 		}
 
 #ifdef _DEBUG
