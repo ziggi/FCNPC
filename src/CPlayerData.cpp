@@ -334,11 +334,18 @@ void CPlayerData::UpdateAim()
 {
 	if (m_bAiming) {
 		// Set the camera mode
-		m_pPlayer->aimSyncData.byteCameraMode = m_pWeaponInfo->IsDoubleHanded(m_pPlayer->syncData.byteWeapon) ? 53 : 7;
-		if (m_pPlayer->syncData.byteWeapon == 0 || m_pPlayer->syncData.byteWeapon == 1) {
+		if (GetWeaponType(m_pPlayer->syncData.byteWeapon) == WEAPON_TYPE_MELEE) {
 			m_pPlayer->aimSyncData.byteCameraMode = 4;
-		} else if (m_pPlayer->syncData.byteWeapon == 34) { // Sniper rifle
+		} else if (m_pPlayer->syncData.byteWeapon == WEAPON_SNIPER) {
 			m_pPlayer->aimSyncData.byteCameraMode = 7;
+		} else if (m_pPlayer->syncData.byteWeapon == WEAPON_CAMERA) {
+			m_pPlayer->aimSyncData.byteCameraMode = 46;
+		} else if (m_pPlayer->syncData.byteWeapon == WEAPON_ROCKETLAUNCHER) {
+			m_pPlayer->aimSyncData.byteCameraMode = 8;
+		} else if (m_pPlayer->syncData.byteWeapon == WEAPON_HEATSEEKER) {
+			m_pPlayer->aimSyncData.byteCameraMode = 51;
+		} else {
+			m_pPlayer->aimSyncData.byteCameraMode = 53;
 		}
 
 		// Set the weapon state
@@ -992,7 +999,13 @@ bool CPlayerData::SetWeaponDamage(int iWeaponId, float fDamage)
 
 float CPlayerData::GetWeaponDamage(int iWeaponId)
 {
-	return m_pWeaponInfo->GetDamage(iWeaponId);
+	float fDamage = m_pWeaponInfo->GetDamage(iWeaponId);
+
+	if (m_pWeaponInfo->IsDoubleHanded(iWeaponId) && GetWeaponSkill(m_pWeaponInfo->GetSkillID(iWeaponId)) == 999) {
+		fDamage *= 2.0f;
+	}
+
+	return fDamage;
 }
 
 bool CPlayerData::SetWeaponReloadTime(int iWeaponId, int iTime)

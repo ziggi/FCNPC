@@ -57,6 +57,7 @@ public:
 
 	static bool IsValid(int iWeaponId);
 	bool IsDoubleHanded(int iWeaponId);
+	int GetSkillID(int iWeaponId);
 
 private:
 	SWeaponInfo *m_pWeaponInfo[MAX_WEAPONS];

@@ -214,3 +214,28 @@ bool CWeaponInfo::IsDoubleHanded(int iWeaponId)
 
 	return false;
 }
+
+int CWeaponInfo::GetSkillID(int iWeaponId)
+{
+	static int iSkills[] = {
+		WEAPONSKILL_PISTOL, // 22
+		WEAPONSKILL_PISTOL_SILENCED, // 23
+		WEAPONSKILL_DESERT_EAGLE, // 24
+		WEAPONSKILL_SHOTGUN, // 25
+		WEAPONSKILL_SAWNOFF_SHOTGUN, // 26
+		WEAPONSKILL_SPAS12_SHOTGUN, // 27
+		WEAPONSKILL_MICRO_UZI, // 28
+		WEAPONSKILL_MP5, // 29
+		WEAPONSKILL_AK47, // 30
+		WEAPONSKILL_M4, // 31
+		WEAPONSKILL_MICRO_UZI, // 32
+		WEAPONSKILL_SNIPERRIFLE, // 33
+		WEAPONSKILL_SNIPERRIFLE // 34
+	};
+
+	if (!IsValid(iWeaponId)) {
+		return -1;
+	}
+
+	return iSkills[iWeaponId - 22];
+}
