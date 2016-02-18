@@ -37,22 +37,22 @@ public:
 	bool SetDefaultInfo(int iWeaponId);
 	SWeaponInfo GetDefaultInfo(int iWeaponId);
 
-	int GetWeaponType(int iWeaponId);
-	bool SetWeaponType(int iWeaponId, int iType);
+	int GetType(int iWeaponId);
+	bool SetType(int iWeaponId, int iType);
 
-	float GetWeaponDamage(int iWeaponId);
-	bool SetWeaponDamage(int iWeaponId, float fDamage);
+	float GetDamage(int iWeaponId);
+	bool SetDamage(int iWeaponId, float fDamage);
 
-	int GetWeaponClipSize(int iWeaponId);
-	bool SetWeaponClipSize(int iWeaponId, int iClipSize);
+	int GetClipSize(int iWeaponId);
+	bool SetClipSize(int iWeaponId, int iClipSize);
 
-	int GetWeaponShootTime(int iWeaponId);
-	bool SetWeaponShootTime(int iWeaponId, int iTime);
+	int GetShootTime(int iWeaponId);
+	bool SetShootTime(int iWeaponId, int iTime);
 
-	int GetWeaponReloadTime(int iWeaponId);
-	bool SetWeaponReloadTime(int iWeaponId, int iTime);
+	int GetReloadTime(int iWeaponId);
+	bool SetReloadTime(int iWeaponId, int iTime);
 
-	bool IsValidWeapon(int iWeaponId);
+	bool IsValid(int iWeaponId);
 	bool IsDoubleHanded(int iWeaponId);
 
 	SWeaponInfo *m_pWeaponInfo[MAX_WEAPONS];

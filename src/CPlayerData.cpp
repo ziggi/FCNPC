@@ -989,42 +989,42 @@ WORD CPlayerData::GetWeaponState()
 
 bool CPlayerData::SetWeaponDamage(int iWeaponId, float fDamage)
 {
-	return m_pWeaponInfo->SetWeaponDamage(iWeaponId, fDamage);
+	return m_pWeaponInfo->SetDamage(iWeaponId, fDamage);
 }
 
 float CPlayerData::GetWeaponDamage(int iWeaponId)
 {
-	return m_pWeaponInfo->GetWeaponDamage(iWeaponId);
+	return m_pWeaponInfo->GetDamage(iWeaponId);
 }
 
 bool CPlayerData::SetWeaponReloadTime(int iWeaponId, int iTime)
 {
-	return m_pWeaponInfo->SetWeaponReloadTime(iWeaponId, iTime);
+	return m_pWeaponInfo->SetReloadTime(iWeaponId, iTime);
 }
 
 int CPlayerData::GetWeaponReloadTime(int iWeaponId)
 {
-	return m_pWeaponInfo->GetWeaponReloadTime(iWeaponId);
+	return m_pWeaponInfo->GetReloadTime(iWeaponId);
 }
 
 bool CPlayerData::SetWeaponShootTime(int iWeaponId, int iTime)
 {
-	return m_pWeaponInfo->SetWeaponShootTime(iWeaponId, iTime);
+	return m_pWeaponInfo->SetShootTime(iWeaponId, iTime);
 }
 
 int CPlayerData::GetWeaponShootTime(int iWeaponId)
 {
-	return m_pWeaponInfo->GetWeaponShootTime(iWeaponId);
+	return m_pWeaponInfo->GetShootTime(iWeaponId);
 }
 
 bool CPlayerData::SetWeaponClipSize(int iWeaponId, int iSize)
 {
-	return m_pWeaponInfo->SetWeaponClipSize(iWeaponId, iSize);
+	return m_pWeaponInfo->SetClipSize(iWeaponId, iSize);
 }
 
 int CPlayerData::GetWeaponClipSize(int iWeaponId)
 {
-	return m_pWeaponInfo->GetWeaponClipSize(iWeaponId);
+	return m_pWeaponInfo->GetClipSize(iWeaponId);
 }
 
 void CPlayerData::SetSpecialAction(int iActionId)
