@@ -109,8 +109,7 @@ struct CAimSyncData {
 	CVector			vecFront;				// 1 - 13
 	CVector			vecPosition;			// 13 - 25
 	float			fZAim;					// 25 - 29
-	BYTE			byteWeaponState : 6;	// 29
-	BYTE			byteCameraZoom : 2;		// 29
+	BYTE			byteWeaponState;		// 29
 	BYTE			unk;					// 30 - 31
 	WORD			wCameraObject;			// 31 - 33
 	WORD			wCameraVehicle;			// 33 - 35

@@ -77,6 +77,8 @@ public:
 	WORD GetAmmo();
 	void SetWeaponSkill(int iSkill, int iLevel);
 	WORD GetWeaponSkill(int iSkill);
+	void SetWeaponState(int iState);
+	WORD GetWeaponState();
 
 	bool SetWeaponDamage(int iWeaponId, float fDamage);
 	float GetWeaponDamage(int iWeaponId);

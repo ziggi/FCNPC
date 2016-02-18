@@ -13,11 +13,6 @@
 
 #define MAX_WEAPONS 46
 
-#define WS_NO_BULLETS   0
-#define WS_LAST_BULLET  1
-#define WS_MORE_BULLETS 191
-#define WS_RELOADING    127
-
 #define WEAPON_TYPE_NONE       0
 #define WEAPON_TYPE_MELEE      1
 #define WEAPON_TYPE_SHOOT      2

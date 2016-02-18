@@ -342,11 +342,14 @@ void CPlayerData::UpdateAim()
 		}
 
 		// Set the weapon state
-		m_pPlayer->aimSyncData.byteWeaponState = WS_MORE_BULLETS;
 		if (m_bReloading) {
-			m_pPlayer->aimSyncData.byteWeaponState = WS_RELOADING;
-		} else if (!m_wAmmo) {
-			m_pPlayer->aimSyncData.byteWeaponState = WS_NO_BULLETS;
+			SetWeaponState(WEAPONSTATE_RELOADING);
+		} else if (m_wAmmo == 1) {
+			SetWeaponState(WEAPONSTATE_LAST_BULLET);
+		} else if (m_wAmmo == 0) {
+			SetWeaponState(WEAPONSTATE_NO_BULLETS);
+		} else {
+			SetWeaponState(WEAPONSTATE_MORE_BULLETS);
 		}
 
 		// Update vector pos
@@ -361,7 +364,7 @@ void CPlayerData::UpdateAim()
 	} else {
 		// Set the camera mode and weapon state
 		m_pPlayer->aimSyncData.byteCameraMode = 0;
-		m_pPlayer->aimSyncData.byteWeaponState = WS_NO_BULLETS;
+		SetWeaponState(WEAPONSTATE_NO_BULLETS);
 		// Convert the player angle to radians
 		float fAngle = CMath::DegreeToRadians(GetAngle());
 		// Calculate the camera target
@@ -968,6 +971,20 @@ void CPlayerData::SetWeaponSkill(int iSkill, int iLevel)
 WORD CPlayerData::GetWeaponSkill(int iSkill)
 {
 	return m_pPlayer->wSkillLevel[iSkill];
+}
+
+void CPlayerData::SetWeaponState(int iState)
+{
+	m_pPlayer->aimSyncData.byteWeaponState = iState << 6;
+}
+
+WORD CPlayerData::GetWeaponState()
+{
+	if (GetState() == PLAYER_STATE_ONFOOT) {
+		return m_pPlayer->aimSyncData.byteWeaponState >> 6;
+	}
+
+	return WEAPONSTATE_UNKNOWN;
 }
 
 bool CPlayerData::SetWeaponDamage(int iWeaponId, float fDamage)
