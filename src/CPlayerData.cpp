@@ -1597,6 +1597,7 @@ float CPlayerData::GetVehicleHealth()
 void CPlayerData::SetPassengerDriveBy(bool bState)
 {
 	m_pPlayer->passengerSyncData.byteDriveBy = bState ? 1 : 0;
+	m_pPlayer->aimSyncData.byteCameraMode = 55;
 }
 
 bool CPlayerData::IsPassengerDriveBy()
