@@ -994,10 +994,12 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetAmmo(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponSkillLevel(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(3, "FCNPC_SetWeaponSkillLevel");
+
 	// Get params
 	int iNPCId = (int)params[1];
 	int iSkill = (int)params[2];
 	int iLevel = (int)params[3];
+
 	// Make sure the player is valid
 	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
 		return 0;

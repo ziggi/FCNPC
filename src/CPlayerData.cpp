@@ -1035,7 +1035,13 @@ bool CPlayerData::SetWeaponClipSize(int iWeaponId, int iSize)
 
 int CPlayerData::GetWeaponClipSize(int iWeaponId)
 {
-	return m_pWeaponInfo->GetClipSize(iWeaponId);
+	int iSize = m_pWeaponInfo->GetClipSize(iWeaponId);
+
+	if (m_pWeaponInfo->IsDoubleHanded(iWeaponId) && GetWeaponSkill(m_pWeaponInfo->GetSkillID(iWeaponId)) == 999) {
+		iSize *= 2;
+	}
+
+	return iSize;
 }
 
 bool CPlayerData::SetWeaponInfo(int iWeaponId, SWeaponInfo sWeaponInfo)
