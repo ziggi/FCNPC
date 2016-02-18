@@ -15,6 +15,9 @@ extern CNetGame *pNetGame;
 
 CServer::CServer(eSAMPVersion version)
 {
+	m_iTicks = 0;
+	m_iTickRate = 5;
+
 	m_Version = version;
 	// Reset instances
 	m_pPlayerDataManager = NULL;
@@ -64,19 +67,28 @@ BYTE CServer::Initialize()
 			return 4;*/
 
 	// Check the maxnpc from the config
-	if (CFunctions::GetMaxNPC() == 0)
-		// Display a warning
-	{
+	if (CFunctions::GetMaxNPC() == 0) {
 		logprintf("Warning: the maxnpc limit is 0 (you will not be able to create NPCs unless you change it)");
 	}
 	// Check the maxnpc and maxplayers in the config
-	else if (CFunctions::GetMaxPlayers() < CFunctions::GetMaxNPC())
-		// Display a warning
-	{
+	else if (CFunctions::GetMaxPlayers() < CFunctions::GetMaxNPC()) {
 		logprintf("Warning: the maxplayers limit is less than maxnpc (possible crash)");
 	}
 
 	return 0;
+}
+
+void CServer::Process()
+{
+	if (m_iTickRate == -1) {
+		return;
+	}
+
+	if (++m_iTicks >= m_iTickRate) {
+		m_iTicks = 0;
+		// Process the player manager
+		pServer->GetPlayerManager()->Process();
+	}
 }
 
 /*int CServer::ExecuteCallback(char *szCallback, char *szFormat, ...)

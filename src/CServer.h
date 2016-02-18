@@ -31,32 +31,36 @@ public:
 	~CServer();
 
 	BYTE Initialize();
+	void Process();
 
-	CPlayerManager     *GetPlayerManager()
+	void SetTickRate(int rate) { m_iTickRate = rate; }
+	int GetTickRate(void) { return m_iTickRate; }
+
+	CPlayerManager *GetPlayerManager()
 	{
 		return m_pPlayerDataManager;
 	};
-	CNodeManager       *GetNodeManager()
+	CNodeManager *GetNodeManager()
 	{
 		return m_pNodeManager;
 	};
 
-	bool    DoesNameExist(char *szName);
+	bool DoesNameExist(char *szName);
 
-	void    SetUpdateRate(DWORD dwRate)
+	void SetUpdateRate(DWORD dwRate)
 	{
 		m_dwUpdateRate = dwRate;
 	};
-	DWORD   GetUpdateRate()
+	DWORD GetUpdateRate()
 	{
 		return m_dwUpdateRate;
 	};
 
-	void        SetMapAndreas(CMapAndreas *pMapAndreas);
+	void SetMapAndreas(CMapAndreas *pMapAndreas);
 	CMapAndreas *GetMapAndreas();
-	bool        IsMapAndreasInited();
+	bool IsMapAndreasInited();
 
-	bool    IsVehicleSeatOccupied(int iPlayerId, WORD wVehicleId, BYTE byteSeatId);
+	bool IsVehicleSeatOccupied(int iPlayerId, WORD wVehicleId, BYTE byteSeatId);
 
 	eSAMPVersion GetVersion()
 	{
@@ -64,12 +68,15 @@ public:
 	}
 
 private:
-	eSAMPVersion        m_Version;
-	CPlayerManager      *m_pPlayerDataManager;
-	CNodeManager        *m_pNodeManager;
-	CThread             *m_pDamageThread;
-	CMapAndreas         *m_pMapAndreas;
-	DWORD               m_dwUpdateRate;
+	eSAMPVersion   m_Version;
+	CPlayerManager *m_pPlayerDataManager;
+	CNodeManager   *m_pNodeManager;
+	CThread        *m_pDamageThread;
+	CMapAndreas    *m_pMapAndreas;
+	DWORD          m_dwUpdateRate;
+
+	int m_iTicks;
+	int m_iTickRate;
 };
 
 #endif

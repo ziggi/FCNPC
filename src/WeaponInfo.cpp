@@ -50,8 +50,8 @@ static SWeaponInfo g_sDefaultWeaponInfo[MAX_WEAPONS] = {
 	{WEAPON_TYPE_ROCKET,  5.0f,  1,   500, 1000}, // WEAPON_HEATSEEKER (36)
 	{WEAPON_TYPE_SPRAY,   5.0f,  500, 500, 1000}, // WEAPON_FLAMETHROWER (37)
 	{WEAPON_TYPE_SHOOT,   10.0f, 500, 20,  1000}, // WEAPON_MINIGUN (38)
-	{WEAPON_TYPE_MELEE,   5.0f,  1,   500, 1000}, // WEAPON_SATCHEL (39)
-	{WEAPON_TYPE_MELEE,   5.0f,  1,   500, 2000}, // WEAPON_BOMB (40)
+	{WEAPON_TYPE_SPECIAL, 5.0f,  1,   500, 1000}, // WEAPON_SATCHEL (39)
+	{WEAPON_TYPE_SPECIAL, 5.0f,  1,   500, 2000}, // WEAPON_BOMB (40)
 	{WEAPON_TYPE_SPRAY,   5.0f,  500, 10,  1000}, // WEAPON_SPRAYCAN (41)
 	{WEAPON_TYPE_SPRAY,   5.0f,  500, 10,  1000}, // WEAPON_FIREEXTINGUISHER (42)
 	{WEAPON_TYPE_SPECIAL, 0.0f,  1,   500, 500}, // WEAPON_CAMERA (43)
@@ -203,7 +203,7 @@ bool CWeaponInfo::SetReloadTime(int iWeaponId, int iReloadTime)
 
 bool CWeaponInfo::IsValid(int iWeaponId)
 {
-	return iWeaponId > 0 && iWeaponId < MAX_WEAPONS;
+	return iWeaponId >= 0 && iWeaponId < MAX_WEAPONS;
 }
 
 bool CWeaponInfo::IsDoubleHanded(int iWeaponId)

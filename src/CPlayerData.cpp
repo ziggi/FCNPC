@@ -444,6 +444,8 @@ void CPlayerData::Process()
 
 		return;
 	}
+
+	DWORD dwThisTick = GetTickCount();
 	// Update the player depending on his state
 	if (GetState() == PLAYER_STATE_ONFOOT) {
 		// Process the player mouvement
@@ -455,9 +457,8 @@ void CPlayerData::Process()
 			CVector vecVelocity;
 			GetVelocity(&vecVelocity);
 			// Make sure we still need to move
-			if ((GetTickCount() - m_dwMoveStartTime) < m_dwMoveTime) {
+			if ((dwThisTick - m_dwMoveStartTime) < m_dwMoveTime) {
 				// Get the time spent since the last update
-				DWORD dwThisTick = GetTickCount();
 				DWORD dwTime = (dwThisTick - m_dwMoveTickCount);
 				// Set the new position
 				CVector vecNewPosition = vecPosition + (vecVelocity * (float)dwTime);
@@ -472,7 +473,6 @@ void CPlayerData::Process()
 				m_dwMoveTickCount = dwThisTick;
 			} else {
 				// Get the time spent since the last update
-				DWORD dwThisTick = GetTickCount();
 				DWORD dwTime = (dwThisTick - m_dwMoveTickCount);
 				dwTime -= (dwThisTick - m_dwMoveStartTime) - m_dwMoveTime;
 				// Set the new position
@@ -489,7 +489,7 @@ void CPlayerData::Process()
 				// Are we entering a vehicle ?
 				if (m_wVehicleToEnter != INVALID_VEHICLE_ID) {
 					// Wait until the entry animation is finished
-					m_dwEnterExitTickCount = GetTickCount();
+					m_dwEnterExitTickCount = dwThisTick;
 					m_bEntering = true;
 					// Check whether the player is jacking the vehicle or not
 					if (pServer->IsVehicleSeatOccupied((int)m_playerId, (int)m_wVehicleToEnter, (int)m_byteSeatToEnter)) {
@@ -522,7 +522,6 @@ void CPlayerData::Process()
 		// Are we performing the entry animation ?
 		if (m_bEntering) {
 			// Get the time spent since the last update
-			DWORD dwThisTick = GetTickCount();
 			DWORD dwTime = (dwThisTick - m_dwEnterExitTickCount);
 			if (dwTime > (DWORD)(m_bJacking ? 5800 : 2500)) {
 				// Change the player state
@@ -546,7 +545,6 @@ void CPlayerData::Process()
 		// Process player reloading
 		if (m_bReloading) {
 			// Get the time spent since the reload start
-			DWORD dwThisTick = GetTickCount();
 			DWORD dwTime = (dwThisTick - m_dwReloadTickCount);
 			// Have we finished reloading ?
 			if (dwTime >= GetWeaponReloadTime(m_byteWeaponId)) {
@@ -572,10 +570,7 @@ void CPlayerData::Process()
 				}
 			} else {
 				// Check the time spent since the last shoot
-				DWORD dwThisTick = GetTickCount();
-				DWORD dwTime = (dwThisTick - m_dwShootTickCount);
-
-				if (dwTime >= GetWeaponShootTime(m_byteWeaponId)) {
+				if ((dwThisTick - m_dwShootTickCount) >= GetWeaponShootTime(m_byteWeaponId)) {
 					// Decrease the ammo
 					m_wAmmo--;
 					// Get the weapon clip size
@@ -584,7 +579,7 @@ void CPlayerData::Process()
 					// Check for reload
 					if (m_wAmmo % dwClip == 0 && m_wAmmo != 0 && dwClip != m_wAmmo && m_bHasReload) {
 						// Set the reload tick count
-						m_dwReloadTickCount = GetTickCount();
+						m_dwReloadTickCount = dwThisTick;
 						// Set reloading flag
 						m_bReloading = true;
 						// Stop shooting and aim only
@@ -602,11 +597,11 @@ void CPlayerData::Process()
 		// Process melee attack
 		else if (m_bMeleeAttack) {
 			// Get the time spent since last melee and compare it with the melee delay
-			if ((GetTickCount() - m_dwShootTickCount) >= m_dwMeleeDelay) {
+			if ((dwThisTick - m_dwShootTickCount) >= m_dwMeleeDelay) {
 				// Set the melee keys
 				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_bMeleeFightstyle ? KEY_AIM | KEY_SECONDARY_ATTACK : KEY_FIRE);
 				// Update the tick count
-				m_dwShootTickCount = GetTickCount();
+				m_dwShootTickCount = dwThisTick;
 			} else {
 				// Reset keys
 				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_bMeleeFightstyle ? KEY_AIM : KEY_NONE);
@@ -643,9 +638,8 @@ void CPlayerData::Process()
 			CVector vecVelocity;
 			GetVelocity(&vecVelocity);
 			// Make sure we still need to move
-			if ((GetTickCount() - m_dwMoveStartTime) < m_dwMoveTime) {
+			if ((dwThisTick - m_dwMoveStartTime) < m_dwMoveTime) {
 				// Get the time spent since the last update
-				DWORD dwThisTick = GetTickCount();
 				DWORD dwTime = (dwThisTick - m_dwMoveTickCount);
 				// Set the new position
 				CVector vecNewPosition = vecPosition + (vecVelocity * (float)dwTime);
@@ -660,7 +654,6 @@ void CPlayerData::Process()
 				m_dwMoveTickCount = dwThisTick;
 			} else {
 				// Get the time spent since the last update
-				DWORD dwThisTick = GetTickCount();
 				DWORD dwTime = (dwThisTick - m_dwMoveTickCount);
 				dwTime -= (dwThisTick - m_dwMoveStartTime) - m_dwMoveTime;
 				// Set the new position
@@ -703,7 +696,7 @@ void CPlayerData::Process()
 	}
 	// Process vehicle exiting
 	if (GetState() == PLAYER_STATE_EXIT_VEHICLE) {
-		if ((GetTickCount() - m_dwEnterExitTickCount) > 1500) {
+		if ((dwThisTick - m_dwEnterExitTickCount) > 1500) {
 			// Reset the player state
 			SetState(PLAYER_STATE_ONFOOT);
 			// Get the vehicle position
@@ -922,7 +915,7 @@ int CPlayerData::GetVirtualWorld()
 void CPlayerData::SetWeapon(BYTE byteWeaponId)
 {
 	// Validate the weapon id
-	if (byteWeaponId > 46) {
+	if (byteWeaponId < 0 || byteWeaponId > 46) {
 		return;
 	}
 
@@ -985,6 +978,11 @@ WORD CPlayerData::GetWeaponState()
 	}
 
 	return WEAPONSTATE_UNKNOWN;
+}
+
+int CPlayerData::GetWeaponType(int iWeaponId)
+{
+	return m_pWeaponInfo->GetType(iWeaponId);
 }
 
 bool CPlayerData::SetWeaponDamage(int iWeaponId, float fDamage)
@@ -1191,8 +1189,8 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float f
 	// Calculate the moving time
 	m_dwMoveTime = (DWORD)(fDistance / vecFront.Length());
 	// Get the start move tick
-	m_dwMoveTickCount = GetTickCount();
-	m_dwMoveStartTime = GetTickCount();
+	m_dwMoveTickCount =
+		m_dwMoveStartTime = GetTickCount();
 	// Mark as moving
 	m_bMoving = true;
 	// Save the MapAndreas usage
@@ -1310,13 +1308,18 @@ bool CPlayerData::MeleeAttack(DWORD dwTime, bool bUseFightstyle)
 	}
 
 	// Validate the player weapon
-	if (m_pPlayer->syncData.byteWeapon < 0 || m_pPlayer->syncData.byteWeapon > 15) {
+	if (GetWeaponType(m_byteWeaponId) != WEAPON_TYPE_MELEE) {
 		return false;
 	}
 
 	// Set the attacking delay
-	m_dwMeleeDelay = dwTime;
-	if (dwTime <= pServer->GetUpdateRate()) {
+	if (dwTime == -1) {
+		m_dwMeleeDelay = GetWeaponShootTime(m_byteWeaponId);
+	} else {
+		m_dwMeleeDelay = dwTime;
+	}
+
+	if (m_dwMeleeDelay <= pServer->GetUpdateRate()) {
 		m_dwMeleeDelay = pServer->GetUpdateRate() + 5;
 	}
 

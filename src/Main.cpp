@@ -251,11 +251,7 @@ PLUGIN_EXPORT int PLUGIN_CALL AmxUnload(AMX *pAMX)
 
 PLUGIN_EXPORT void PLUGIN_CALL ProcessTick()
 {
-	// Check if we need to process
-	if ((GetTickCount() - dwStartTick) >= 5) {
-		// Process the player manager
-		pServer->GetPlayerManager()->Process();
-		// Update the start tick
-		dwStartTick = GetTickCount();
+	if (pServer) {
+		pServer->Process();
 	}
 }

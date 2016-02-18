@@ -1416,7 +1416,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAtPlayer(AMX *amx, cell *params)
 	return 1;
 }
 
-// native FCNPC_MeleeAttack(npcid, delay = 100, bool:fightstyle = true);
+// native FCNPC_MeleeAttack(npcid, delay = -1, bool:fightstyle = true);
 cell AMX_NATIVE_CALL CNatives::FCNPC_MeleeAttack(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(3, "FCNPC_MeleeAttack");

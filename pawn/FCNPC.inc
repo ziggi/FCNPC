@@ -131,7 +131,7 @@ native FCNPC_IsMoving(npcid);
 native FCNPC_AimAt(npcid, Float:X, Float:Y, Float:Z, bool:shoot = false);
 native FCNPC_AimAtPlayer(npcid, playerid, bool:shoot = false);
 native FCNPC_StopAim(npcid);
-native FCNPC_MeleeAttack(npcid, delay = 100, bool:fightstyle = true);
+native FCNPC_MeleeAttack(npcid, delay = -1, bool:fightstyle = false);
 native FCNPC_StopAttack(npcid);
 native FCNPC_IsAiming(npcid);
 native FCNPC_IsShooting(npcid);

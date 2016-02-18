@@ -80,6 +80,7 @@ public:
 	void SetWeaponState(int iState);
 	WORD GetWeaponState();
 
+	int GetWeaponType(int iWeaponId);
 	bool SetWeaponDamage(int iWeaponId, float fDamage);
 	float GetWeaponDamage(int iWeaponId);
 	bool SetWeaponReloadTime(int iWeaponId, int iTime);
