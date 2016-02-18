@@ -1007,7 +1007,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponSkillLevel(AMX *amx, cell *params)
 		return 0;
 	}
 
-	// Set the player ammo
+	// Set the player weapon skill level
 	pServer->GetPlayerManager()->GetAt(iNPCId)->SetWeaponSkill(iSkill, iLevel);
 	return 1;
 }
@@ -1023,8 +1023,51 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponSkillLevel(AMX *amx, cell *params)
 		return 0;
 	}
 
-	// Get the player ammo
+	// Get the player weapon skill level
 	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetWeaponSkill(iSkill);
+}
+
+// native FCNPC_SetWeaponState(npcid, weaponstate);
+cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponState(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_SetWeaponState");
+
+	// Get params
+	int iNPCId = (int)params[1];
+	int iState = (int)params[2];
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
+		return 0;
+	}
+
+	switch (iState) {
+		case WEAPONSTATE_NO_BULLETS:
+		case WEAPONSTATE_LAST_BULLET:
+		case WEAPONSTATE_MORE_BULLETS:
+		case WEAPONSTATE_RELOADING:
+			pServer->GetPlayerManager()->GetAt(iNPCId)->SetWeaponState(iState);
+			return 1;
+	}
+
+	return 0;
+}
+
+// native FCNPC_GetWeaponState(npcid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponState(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_GetWeaponState");
+
+	// Get params
+	int iNPCId = (int)params[1];
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
+		return 0;
+	}
+
+	// Get the player weapon state
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetWeaponState();
 }
 
 // native FCNPC_SetWeaponDamage(npcid, weaponid, Float:damage);

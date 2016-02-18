@@ -59,6 +59,8 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_GetAmmo(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetWeaponSkillLevel(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetWeaponSkillLevel(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_SetWeaponState(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_GetWeaponState(AMX *amx, cell *params);
 
 	static cell AMX_NATIVE_CALL FCNPC_SetWeaponDamage(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetWeaponDamage(AMX *amx, cell *params);

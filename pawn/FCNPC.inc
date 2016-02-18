@@ -92,6 +92,8 @@ native FCNPC_SetAmmo(npcid, ammo);
 native FCNPC_GetAmmo(npcid);
 native FCNPC_SetWeaponSkillLevel(npcid, skill, level);
 native FCNPC_GetWeaponSkillLevel(npcid, skill);
+native FCNPC_SetWeaponState(npcid, weaponstate);
+native FCNPC_GetWeaponState(npcid);
 
 native FCNPC_SetWeaponDamage(npcid, weaponid, Float:damage);
 native Float:FCNPC_GetWeaponDamage(npcid, weaponid);
