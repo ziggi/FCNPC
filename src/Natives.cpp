@@ -1027,6 +1027,156 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponSkillLevel(AMX *amx, cell *params)
 	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetWeaponSkill(iSkill);
 }
 
+// native FCNPC_SetWeaponDamage(npcid, weaponid, Float:damage);
+cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponDamage(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(3, "FCNPC_SetWeaponDamage");
+
+	// Get params
+	int iNPCId = (int)params[1];
+	int iWeaponId = (int)params[2];
+	int fDamage = amx_ctof(params[3]);
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
+		return 0;
+	}
+
+	// Set the player weapon damage
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->SetWeaponDamage(iWeaponId, fDamage) ? 1 : 0;
+}
+
+// native Float:FCNPC_GetWeaponDamage(npcid, weaponid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponDamage(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_GetWeaponDamage");
+
+	// Get params
+	int iNPCId = (int)params[1];
+	int iWeaponId = (int)params[2];
+	float fDamage = 0.0f;
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
+		return fDamage;
+	}
+
+	// Get the player weapon damage
+	fDamage = pServer->GetPlayerManager()->GetAt(iNPCId)->GetWeaponDamage(iWeaponId);
+	return amx_ftoc(fDamage);
+}
+
+// native FCNPC_SetWeaponReloadTime(npcid, weaponid, time);
+cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponReloadTime(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(3, "FCNPC_SetWeaponReloadTime");
+
+	// Get params
+	int iNPCId = (int)params[1];
+	int iWeaponId = (int)params[2];
+	int iReloadTime = (int)params[3];
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
+		return 0;
+	}
+
+	// Set the player weapon reload time
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->SetWeaponReloadTime(iWeaponId, iReloadTime) ? 1 : 0;
+}
+
+// native FCNPC_GetWeaponReloadTime(npcid, weaponid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponReloadTime(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_GetWeaponReloadTime");
+
+	// Get params
+	int iNPCId = (int)params[1];
+	int iWeaponId = (int)params[2];
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
+		return 0;
+	}
+
+	// Get the player weapon reload time
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetWeaponReloadTime(iWeaponId);
+}
+
+// native FCNPC_SetWeaponShootTime(npcid, weaponid, time);
+cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponShootTime(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(3, "FCNPC_SetWeaponShootTime");
+
+	// Get params
+	int iNPCId = (int)params[1];
+	int iWeaponId = (int)params[2];
+	int iShootTime = (int)params[3];
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
+		return 0;
+	}
+
+	// Set the player weapon shoot time
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->SetWeaponShootTime(iWeaponId, iShootTime) ? 1 : 0;
+}
+
+// native FCNPC_GetWeaponShootTime(npcid, weaponid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponShootTime(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_GetWeaponShootTime");
+
+	// Get params
+	int iNPCId = (int)params[1];
+	int iWeaponId = (int)params[2];
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
+		return 0;
+	}
+
+	// Get the player weapon shoot time
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetWeaponShootTime(iWeaponId);
+}
+
+// native FCNPC_SetWeaponClipSize(npcid, weaponid, size);
+cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponClipSize(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(3, "FCNPC_SetWeaponClipSize");
+
+	// Get params
+	int iNPCId = (int)params[1];
+	int iWeaponId = (int)params[2];
+	int iClipSize = (int)params[3];
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
+		return 0;
+	}
+
+	// Set the player weapon clip size
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->SetWeaponClipSize(iWeaponId, iClipSize) ? 1 : 0;
+}
+
+// native FCNPC_GetWeaponClipSize(npcid, weaponid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponClipSize(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_GetWeaponClipSize");
+
+	// Get params
+	int iNPCId = (int)params[1];
+	int iWeaponId = (int)params[2];
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
+		return 0;
+	}
+
+	// Get the player weapon clip size
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetWeaponClipSize(iWeaponId);
+}
+
 cell AMX_NATIVE_CALL CNatives::FCNPC_AimAt(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(5, "FCNPC_AimAt");

@@ -53,6 +53,7 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_byteHitType = BULLET_HIT_TYPE_NONE;
 	m_vecSurfing = CVector();
 	m_wSurfingInfo = 0;
+	m_pWeaponInfo = new CWeaponInfo();
 }
 
 CPlayerData::~CPlayerData()
@@ -333,7 +334,7 @@ void CPlayerData::UpdateAim()
 {
 	if (m_bAiming) {
 		// Set the camera mode
-		m_pPlayer->aimSyncData.byteCameraMode = CWeaponInfo::IsDoubleHanded(m_pPlayer->syncData.byteWeapon) ? 53 : 7;
+		m_pPlayer->aimSyncData.byteCameraMode = m_pWeaponInfo->IsDoubleHanded(m_pPlayer->syncData.byteWeapon) ? 53 : 7;
 		if (m_pPlayer->syncData.byteWeapon == 0 || m_pPlayer->syncData.byteWeapon == 1) {
 			m_pPlayer->aimSyncData.byteCameraMode = 4;
 		} else if (m_pPlayer->syncData.byteWeapon == 34) { // Sniper rifle
@@ -352,9 +353,9 @@ void CPlayerData::UpdateAim()
 		if (m_byteHitType == BULLET_HIT_TYPE_PLAYER && m_wHitId != INVALID_PLAYER_ID) {
 			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[m_wHitId];
 			if (pPlayer) {
-				CPlayerData::AimAt(pPlayer->vecPosition, m_pPlayer->dwKeys & 4);
+				AimAt(pPlayer->vecPosition, IsShooting());
 			} else {
-				CPlayerData::StopAim();
+				StopAim();
 			}
 		}
 	} else {
@@ -545,43 +546,37 @@ void CPlayerData::Process()
 			DWORD dwThisTick = GetTickCount();
 			DWORD dwTime = (dwThisTick - m_dwReloadTickCount);
 			// Have we finished reloading ?
-			if (dwTime >= 2500) {
+			if (dwTime >= GetWeaponReloadTime(m_byteWeaponId)) {
 				// Reset the reloading flag
 				m_bReloading = false;
-				// Start shooting again
-				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_FIRE | KEY_AIM);
 				// Update the shoot tick
 				m_dwShootTickCount = dwThisTick;
+				// Start shooting again
+				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM | KEY_FIRE);
 			}
 		}
 		// Process player shooting
-		else if (m_bAiming && m_pPlayer->dwKeys & 4) {
+		else if (m_bAiming && IsShooting()) {
 			// Do we still have ammo ?
 			if (m_wAmmo == 0) {
 				// Check for infinite ammo flag
-				if (!m_bHasInfiniteAmmo)
+				if (!m_bHasInfiniteAmmo) {
 					// Stop shooting and aim only
-				{
 					SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM);
-				} else
+				} else {
 					// This is done so the NPC would keep reloading even if the infinite ammo flag is set
-				{
 					m_wAmmo = 500;
 				}
 			} else {
 				// Check the time spent since the last shoot
 				DWORD dwThisTick = GetTickCount();
 				DWORD dwTime = (dwThisTick - m_dwShootTickCount);
-				if (dwTime >= CWeaponInfo::GetWeaponRateOfFire(m_byteWeaponId) * 2) {
+
+				if (dwTime >= GetWeaponShootTime(m_byteWeaponId)) {
 					// Decrease the ammo
 					m_wAmmo--;
 					// Get the weapon clip size
-					DWORD dwClip = 0;
-					if (m_byteWeaponId == 38 || m_byteWeaponId == 37 || m_byteWeaponId == 34) {
-						dwClip = m_wAmmo;
-					} else {
-						dwClip = CWeaponInfo::GetWeaponClipSize(m_byteWeaponId);
-					}
+					DWORD dwClip = GetWeaponClipSize(m_byteWeaponId);
 
 					// Check for reload
 					if (m_wAmmo % dwClip == 0 && m_wAmmo != 0 && dwClip != m_wAmmo && m_bHasReload) {
@@ -975,6 +970,46 @@ WORD CPlayerData::GetWeaponSkill(int iSkill)
 	return m_pPlayer->wSkillLevel[iSkill];
 }
 
+bool CPlayerData::SetWeaponDamage(int iWeaponId, float fDamage)
+{
+	return m_pWeaponInfo->SetWeaponDamage(iWeaponId, fDamage);
+}
+
+float CPlayerData::GetWeaponDamage(int iWeaponId)
+{
+	return m_pWeaponInfo->GetWeaponDamage(iWeaponId);
+}
+
+bool CPlayerData::SetWeaponReloadTime(int iWeaponId, int iTime)
+{
+	return m_pWeaponInfo->SetWeaponReloadTime(iWeaponId, iTime);
+}
+
+int CPlayerData::GetWeaponReloadTime(int iWeaponId)
+{
+	return m_pWeaponInfo->GetWeaponReloadTime(iWeaponId);
+}
+
+bool CPlayerData::SetWeaponShootTime(int iWeaponId, int iTime)
+{
+	return m_pWeaponInfo->SetWeaponShootTime(iWeaponId, iTime);
+}
+
+int CPlayerData::GetWeaponShootTime(int iWeaponId)
+{
+	return m_pWeaponInfo->GetWeaponShootTime(iWeaponId);
+}
+
+bool CPlayerData::SetWeaponClipSize(int iWeaponId, int iSize)
+{
+	return m_pWeaponInfo->SetWeaponClipSize(iWeaponId, iSize);
+}
+
+int CPlayerData::GetWeaponClipSize(int iWeaponId)
+{
+	return m_pWeaponInfo->GetWeaponClipSize(iWeaponId);
+}
+
 void CPlayerData::SetSpecialAction(int iActionId)
 {
 	// Validate the action id
@@ -1204,7 +1239,7 @@ void CPlayerData::AimAt(CVector vecPoint, bool bShoot)
 	m_pPlayer->aimSyncData.vecPosition = vecPosition;
 	// Set keys
 	if (!m_bAiming) {
-		SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, bShoot ? KEY_FIRE | KEY_AIM : KEY_AIM);
+		SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM | KEY_FIRE);
 	}
 
 	// Mark as aiming
@@ -1295,7 +1330,7 @@ bool CPlayerData::IsAiming()
 
 bool CPlayerData::IsShooting()
 {
-	return m_bAiming && m_pPlayer->dwKeys == 4;
+	return m_bAiming && m_pPlayer->dwKeys & KEY_FIRE;
 }
 
 bool CPlayerData::IsReloading()

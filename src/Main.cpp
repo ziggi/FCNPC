@@ -132,6 +132,15 @@ AMX_NATIVE_INFO PluginNatives[ ] = {
 	{ "FCNPC_SetWeaponSkillLevel", CNatives::FCNPC_SetWeaponSkillLevel},
 	{ "FCNPC_GetWeaponSkillLevel", CNatives::FCNPC_GetWeaponSkillLevel},
 
+	{ "FCNPC_SetWeaponDamage", CNatives::FCNPC_SetWeaponDamage},
+	{ "FCNPC_GetWeaponDamage", CNatives::FCNPC_GetWeaponDamage},
+	{ "FCNPC_SetWeaponReloadTime", CNatives::FCNPC_SetWeaponReloadTime},
+	{ "FCNPC_GetWeaponReloadTime", CNatives::FCNPC_GetWeaponReloadTime},
+	{ "FCNPC_SetWeaponShootTime", CNatives::FCNPC_SetWeaponShootTime},
+	{ "FCNPC_GetWeaponShootTime", CNatives::FCNPC_GetWeaponShootTime},
+	{ "FCNPC_SetWeaponClipSize", CNatives::FCNPC_SetWeaponClipSize},
+	{ "FCNPC_GetWeaponClipSize", CNatives::FCNPC_GetWeaponClipSize},
+
 	{ "FCNPC_SetKeys", CNatives::FCNPC_SetKeys},
 	{ "FCNPC_GetKeys", CNatives::FCNPC_GetKeys},
 

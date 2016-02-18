@@ -93,6 +93,15 @@ native FCNPC_GetAmmo(npcid);
 native FCNPC_SetWeaponSkillLevel(npcid, skill, level);
 native FCNPC_GetWeaponSkillLevel(npcid, skill);
 
+native FCNPC_SetWeaponDamage(npcid, weaponid, Float:damage);
+native Float:FCNPC_GetWeaponDamage(npcid, weaponid);
+native FCNPC_SetWeaponReloadTime(npcid, weaponid, time);
+native FCNPC_GetWeaponReloadTime(npcid, weaponid);
+native FCNPC_SetWeaponShootTime(npcid, weaponid, time);
+native FCNPC_GetWeaponShootTime(npcid, weaponid);
+native FCNPC_SetWeaponClipSize(npcid, weaponid, size);
+native FCNPC_GetWeaponClipSize(npcid, weaponid);
+
 native FCNPC_SetKeys(npcid, Keys);
 native FCNPC_GetKeys(npcid, &UDAnalog, &LRAnalog, &Keys);
 

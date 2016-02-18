@@ -60,6 +60,15 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_SetWeaponSkillLevel(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetWeaponSkillLevel(AMX *amx, cell *params);
 
+	static cell AMX_NATIVE_CALL FCNPC_SetWeaponDamage(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_GetWeaponDamage(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_SetWeaponReloadTime(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_GetWeaponReloadTime(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_SetWeaponShootTime(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_GetWeaponShootTime(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_SetWeaponClipSize(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_GetWeaponClipSize(AMX *amx, cell *params);
+
 	static cell AMX_NATIVE_CALL FCNPC_SetKeys(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetKeys(AMX *amx, cell *params);
 

@@ -16,6 +16,7 @@
 #include "Structs.h"
 #include "Playback.h"
 #include "Node.h"
+#include "WeaponInfo.h"
 #include <stdio.h>
 
 class CPlayback;
@@ -76,6 +77,15 @@ public:
 	WORD GetAmmo();
 	void SetWeaponSkill(int iSkill, int iLevel);
 	WORD GetWeaponSkill(int iSkill);
+
+	bool SetWeaponDamage(int iWeaponId, float fDamage);
+	float GetWeaponDamage(int iWeaponId);
+	bool SetWeaponReloadTime(int iWeaponId, int iTime);
+	int GetWeaponReloadTime(int iWeaponId);
+	bool SetWeaponShootTime(int iWeaponId, int iTime);
+	int GetWeaponShootTime(int iWeaponId);
+	bool SetWeaponClipSize(int iWeaponId, int iSize);
+	int GetWeaponClipSize(int iWeaponId);
 
 	void SetSkin(int iSkin);
 	int GetSkin();
@@ -194,6 +204,7 @@ private:
 	CPlayer *m_pPlayer;
 	CVector m_vecSurfing;
 	WORD m_wSurfingInfo;
+	CWeaponInfo *m_pWeaponInfo;
 
 };
 
