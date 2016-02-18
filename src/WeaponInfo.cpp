@@ -62,7 +62,7 @@ const CWeaponInfo::SWeaponInfo CWeaponInfo::m_sDefaultWeaponInfo[MAX_WEAPONS] = 
 CWeaponInfo::CWeaponInfo()
 {
 	for (int i = 0; i < (sizeof(m_pWeaponInfo) / sizeof(m_pWeaponInfo[0])); i++) {
-		m_pWeaponInfo[i] = new SWeaponInfo(*GetDefaultInfo(i));
+		m_pWeaponInfo[i] = new SWeaponInfo(GetDefaultInfo(i));
 	}
 }
 
@@ -72,17 +72,17 @@ bool CWeaponInfo::SetDefaultInfo(int iWeaponId)
 		return false;
 	}
 
-	m_pWeaponInfo[iWeaponId] = GetDefaultInfo(iWeaponId);
+	*m_pWeaponInfo[iWeaponId] = GetDefaultInfo(iWeaponId);
 	return true;
 }
 
-CWeaponInfo::SWeaponInfo *CWeaponInfo::GetDefaultInfo(int iWeaponId)
+CWeaponInfo::SWeaponInfo CWeaponInfo::GetDefaultInfo(int iWeaponId)
 {
 	if (!IsValidWeapon(iWeaponId)) {
-		return NULL;
+		return SWeaponInfo();
 	}
 
-	return &(CWeaponInfo::SWeaponInfo)m_sDefaultWeaponInfo[iWeaponId];
+	return m_sDefaultWeaponInfo[iWeaponId];
 }
 
 int CWeaponInfo::GetWeaponType(int iWeaponId)

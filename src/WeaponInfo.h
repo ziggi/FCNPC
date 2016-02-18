@@ -40,7 +40,7 @@ public:
 	CWeaponInfo();
 
 	bool SetDefaultInfo(int iWeaponId);
-	SWeaponInfo *GetDefaultInfo(int iWeaponId);
+	SWeaponInfo GetDefaultInfo(int iWeaponId);
 
 	int GetWeaponType(int iWeaponId);
 	bool SetWeaponType(int iWeaponId, int iType);
