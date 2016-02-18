@@ -143,6 +143,11 @@ AMX_NATIVE_INFO PluginNatives[ ] = {
 	{ "FCNPC_SetWeaponClipSize", CNatives::FCNPC_SetWeaponClipSize},
 	{ "FCNPC_GetWeaponClipSize", CNatives::FCNPC_GetWeaponClipSize},
 
+	{ "FCNPC_SetWeaponInfo", CNatives::FCNPC_SetWeaponInfo },
+	{ "FCNPC_GetWeaponInfo", CNatives::FCNPC_GetWeaponInfo },
+	{ "FCNPC_SetWeaponDefaultInfo", CNatives::FCNPC_SetWeaponDefaultInfo },
+	{ "FCNPC_GetWeaponDefaultInfo", CNatives::FCNPC_GetWeaponDefaultInfo },
+
 	{ "FCNPC_SetKeys", CNatives::FCNPC_SetKeys},
 	{ "FCNPC_GetKeys", CNatives::FCNPC_GetKeys},
 

@@ -20,22 +20,25 @@
 #define WEAPON_TYPE_SPRAY      4
 #define WEAPON_TYPE_SPECIAL    5
 
+struct SWeaponInfo
+{
+	int iType;
+	float fDamage;
+	int iClipSize;
+	int iShootTime;
+	int iReloadTime;
+};
+
 class CWeaponInfo
 {
 public:
-	struct SWeaponInfo
-	{
-		int iType;
-		float fDamage;
-		int iClipSize;
-		int iShootTime;
-		int iReloadTime;
-	};
-
 	CWeaponInfo();
 
-	bool SetDefaultInfo(int iWeaponId);
-	SWeaponInfo GetDefaultInfo(int iWeaponId);
+	static bool SetDefaultInfo(int iWeaponId, SWeaponInfo sWeaponInfo);
+	static SWeaponInfo GetDefaultInfo(int iWeaponId);
+
+	bool SetInfo(int iWeaponId, SWeaponInfo sWeaponInfo);
+	SWeaponInfo GetInfo(int iWeaponId);
 
 	int GetType(int iWeaponId);
 	bool SetType(int iWeaponId, int iType);
@@ -52,11 +55,11 @@ public:
 	int GetReloadTime(int iWeaponId);
 	bool SetReloadTime(int iWeaponId, int iTime);
 
-	bool IsValid(int iWeaponId);
+	static bool IsValid(int iWeaponId);
 	bool IsDoubleHanded(int iWeaponId);
 
+private:
 	SWeaponInfo *m_pWeaponInfo[MAX_WEAPONS];
-	const static SWeaponInfo m_sDefaultWeaponInfo[MAX_WEAPONS];
 };
 
 #endif

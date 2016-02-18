@@ -10,7 +10,7 @@
 
 #include "Main.h"
 
-const CWeaponInfo::SWeaponInfo CWeaponInfo::m_sDefaultWeaponInfo[MAX_WEAPONS] = {
+static SWeaponInfo g_sDefaultWeaponInfo[MAX_WEAPONS] = {
 	{WEAPON_TYPE_MELEE,   5.0f,  0,   250, 50}, // WEAPON_BRASSKNUCKLE (1)
 	{WEAPON_TYPE_MELEE,   5.0f,  0,   250, 50}, // WEAPON_GOLFCLUK (2)
 	{WEAPON_TYPE_MELEE,   5.0f,  0,   250, 50}, // WEAPON_NITESTICE (3)
@@ -66,23 +66,42 @@ CWeaponInfo::CWeaponInfo()
 	}
 }
 
-bool CWeaponInfo::SetDefaultInfo(int iWeaponId)
+bool CWeaponInfo::SetDefaultInfo(int iWeaponId, SWeaponInfo sWeaponInfo)
+{
+	if (!CWeaponInfo::IsValid(iWeaponId)) {
+		return false;
+	}
+
+	g_sDefaultWeaponInfo[iWeaponId] = sWeaponInfo;
+	return true;
+}
+
+SWeaponInfo CWeaponInfo::GetDefaultInfo(int iWeaponId)
+{
+	if (!CWeaponInfo::IsValid(iWeaponId)) {
+		return SWeaponInfo();
+	}
+
+	return g_sDefaultWeaponInfo[iWeaponId];
+}
+
+bool CWeaponInfo::SetInfo(int iWeaponId, SWeaponInfo sWeaponInfo)
 {
 	if (!IsValid(iWeaponId)) {
 		return false;
 	}
 
-	*m_pWeaponInfo[iWeaponId] = GetDefaultInfo(iWeaponId);
+	*m_pWeaponInfo[iWeaponId] = sWeaponInfo;
 	return true;
 }
 
-CWeaponInfo::SWeaponInfo CWeaponInfo::GetDefaultInfo(int iWeaponId)
+SWeaponInfo CWeaponInfo::GetInfo(int iWeaponId)
 {
 	if (!IsValid(iWeaponId)) {
 		return SWeaponInfo();
 	}
 
-	return m_sDefaultWeaponInfo[iWeaponId];
+	return *m_pWeaponInfo[iWeaponId];
 }
 
 int CWeaponInfo::GetType(int iWeaponId)

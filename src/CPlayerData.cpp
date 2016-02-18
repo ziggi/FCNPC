@@ -1027,6 +1027,16 @@ int CPlayerData::GetWeaponClipSize(int iWeaponId)
 	return m_pWeaponInfo->GetClipSize(iWeaponId);
 }
 
+bool CPlayerData::SetWeaponInfo(int iWeaponId, SWeaponInfo sWeaponInfo)
+{
+	return m_pWeaponInfo->SetInfo(iWeaponId, sWeaponInfo);
+}
+
+SWeaponInfo CPlayerData::GetWeaponInfo(int iWeaponId)
+{
+	return m_pWeaponInfo->GetInfo(iWeaponId);
+}
+
 void CPlayerData::SetSpecialAction(int iActionId)
 {
 	// Validate the action id

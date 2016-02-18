@@ -88,6 +88,8 @@ public:
 	int GetWeaponShootTime(int iWeaponId);
 	bool SetWeaponClipSize(int iWeaponId, int iSize);
 	int GetWeaponClipSize(int iWeaponId);
+	bool SetWeaponInfo(int iWeaponId, SWeaponInfo sWeaponInfo);
+	SWeaponInfo GetWeaponInfo(int iWeaponId);
 
 	void SetSkin(int iSkin);
 	int GetSkin();

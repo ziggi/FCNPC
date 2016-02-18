@@ -1220,6 +1220,147 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponClipSize(AMX *amx, cell *params)
 	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetWeaponClipSize(iWeaponId);
 }
 
+// native FCNPC_SetWeaponInfo(npcid, weaponid, Float:damage = -1.0, reload_time = -1, shoot_time = -1, clip_size = -1);
+cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponInfo(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(6, "FCNPC_SetWeaponInfo");
+
+	// Get params
+	int iNPCId = (int)params[1];
+	int iWeaponId = (int)params[2];
+	int fDamage = amx_ctof(params[3]);
+	int iReloadTime = (int)params[4];
+	int iShootTime = (int)params[5];
+	int iClipSize = (int)params[6];
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
+		return 0;
+	}
+
+	// Set the player weapon info
+	SWeaponInfo sWeaponInfo = pServer->GetPlayerManager()->GetAt(iNPCId)->GetWeaponInfo(iWeaponId);
+	
+	if (fDamage != -1.0) {
+		sWeaponInfo.fDamage = fDamage;
+	}
+	
+	if (iClipSize != -1) {
+		sWeaponInfo.iClipSize = iClipSize;
+	}
+
+	if (iReloadTime != -1) {
+		sWeaponInfo.iReloadTime = iReloadTime;
+	}
+
+	if (iShootTime != -1) {
+		sWeaponInfo.iShootTime = iShootTime;
+	}
+
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->SetWeaponInfo(iWeaponId, sWeaponInfo) ? 1 : 0;
+}
+
+// native FCNPC_GetWeaponInfo(npcid, weaponid, &Float:damage = -1.0, &reload_time = -1, &shoot_time = -1, &clip_size = -1);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponInfo(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(6, "FCNPC_GetWeaponInfo");
+
+	// get params
+	int iNPCId = (int)params[1];
+	int iWeaponId = (int)params[2];
+
+	// valid weapon
+	if (!CWeaponInfo::IsValid(iWeaponId)) {
+		return 0;
+	}
+
+	// get weapon info
+	SWeaponInfo sWeaponInfo = pServer->GetPlayerManager()->GetAt(iNPCId)->GetWeaponInfo(iWeaponId);
+
+	// write data to amx
+	cell *pAddress = NULL;
+	amx_GetAddr(amx, params[2], &pAddress);
+	*pAddress = amx_ftoc(sWeaponInfo.fDamage);
+
+	amx_GetAddr(amx, params[3], &pAddress);
+	*pAddress = sWeaponInfo.iReloadTime;
+
+	amx_GetAddr(amx, params[4], &pAddress);
+	*pAddress = sWeaponInfo.iShootTime;
+
+	amx_GetAddr(amx, params[5], &pAddress);
+	*pAddress = sWeaponInfo.iClipSize;
+
+	return 1;
+}
+
+// native FCNPC_SetWeaponDefaultInfo(weaponid, Float:damage = -1.0, reload_time = -1, shoot_time = -1, clip_size = -1);
+cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponDefaultInfo(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(5, "FCNPC_SetWeaponDefaultInfo");
+
+	// Get params
+	int iWeaponId = (int)params[1];
+	int fDamage = amx_ctof(params[2]);
+	int iReloadTime = (int)params[3];
+	int iShootTime = (int)params[4];
+	int iClipSize = (int)params[5];
+
+	// Set default weapon info
+	SWeaponInfo sWeaponInfo = CWeaponInfo::GetDefaultInfo(iWeaponId);
+
+	if (fDamage != -1.0) {
+		sWeaponInfo.fDamage = fDamage;
+	}
+
+	if (iClipSize != -1) {
+		sWeaponInfo.iClipSize = iClipSize;
+	}
+
+	if (iReloadTime != -1) {
+		sWeaponInfo.iReloadTime = iReloadTime;
+	}
+
+	if (iShootTime != -1) {
+		sWeaponInfo.iShootTime = iShootTime;
+	}
+
+	return CWeaponInfo::SetDefaultInfo(iWeaponId, sWeaponInfo) ? 1 : 0;
+}
+
+// native FCNPC_GetWeaponDefaultInfo(weaponid, &Float:damage = -1.0, &reload_time = -1, &shoot_time = -1, &clip_size = -1);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponDefaultInfo(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(5, "FCNPC_GetWeaponDefaultInfo");
+
+	// get params
+	int iWeaponId = (int)params[1];
+
+	// valid weapon
+	if (!CWeaponInfo::IsValid(iWeaponId)) {
+		return 0;
+	}
+
+	// get weapon info
+	SWeaponInfo sWeaponInfo = CWeaponInfo::GetDefaultInfo(iWeaponId);
+
+	// write data to amx
+	cell *pAddress = NULL;
+	amx_GetAddr(amx, params[2], &pAddress);
+	*pAddress = amx_ftoc(sWeaponInfo.fDamage);
+
+	amx_GetAddr(amx, params[3], &pAddress);
+	*pAddress = sWeaponInfo.iReloadTime;
+
+	amx_GetAddr(amx, params[4], &pAddress);
+	*pAddress = sWeaponInfo.iShootTime;
+
+	amx_GetAddr(amx, params[5], &pAddress);
+	*pAddress = sWeaponInfo.iClipSize;
+
+	return 1;
+}
+
 cell AMX_NATIVE_CALL CNatives::FCNPC_AimAt(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(5, "FCNPC_AimAt");
