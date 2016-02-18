@@ -11,6 +11,7 @@
 #include "Main.h"
 
 static SWeaponInfo g_sDefaultWeaponInfo[MAX_WEAPONS] = {
+	{WEAPON_TYPE_MELEE,   5.0f,  0,   250, 50}, // fists (0)
 	{WEAPON_TYPE_MELEE,   5.0f,  0,   250, 50}, // WEAPON_BRASSKNUCKLE (1)
 	{WEAPON_TYPE_MELEE,   5.0f,  0,   250, 50}, // WEAPON_GOLFCLUK (2)
 	{WEAPON_TYPE_MELEE,   5.0f,  0,   250, 50}, // WEAPON_NITESTICE (3)

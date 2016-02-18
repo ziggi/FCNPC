@@ -11,7 +11,7 @@
 #ifndef WEAPONINFO_H
 #define WEAPONINFO_H
 
-#define MAX_WEAPONS 46
+#define MAX_WEAPONS 47
 
 #define WEAPON_TYPE_NONE       0
 #define WEAPON_TYPE_MELEE      1
