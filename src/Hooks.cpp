@@ -29,6 +29,19 @@ struct t_OnPlayerGiveDamage {
 
 t_OnPlayerGiveDamage pGiveDamage;
 
+// weapon shoot
+bool bWeaponShot;
+
+struct t_OnPlayerWeaponShot {
+	int iPlayerId;
+	int iWeaponId;
+	int iHitType;
+	int iHitId;
+	CVector vecHit;
+};
+
+t_OnPlayerWeaponShot pWeaponShot;
+
 // stream in/out
 struct t_OnPlayerStream {
 	int iPlayerId;
@@ -62,6 +75,8 @@ int amx_FindPublic_Hook(AMX *amx, const char *funcname, int *index)
 {
 	if (!strcmp(funcname, "OnPlayerGiveDamage")) {
 		bGiveDamage = true;
+	} else if (!strcmp(funcname, "OnPlayerWeaponShot")) {
+		bWeaponShot = true;
 	} else if (!strcmp(funcname, "OnPlayerStreamIn")) {
 		bStreamIn = true;
 	} else if (!strcmp(funcname, "OnPlayerStreamOut")) {
@@ -98,6 +113,38 @@ int amx_Push_Hook(AMX *amx, cell value)
 
 			case 0:
 				pGiveDamage.iBodypart = value;
+				break;
+		}
+		// Increase the parameters count
+		bytePushCount++;
+	} else if (bWeaponShot) {
+		switch (bytePushCount) {
+			case 6:
+				pWeaponShot.iPlayerId = value;
+				break;
+
+			case 5:
+				pWeaponShot.iWeaponId = value;
+				break;
+
+			case 4:
+				pWeaponShot.iHitType = value;
+				break;
+
+			case 3:
+				pWeaponShot.iHitId = value;
+				break;
+
+			case 2:
+				pWeaponShot.vecHit.fX = amx_ctof(value);
+				break;
+
+			case 1:
+				pWeaponShot.vecHit.fY = amx_ctof(value);
+				break;
+
+			case 0:
+				pWeaponShot.vecHit.fZ = amx_ctof(value);
 				break;
 		}
 		// Increase the parameters count
@@ -150,9 +197,24 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 		ret = pfn_amx_Exec(amx, retval, index);
 
 		// call custom callback
-		if (pServer->GetPlayerManager()->IsPlayerConnectedEx(pGiveDamage.iDamagerId)) {
+		if (pServer->GetPlayerManager()->IsPlayerConnectedEx(pWeaponShot.iHitId)) {
 			pServer->GetPlayerManager()->GetAt(pGiveDamage.iDamagerId)->ProcessDamage(
 			    pGiveDamage.iPlayerId, pGiveDamage.fHealthLoss, pGiveDamage.iWeapon, pGiveDamage.iBodypart);
+		}
+	} else if (bWeaponShot) {
+		bWeaponShot = false;
+
+		// call hooked callback
+		ret = pfn_amx_Exec(amx, retval, index);
+
+		// call custom callback
+		if (pWeaponShot.iHitType == BULLET_HIT_TYPE_VEHICLE) {
+			WORD wPlayerId = pServer->GetVehicleSeatPlayerId(pWeaponShot.iHitId, 0);
+
+			if (pServer->GetPlayerManager()->IsPlayerConnectedEx(wPlayerId)) {
+				pServer->GetPlayerManager()->GetAt(wPlayerId)->ProcessVehicleDamage(
+				    pWeaponShot.iPlayerId, pWeaponShot.iHitId, pWeaponShot.iWeaponId, pWeaponShot.vecHit);
+			}
 		}
 	} else if (bStreamIn) {
 		bStreamIn = false;

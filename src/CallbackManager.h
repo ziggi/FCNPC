@@ -29,6 +29,7 @@ public:
 	static void	OnVehicleEntryComplete(int iGameId, int iVehicleId, int iSeat);
 	static void	OnVehicleExitComplete(int iGameId);
 	static int	OnTakeDamage(int iGameId, int iDamagerId, int iWeapon, int iBodyPart, float fHealthLoss);
+	static int	OnVehicleTakeDamage(int iGameId, int iDamagerId, int iVehicleId, int iWeaponId, CVector vecHit);
 	static void	OnFinishPlayback(int iGameId);
 	static int	OnChangeNode(int iGameId, int iNodeId);
 	static int	OnFinishNodePoint(int iGameId, int iNodePoint);

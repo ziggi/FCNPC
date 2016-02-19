@@ -125,19 +125,39 @@ bool CServer::IsMapAndreasInited()
 
 bool CServer::IsVehicleSeatOccupied(int iPlayerId, WORD wVehicleId, BYTE byteSeatId)
 {
+	WORD wPlayerId = GetVehicleSeatPlayerId(wVehicleId, byteSeatId);
+
+	if (wPlayerId != (WORD)iPlayerId && wPlayerId != INVALID_PLAYER_ID) {
+		return true;
+	}
+
+	return false;
+}
+
+WORD CServer::GetVehicleSeatPlayerId(WORD wVehicleId, BYTE byteSeatId)
+{
+	if (wVehicleId < 1 || wVehicleId > MAX_VEHICLES) {
+		return INVALID_PLAYER_ID;
+	}
+
+	CPlayerPool *pPlayerPool = pNetGame->pPlayerPool;
+	CPlayer *pPlayer;
+
 	// Loop through all the players
 	for (int i = 0; i < MAX_PLAYERS; i++) {
 		// Ignore non connected players and the same player
-		if (!pNetGame->pPlayerPool->bIsPlayerConnectedEx[i] || iPlayerId == i) {
+		if (!pPlayerPool->bIsPlayerConnectedEx[i]) {
 			continue;
 		}
 
 		// Get the player interface
-		CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[i];
+		pPlayer = pPlayerPool->pPlayer[i];
+
 		// Check vehicle and seat
 		if (pPlayer->wVehicleId == wVehicleId && pPlayer->byteSeatId == byteSeatId) {
-			return true;
+			return pPlayer->wPlayerId;
 		}
 	}
-	return false;
+
+	return INVALID_PLAYER_ID;
 }

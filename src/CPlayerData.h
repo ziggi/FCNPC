@@ -21,6 +21,7 @@
 
 class CPlayback;
 struct CSyncData;
+struct CVehicle;
 struct CVehicleSyncData;
 struct CPlayer;
 
@@ -129,6 +130,7 @@ public:
 
 
 	void ProcessDamage(int iDamagerId, float fHealthLoss, int iWeaponId, int iBodypart);
+	void ProcessVehicleDamage(int iDamagerId, int iVehicleId, int iWeaponId, CVector vecHit);
 
 	bool EnterVehicle(int iVehicleId, int iSeatId, int iType);
 	bool ExitVehicle();
@@ -137,6 +139,8 @@ public:
 	bool IsInVehicle();
 	int GetVehicleId();
 	int GetSeatId();
+	void SetVehicle(WORD wVehicleId, BYTE byteSeatId);
+	CVehicle *GetVehicle();
 	void SetVehicleSiren(bool bState);
 	bool IsVehicleSiren();
 	void SetVehicleHealth(float fHealth);
@@ -190,6 +194,7 @@ private:
 	DWORD m_dwMoveTime;
 	DWORD m_dwMeleeDelay;
 	DWORD m_dwKillVehicleTickCount;
+	DWORD m_dwVehicleDeadTick;
 	CVector m_vecDestination;
 	BYTE m_byteWeaponId;
 	WORD m_wAmmo;

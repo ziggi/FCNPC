@@ -151,6 +151,32 @@ int CCallbackManager::OnTakeDamage(int iGameId, int iDamagerId, int iWeapon, int
 	return cReturn;
 }
 
+int CCallbackManager::OnVehicleTakeDamage(int iGameId, int iDamagerId, int iVehicleId, int iWeaponId, CVector vecHit)
+{
+	cell cReturn = 1;
+	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {
+		// Get the function index
+		int iIndex;
+		if (!amx_FindPublic((*i), "FCNPC_OnVehicleTakeDamage", &iIndex)) {
+			// Push the parameters
+			amx_Push((*i), amx_ftoc(vecHit.fZ));
+			amx_Push((*i), amx_ftoc(vecHit.fY));
+			amx_Push((*i), amx_ftoc(vecHit.fX));
+			amx_Push((*i), iWeaponId);
+			amx_Push((*i), iVehicleId);
+			amx_Push((*i), iDamagerId);
+			amx_Push((*i), iGameId);
+			// Execute the callback
+			if (cReturn) {
+				amx_Exec((*i), &cReturn, iIndex);
+			} else {
+				amx_Exec((*i), NULL, iIndex);
+			}
+		}
+	}
+	return cReturn;
+}
+
 void CCallbackManager::OnFinishPlayback(int iGameId)
 {
 	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {

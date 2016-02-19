@@ -61,6 +61,7 @@ public:
 	bool IsMapAndreasInited();
 
 	bool IsVehicleSeatOccupied(int iPlayerId, WORD wVehicleId, BYTE byteSeatId);
+	WORD GetVehicleSeatPlayerId(WORD wVehicleId, BYTE byteSeatId);
 
 	eSAMPVersion GetVersion()
 	{
