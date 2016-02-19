@@ -197,7 +197,7 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 		ret = pfn_amx_Exec(amx, retval, index);
 
 		// call custom callback
-		if (pServer->GetPlayerManager()->IsPlayerConnectedEx(pWeaponShot.iHitId)) {
+		if (pServer->GetPlayerManager()->IsPlayerConnectedEx(pGiveDamage.iDamagerId)) {
 			pServer->GetPlayerManager()->GetAt(pGiveDamage.iDamagerId)->ProcessDamage(
 			    pGiveDamage.iPlayerId, pGiveDamage.fHealthLoss, pGiveDamage.iWeapon, pGiveDamage.iBodypart);
 		}
