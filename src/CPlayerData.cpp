@@ -1622,6 +1622,7 @@ void CPlayerData::SetVehicle(WORD wVehicleId, BYTE byteSeatId)
 	if (wVehicleId == INVALID_VEHICLE_ID && m_pPlayer->wVehicleId != INVALID_VEHICLE_ID) {
 		CVehicle *pVehicle = GetVehicle();
 		pVehicle->bOccupied = false;
+		pVehicle->vehActive = false;
 	}
 
 	// validate vehicle
