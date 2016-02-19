@@ -303,7 +303,6 @@ void CPlayerData::Update(int iState)
 					Kill(pVehicle->wKillerID, 255);
 
 					pVehicle->bDead = true;
-					pVehicle->vehWasted = true;
 					m_dwVehicleDeadTick = 0;
 					SetVehicle(INVALID_VEHICLE_ID, 0);
 				}
