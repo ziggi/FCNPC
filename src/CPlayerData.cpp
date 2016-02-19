@@ -591,8 +591,10 @@ void CPlayerData::Process()
 		if (m_bReloading) {
 			// Get the time spent since the reload start
 			DWORD dwTime = (dwThisTick - m_dwReloadTickCount);
+			// Get the reload time
+			int iReloadTime = GetWeaponReloadTime(m_byteWeaponId);
 			// Have we finished reloading ?
-			if (dwTime >= GetWeaponReloadTime(m_byteWeaponId)) {
+			if (iReloadTime != -1 && dwTime >= (DWORD)iReloadTime) {
 				// Reset the reloading flag
 				m_bReloading = false;
 				// Update the shoot tick
@@ -614,8 +616,10 @@ void CPlayerData::Process()
 					m_wAmmo = 500;
 				}
 			} else {
+				// Get the shoot time
+				int iShootTime = GetWeaponShootTime(m_byteWeaponId);
 				// Check the time spent since the last shoot
-				if ((dwThisTick - m_dwShootTickCount) >= GetWeaponShootTime(m_byteWeaponId)) {
+				if (iShootTime != -1 && (dwThisTick - m_dwShootTickCount) >= (DWORD)iShootTime) {
 					// Decrease the ammo
 					m_wAmmo--;
 					// Get the weapon clip size
@@ -1103,11 +1107,11 @@ void CPlayerData::GetAnimation(int *iAnimationId, float *fDelta, bool *bLoop, bo
 {
 	*iAnimationId = m_pPlayer->syncData.wAnimIndex;
 	*fDelta = m_pPlayer->syncData.wAnimFlags & 0xFF;
-	*bLoop = m_pPlayer->syncData.wAnimFlags >> 8 & 0x1 != 0;
-	*bLockX = m_pPlayer->syncData.wAnimFlags >> 9 & 0x1 != 0;
-	*bLockY = m_pPlayer->syncData.wAnimFlags >> 10 & 0x1 != 0;
-	*bFreeze = m_pPlayer->syncData.wAnimFlags >> 11 & 0x1 != 0;
-	*iTime = m_pPlayer->syncData.wAnimFlags >> 12 & 0xF;
+	*bLoop = (m_pPlayer->syncData.wAnimFlags >> 8 & 0x1) != 0;
+	*bLockX = (m_pPlayer->syncData.wAnimFlags >> 9 & 0x1) != 0;
+	*bLockY = (m_pPlayer->syncData.wAnimFlags >> 10 & 0x1) != 0;
+	*bFreeze = (m_pPlayer->syncData.wAnimFlags >> 11 & 0x1) != 0;
+	*iTime = (m_pPlayer->syncData.wAnimFlags >> 12 & 0xF);
 }
 
 void CPlayerData::SetVelocity(CVector vecVelocity)
@@ -1313,7 +1317,7 @@ void CPlayerData::StopAim()
 	SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_NONE);
 }
 
-bool CPlayerData::MeleeAttack(DWORD dwTime, bool bUseFightstyle)
+bool CPlayerData::MeleeAttack(int iTime, bool bUseFightstyle)
 {
 	// Make sure the player is not melee attacking
 	if (m_bMeleeAttack) {
@@ -1331,10 +1335,10 @@ bool CPlayerData::MeleeAttack(DWORD dwTime, bool bUseFightstyle)
 	}
 
 	// Set the attacking delay
-	if (dwTime == -1) {
+	if (iTime == -1) {
 		m_dwMeleeDelay = GetWeaponShootTime(m_byteWeaponId);
 	} else {
-		m_dwMeleeDelay = dwTime;
+		m_dwMeleeDelay = (DWORD)iTime;
 	}
 
 	if (m_dwMeleeDelay <= pServer->GetUpdateRate()) {

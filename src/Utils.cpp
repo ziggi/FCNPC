@@ -85,7 +85,7 @@ void CUtils::FCNPCSleep(DWORD dwMs)
 #endif
 }
 // Thanks to kurta999 - YSF project
-DWORD CUtils::FindPattern(char *szPattern, char *szMask)
+DWORD CUtils::FindPattern(const char *szPattern, const char *szMask)
 {
 #ifdef WIN32
 	// Get the current process information

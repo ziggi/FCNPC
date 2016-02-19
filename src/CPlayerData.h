@@ -122,7 +122,7 @@ public:
 	void AimAt(CVector vecPoint, bool bShoot);
 	void AimAtPlayer(WORD wHitId, bool bShoot);
 	void StopAim();
-	bool MeleeAttack(DWORD dwTime, bool bUseFightstyle);
+	bool MeleeAttack(int iTime, bool bUseFightstyle);
 	void StopAttack();
 	bool IsAiming();
 	bool IsShooting();

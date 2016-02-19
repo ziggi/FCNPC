@@ -14,7 +14,7 @@
 #include <math.h>
 
 // logprintf function defintion
-typedef void (* logprintf_t)(char *szFormat, ...);
+typedef void (* logprintf_t)(const char *szFormat, ...);
 extern logprintf_t          logprintf;
 
 // General definitions
@@ -29,7 +29,7 @@ extern logprintf_t          logprintf;
 		{                                                                                                               \
 			if (params[0] != (m * 4))                                                                                   \
 			{                                                                                                           \
-				logprintf("[FCNPC] Error: Incorrect parameter count for \"" n "\", %d != %d\n", m, params[0] / 4); \
+				logprintf("[FCNPC] Error: Incorrect parameter count for \"%s\", %d != %d\n", n, m, ((int)params[0]) / 4); \
 				return 0;                                                                                               \
 			}                                                                                                           \
 		}                                                                                                               \

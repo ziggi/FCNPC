@@ -49,7 +49,7 @@ long WINAPI CExceptionHandler::ExceptionHandlerCallback(_EXCEPTION_POINTERS *pEx
 	fprintf(pFile, "======================== FCNPC Exception Handler ===============================\n");
 	fprintf(pFile, "Address: 0x%p\n\n", pExceptionInfo->ExceptionRecord->ExceptionAddress);
 	fprintf(pFile, "Registers:\n");
-	fprintf(pFile, "EAX: 0x%p - EBX: 0x%p - ECX: 0x%p - EDX: 0x%p\nESI: 0x%p - EDI: 0x%x - EBP: 0x%p - ESP: 0x%p\n\n", pExceptionInfo->ContextRecord->Eax, pExceptionInfo->ContextRecord->Ebx,
+	fprintf(pFile, "EAX: 0x%p - EBX: 0x%p - ECX: 0x%p - EDX: 0x%p\nESI: 0x%p - EDI: 0x%lx - EBP: 0x%p - ESP: 0x%p\n\n", pExceptionInfo->ContextRecord->Eax, pExceptionInfo->ContextRecord->Ebx,
 	        pExceptionInfo->ContextRecord->Ecx, pExceptionInfo->ContextRecord->Edx, pExceptionInfo->ContextRecord->Esi, pExceptionInfo->ContextRecord->Edi,
 	        pExceptionInfo->ContextRecord->Ebp, pExceptionInfo->ContextRecord->Esp);
 
@@ -59,24 +59,24 @@ long WINAPI CExceptionHandler::ExceptionHandlerCallback(_EXCEPTION_POINTERS *pEx
 	        *(DWORD *)(dwEsp + 8), *(DWORD *)(dwEsp + 12), *(DWORD *)(dwEsp + 16), *(DWORD *)(dwEsp + 20), *(DWORD *)(dwEsp + 24), *(DWORD *)(dwEsp + 28), *(DWORD *)(dwEsp + 32));
 
 	fprintf(pFile, "\nFunctions:\n");
-	fprintf(pFile, "FUNC_CPlayerPool__DeletePlayer: 0x%x\n", CAddress::FUNC_CPlayerPool__DeletePlayer);
-	fprintf(pFile, "FUNC_CPlayer__Kill: 0x%x\n", CAddress::FUNC_CPlayer__Kill);
-	fprintf(pFile, "FUNC_CPlayer__EnterVehicle: 0x%x\n", CAddress::FUNC_CPlayer__EnterVehicle);
-	fprintf(pFile, "FUNC_CPlayer__ExitVehicle: 0x%x\n", CAddress::FUNC_CPlayer__ExitVehicle);
-	fprintf(pFile, "FUNC_CPlayer__SpawnForWorld: 0x%x\n", CAddress::FUNC_CPlayer__SpawnForWorld);
-	fprintf(pFile, "FUNC_GetVehicleModelInfo: 0x%x\n", CAddress::FUNC_GetVehicleModelInfo);
-	fprintf(pFile, "FUNC_CConsole__GetIntVariable: 0x%x\n", CAddress::FUNC_CConsole__GetIntVariable);
-	fprintf(pFile, "FUNC_ClientJoin_RPC: 0x%x\n", CAddress::FUNC_ClientJoin_RPC);
+	fprintf(pFile, "FUNC_CPlayerPool__DeletePlayer: 0x%lx\n", CAddress::FUNC_CPlayerPool__DeletePlayer);
+	fprintf(pFile, "FUNC_CPlayer__Kill: 0x%lx\n", CAddress::FUNC_CPlayer__Kill);
+	fprintf(pFile, "FUNC_CPlayer__EnterVehicle: 0x%lx\n", CAddress::FUNC_CPlayer__EnterVehicle);
+	fprintf(pFile, "FUNC_CPlayer__ExitVehicle: 0x%lx\n", CAddress::FUNC_CPlayer__ExitVehicle);
+	fprintf(pFile, "FUNC_CPlayer__SpawnForWorld: 0x%lx\n", CAddress::FUNC_CPlayer__SpawnForWorld);
+	fprintf(pFile, "FUNC_GetVehicleModelInfo: 0x%lx\n", CAddress::FUNC_GetVehicleModelInfo);
+	fprintf(pFile, "FUNC_CConsole__GetIntVariable: 0x%lx\n", CAddress::FUNC_CConsole__GetIntVariable);
+	fprintf(pFile, "FUNC_ClientJoin_RPC: 0x%lx\n", CAddress::FUNC_ClientJoin_RPC);
 
 	fprintf(pFile, "\n\nPointers:\n");
-	fprintf(pFile, "VAR_ServerAuthentication: 0x%x\n", CAddress::VAR_ServerAuthentication);
-	fprintf(pFile, "VAR_NetVersion: 0x%x\n", CAddress::VAR_NetVersion);
+	fprintf(pFile, "VAR_ServerAuthentication: 0x%lx\n", CAddress::VAR_ServerAuthentication);
+	fprintf(pFile, "VAR_NetVersion: 0x%lx\n", CAddress::VAR_NetVersion);
 
 	fprintf(pFile, "\n\nOffsets:\n");
-	fprintf(pFile, "OFFSET_RemoteSystemManager: 0x%x\n", CAddress::OFFSET_RemoteSystemManager);
-	fprintf(pFile, "OFFSET_RemoteSystemSize: 0x%x\n", CAddress::OFFSET_RemoteSystemSize);
-	fprintf(pFile, "OFFSET_RemoteSystem__ConnectMode: 0x%x\n", CAddress::OFFSET_RemoteSystem__ConnectMode);
-	fprintf(pFile, "OFFSET_RemoteSystem__Unknown: 0x%x\n", CAddress::OFFSET_RemoteSystem__Unknown);
+	fprintf(pFile, "OFFSET_RemoteSystemManager: 0x%lx\n", CAddress::OFFSET_RemoteSystemManager);
+	fprintf(pFile, "OFFSET_RemoteSystemSize: 0x%lx\n", CAddress::OFFSET_RemoteSystemSize);
+	fprintf(pFile, "OFFSET_RemoteSystem__ConnectMode: 0x%lx\n", CAddress::OFFSET_RemoteSystem__ConnectMode);
+	fprintf(pFile, "OFFSET_RemoteSystem__Unknown: 0x%lx\n", CAddress::OFFSET_RemoteSystem__Unknown);
 	fprintf(pFile, "======================== FCNPC Exception Handler ===============================");
 	// Close the file
 	fclose(pFile);
@@ -104,7 +104,7 @@ void CExceptionHandler::ExceptionHandlerCallback(int signum)
 	fprintf(pFile, "======================== FCNPC Exception Handler ===============================\n");
 	//fprintf(pFile, "Address: 0x%p\n\n", pExceptionInfo->ExceptionRecord->ExceptionAddress);
 	//fprintf(pFile, "Registers:\n");
-	//fprintf(pFile, "EAX: 0x%p - EBX: 0x%p - ECX: 0x%p - EDX: 0x%p\nESI: 0x%p - EDI: 0x%x - EBP: 0x%p - ESP: 0x%p\n\n", pExceptionInfo->ContextRecord->Eax, pExceptionInfo->ContextRecord->Ebx,
+	//fprintf(pFile, "EAX: 0x%p - EBX: 0x%p - ECX: 0x%p - EDX: 0x%p\nESI: 0x%p - EDI: 0x%lx - EBP: 0x%p - ESP: 0x%p\n\n", pExceptionInfo->ContextRecord->Eax, pExceptionInfo->ContextRecord->Ebx,
 	//	pExceptionInfo->ContextRecord->Ecx, pExceptionInfo->ContextRecord->Edx, pExceptionInfo->ContextRecord->Esi, pExceptionInfo->ContextRecord->Edi,
 	//	pExceptionInfo->ContextRecord->Ebp, pExceptionInfo->ContextRecord->Esp);
 
@@ -114,24 +114,24 @@ void CExceptionHandler::ExceptionHandlerCallback(int signum)
 	//	*(DWORD *)(dwEsp + 8), *(DWORD *)(dwEsp + 12), *(DWORD *)(dwEsp + 16), *(DWORD *)(dwEsp + 20), *(DWORD *)(dwEsp + 24), *(DWORD *)(dwEsp + 28), *(DWORD *)(dwEsp + 32));
 
 	fprintf(pFile, "\nFunctions:\n");
-	fprintf(pFile, "FUNC_CPlayerPool__DeletePlayer: 0x%x\n", CAddress::FUNC_CPlayerPool__DeletePlayer);
-	fprintf(pFile, "FUNC_CPlayer__Kill: 0x%x\n", CAddress::FUNC_CPlayer__Kill);
-	fprintf(pFile, "FUNC_CPlayer__EnterVehicle: 0x%x\n", CAddress::FUNC_CPlayer__EnterVehicle);
-	fprintf(pFile, "FUNC_CPlayer__ExitVehicle: 0x%x\n", CAddress::FUNC_CPlayer__ExitVehicle);
-	fprintf(pFile, "FUNC_CPlayer__SpawnForWorld: 0x%x\n", CAddress::FUNC_CPlayer__SpawnForWorld);
-	fprintf(pFile, "FUNC_GetVehicleModelInfo: 0x%x\n", CAddress::FUNC_GetVehicleModelInfo);
-	fprintf(pFile, "FUNC_CConsole__GetIntVariable: 0x%x\n", CAddress::FUNC_CConsole__GetIntVariable);
-	fprintf(pFile, "FUNC_ClientJoin_RPC: 0x%x\n", CAddress::FUNC_ClientJoin_RPC);
+	fprintf(pFile, "FUNC_CPlayerPool__DeletePlayer: 0x%lx\n", CAddress::FUNC_CPlayerPool__DeletePlayer);
+	fprintf(pFile, "FUNC_CPlayer__Kill: 0x%lx\n", CAddress::FUNC_CPlayer__Kill);
+	fprintf(pFile, "FUNC_CPlayer__EnterVehicle: 0x%lx\n", CAddress::FUNC_CPlayer__EnterVehicle);
+	fprintf(pFile, "FUNC_CPlayer__ExitVehicle: 0x%lx\n", CAddress::FUNC_CPlayer__ExitVehicle);
+	fprintf(pFile, "FUNC_CPlayer__SpawnForWorld: 0x%lx\n", CAddress::FUNC_CPlayer__SpawnForWorld);
+	fprintf(pFile, "FUNC_GetVehicleModelInfo: 0x%lx\n", CAddress::FUNC_GetVehicleModelInfo);
+	fprintf(pFile, "FUNC_CConsole__GetIntVariable: 0x%lx\n", CAddress::FUNC_CConsole__GetIntVariable);
+	fprintf(pFile, "FUNC_ClientJoin_RPC: 0x%lx\n", CAddress::FUNC_ClientJoin_RPC);
 
 	fprintf(pFile, "\n\nPointers:\n");
-	fprintf(pFile, "VAR_ServerAuthentication: 0x%x\n", CAddress::VAR_ServerAuthentication);
-	fprintf(pFile, "VAR_NetVersion: 0x%x\n", CAddress::VAR_NetVersion);
+	fprintf(pFile, "VAR_ServerAuthentication: 0x%lx\n", CAddress::VAR_ServerAuthentication);
+	fprintf(pFile, "VAR_NetVersion: 0x%lx\n", CAddress::VAR_NetVersion);
 
 	fprintf(pFile, "\n\nOffsets:\n");
-	fprintf(pFile, "OFFSET_RemoteSystemManager: 0x%x\n", CAddress::OFFSET_RemoteSystemManager);
-	fprintf(pFile, "OFFSET_RemoteSystemSize: 0x%x\n", CAddress::OFFSET_RemoteSystemSize);
-	fprintf(pFile, "OFFSET_RemoteSystem__ConnectMode: 0x%x\n", CAddress::OFFSET_RemoteSystem__ConnectMode);
-	fprintf(pFile, "OFFSET_RemoteSystem__Unknown: 0x%x\n", CAddress::OFFSET_RemoteSystem__Unknown);
+	fprintf(pFile, "OFFSET_RemoteSystemManager: 0x%lx\n", CAddress::OFFSET_RemoteSystemManager);
+	fprintf(pFile, "OFFSET_RemoteSystemSize: 0x%lx\n", CAddress::OFFSET_RemoteSystemSize);
+	fprintf(pFile, "OFFSET_RemoteSystem__ConnectMode: 0x%lx\n", CAddress::OFFSET_RemoteSystem__ConnectMode);
+	fprintf(pFile, "OFFSET_RemoteSystem__Unknown: 0x%lx\n", CAddress::OFFSET_RemoteSystem__Unknown);
 	fprintf(pFile, "======================== FCNPC Exception Handler ===============================");
 	// Close the file
 	fclose(pFile);
