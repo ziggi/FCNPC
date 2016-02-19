@@ -300,9 +300,10 @@ void CPlayerData::Update(int iState)
 				m_dwVehicleDeadTick = GetTickCount();
 			} else {
 				if (!pVehicle->bDead && (dwThisTick - m_dwVehicleDeadTick) > 5000) {
-					Kill(pVehicle->wKillerID, WEAPON_VEHICLE);
+					Kill(pVehicle->wKillerID, 255);
 
 					pVehicle->bDead = true;
+					pVehicle->vehWasted = true;
 					m_dwVehicleDeadTick = 0;
 					SetVehicle(INVALID_VEHICLE_ID, 0);
 				}
@@ -577,8 +578,7 @@ void CPlayerData::Process()
 				m_bEntering = false;
 				m_bJacking = false;
 				// Set the angle
-				CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[m_wVehicleToEnter];
-				SetAngle(CMath::GetAngle(-pVehicle->vehMatrix.up.fX, pVehicle->vehMatrix.up.fY));
+				SetAngle(pServer->GetVehicleAngle(pNetGame->pVehiclePool->pVehicle[m_wVehicleToEnter]));
 				// Call the vehicle entry complete callback
 				CCallbackManager::OnVehicleEntryComplete((int)m_playerId, (int)m_wVehicleToEnter, (int)m_byteSeatToEnter);
 				// Set the player vehicle and seat
@@ -1542,14 +1542,11 @@ bool CPlayerData::PutInVehicle(int iVehicleId, int iSeatId)
 		return false;
 	}
 
-	// Set the player vehicle and seat id
+	// Set the player params
 	SetVehicle((WORD)iVehicleId, (BYTE)iSeatId);
-
-	// Set the player state
+	SetPosition(pVehicle->vecPosition);
 	SetState(iSeatId == 0 ? PLAYER_STATE_DRIVER : PLAYER_STATE_PASSENGER);
-
-	// Set the angle
-	SetAngle(CMath::GetAngle(-pVehicle->vehMatrix.up.fX, pVehicle->vehMatrix.up.fY));
+	SetAngle(pServer->GetVehicleAngle(pVehicle));
 	return true;
 }
 
@@ -1639,6 +1636,7 @@ void CPlayerData::SetVehicle(WORD wVehicleId, BYTE byteSeatId)
 	pVehicle->wLastDriverID = m_playerId;
 	pVehicle->bOccupied = true;
 	pVehicle->vehOccupiedTick = GetTickCount();
+	pVehicle->vehActive = true;
 }
 
 CVehicle *CPlayerData::GetVehicle()

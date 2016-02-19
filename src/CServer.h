@@ -62,6 +62,7 @@ public:
 
 	bool IsVehicleSeatOccupied(int iPlayerId, WORD wVehicleId, BYTE byteSeatId);
 	WORD GetVehicleSeatPlayerId(WORD wVehicleId, BYTE byteSeatId);
+	float GetVehicleAngle(CVehicle *pVehicle);
 
 	eSAMPVersion GetVersion()
 	{

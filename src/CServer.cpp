@@ -161,3 +161,19 @@ WORD CServer::GetVehicleSeatPlayerId(WORD wVehicleId, BYTE byteSeatId)
 
 	return INVALID_PLAYER_ID;
 }
+
+float CServer::GetVehicleAngle(CVehicle *pVehicle)
+{
+	float fAngle;
+
+	bool bIsBadMatrix = pVehicle->vehMatrix.up.fX == 0.0f && pVehicle->vehMatrix.up.fY == 0.0f;
+	bool bIsTrain = pVehicle->customSpawn.iModelID == 537 || pVehicle->customSpawn.iModelID == 538;
+	
+	if (bIsBadMatrix || bIsTrain) {
+		fAngle = pVehicle->customSpawn.fRot;
+	} else {
+		fAngle = CMath::GetAngle(-pVehicle->vehMatrix.up.fX, pVehicle->vehMatrix.up.fY);
+	}
+
+	return fAngle;
+}
