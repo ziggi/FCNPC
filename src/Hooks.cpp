@@ -219,22 +219,22 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 	} else if (bStreamIn) {
 		bStreamIn = false;
 
-		// call hooked callback
-		ret = pfn_amx_Exec(amx, retval, index);
-
-		// call custom callback
 		if (pServer->GetPlayerManager()->IsPlayerConnectedEx(pStreamIn.iPlayerId)) {
+			// call custom callback
 			CCallbackManager::OnStreamIn(pStreamIn.iPlayerId, pStreamIn.iForPlayerId);
+		} else {
+			// call hooked callback
+			ret = pfn_amx_Exec(amx, retval, index);
 		}
 	} else if (bStreamOut) {
 		bStreamOut = false;
 
-		// call hooked callback
-		ret = pfn_amx_Exec(amx, retval, index);
-
-		// call custom callback
 		if (pServer->GetPlayerManager()->IsPlayerConnectedEx(pStreamIn.iPlayerId)) {
+			// call custom callback
 			CCallbackManager::OnStreamOut(pStreamIn.iPlayerId, pStreamIn.iForPlayerId);
+		} else {
+			// call hooked callback
+			ret = pfn_amx_Exec(amx, retval, index);
 		}
 	} else {
 		ret = pfn_amx_Exec(amx, retval, index);
