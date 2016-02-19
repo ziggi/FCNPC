@@ -589,12 +589,10 @@ void CPlayerData::Process()
 		}
 		// Process player reloading
 		if (m_bReloading) {
-			// Get the time spent since the reload start
-			DWORD dwTime = (dwThisTick - m_dwReloadTickCount);
 			// Get the reload time
 			int iReloadTime = GetWeaponReloadTime(m_byteWeaponId);
 			// Have we finished reloading ?
-			if (iReloadTime != -1 && dwTime >= (DWORD)iReloadTime) {
+			if (iReloadTime != -1 && (dwThisTick - m_dwReloadTickCount) >= (DWORD)iReloadTime) {
 				// Reset the reloading flag
 				m_bReloading = false;
 				// Update the shoot tick
@@ -626,7 +624,7 @@ void CPlayerData::Process()
 					DWORD dwClip = GetWeaponClipSize(m_byteWeaponId);
 
 					// Check for reload
-					if (m_wAmmo % dwClip == 0 && m_wAmmo != 0 && dwClip != m_wAmmo && m_bHasReload) {
+					if (m_wAmmo % dwClip == 0 && m_wAmmo != 0 && dwClip != m_wAmmo && m_bHasReload && dwClip != 1) {
 						// Set the reload tick count
 						m_dwReloadTickCount = dwThisTick;
 						// Set reloading flag
