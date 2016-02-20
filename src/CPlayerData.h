@@ -119,8 +119,8 @@ public:
 	void ToggleReloading(bool bToggle);
 	void ToggleInfiniteAmmo(bool bToggle);
 
-	void AimAt(CVector vecPoint, bool bShoot);
-	void AimAtPlayer(WORD wHitId, bool bShoot);
+	void AimAt(CVector vecPoint, bool bShoot, DWORD dwShootDelay);
+	void AimAtPlayer(WORD wHitId, bool bShoot, DWORD dwShootDelay);
 	void StopAim();
 	bool MeleeAttack(int iTime, bool bUseFightstyle);
 	void StopAttack();
@@ -176,6 +176,7 @@ private:
 	bool m_bUseMapAndreas;
 	bool m_bAiming;
 	bool m_bReloading;
+	bool m_bShooting;
 	bool m_bEntering;
 	bool m_bJacking;
 	bool m_bExiting;
@@ -189,6 +190,7 @@ private:
 	DWORD m_dwMoveTickCount;
 	DWORD m_dwReloadTickCount;
 	DWORD m_dwShootTickCount;
+	DWORD m_dwShootDelay;
 	DWORD m_dwEnterExitTickCount;
 	DWORD m_dwMoveStartTime;
 	DWORD m_dwMoveTime;

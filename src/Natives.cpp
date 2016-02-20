@@ -1365,38 +1365,51 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponDefaultInfo(AMX *amx, cell *params
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_AimAt(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(5, "FCNPC_AimAt");
-	// Get the NPC id
+	CHECK_PARAMS(6, "FCNPC_AimAt");
+
+	// Get the params
 	int iNPCId = (int)params[1];
-	// Get the aim vector
 	float fX = amx_ctof(params[2]);
 	float fY = amx_ctof(params[3]);
 	float fZ = amx_ctof(params[4]);
-	// Get the shooting flag
-	int iShoot = (int)params[5];
+	bool bShoot = (bool)params[5];
+	DWORD dwShootDelay = (DWORD)params[6];
+
 	// Make sure the player is valid
 	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
 		return 0;
 	}
 
-	// Set the player aiming
-	pServer->GetPlayerManager()->GetAt(iNPCId)->AimAt(CVector(fX, fY, fZ), !iShoot ? false : true);
-	return 1;
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(iNPCId);
+
+	int iWeaponType = pPlayerData->GetWeaponType(pPlayerData->GetWeapon());
+	switch (iWeaponType) {
+		case WEAPON_TYPE_SHOOT:
+		case WEAPON_TYPE_ROCKET:
+		case WEAPON_TYPE_SPRAY:
+		case WEAPON_TYPE_THROW:
+			pPlayerData->AimAt(CVector(fX, fY, fZ), bShoot, dwShootDelay);
+			return 1;
+	}
+
+	return 0;
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_AimAtPlayer(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "FCNPC_AimAtPlayer");
-	// Get the NPC id
+	CHECK_PARAMS(4, "FCNPC_AimAtPlayer");
+
+	// Get the params
 	int iNPCId = (int)params[1];
-	// Get the aim playerid
 	int iPlayerId = (int)params[2];
-	// Get the shooting flag
-	int iShoot = (int)params[3];
+	bool bShoot = (bool)params[3];
+	DWORD dwShootDelay = (DWORD)params[4];
+
 	// Make sure the npc is valid
 	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
 		return 0;
 	}
+
 	// Make sure the player is valid
 	if (iPlayerId < 0 || iPlayerId > MAX_PLAYERS) {
 		return 0;
@@ -1407,8 +1420,19 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAtPlayer(AMX *amx, cell *params)
 	}
 
 	// Set the player aiming
-	pServer->GetPlayerManager()->GetAt(iNPCId)->AimAtPlayer(iPlayerId, !iShoot ? false : true);
-	return 1;
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(iNPCId);
+
+	int iWeaponType = pPlayerData->GetWeaponType(pPlayerData->GetWeapon());
+	switch (iWeaponType) {
+		case WEAPON_TYPE_SHOOT:
+		case WEAPON_TYPE_ROCKET:
+		case WEAPON_TYPE_SPRAY:
+		case WEAPON_TYPE_THROW:
+			pServer->GetPlayerManager()->GetAt(iNPCId)->AimAtPlayer(iPlayerId, bShoot, dwShootDelay);
+			return 1;
+	}
+
+	return 0;
 }
 
 // native FCNPC_MeleeAttack(npcid, delay = -1, bool:fightstyle = true);

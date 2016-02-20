@@ -32,6 +32,7 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_bUseMapAndreas = false;
 	m_bAiming = false;
 	m_bReloading = false;
+	m_bShooting = false;
 	m_bEntering = false;
 	m_bJacking = false;
 	m_bExiting = false;
@@ -381,7 +382,7 @@ void CPlayerData::UpdateAim()
 		if (m_byteHitType == BULLET_HIT_TYPE_PLAYER && m_wHitId != INVALID_PLAYER_ID) {
 			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[m_wHitId];
 			if (pPlayer) {
-				AimAt(pPlayer->vecPosition, IsShooting());
+				AimAt(pPlayer->vecPosition, m_bShooting, m_dwShootDelay);
 			} else {
 				StopAim();
 			}
@@ -598,16 +599,19 @@ void CPlayerData::Process()
 				// Update the shoot tick
 				m_dwShootTickCount = dwThisTick;
 				// Start shooting again
-				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM | KEY_FIRE);
+				m_bShooting = true;
+			} else {
+				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM);
 			}
 		}
 		// Process player shooting
-		else if (m_bAiming && IsShooting()) {
+		else if (m_bShooting) {
 			// Do we still have ammo ?
 			if (m_wAmmo == 0) {
 				// Check for infinite ammo flag
 				if (!m_bHasInfiniteAmmo) {
 					// Stop shooting and aim only
+					m_bShooting = false;
 					SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM);
 				} else {
 					// This is done so the NPC would keep reloading even if the infinite ammo flag is set
@@ -616,25 +620,34 @@ void CPlayerData::Process()
 			} else {
 				// Get the shoot time
 				int iShootTime = GetWeaponShootTime(m_byteWeaponId);
-				// Check the time spent since the last shoot
+
+				// shoot delay
+				if (iShootTime != -1 && (DWORD)iShootTime < m_dwShootDelay) {
+					m_dwShootDelay = (DWORD)iShootTime - pServer->GetUpdateRate();
+				}
+
+				if ((dwThisTick - m_dwShootTickCount) >= m_dwShootDelay) {
+					SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM);
+				}
+
+				// shoot time
 				if (iShootTime != -1 && (dwThisTick - m_dwShootTickCount) >= (DWORD)iShootTime) {
-					// Decrease the ammo
 					m_wAmmo--;
-					// Get the weapon clip size
-					DWORD dwClip = GetWeaponClipSize(m_byteWeaponId);
 
 					// Check for reload
+					DWORD dwClip = GetWeaponClipSize(m_byteWeaponId);
 					if (m_wAmmo % dwClip == 0 && m_wAmmo != 0 && dwClip != m_wAmmo && m_bHasReload && dwClip != 1) {
-						// Set the reload tick count
 						m_dwReloadTickCount = dwThisTick;
-						// Set reloading flag
 						m_bReloading = true;
-						// Stop shooting and aim only
-						SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM);
-					} else {
-						// Send the bullet
-						CFunctions::PlayerShoot((int)m_playerId, m_wHitId, m_byteHitType, m_byteWeaponId, m_vecAimAt);
+						m_bShooting = false;
 					}
+
+					// Send bullet
+					if (GetWeaponType(m_byteWeaponId) == WEAPON_TYPE_SHOOT) {
+						CFunctions::PlayerShoot((int)m_playerId, m_wHitId, m_byteHitType, m_byteWeaponId, m_vecAimAt);	
+					}
+					
+					SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM | KEY_FIRE);
 
 					// Update the shoot tick
 					m_dwShootTickCount = dwThisTick;
@@ -1252,7 +1265,7 @@ void CPlayerData::ToggleInfiniteAmmo(bool bToggle)
 	m_bHasInfiniteAmmo = bToggle;
 }
 
-void CPlayerData::AimAt(CVector vecPoint, bool bShoot)
+void CPlayerData::AimAt(CVector vecPoint, bool bShoot, DWORD dwShootDelay)
 {
 	// Set the aiming flag
 	if (!m_bAiming) {
@@ -1284,17 +1297,25 @@ void CPlayerData::AimAt(CVector vecPoint, bool bShoot)
 	m_pPlayer->aimSyncData.vecPosition = vecPosition;
 	// Set keys
 	if (!m_bAiming) {
-		SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM | KEY_FIRE);
+		m_bAiming = true;
+		SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM);
 	}
 
-	// Mark as aiming
-	m_bAiming = true;
+	// set the shoot delay
+	if (dwShootDelay <= pServer->GetUpdateRate()) {
+		dwShootDelay = pServer->GetUpdateRate() + 5;
+	}
+
+	m_dwShootDelay = dwShootDelay;
+
+	// set the shooting flag
+	m_bShooting = bShoot;
 }
 
-void CPlayerData::AimAtPlayer(WORD wHitId, bool bShoot)
+void CPlayerData::AimAtPlayer(WORD wHitId, bool bShoot, DWORD dwShootDelay)
 {
 	CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[wHitId];
-	AimAt(pPlayer->vecPosition, bShoot);
+	AimAt(pPlayer->vecPosition, bShoot, dwShootDelay);
 	m_wHitId = wHitId;
 	m_byteHitType = BULLET_HIT_TYPE_PLAYER;
 }
@@ -1309,6 +1330,7 @@ void CPlayerData::StopAim()
 	// Reset aiming flags
 	m_bAiming = false;
 	m_bReloading = false;
+	m_bShooting = false;
 	m_wHitId = INVALID_PLAYER_ID;
 	m_byteHitType = BULLET_HIT_TYPE_NONE;
 	// Reset keys
@@ -1380,7 +1402,7 @@ bool CPlayerData::IsAiming()
 
 bool CPlayerData::IsShooting()
 {
-	return m_bAiming && m_pPlayer->dwKeys & KEY_FIRE;
+	return m_bAiming && m_bShooting;
 }
 
 bool CPlayerData::IsReloading()
