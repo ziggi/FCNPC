@@ -17,18 +17,18 @@ make
 
 # Definitions
 ```Pawn
-#define MOVE_TYPE_AUTO      -1
-#define MOVE_TYPE_WALK      0
-#define MOVE_TYPE_RUN       1
-#define MOVE_TYPE_SPRINT    2
-#define MOVE_TYPE_DRIVE     3
+#define MOVE_TYPE_AUTO      (-1)
+#define MOVE_TYPE_WALK      (0)
+#define MOVE_TYPE_RUN       (1)
+#define MOVE_TYPE_SPRINT    (2)
+#define MOVE_TYPE_DRIVE     (3)
 
-#define MAX_NODES           64
+#define MAX_NODES           (64)
 
 #define NODE_TYPE_NONE      (-1)
-#define NODE_TYPE_PED       0
-#define NODE_TYPE_VEHICLE   1
-#define NODE_TYPE_BOAT      2
+#define NODE_TYPE_PED       (0)
+#define NODE_TYPE_VEHICLE   (1)
+#define NODE_TYPE_BOAT      (2)
 ```
 
 # Callbacks
