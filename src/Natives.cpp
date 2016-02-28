@@ -152,7 +152,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsStreamedIn(AMX *amx, cell *params)
 	}
 
 	// Make sure the player is valid
-	if (iForPlayerId < 0 || iForPlayerId > MAX_PLAYERS) {
+	if (iForPlayerId < 0 || iForPlayerId >= MAX_PLAYERS) {
 		return 0;
 	}
 
@@ -277,7 +277,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetAngleToPlayer(AMX *amx, cell *params)
 	}
 
 	// Make sure the player is valid
-	if (iPlayerId < 0 || iPlayerId > MAX_PLAYERS) {
+	if (iPlayerId < 0 || iPlayerId >= MAX_PLAYERS) {
 		return 0;
 	}
 
@@ -884,7 +884,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GoToPlayer(AMX *amx, cell *params)
 		return 0;
 	}
 
-	if (iPlayerId < 0 || iPlayerId > MAX_PLAYERS) {
+	if (iPlayerId < 0 || iPlayerId >= MAX_PLAYERS) {
 		return 0;
 	}
 
@@ -1080,7 +1080,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponDamage(AMX *amx, cell *params)
 	// Get params
 	int iNPCId = (int)params[1];
 	int iWeaponId = (int)params[2];
-	int fDamage = amx_ctof(params[3]);
+	float fDamage = amx_ctof(params[3]);
 
 	// Make sure the player is valid
 	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
@@ -1230,7 +1230,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponInfo(AMX *amx, cell *params)
 	// Get params
 	int iNPCId = (int)params[1];
 	int iWeaponId = (int)params[2];
-	int fDamage = amx_ctof(params[3]);
+	float fDamage = amx_ctof(params[3]);
 	int iReloadTime = (int)params[4];
 	int iShootTime = (int)params[5];
 	int iClipSize = (int)params[6];
@@ -1243,7 +1243,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponInfo(AMX *amx, cell *params)
 	// Set the player weapon info
 	SWeaponInfo sWeaponInfo = pServer->GetPlayerManager()->GetAt(iNPCId)->GetWeaponInfo(iWeaponId);
 	
-	if (fDamage != -1.0) {
+	if (fDamage != -1.0f) {
 		sWeaponInfo.fDamage = fDamage;
 	}
 	
@@ -1303,7 +1303,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponDefaultInfo(AMX *amx, cell *params
 
 	// Get params
 	int iWeaponId = (int)params[1];
-	int fDamage = amx_ctof(params[2]);
+	float fDamage = amx_ctof(params[2]);
 	int iReloadTime = (int)params[3];
 	int iShootTime = (int)params[4];
 	int iClipSize = (int)params[5];
@@ -1311,7 +1311,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponDefaultInfo(AMX *amx, cell *params
 	// Set default weapon info
 	SWeaponInfo sWeaponInfo = CWeaponInfo::GetDefaultInfo(iWeaponId);
 
-	if (fDamage != -1.0) {
+	if (fDamage != -1.0f) {
 		sWeaponInfo.fDamage = fDamage;
 	}
 
@@ -1411,7 +1411,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAtPlayer(AMX *amx, cell *params)
 	}
 
 	// Make sure the player is valid
-	if (iPlayerId < 0 || iPlayerId > MAX_PLAYERS) {
+	if (iPlayerId < 0 || iPlayerId >= MAX_PLAYERS) {
 		return 0;
 	}
 
@@ -1443,7 +1443,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_MeleeAttack(AMX *amx, cell *params)
 	// Get parms
 	int iNPCId = (int)params[1];
 	int iTime = (int)params[2];
-	int bUseFightstyle = (bool)params[3];
+	bool bUseFightstyle = (bool)params[3];
 
 	// Make sure the player is valid
 	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
@@ -1727,9 +1727,9 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetSurfingOffsets(AMX *amx, cell *params)
 
 	// Get params
 	int iNPCId = (int)params[1];
-	int fX = amx_ctof(params[2]);
-	int fY = amx_ctof(params[3]);
-	int fZ = amx_ctof(params[4]);
+	float fX = amx_ctof(params[2]);
+	float fY = amx_ctof(params[3]);
+	float fZ = amx_ctof(params[4]);
 
 	// Make sure the player is valid
 	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
@@ -1900,7 +1900,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetPassengerDriveBy(AMX *amx, cell *params)
 
 	// Get params
 	int iNPCId = (int)params[1];
-	int bDriveBy = (bool)params[2];
+	bool bDriveBy = (bool)params[2];
 
 	// Make sure the player is valid
 	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
