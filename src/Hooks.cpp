@@ -189,7 +189,11 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 	if (bGiveDamage) {
 		bGiveDamage = false;
 
-		if (pServer->GetPlayerManager()->GetAt(pGiveDamage.iDamagerId)->IsInvulnerable()) {
+		// get the player data
+		CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(pGiveDamage.iDamagerId);
+
+		// check on invulnerable
+		if (pPlayerData && pPlayerData->IsInvulnerable()) {
 			return ret;
 		}
 
@@ -197,9 +201,8 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 		ret = pfn_amx_Exec(amx, retval, index);
 
 		// call custom callback
-		if (pServer->GetPlayerManager()->IsPlayerConnectedEx(pGiveDamage.iDamagerId)) {
-			pServer->GetPlayerManager()->GetAt(pGiveDamage.iDamagerId)->ProcessDamage(
-			    pGiveDamage.iPlayerId, pGiveDamage.fHealthLoss, pGiveDamage.iWeapon, pGiveDamage.iBodypart);
+		if (pPlayerData) {
+			pPlayerData->ProcessDamage(pGiveDamage.iPlayerId, pGiveDamage.fHealthLoss, pGiveDamage.iWeapon, pGiveDamage.iBodypart);
 		}
 	} else if (bWeaponShot) {
 		bWeaponShot = false;
