@@ -83,7 +83,11 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_GetSpecialAction(AMX *amx, cell *params);
 
 	static cell AMX_NATIVE_CALL FCNPC_SetAnimation(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_SetAnimationByName(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetAnimation(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_ResetAnimation(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_ApplyAnimation(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_ClearAnimations(AMX *amx, cell *params);
 
 	static cell AMX_NATIVE_CALL FCNPC_SetFightingStyle(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetFightingStyle(AMX *amx, cell *params);

@@ -1114,6 +1114,18 @@ void CPlayerData::SetAnimation(int iAnimationId, float fDelta, bool bLoop, bool 
 	}
 }
 
+void CPlayerData::SetAnimationByName(char *szName, float fDelta, bool bLoop, bool bLockX, bool bLockY, bool bFreeze, int iTime)
+{
+	int index = CAnimationInfo::GetIndexByName(szName);
+	SetAnimation(index, fDelta, bLoop, bLockX, bLockY, bFreeze, iTime);
+}
+
+void CPlayerData::ResetAnimation()
+{
+	m_pPlayer->syncData.wAnimIndex = 0;
+	m_pPlayer->syncData.wAnimFlags = 0;
+}
+
 void CPlayerData::GetAnimation(int *iAnimationId, float *fDelta, bool *bLoop, bool *bLockX, bool *bLockY, bool *bFreeze, int *iTime)
 {
 	*iAnimationId = m_pPlayer->syncData.wAnimIndex;
@@ -1123,6 +1135,32 @@ void CPlayerData::GetAnimation(int *iAnimationId, float *fDelta, bool *bLoop, bo
 	*bLockY = (m_pPlayer->syncData.wAnimFlags >> 10 & 0x1) != 0;
 	*bFreeze = (m_pPlayer->syncData.wAnimFlags >> 11 & 0x1) != 0;
 	*iTime = (m_pPlayer->syncData.wAnimFlags >> 12 & 0xF);
+}
+
+void CPlayerData::ApplyAnimation(char *szAnimationLib, char *szAnimationName, float fDelta, bool bLoop, bool bLockX, bool bLockY, bool bFreeze, int iTime)
+{
+	RakNet::BitStream bsData;
+
+	bsData.Write(m_playerId);
+	bsData.Write((BYTE)strlen(szAnimationLib));
+	bsData.Write((char*)szAnimationLib, strlen(szAnimationLib));
+	bsData.Write((BYTE)strlen(szAnimationName));
+	bsData.Write((char*)szAnimationName, strlen(szAnimationName));
+	bsData.Write(fDelta);
+	bsData.Write(bLoop);
+	bsData.Write(bLockX);
+	bsData.Write(bLockY);
+	bsData.Write(bFreeze);
+	bsData.Write(iTime);
+
+	CFunctions::AddedPlayersRPC(&RPC_ApplyAnimation, &bsData, m_playerId);
+}
+
+void CPlayerData::ClearAnimations()
+{
+	RakNet::BitStream bsData;
+	bsData.Write(m_playerId);
+	CFunctions::AddedPlayersRPC(&RPC_ClearAnimations, &bsData, m_playerId);
 }
 
 void CPlayerData::SetVelocity(CVector vecVelocity)

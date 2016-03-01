@@ -67,6 +67,7 @@
 #include "Hooks.h"
 #include "VehicleInfo.h"
 #include "WeaponInfo.h"
+#include "AnimationInfo.h"
 #include "ThreadFunctions.h"
 // SAMP includes
 #include "SAMPRakPeer.h"

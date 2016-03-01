@@ -110,7 +110,11 @@ public:
 	int GetFightingStyle();
 
 	void SetAnimation(int iAnimationId, float fDelta, bool bLoop, bool bLockX, bool bLockY, bool bFreeze, int iTime);
+	void SetAnimationByName(char *szName, float fDelta, bool bLoop, bool bLockX, bool bLockY, bool bFreeze, int iTime);
+	void ResetAnimation();
 	void GetAnimation(int *iAnimationId, float *fDelta, bool *bLoop, bool *bLockX, bool *bLockY, bool *bFreeze, int *iTime);
+	void ApplyAnimation(char *szAnimationLib, char *szAnimationName, float fDelta, bool bLoop, bool bLockX, bool bLockY, bool bFreeze, int iTime);
+	void ClearAnimations();
 
 	bool GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float fRadius = 0.0, bool bGetAngle = true);
 	void StopMoving();

@@ -720,7 +720,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetAnimation(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(8, "FCNPC_SetAnimation");
 
-	// Get parms
+	// Get params
 	int iNPCId = (int)params[1];
 	int iAnimationId = (int)params[2];
 	float fDelta = amx_ctof(params[3]);
@@ -736,8 +736,96 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetAnimation(AMX *amx, cell *params)
 	}
 
 	// Set the player animation
-	pServer->GetPlayerManager()->GetAt(iNPCId)->
-	SetAnimation(iAnimationId, fDelta, bLoop, bLockX, bLockY, bFreeze, iTime);
+	pServer->GetPlayerManager()->GetAt(iNPCId)->SetAnimation(iAnimationId, fDelta, bLoop, bLockX, bLockY, bFreeze, iTime);
+	return 1;
+}
+
+// native FCNPC_SetAnimationByName(npcid, name[], Float:fDelta = 4.1, loop = 0, lockx = 1, locky = 1, freeze = 0, time = 1);
+cell AMX_NATIVE_CALL CNatives::FCNPC_SetAnimationByName(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(8, "FCNPC_SetAnimationByName");
+
+	// Get params
+	int iNPCId = (int)params[1];
+	char *name;
+	amx_StrParam(amx, params[2], name);
+	float fDelta = amx_ctof(params[4]);
+	bool bLoop = (bool)params[5];
+	bool bLockX = (bool)params[6];
+	bool bLockY = (bool)params[7];
+	bool bFreeze = (bool)params[8];
+	int iTime = (int)params[9];
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
+		return 0;
+	}
+
+	// Set the player animation
+	pServer->GetPlayerManager()->GetAt(iNPCId)->SetAnimationByName(name, fDelta, bLoop, bLockX, bLockY, bFreeze, iTime);
+	return 1;
+}
+
+// native FCNPC_ResetAnimation(npcid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_ResetAnimation(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_ResetAnimation");
+
+	// Get params
+	int iNPCId = (int)params[1];
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
+		return 0;
+	}
+
+	// Set the player animation
+	pServer->GetPlayerManager()->GetAt(iNPCId)->ResetAnimation();
+	return 1;
+}
+
+// native FCNPC_ApplyAnimation(npcid, animlib[], animname[], Float:fDelta = 4.1, loop = 0, lockx = 1, locky = 1, freeze = 0, time = 1);
+cell AMX_NATIVE_CALL CNatives::FCNPC_ApplyAnimation(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(9, "FCNPC_ApplyAnimation");
+
+	// Get params
+	int iNPCId = (int)params[1];
+	char *animlib, *animname;
+	amx_StrParam(amx, params[2], animlib);
+	amx_StrParam(amx, params[3], animname);
+	float fDelta = amx_ctof(params[4]);
+	bool bLoop = (bool)params[5];
+	bool bLockX = (bool)params[6];
+	bool bLockY = (bool)params[7];
+	bool bFreeze = (bool)params[8];
+	int iTime = (int)params[9];
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
+		return 0;
+	}
+
+	// Set the player animation
+	pServer->GetPlayerManager()->GetAt(iNPCId)->ApplyAnimation(animlib, animname, fDelta, bLoop, bLockX, bLockY, bFreeze, iTime);
+	return 1;
+}
+
+// native FCNPC_ClearAnimations(npcid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_ClearAnimations(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_ClearAnimations");
+
+	// Get params
+	int iNPCId = (int)params[1];
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
+		return 0;
+	}
+
+	// Set the player animation
+	pServer->GetPlayerManager()->GetAt(iNPCId)->ClearAnimations();
 	return 1;
 }
 
@@ -762,8 +850,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetAnimation(AMX *amx, cell *params)
 	int iTime;
 
 	// Get the player animation
-	pServer->GetPlayerManager()->GetAt(iNPCId)->
-	GetAnimation(&iAnimationId, &fDelta, &bLoop, &bLockX, &bLockY, &bFreeze, &iTime);
+	pServer->GetPlayerManager()->GetAt(iNPCId)->GetAnimation(&iAnimationId, &fDelta, &bLoop, &bLockX, &bLockY, &bFreeze, &iTime);
 
 	cell *pAddress = NULL;
 	amx_GetAddr(amx, params[2], &pAddress);
