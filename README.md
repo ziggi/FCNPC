@@ -125,7 +125,11 @@ native FCNPC_SetSpecialAction(npcid, actionid);
 native FCNPC_GetSpecialAction(npcid);
 
 native FCNPC_SetAnimation(npcid, animationid, Float:fDelta = 4.1, loop = 0, lockx = 1, locky = 1, freeze = 0, time = 1);
+native FCNPC_SetAnimationByName(npcid, name[], Float:fDelta = 4.1, loop = 0, lockx = 1, locky = 1, freeze = 0, time = 1);
+native FCNPC_ResetAnimation(npcid);
 native FCNPC_GetAnimation(npcid, &animationid = 0, &Float:fDelta = 4.1, &loop = 0, &lockx = 1, &locky = 1, &freeze = 0, &time = 1);
+native FCNPC_ApplyAnimation(npcid, animlib[], animname[], Float:fDelta = 4.1, loop = 0, lockx = 1, locky = 1, freeze = 0, time = 1);
+native FCNPC_ClearAnimations(npcid);
 
 native FCNPC_SetFightingStyle(npcid, style);
 native FCNPC_GetFightingStyle(npcid);
