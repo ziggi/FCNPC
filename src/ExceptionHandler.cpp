@@ -46,7 +46,7 @@ long WINAPI CExceptionHandler::ExceptionHandlerCallback(_EXCEPTION_POINTERS *pEx
 	}
 
 	// Write the exception informations
-	fprintf(pFile, "======================== FCNPC Exception Handler ===============================\n");
+	fprintf(pFile, "======================== FCNPC " VERSION " Exception Handler ===============================\n");
 	fprintf(pFile, "Address: 0x%p\n\n", pExceptionInfo->ExceptionRecord->ExceptionAddress);
 	fprintf(pFile, "Registers:\n");
 	fprintf(pFile, "EAX: 0x%p - EBX: 0x%p - ECX: 0x%p - EDX: 0x%p\nESI: 0x%p - EDI: 0x%lx - EBP: 0x%p - ESP: 0x%p\n\n", pExceptionInfo->ContextRecord->Eax, pExceptionInfo->ContextRecord->Ebx,
@@ -77,7 +77,7 @@ long WINAPI CExceptionHandler::ExceptionHandlerCallback(_EXCEPTION_POINTERS *pEx
 	fprintf(pFile, "OFFSET_RemoteSystemSize: 0x%lx\n", CAddress::OFFSET_RemoteSystemSize);
 	fprintf(pFile, "OFFSET_RemoteSystem__ConnectMode: 0x%lx\n", CAddress::OFFSET_RemoteSystem__ConnectMode);
 	fprintf(pFile, "OFFSET_RemoteSystem__Unknown: 0x%lx\n", CAddress::OFFSET_RemoteSystem__Unknown);
-	fprintf(pFile, "======================== FCNPC Exception Handler ===============================");
+	fprintf(pFile, "======================== FCNPC " VERSION " Exception Handler ===============================");
 	// Close the file
 	fclose(pFile);
 	return EXCEPTION_EXECUTE_HANDLER;
@@ -101,7 +101,7 @@ void CExceptionHandler::ExceptionHandlerCallback(int signum)
 	}
 
 	// Write the exception informations
-	fprintf(pFile, "======================== FCNPC Exception Handler ===============================\n");
+	fprintf(pFile, "======================== FCNPC " VERSION " Exception Handler ===============================\n");
 	//fprintf(pFile, "Address: 0x%p\n\n", pExceptionInfo->ExceptionRecord->ExceptionAddress);
 	//fprintf(pFile, "Registers:\n");
 	//fprintf(pFile, "EAX: 0x%p - EBX: 0x%p - ECX: 0x%p - EDX: 0x%p\nESI: 0x%p - EDI: 0x%lx - EBP: 0x%p - ESP: 0x%p\n\n", pExceptionInfo->ContextRecord->Eax, pExceptionInfo->ContextRecord->Ebx,
@@ -132,7 +132,7 @@ void CExceptionHandler::ExceptionHandlerCallback(int signum)
 	fprintf(pFile, "OFFSET_RemoteSystemSize: 0x%lx\n", CAddress::OFFSET_RemoteSystemSize);
 	fprintf(pFile, "OFFSET_RemoteSystem__ConnectMode: 0x%lx\n", CAddress::OFFSET_RemoteSystem__ConnectMode);
 	fprintf(pFile, "OFFSET_RemoteSystem__Unknown: 0x%lx\n", CAddress::OFFSET_RemoteSystem__Unknown);
-	fprintf(pFile, "======================== FCNPC Exception Handler ===============================");
+	fprintf(pFile, "======================== FCNPC " VERSION " Exception Handler ===============================");
 	// Close the file
 	fclose(pFile);
 
