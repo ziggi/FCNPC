@@ -70,7 +70,7 @@ void CFunctions::PreInitialize()
 int CFunctions::GetFreePlayerSlot()
 {
 	// Loop through all the players
-	for (int i = (GetMaxPlayers() - 1); i != 0; i--) {
+	for (int i = (GetMaxPlayers() - 1); i != -1; i--) {
 		// Is he not connected ?
 		if (!pNetGame->pPlayerPool->bIsPlayerConnectedEx[i]) {
 			return i;
