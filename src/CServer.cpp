@@ -177,3 +177,41 @@ float CServer::GetVehicleAngle(CVehicle *pVehicle)
 
 	return fAngle;
 }
+
+CVector CServer::GetVehiclePos(CVehicle *pVehicle)
+{
+	if (pVehicle->vehMatrix.up.fX == 0.0f && pVehicle->vehMatrix.up.fY == 0.0f) {
+		return pVehicle->customSpawn.vecPos;
+	}
+
+	return pVehicle->vecPosition;
+}
+
+CVector CServer::GetVehicleSeatPos(CVehicle *pVehicle, int iSeatId)
+{
+	// Get the seat position
+	CVector *pvecSeat;
+
+	if (iSeatId == 0 || iSeatId == 1) {
+		pvecSeat = CFunctions::GetVehicleModelInfoEx(pVehicle->customSpawn.iModelID, VEHICLE_MODEL_INFO_FRONTSEAT);
+	} else {
+		pvecSeat = CFunctions::GetVehicleModelInfoEx(pVehicle->customSpawn.iModelID, VEHICLE_MODEL_INFO_REARSEAT);
+	}
+
+	// Adjust the seat vector
+	CVector vecSeat(pvecSeat->fX + 1.3f, pvecSeat->fY - 0.6f, pvecSeat->fZ);
+
+	if (iSeatId == 0 || iSeatId == 2) {
+		vecSeat.fX = -vecSeat.fX;
+	}
+
+	// Get vehicle angle
+	float fAngle = pServer->GetVehicleAngle(pVehicle);
+	float _fAngle = fAngle * 0.01570796326794897f;
+
+	CVector vecSeatPosition(vecSeat.fX * cos(_fAngle) - vecSeat.fY * sin(_fAngle),
+	                        vecSeat.fX * sin(_fAngle) + vecSeat.fY * cos(_fAngle),
+	                        vecSeat.fZ);
+	
+	return vecSeatPosition + pServer->GetVehiclePos(pVehicle);
+}

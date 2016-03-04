@@ -576,12 +576,12 @@ void CPlayerData::Process()
 				// Reset entering variables
 				m_bEntering = false;
 				m_bJacking = false;
-				// Set the angle
-				SetAngle(pServer->GetVehicleAngle(pNetGame->pVehiclePool->pVehicle[m_wVehicleToEnter]));
 				// Call the vehicle entry complete callback
 				CCallbackManager::OnVehicleEntryComplete((int)m_playerId, (int)m_wVehicleToEnter, (int)m_byteSeatToEnter);
 				// Set the player vehicle and seat
 				SetVehicle(m_wVehicleToEnter, m_byteSeatToEnter);
+				// Set the angle
+				SetAngle(pServer->GetVehicleAngle(GetVehicle()));
 				// Reset entering values
 				m_wVehicleToEnter = INVALID_VEHICLE_ID;
 				m_byteSeatToEnter = 0;
@@ -770,10 +770,8 @@ void CPlayerData::GetPosition(CVector *pvecPosition)
 {
 	// Check the player state
 	if ((GetState() == PLAYER_STATE_DRIVER || GetState() == PLAYER_STATE_PASSENGER) && m_pPlayer->wVehicleId != INVALID_VEHICLE_ID) {
-		// Get the player vehicle interface
 		CVehicle *pVehicle = GetVehicle();
-		// Get the player vehicle position
-		*pvecPosition = pVehicle->vecPosition;
+		*pvecPosition = pServer->GetVehiclePos(pVehicle);
 	} else {
 		*pvecPosition = m_pPlayer->vecPosition;
 	}
@@ -888,8 +886,8 @@ void CPlayerData::SetSkin(int iSkin)
 	// Send RPC
 	if (m_pPlayer->bReadyToSpawn) {
 		RakNet::BitStream bsData;
-		bsData.Write(m_pPlayer->wPlayerId);
-		bsData.Write((int)iSkin);
+		bsData.Write((int)m_pPlayer->wPlayerId);
+		bsData.Write(iSkin);
 		CFunctions::AddedPlayersRPC(&RPC_SetPlayerSkin, &bsData, m_playerId);
 	}
 
@@ -1517,36 +1515,36 @@ bool CPlayerData::EnterVehicle(int iVehicleId, int iSeatId, int iType)
 	}
 
 	// Validate the distance to enter
-	if (CMath::GetDistanceBetween3DPoints(pVehicle->vecPosition,
-	                                      m_pPlayer->vecPosition) > MAX_DISTANCE_TO_ENTER_VEHICLE) {
+	CVector vecDestination = pServer->GetVehicleSeatPos(pVehicle, iSeatId);
+
+	float fDistance = CMath::GetDistanceBetween3DPoints(m_pPlayer->vecPosition, vecDestination);
+	if (fDistance > MAX_DISTANCE_TO_ENTER_VEHICLE) {
 		return false;
 	}
 
 	// Save the entering stats
 	m_wVehicleToEnter = (WORD)iVehicleId;
 	m_byteSeatToEnter = (BYTE)iSeatId;
-	// Get the seat position
-	CVector *pvecSeat = CFunctions::GetVehicleModelInfoEx(pVehicle->customSpawn.iModelID,
-	                    iSeatId == 0 || iSeatId == 1 ? VEHICLE_MODEL_INFO_FRONTSEAT : VEHICLE_MODEL_INFO_REARSEAT);
+	m_dwEnterExitTickCount = GetTickCount();
 
-	// Adjust the seat vector
-	CVector vecSeat(pvecSeat->fX + 0.7f, pvecSeat->fY, pvecSeat->fZ);
-	if (iSeatId == 0 || iSeatId == 2) {
-		vecSeat.fX = -vecSeat.fX;
+	// Check distance
+	if (fDistance < 0.5f) {
+		// Wait until the entry animation is finished
+		m_dwEnterExitTickCount = GetTickCount();
+		m_bEntering = true;
+
+		// Check whether the player is jacking the vehicle or not
+		if (pServer->IsVehicleSeatOccupied((int)m_playerId, (int)m_wVehicleToEnter, (int)m_byteSeatToEnter)) {
+			m_bJacking = true;
+		}
+
+		// Call the SAMP enter vehicle function
+		CFunctions::PlayerEnterVehicle((int)m_playerId, (int)m_wVehicleToEnter, (int)m_byteSeatToEnter);
+	} else {
+		// Go to the vehicle
+		GoTo(vecDestination, iType, true);
 	}
 
-	// Get vehicle angle
-	float fAngle = CMath::GetAngle(-pVehicle->vehMatrix.up.fX, pVehicle->vehMatrix.up.fY);
-	// This is absolutely bullshit
-	float _fAngle = fAngle * 0.01570796326794897f;
-	// Calculate the seat position based on vehicle angle
-	CVector vecSeatPosition(vecSeat.fX * cos(_fAngle) - vecSeat.fY * sin(_fAngle),
-	                        vecSeat.fX * sin(_fAngle) + vecSeat.fY * cos(_fAngle),
-	                        vecSeat.fZ);
-	// Calculate the destination point
-	CVector vecDestination = pVehicle->vecPosition + vecSeatPosition;
-	// Go to the vehicle
-	GoTo(vecDestination, iType, true);
 	return true;
 }
 
@@ -1597,7 +1595,7 @@ bool CPlayerData::PutInVehicle(int iVehicleId, int iSeatId)
 
 	// Set the player params
 	SetVehicle((WORD)iVehicleId, (BYTE)iSeatId);
-	SetPosition(pVehicle->vecPosition);
+	SetPosition(pServer->GetVehiclePos(pVehicle));
 	SetState(iSeatId == 0 ? PLAYER_STATE_DRIVER : PLAYER_STATE_PASSENGER);
 	SetAngle(pServer->GetVehicleAngle(pVehicle));
 	return true;
@@ -1612,32 +1610,13 @@ bool CPlayerData::RemoveFromVehicle()
 
 	// Set the player state
 	SetState(PLAYER_STATE_ONFOOT);
-	// Get the vehicle position
+
+	// Get the vehicle
 	CVehicle *pVehicle = GetVehicle();
-	CVector vecVehiclePos = pVehicle->vecPosition;
-	// Get the seat position
-	CVector *pvecSeat = CFunctions::GetVehicleModelInfoEx(pVehicle->customSpawn.iModelID,
-	                    m_pPlayer->byteSeatId == 0 || m_pPlayer->byteSeatId == 1 ? VEHICLE_MODEL_INFO_FRONTSEAT : VEHICLE_MODEL_INFO_REARSEAT);
-
-	// Adjust the seat vector
-	CVector vecSeat(pvecSeat->fX + 0.8f, pvecSeat->fY, pvecSeat->fZ);
-	if (m_pPlayer->byteSeatId == 0 || m_pPlayer->byteSeatId == 2) {
-		vecSeat.fX = -vecSeat.fX;
-	}
-
-	// Get vehicle angle
-	float fAngle = CMath::GetAngle(-pVehicle->vehMatrix.up.fX, pVehicle->vehMatrix.up.fY);
-	// This is absolutely bullshit
-	float _fAngle = fAngle * 0.01570796326794897f;
-	// Calculate the seat position based on vehicle angle
-	CVector vecSeatPosition(vecSeat.fX * cos(_fAngle) - vecSeat.fY * sin(_fAngle) + vecVehiclePos.fX,
-	                        vecSeat.fX * sin(_fAngle) + vecSeat.fY * cos(_fAngle) + vecVehiclePos.fY,
-	                        vecSeat.fZ + vecVehiclePos.fZ);
 
 	// Set his position
-	SetPosition(vecSeatPosition);
-	// Set his angle
-	SetAngle(fAngle);
+	SetPosition(pServer->GetVehicleSeatPos(pVehicle, m_pPlayer->byteSeatId));
+
 	// Reset the player vehicle and seat id
 	SetVehicle(INVALID_VEHICLE_ID, 0);
 	return true;
