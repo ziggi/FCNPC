@@ -1676,6 +1676,12 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_RemoveFromVehicle(AMX *amx, cell *params)
 		return 0;
 	}
 
+	// Validate the player state
+	int iState = pServer->GetPlayerManager()->GetAt(iNPCId)->GetState();
+	if (iState != PLAYER_STATE_DRIVER && iState != PLAYER_STATE_PASSENGER) {
+		return 0;
+	}
+
 	// Make the player exit the vehicle
 	return pServer->GetPlayerManager()->GetAt(iNPCId)->RemoveFromVehicle() ? 1 : 0;
 }

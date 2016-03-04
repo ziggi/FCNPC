@@ -559,9 +559,8 @@ void CPlayerData::Process()
 						} else {
 							StopPlayingNode();
 						}
-					} else
+					} else {
 						// Call the reach destination callback
-					{
 						CCallbackManager::OnReachDestination((int)m_playerId);
 					}
 				}
@@ -1541,7 +1540,9 @@ bool CPlayerData::EnterVehicle(int iVehicleId, int iSeatId, int iType)
 	// This is absolutely bullshit
 	float _fAngle = fAngle * 0.01570796326794897f;
 	// Calculate the seat position based on vehicle angle
-	CVector vecSeatPosition(vecSeat.fX * cos(_fAngle) - vecSeat.fY * sin(_fAngle), vecSeat.fX * sin(_fAngle) + vecSeat.fY * cos(_fAngle), vecSeat.fZ);
+	CVector vecSeatPosition(vecSeat.fX * cos(_fAngle) - vecSeat.fY * sin(_fAngle),
+	                        vecSeat.fX * sin(_fAngle) + vecSeat.fY * cos(_fAngle),
+	                        vecSeat.fZ);
 	// Calculate the destination point
 	CVector vecDestination = pVehicle->vecPosition + vecSeatPosition;
 	// Go to the vehicle
@@ -1604,11 +1605,6 @@ bool CPlayerData::PutInVehicle(int iVehicleId, int iSeatId)
 
 bool CPlayerData::RemoveFromVehicle()
 {
-	// Validate the player state
-	if (GetState() != PLAYER_STATE_DRIVER && GetState() != PLAYER_STATE_PASSENGER) {
-		return false;
-	}
-
 	// Validate the player vehicle
 	if (!GetVehicle()) {
 		return false;
@@ -1635,7 +1631,8 @@ bool CPlayerData::RemoveFromVehicle()
 	float _fAngle = fAngle * 0.01570796326794897f;
 	// Calculate the seat position based on vehicle angle
 	CVector vecSeatPosition(vecSeat.fX * cos(_fAngle) - vecSeat.fY * sin(_fAngle) + vecVehiclePos.fX,
-	                        vecSeat.fX * sin(_fAngle) + vecSeat.fY * cos(_fAngle) + vecVehiclePos.fY, vecSeat.fZ + vecVehiclePos.fZ);
+	                        vecSeat.fX * sin(_fAngle) + vecSeat.fY * cos(_fAngle) + vecVehiclePos.fY,
+	                        vecSeat.fZ + vecVehiclePos.fZ);
 
 	// Set his position
 	SetPosition(vecSeatPosition);
