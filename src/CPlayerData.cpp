@@ -1525,7 +1525,6 @@ bool CPlayerData::EnterVehicle(int iVehicleId, int iSeatId, int iType)
 	// Save the entering stats
 	m_wVehicleToEnter = (WORD)iVehicleId;
 	m_byteSeatToEnter = (BYTE)iSeatId;
-	m_dwEnterExitTickCount = GetTickCount();
 
 	// Check distance
 	if (fDistance < 0.5f) {
