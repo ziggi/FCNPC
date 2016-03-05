@@ -8,7 +8,7 @@ add_definitions (-DVERSION="${VERSION}")
 set (CMAKE_SHARED_LIBRARY_PREFIX "")
 
 if (WIN32)
-	add_definitions (-DWIN32 -D_WIN32 -D__STDC__)
+	add_definitions (-DWIN32 -D_WIN32 -D__STDC__ -DSYSTEM_NAME="Windows")
 
 	set (FCNPC_SRC
 		${CMAKE_CURRENT_SOURCE_DIR}/src/Exports.def
@@ -20,7 +20,7 @@ if (WIN32)
 	set (CMAKE_CXX_FLAGS "/Zp1 /EHsc")
 	set (CMAKE_SHARED_LINKER_FLAGS "/NOLOGO /MACHINE:X86")
 else ()
-	add_definitions (-DLINUX)
+	add_definitions (-DLINUX -DSYSTEM_NAME="GNU/Linux")
 
 	set (FCNPC_SRC
 		${CMAKE_CURRENT_SOURCE_DIR}/src/fopen_s/*.cpp

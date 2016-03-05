@@ -21,6 +21,7 @@ DWORD        dwStartTick;
 CNetGame     *pNetGame;
 void         *pConsole = NULL;
 RakServer    *pRakServer = NULL;
+char         szSampVersion[64];
 
 PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports()
 {
@@ -36,17 +37,16 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	logprintf = (logprintf_t)ppData[PLUGIN_DATA_LOGPRINTF];
 	// Check server version
 	eSAMPVersion version;
-	char szVersion[64];
 
 	if ((DWORD)logprintf == CAddress::FUNC_Logprintf_037) {
 		version = SAMP_VERSION_037;
-		strlcpy(szVersion, "0.3.7", sizeof(szVersion));
+		strlcpy(szSampVersion, "0.3.7", sizeof(szSampVersion));
 	} else if ((DWORD)logprintf == CAddress::FUNC_Logprintf_037_R2_1) {
 		version = SAMP_VERSION_037_R2_1;
-		strlcpy(szVersion, "0.3.7 R2-1", sizeof(szVersion));
+		strlcpy(szSampVersion, "0.3.7 R2-1", sizeof(szSampVersion));
 	} else {
 		version = SAMP_VERSION_UNKNOWN;
-		strlcpy(szVersion, "Unknown", sizeof(szVersion));
+		strlcpy(szSampVersion, "Unknown", sizeof(szSampVersion));
 	}
 	// Print the loading message
 	logprintf("");
@@ -55,7 +55,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	logprintf("");
 	logprintf("- Author: OrMisicL");
 	logprintf("- Contributors: ziggi, Neutralneu");
-	logprintf("- Server version: %s", szVersion);
+	logprintf("- Server version: %s", szSampVersion);
 	logprintf("- Build: " __DATE__" at " __TIME__ "");
 	logprintf("-------------------------------------------------");
 	logprintf("");

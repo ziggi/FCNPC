@@ -88,8 +88,9 @@
 #include "Natives.h"
 
 // externals
-extern CServer          *pServer;
-extern void             **ppPluginData;
-extern CNetGame         *pNetGame;
-extern void             *pConsole;
-extern RakServer        *pRakServer;
+extern CServer      *pServer;
+extern void         **ppPluginData;
+extern CNetGame     *pNetGame;
+extern void         *pConsole;
+extern RakServer    *pRakServer;
+extern char         szSampVersion[64];
