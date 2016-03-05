@@ -10,6 +10,8 @@
 #ifndef HOOKS_H
 #define HOOKS_H
 
+extern bool bTakeDamageInternalCall;
+
 class CHooks
 {
 public:

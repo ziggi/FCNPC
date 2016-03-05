@@ -635,7 +635,7 @@ void CPlayerData::Process()
 
 					// Check for reload
 					DWORD dwClip = GetWeaponClipSize(m_byteWeaponId);
-					if (m_wAmmo % dwClip == 0 && m_wAmmo != 0 && dwClip != m_wAmmo && m_bHasReload && dwClip != 1) {
+					if (dwClip > 1 && m_wAmmo % dwClip == 0 && m_wAmmo != 0 && dwClip != m_wAmmo && m_bHasReload) {
 						m_dwReloadTickCount = dwThisTick;
 						m_bReloading = true;
 						m_bShooting = false;
@@ -1434,6 +1434,53 @@ bool CPlayerData::IsShooting()
 bool CPlayerData::IsReloading()
 {
 	return m_bReloading;
+}
+
+void CPlayerData::ProcessGiveDamage(int iDamagedId, float fHealthLoss, int iWeaponId, int iBodypart)
+{
+	CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[iDamagedId];
+	if (!pPlayer) {
+		return;
+	}
+
+	float fWeaponDamage = GetWeaponDamage(iWeaponId);
+
+	// Check the armour
+	if (pPlayer->fArmour > 0.0f) {
+		// Save the old armour
+		float fDiff = pPlayer->fArmour - fWeaponDamage;
+		// Decrease the armor
+		pPlayer->fArmour -= fWeaponDamage;
+		// If the damage is bigger than the armour then decrease the health aswell
+		if (fDiff < 0.0f) {
+			pPlayer->fHealth += fDiff;
+		}
+	} else {
+		pPlayer->fHealth -= fWeaponDamage;
+	}
+
+	if (pPlayer->fArmour < 0.0f) {
+		pPlayer->fArmour = 0.0f;
+	}
+
+	if (pPlayer->fHealth < 0.0f) {
+		pPlayer->fHealth = 0.0f;
+	}
+
+	RakNet::BitStream bsData;
+	bsData.Write(pPlayer->fHealth);
+	CFunctions::PlayerRPC(&RPC_SetPlayerHealth, &bsData, iDamagedId);
+
+	bsData.Reset();
+	bsData.Write(pPlayer->fArmour);
+	CFunctions::PlayerRPC(&RPC_SetPlayerArmour, &bsData, iDamagedId);
+
+	// Call the on take damage callback
+	int iReturn = CCallbackManager::OnGiveDamage((int)m_playerId, iDamagedId, iWeaponId, iBodypart, fWeaponDamage);
+	// Check the returned value
+	if (iReturn) {
+		CCallbackManager::OnPlayerTakeDamage(iDamagedId, (int)m_playerId, fWeaponDamage, iWeaponId, iBodypart);
+	}
 }
 
 void CPlayerData::ProcessDamage(int iDamagerId, float fHealthLoss, int iWeaponId, int iBodypart)

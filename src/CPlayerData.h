@@ -132,7 +132,7 @@ public:
 	bool IsShooting();
 	bool IsReloading();
 
-
+	void ProcessGiveDamage(int iDamagedId, float fHealthLoss, int iWeaponId, int iBodypart);
 	void ProcessDamage(int iDamagerId, float fHealthLoss, int iWeaponId, int iBodypart);
 	void ProcessVehicleDamage(int iDamagerId, int iVehicleId, int iWeaponId, CVector vecHit);
 
