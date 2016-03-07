@@ -38,7 +38,7 @@ long WINAPI CExceptionHandler::ExceptionHandlerCallback(_EXCEPTION_POINTERS *pEx
 	GetSystemTime(&systemTime);
 	// Create the file name
 	char szFileName[MAX_PATH];
-	snprintf(szFileName, sizeof(szFileName), "fcnpc-crash_%d-%d-%d_%d.%d.%d.txt", systemTime.wDay, systemTime.wMonth, systemTime.wYear, systemTime.wHour, systemTime.wMinute, systemTime.wSecond);
+	snprintf(szFileName, sizeof(szFileName), "fcnpc-crash_%04d-%02d-%02d_%02d.%02d.%02d.txt", systemTime.wYear, systemTime.wMonth, systemTime.wDay, systemTime.wHour, systemTime.wMinute, systemTime.wSecond);
 	// Open the log file
 	FILE *pFile;
 	fopen_s(&pFile, szFileName, "w");
@@ -93,13 +93,13 @@ long WINAPI CExceptionHandler::ExceptionHandlerCallback(_EXCEPTION_POINTERS *pEx
 void CExceptionHandler::ExceptionHandlerCallback(int signum, siginfo_t * info, void * ucontext)
 {
 	time_t rawtime;
-	struct tm * timeinfo;
+	struct tm *timeinfo;
 	// Get the current time
 	time(&rawtime);
 	timeinfo = localtime(&rawtime);
 	// Create the file name
 	char szFileName[MAX_PATH];
-	sprintf(szFileName, "fcnpc-crash_%d-%d-%d_%d.%d.%d.txt", timeinfo->tm_mday, timeinfo->tm_mon, timeinfo->tm_year, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
+	sprintf(szFileName, "fcnpc-crash_%d-%02d-%02d_%02d.%02d.%02d.txt", timeinfo->tm_year + 1900, timeinfo->tm_mon, timeinfo->tm_mday, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
 	// Open the log file
 	FILE *pFile = fopen(szFileName, "w");
 	// Make sure the file is opened
