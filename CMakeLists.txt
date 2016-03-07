@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 2.8.4)
 
 project (FCNPC)
 
-set (VERSION "1.0.1")
+set (VERSION "1.0.2")
 add_definitions (-DVERSION="${VERSION}")
 
 set (CMAKE_SHARED_LIBRARY_PREFIX "")
