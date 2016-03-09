@@ -33,7 +33,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_Create(AMX *amx, cell *params)
 	// Get the name
 	amx_GetString(szName, pAddress, 0, iLength);
 	// Create the player in the player manager
-	return pServer->GetPlayerManager()->AddPlayer(szName);
+
+	int iReturn = pServer->GetPlayerManager()->AddPlayer(szName);
+	SAFE_DELETE(szName);
+	return iReturn;
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_Destroy(AMX *amx, cell *params)
@@ -393,6 +396,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetQuaternion(AMX *amx, cell *params)
 
 	// Set the player quaternion
 	pServer->GetPlayerManager()->GetAt(iNPCId)->SetQuaternion(fQuaternion);
+	SAFE_DELETE(fQuaternion);
 	return 1;
 }
 
@@ -435,6 +439,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetQuaternion(AMX *amx, cell *params)
 
 	amx_GetAddr(amx, params[5], &pAddress);
 	*pAddress = amx_ftoc(fQuaternion[3]);
+
+	SAFE_DELETE(fQuaternion);
 	return 1;
 }
 
@@ -1329,11 +1335,11 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponInfo(AMX *amx, cell *params)
 
 	// Set the player weapon info
 	SWeaponInfo sWeaponInfo = pServer->GetPlayerManager()->GetAt(iNPCId)->GetWeaponInfo(iWeaponId);
-	
+
 	if (fDamage != -1.0f) {
 		sWeaponInfo.fDamage = fDamage;
 	}
-	
+
 	if (iClipSize != -1) {
 		sWeaponInfo.iClipSize = iClipSize;
 	}
@@ -2093,7 +2099,9 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StartPlayingPlayback(AMX *amx, cell *params
 	}
 
 	// Start Playing the player playback
-	return pServer->GetPlayerManager()->GetAt(iNPCId)->StartPlayingPlayback(szFile) ? 1 : 0;
+	int iReturn = pServer->GetPlayerManager()->GetAt(iNPCId)->StartPlayingPlayback(szFile) ? 1 : 0;
+	SAFE_DELETE(szFile);
+	return iReturn;
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_StopPlayingPlayback(AMX *amx, cell *params)

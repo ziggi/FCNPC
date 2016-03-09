@@ -3,7 +3,7 @@
 		FCNPC - Fully Controllable NPC
 			----------------------
 
-	- File: ThreadFunctions.h
+	- File: ThreadFunctions.hpp
 	- Author(s): OrMisicL
 
   =========================================*/

@@ -3,7 +3,7 @@
 		FCNPC - Fully Controllable NPC
 			----------------------
 
-	- File: WeaponInfo.h
+	- File: WeaponInfo.hpp
 	- Author(s): OrMisicL, ziggi
 
   =========================================*/
@@ -36,6 +36,7 @@ class CWeaponInfo
 {
 public:
 	CWeaponInfo();
+	~CWeaponInfo();
 
 	static bool SetDefaultInfo(int iWeaponId, SWeaponInfo sWeaponInfo);
 	static SWeaponInfo GetDefaultInfo(int iWeaponId);

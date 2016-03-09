@@ -3,7 +3,7 @@
 		FCNPC - Fully Controllable NPC
 			----------------------
 
-	- File: Natives.h
+	- File: Natives.hpp
 	- Author(s): OrMisicL
 
   =========================================*/

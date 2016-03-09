@@ -19,16 +19,15 @@ public:
 	static void  FCNPCSleep(DWORD dwMs);
 	static DWORD FindPattern(const char *szPattern, const char *szMask);
 	static float RandomFloat(float min, float max);
-
 };
 
-// Linux
-#ifndef _WIN32
+#if defined(LINUX)
+	#if defined(GetTickCount)
+		#undef GetTickCount
+	#endif
 
-	#undef GetTickCount
 	int GetTickCount();
 	void LoadTickCount();
-
 #endif
 
 #endif

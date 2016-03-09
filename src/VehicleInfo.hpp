@@ -3,7 +3,7 @@
 		FCNPC - Fully Controllable NPC
 			----------------------
 
-	- File: VehicleInfo.h
+	- File: VehicleInfo.hpp
 	- Author(s): ziggi
 
   =========================================*/

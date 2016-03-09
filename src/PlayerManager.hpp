@@ -3,7 +3,7 @@
 		FCNPC - Fully Controllable NPC
 			----------------------
 
-	- File: PlayerManager.h
+	- File: PlayerManager.hpp
 	- Author(s): OrMisicL
 
   =========================================*/
@@ -11,7 +11,7 @@
 #ifndef PLAYERMANAGER_H
 #define PLAYERMANAGER_H
 
-#include "CPlayerData.h"
+#include "CPlayerData.hpp"
 
 class CPlayerManager
 {

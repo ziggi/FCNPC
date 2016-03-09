@@ -3,7 +3,7 @@
 		FCNPC - Fully Controllable NPC
 			----------------------
 
-	- File: Address.h
+	- File: Address.hpp
 	- Author(s): OrMisicL
 
   =========================================*/
@@ -12,11 +12,11 @@
 #ifndef ADDRESS_H
 #define ADDRESS_H
 
-#ifdef _WIN32
+#if defined(WIN32)
 	#define RAKNET_SEND_OFFSET          7
 	#define RAKNET_RPC_OFFSET           32
 	#define RAKNET_RECEIVE_OFFSET       10
-#else
+#elif defined(LINUX)
 	#define RAKNET_SEND_OFFSET          9
 	#define RAKNET_RPC_OFFSET           35
 	#define RAKNET_RECEIVE_OFFSET       11
@@ -58,10 +58,6 @@ public:
 	static DWORD           OFFSET_RemoteSystemSize;
 	static DWORD           OFFSET_RemoteSystem__ConnectMode;
 	static DWORD           OFFSET_RemoteSystem__Unknown;
-
-	// Arrays
-
-
 };
 
 #endif

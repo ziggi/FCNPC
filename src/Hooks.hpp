@@ -3,7 +3,7 @@
 		FCNPC - Fully Controllable NPC
 			----------------------
 
-	- File: Hooks.h
+	- File: Hooks.hpp
 	- Author(s): OrMisicL
 
   =========================================*/

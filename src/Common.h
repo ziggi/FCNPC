@@ -25,15 +25,12 @@ extern logprintf_t          logprintf;
 #define PAD(a, b)           char a[b]
 #ifndef CHECK_PARAMS
 #define CHECK_PARAMS(m,n)                                                                                           \
-		do                                                                                                              \
-		{                                                                                                               \
-			if (params[0] != (m * 4))                                                                                   \
-			{                                                                                                           \
+		do {                                                                                                           \
+			if (params[0] != (m * 4)) {                                                                                 \
 				logprintf("[FCNPC] Error: Incorrect parameter count for \"%s\", %d != %d\n", n, m, ((int)params[0]) / 4); \
 				return 0;                                                                                               \
 			}                                                                                                           \
-		}                                                                                                               \
-		while (0)
+		} while (0)
 #endif
 // Plugin exports
 #define PLUGIN_DATA_NETGAME        225
@@ -275,9 +272,9 @@ extern logprintf_t          logprintf;
 #define DEFAULT_UPDATE_RATE             50
 
 // Hook functions
-#ifdef _WIN32
+#if defined(WIN32)
 	#define HOOK void _declspec(naked)
-#else
+#elif defined(LINUX)
 	#define HOOK void __attribute__((naked))
 #endif
 

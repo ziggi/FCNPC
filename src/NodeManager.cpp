@@ -77,4 +77,3 @@ void CNodeManager::CloseNode(int iNodeId)
 	// Mark not opened
 	m_bOpened[iNodeId] = false;
 }
-

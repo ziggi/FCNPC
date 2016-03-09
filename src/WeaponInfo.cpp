@@ -67,6 +67,13 @@ CWeaponInfo::CWeaponInfo()
 	}
 }
 
+CWeaponInfo::~CWeaponInfo()
+{
+	for (unsigned int i = 0; i < (sizeof(m_pWeaponInfo) / sizeof(m_pWeaponInfo[0])); i++) {
+		SAFE_DELETE(m_pWeaponInfo[i]);
+	}
+}
+
 bool CWeaponInfo::SetDefaultInfo(int iWeaponId, SWeaponInfo sWeaponInfo)
 {
 	if (!CWeaponInfo::IsValid(iWeaponId)) {

@@ -3,7 +3,7 @@
 		FCNPC - Fully Controllable NPC
 			----------------------
 
-	- File: AnimationInfo.h
+	- File: AnimationInfo.hpp
 	- Author(s): ziggi
 
   =========================================*/

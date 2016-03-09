@@ -15,9 +15,9 @@ extern CServer *pServer;
 void CExceptionHandler::Install()
 {
 	// Set the exception handler callback
-#ifdef _WIN32
+#if defined(WIN32)
 	SetUnhandledExceptionFilter(ExceptionHandlerCallback);
-#else
+#elif defined(LINUX)
 	struct sigaction sigact;
 
 	sigact.sa_sigaction = ExceptionHandlerCallback;
@@ -30,7 +30,7 @@ void CExceptionHandler::Install()
 #endif
 }
 
-#ifdef _WIN32
+#if defined(WIN32)
 long WINAPI CExceptionHandler::ExceptionHandlerCallback(_EXCEPTION_POINTERS *pExceptionInfo)
 {
 	// Get the current time
@@ -89,7 +89,7 @@ long WINAPI CExceptionHandler::ExceptionHandlerCallback(_EXCEPTION_POINTERS *pEx
 	fclose(pFile);
 	return EXCEPTION_EXECUTE_HANDLER;
 }
-#else
+#elif defined(LINUX)
 void CExceptionHandler::ExceptionHandlerCallback(int signum, siginfo_t * info, void * ucontext)
 {
 	time_t rawtime;

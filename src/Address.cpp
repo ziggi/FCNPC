@@ -11,10 +11,10 @@
 
 #include "Main.h"
 
-#ifdef _WIN32
+#if defined(WIN32)
 	DWORD CAddress::FUNC_Logprintf_037 = 0x0048A0B0;
 	DWORD CAddress::FUNC_Logprintf_037_R2_1 = 0x0048C8D0;
-#else
+#elif defined(LINUX)
 	DWORD CAddress::FUNC_Logprintf_037 = 0x080A9000;
 	DWORD CAddress::FUNC_Logprintf_037_R2_1 = 0x080A91D0;
 #endif
@@ -44,7 +44,7 @@ DWORD CAddress::OFFSET_RemoteSystem__Unknown = NULL;
 
 void CAddress::Initialize(eSAMPVersion sampVersion)
 {
-#ifdef _WIN32
+#if defined(WIN32)
 	switch (sampVersion) {
 		case SAMP_VERSION_037:
 			FUNC_CPlayerPool__DeletePlayer = 0x466740;
@@ -102,7 +102,7 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 			OFFSET_RemoteSystem__Unknown = *(DWORD *)(CUtils::FindPattern("\x80\xB8\xB5\x0C\x00\x00\x02\x0F\x85\x4C\x01\x00\x00\x8B\x7C\x24\x3C\x8B\xCF", "xx????xx??????xx?xx") + 2);
 			break;
 	}
-#else
+#elif defined(LINUX)
 	switch (sampVersion) {
 		case SAMP_VERSION_037:
 			FUNC_CPlayerPool__DeletePlayer = 0x80d0600;

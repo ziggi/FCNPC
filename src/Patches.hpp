@@ -3,7 +3,7 @@
 		FCNPC - Fully Controllable NPC
 			----------------------
 
-	- File: Patches.h
+	- File: Patches.hpp
 	- Author(s): OrMisicL
 
   =========================================*/

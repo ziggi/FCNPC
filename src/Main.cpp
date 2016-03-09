@@ -9,7 +9,7 @@
   =========================================*/
 
 #include "Main.h"
-#include "Address.h"
+#include "Address.hpp"
 
 // Globals
 logprintf_t  logprintf;
@@ -63,7 +63,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	// Install the exception handler
 	CExceptionHandler::Install();
 	// Initialize linux tick count
-#ifndef _WIN32
+#if defined(LINUX)
 	LoadTickCount();
 #endif
 	// Create the server instance

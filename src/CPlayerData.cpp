@@ -59,7 +59,7 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 
 CPlayerData::~CPlayerData()
 {
-
+	SAFE_DELETE(m_pWeaponInfo);
 }
 
 int CPlayerData::GetId()
@@ -643,9 +643,9 @@ void CPlayerData::Process()
 
 					// Send bullet
 					if (GetWeaponType(m_byteWeaponId) == WEAPON_TYPE_SHOOT) {
-						CFunctions::PlayerShoot((int)m_playerId, m_wHitId, m_byteHitType, m_byteWeaponId, m_vecAimAt);	
+						CFunctions::PlayerShoot((int)m_playerId, m_wHitId, m_byteHitType, m_byteWeaponId, m_vecAimAt);
 					}
-					
+
 					SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM | KEY_FIRE);
 
 					// Update the shoot tick
@@ -811,13 +811,15 @@ void CPlayerData::SetAngle(float fAngle)
 	// Set the player
 	m_pPlayer->fAngle = fAngle;
 	// Rotate new quaternion matrix
-	MATRIX4X4 *matrix = new MATRIX4X4;
+	MATRIX4X4 matrix;
 	float *fQuaternion = new float[4];
 
-	CMath::QuaternionRotateZ(matrix, CMath::DegreeToRadians(fAngle));
-	CMath::GetQuaternionFromMatrix(*matrix, fQuaternion);
+	CMath::QuaternionRotateZ(&matrix, CMath::DegreeToRadians(fAngle));
+	CMath::GetQuaternionFromMatrix(matrix, fQuaternion);
 	// Update quaternion
 	SetQuaternion(fQuaternion);
+
+	SAFE_DELETE(fQuaternion);
 }
 
 float CPlayerData::GetAngle()
@@ -1308,10 +1310,10 @@ void CPlayerData::AimAt(CVector vecPoint, bool bShoot, DWORD dwShootDelay)
 	// Get the distance to the destination point
 	float fDistance = CMath::GetDistanceBetween3DPoints(vecPosition, vecPoint);
 	// Calculate the aiming Z angle
-	float fZAngle = -acos(((vecDistance.fX * vecDistance.fX) + (vecDistance.fY * vecDistance.fY))
-	                      / (sqrt((vecDistance.fX * vecDistance.fX) + (vecDistance.fY * vecDistance.fY) + (vecDistance.fZ * vecDistance.fZ))
-	                         * sqrt((vecDistance.fX * vecDistance.fX) + (vecDistance.fY * vecDistance.fY)))) + 0.1f;
-
+	float fXSquare = vecDistance.fX * vecDistance.fX;
+	float fYSquare = vecDistance.fY * vecDistance.fY;
+	float fZSquare = vecDistance.fZ * vecDistance.fZ;
+	float fZAngle = -acos((fXSquare + fYSquare) / (sqrt(fXSquare + fYSquare + fZSquare) * sqrt(fXSquare + fYSquare))) + 0.1f;
 	// Get the destination angle
 	vecDistance /= fDistance;
 	SetAngle(CMath::RadiansToDegree(atan2(vecDistance.fY, vecDistance.fX)));
@@ -1832,7 +1834,12 @@ bool CPlayerData::StartPlayingPlayback(char *szFile)
 	// Create a new playback instance
 	m_pPlayback = new CPlayback(szFile);
 	// Initialize it
-	if (!m_pPlayback || !m_pPlayback->Initialize()) {
+	if (!m_pPlayback) {
+		return false;
+	}
+
+	if (!m_pPlayback->Initialize()) {
+		SAFE_DELETE(m_pPlayback);
 		return false;
 	}
 

@@ -3,7 +3,7 @@
 		FCNPC - Fully Controllable NPC
 			----------------------
 
-	- File: Maths.h
+	- File: Maths.hpp
 	- Author(s): OrMisicL
 
   =========================================*/

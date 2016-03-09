@@ -3,7 +3,7 @@
 		FCNPC - Fully Controllable NPC
 			----------------------
 
-	- File: SAMPRakPeer.h
+	- File: SAMPRakPeer.hpp
 	- Author(s): OrMisicL
 
   =========================================*/
@@ -13,9 +13,9 @@
 
 class CSAMPSystemAddress;
 
-#ifdef _WIN32
+#if defined(WIN32)
 	#define SYSTEM_MANAGER_OFFSET 8
-#else
+#elif defined(LINUX)
 	#define SYSTEM_MANAGER_OFFSET 4
 #endif
 

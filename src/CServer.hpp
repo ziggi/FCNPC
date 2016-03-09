@@ -3,7 +3,7 @@
 		FCNPC - Fully Controllable NPC
 			----------------------
 
-	- File: Server.h
+	- File: Server.hpp
 	- Author(s): OrMisicL
 
   =========================================*/
@@ -17,9 +17,9 @@ struct Packet;
 struct CVehicleSpawn;
 class CGangZonePool;
 
-#include "Address.h"
-#include "PlayerManager.h"
-#include "NodeManager.h"
+#include "Address.hpp"
+#include "PlayerManager.hpp"
+#include "NodeManager.hpp"
 #include <list>
 
 class CMapAndreas;

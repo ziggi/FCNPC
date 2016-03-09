@@ -9,7 +9,7 @@
   =========================================*/
 
 #include "Main.h"
-#include "Utils.h"
+#include "Utils.hpp"
 
 float CMath::GetDistanceBetween3DPoints(CVector vecPosition, CVector _vecPosition)
 {

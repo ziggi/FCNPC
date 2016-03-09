@@ -9,16 +9,16 @@
   =========================================*/
 
 // OS includes
-#ifdef _WIN32
+#if defined(WIN32)
 	#include <windows.h>
-#else
+
+	#define STDCALL __stdcall
+	#define THISCALL __thiscall
+#elif defined(LINUX)
 	#include "pthread.h"
 	#include "unistd.h"
 	#include <sys/mman.h>
-#endif
 
-// Define some linux types
-#ifndef _WIN32
 	#define BOOL    int
 	#define DWORD   unsigned long
 	#define BYTE    unsigned char
@@ -28,9 +28,6 @@
 	#define STDCALL
 	#define THISCALL
 	#define MAX_PATH 260
-#else
-	#define STDCALL __stdcall
-	#define THISCALL __thiscall
 #endif
 
 // Standard includes
@@ -41,51 +38,51 @@
 #include <string.h>
 #include "subhook/subhook.h"
 #include "strlcpy/strlcpy.h"
-#ifdef _WIN32
+#if defined(WIN32)
 	#include "snprintf/snprintf.h"
-#else
+#elif defined(LINUX)
 	#include "fopen_s/fopen_s.h"
 #endif
 // ExceptionHandler includes
-#include "ExceptionHandler.h"
+#include "ExceptionHandler.hpp"
 // SDK includes
 #include <sdk/plugin.h>
 // Utils includes
-#include "Utils.h"
+#include "Utils.hpp"
 #include "Common.h"
 #include "CVector.h"
-#include "Thread.h"
+#include "Thread.hpp"
 #include "raknet/BitStream.h"
 // Nodes includes
-#include "Playback.h"
+#include "Playback.hpp"
 #include "MapAndreas.h"
-#include "Node.h"
+#include "Node.hpp"
 // Server includes
-#include "Address.h"
-#include "CServer.h"
-#include "Patches.h"
-#include "Hooks.h"
-#include "VehicleInfo.h"
-#include "WeaponInfo.h"
-#include "AnimationInfo.h"
-#include "ThreadFunctions.h"
+#include "Address.hpp"
+#include "CServer.hpp"
+#include "Patches.hpp"
+#include "Hooks.hpp"
+#include "VehicleInfo.hpp"
+#include "WeaponInfo.hpp"
+#include "AnimationInfo.hpp"
+#include "ThreadFunctions.hpp"
 // SAMP includes
-#include "SAMPRakPeer.h"
-#include "CFunctions.h"
+#include "SAMPRakPeer.hpp"
+#include "CFunctions.hpp"
 #include "Structs.h"
 #include "RPCs.h"
 // SA includes
-#include "SANode.h"
-#include "Maths.h"
+#include "SANode.hpp"
+#include "Maths.hpp"
 
 // Managers includes
-#include "PlayerManager.h"
-#include "NodeManager.h"
-#include "CallbackManager.h"
+#include "PlayerManager.hpp"
+#include "NodeManager.hpp"
+#include "CallbackManager.hpp"
 // Entity includes
-#include "CPlayerData.h"
+#include "CPlayerData.hpp"
 // Scripting includes
-#include "Natives.h"
+#include "Natives.hpp"
 
 // externals
 extern CServer      *pServer;

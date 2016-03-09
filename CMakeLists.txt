@@ -7,7 +7,7 @@ add_definitions (-DVERSION="${VERSION}")
 
 set (CMAKE_SHARED_LIBRARY_PREFIX "")
 
-if (WIN32)
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	add_definitions (-DWIN32 -D_WIN32 -D__STDC__ -DSYSTEM_NAME="Windows")
 
 	set (FCNPC_SRC
@@ -19,7 +19,7 @@ if (WIN32)
 	set (CMAKE_C_FLAGS "/Zp1")
 	set (CMAKE_CXX_FLAGS "/Zp1 /EHsc")
 	set (CMAKE_SHARED_LINKER_FLAGS "/NOLOGO /MACHINE:X86")
-else ()
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	add_definitions (-DLINUX -DSYSTEM_NAME="GNU/Linux")
 
 	set (FCNPC_SRC
@@ -27,10 +27,11 @@ else ()
 		${CMAKE_CURRENT_SOURCE_DIR}/src/fopen_s/*.h
 	)
 
-	set (CMAKE_C_FLAGS "-m32 -fPIC -O2 -w -fno-stack-protector -fpack-struct=1")
-	set (CMAKE_CXX_FLAGS "-m32 -fPIC -O2 -w -fno-stack-protector -fpack-struct=1")
+	set (FLAGS "-m32 -fPIC -O2 -w -fno-stack-protector -fpack-struct=1")
+	set (CMAKE_C_FLAGS ${FLAGS})
+	set (CMAKE_CXX_FLAGS ${FLAGS})
 	set (CMAKE_SHARED_LINKER_FLAGS "-fshort-wchar -shared")
-endif (WIN32)
+endif ()
 
 include_directories (
 	${CMAKE_CURRENT_SOURCE_DIR}/src
@@ -48,6 +49,7 @@ file (GLOB FCNPC_SRC
 	${FCNPC_SRC}
 	${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/amx/*.c

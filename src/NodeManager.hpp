@@ -3,7 +3,7 @@
 		FCNPC - Fully Controllable NPC
 			----------------------
 
-	- File: NodeManager.h
+	- File: NodeManager.hpp
 	- Author(s): OrMisicL
 
   =========================================*/
@@ -11,7 +11,7 @@
 #ifndef	NODEMANAGER_H
 #define NODEMANAGER_H
 
-#include "Node.h"
+#include "Node.hpp"
 
 class CNodeManager
 {

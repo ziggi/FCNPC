@@ -3,7 +3,7 @@
 		FCNPC - Fully Controllable NPC
 			----------------------
 
-	- File: Node.h
+	- File: Node.hpp
 	- Author(s): OrMisicL
 
   =========================================*/
@@ -12,7 +12,7 @@
 #define NODE_H
 
 #include "Structs.h"
-#include "SANode.h"
+#include "SANode.hpp"
 
 class CPlayerData;
 

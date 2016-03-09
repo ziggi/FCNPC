@@ -3,7 +3,7 @@
 		FCNPC - Fully Controllable NPC
 			----------------------
 
-	- File: CallbackManager.h
+	- File: CallbackManager.hpp
 	- Author(s): OrMisicL
 
   =========================================*/

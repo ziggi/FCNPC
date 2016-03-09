@@ -3,7 +3,7 @@
 		FCNPC - Fully Controllable NPC
 			----------------------
 
-	- File: Player.h
+	- File: Player.hpp
 	- Author(s): OrMisicL
 
   =========================================*/
@@ -14,9 +14,9 @@
 
 #include "CVector.h"
 #include "Structs.h"
-#include "Playback.h"
-#include "Node.h"
-#include "WeaponInfo.h"
+#include "Playback.hpp"
+#include "Node.hpp"
+#include "WeaponInfo.hpp"
 #include <stdio.h>
 
 class CPlayback;

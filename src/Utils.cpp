@@ -10,29 +10,24 @@
 
 #include "Main.h"
 
-#ifdef _WIN32
+#if defined(WIN32)
 	#include <Psapi.h>
-#endif
-// Linux GetTickCount
-#ifndef _WIN32
+#elif defined(LINUX)
+	#include "sys/time.h"
 
-#include "sys/time.h"
-timeval startTime;
-timeval currentTime;
+	timeval startTime;
+	timeval currentTime;
 
-void LoadTickCount()
-{
-	// Get the starting time
-	gettimeofday(&startTime, 0);
-}
+	void LoadTickCount()
+	{
+		gettimeofday(&startTime, 0);
+	}
 
-int GetTickCount()
-{
-	// Get the time elapsed since the start
-	gettimeofday(&currentTime, 0);
-	return (currentTime.tv_usec - startTime.tv_usec) / 1000 + 1000 * (currentTime.tv_sec - startTime.tv_sec);
-}
-
+	int GetTickCount()
+	{
+		gettimeofday(&currentTime, 0);
+		return (currentTime.tv_usec - startTime.tv_usec) / 1000 + 1000 * (currentTime.tv_sec - startTime.tv_sec);
+	}
 #endif
 
 void CUtils::GetPluginError(BYTE byteError, char *szError, size_t sSize)
@@ -67,10 +62,10 @@ void CUtils::GetPluginError(BYTE byteError, char *szError, size_t sSize)
 void CUtils::UnProtect(DWORD dwAddress, size_t sSize)
 {
 	// Unprotect the address
-#ifdef _WIN32
+#if defined(WIN32)
 	DWORD dwOldProtection;
 	VirtualProtect((LPVOID)dwAddress, sSize, PAGE_EXECUTE_READWRITE, &dwOldProtection);
-#else
+#elif defined(LINUX)
 	mprotect((void*)(((int)dwAddress / 4096) * 4096), 4096, PROT_WRITE | PROT_READ | PROT_EXEC);
 #endif
 }
@@ -78,23 +73,23 @@ void CUtils::UnProtect(DWORD dwAddress, size_t sSize)
 void CUtils::FCNPCSleep(DWORD dwMs)
 {
 	// Sleep
-#ifdef _WIN32
+#if defined(WIN32)
 	Sleep(dwMs);
-#else
+#elif defined(LINUX)
 	usleep((dwMs) * 1000);
 #endif
 }
 // Thanks to kurta999 - YSF project
 DWORD CUtils::FindPattern(const char *szPattern, const char *szMask)
 {
-#ifdef WIN32
+#if defined(WIN32)
 	// Get the current process information
 	MODULEINFO mInfo = {0};
 	GetModuleInformation(GetCurrentProcess(), GetModuleHandle(NULL), &mInfo, sizeof(MODULEINFO));
 	// Find the base address
 	DWORD dwBase = (DWORD)mInfo.lpBaseOfDll;
 	DWORD dwSize =  (DWORD)mInfo.SizeOfImage;
-#else
+#elif defined(LINUX)
 	DWORD dwBase = 0x804b480;
 	DWORD dwSize = 0x8128B80 - dwBase;
 #endif

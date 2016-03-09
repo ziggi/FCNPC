@@ -3,7 +3,7 @@
 		FCNPC - Fully Controllable NPC
 			----------------------
 
-	- File: SAMPFunctions.h
+	- File: SAMPFunctions.hpp
 	- Author(s): OrMisicL
 
   =========================================*/
@@ -11,8 +11,6 @@
 
 #ifndef SAMPFUNCTIONS_H
 #define SAMPFUNCTIONS_H
-
-//#include "Structs.h"
 
 struct Packet;
 struct PlayerId;

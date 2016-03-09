@@ -3,7 +3,7 @@
 FCNPC - Fully Controllable NPC
 ----------------------
 
-- File: ExceptionHandler.h
+- File: ExceptionHandler.hpp
 - Author(s): OrMisicL
 
 =========================================*/
@@ -11,7 +11,7 @@ FCNPC - Fully Controllable NPC
 #ifndef EXCEPTIONHANDLER_H
 #define EXCEPTIONHANDLER_H
 
-#ifndef _WIN32
+#if defined(LINUX)
 	#include <signal.h>
 	#include <time.h>
 	#include <execinfo.h>
@@ -31,9 +31,9 @@ public:
 	static void Install();
 
 	// Exception handler callback
-#ifdef _WIN32
+#if defined(WIN32)
 	static long WINAPI ExceptionHandlerCallback(_EXCEPTION_POINTERS *pExceptionInfo);
-#else
+#elif defined(LINUX)
 	static void ExceptionHandlerCallback(int param, siginfo_t * info, void * ucontext);
 #endif
 

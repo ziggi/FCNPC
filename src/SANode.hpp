@@ -3,7 +3,7 @@
 		FCNPC - Fully Controllable NPC
 			----------------------
 
-	- File: SANode.h
+	- File: SANode.hpp
 	- Author(s): OrMisicL
 
   =========================================*/

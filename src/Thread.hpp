@@ -3,7 +3,7 @@
 		FCNPC - Fully Controllable NPC
 			----------------------
 
-	- File: Thread.h
+	- File: Thread.hpp
 	- Author(s): OrMisicL
 
   =========================================*/
@@ -33,9 +33,9 @@ public:
 	{
 		m_pfnThreadCallback((void *)pThread);
 	};
-#ifdef _WIN32
+#if defined(WIN32)
 	static void ThreadFunction(LPVOID lpThread);
-#else
+#elif defined(LINUX)
 	static void *ThreadFunction(void * pVoidThis);
 #endif
 
@@ -54,9 +54,9 @@ public:
 private:
 	bool                m_bStarted;
 	ThreadCallback_t    m_pfnThreadCallback;
-#ifdef _WIN32
+#if defined(WIN32)
 	HANDLE              m_hThread;
-#else
+#elif defined(LINUX)
 	pthread_t           m_Thread;
 #endif
 	void                *m_pParam;
