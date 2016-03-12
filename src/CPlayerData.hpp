@@ -82,8 +82,6 @@ public:
 	WORD GetWeaponState();
 
 	int GetWeaponType(int iWeaponId);
-	bool SetWeaponDamage(int iWeaponId, float fDamage);
-	float GetWeaponDamage(int iWeaponId);
 	bool SetWeaponReloadTime(int iWeaponId, int iTime);
 	int GetWeaponReloadTime(int iWeaponId);
 	bool SetWeaponShootTime(int iWeaponId, int iTime);
@@ -148,9 +146,6 @@ public:
 	bool IsVehicleSiren();
 	void SetVehicleHealth(float fHealth);
 	float GetVehicleHealth();
-
-	void SetPassengerDriveBy(bool bState);
-	bool IsPassengerDriveBy();
 
 	void SetSurfingOffsets(CVector vecOffsets);
 	void GetSurfingOffsets(CVector *vecOffsets);

@@ -996,22 +996,6 @@ int CPlayerData::GetWeaponType(int iWeaponId)
 	return m_pWeaponInfo->GetType(iWeaponId);
 }
 
-bool CPlayerData::SetWeaponDamage(int iWeaponId, float fDamage)
-{
-	return m_pWeaponInfo->SetDamage(iWeaponId, fDamage);
-}
-
-float CPlayerData::GetWeaponDamage(int iWeaponId)
-{
-	float fDamage = m_pWeaponInfo->GetDamage(iWeaponId);
-
-	if (m_pWeaponInfo->IsDoubleHanded(iWeaponId) && GetWeaponSkill(m_pWeaponInfo->GetSkillID(iWeaponId)) == 999) {
-		fDamage *= 2.0f;
-	}
-
-	return fDamage;
-}
-
 bool CPlayerData::SetWeaponReloadTime(int iWeaponId, int iTime)
 {
 	return m_pWeaponInfo->SetReloadTime(iWeaponId, iTime);
@@ -1716,17 +1700,6 @@ void CPlayerData::SetVehicleHealth(float fHealth)
 float CPlayerData::GetVehicleHealth()
 {
 	return m_pPlayer->vehicleSyncData.fHealth;
-}
-
-void CPlayerData::SetPassengerDriveBy(bool bState)
-{
-	m_pPlayer->passengerSyncData.byteDriveBy = bState ? 1 : 0;
-	m_pPlayer->aimSyncData.byteCameraMode = 55;
-}
-
-bool CPlayerData::IsPassengerDriveBy()
-{
-	return m_pPlayer->passengerSyncData.byteDriveBy != 0;
 }
 
 void CPlayerData::SetSurfingOffsets(CVector vecOffsets)

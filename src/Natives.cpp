@@ -1165,45 +1165,6 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponState(AMX *amx, cell *params)
 	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetWeaponState();
 }
 
-// native FCNPC_SetWeaponDamage(npcid, weaponid, Float:damage);
-cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponDamage(AMX *amx, cell *params)
-{
-	CHECK_PARAMS(3, "FCNPC_SetWeaponDamage");
-
-	// Get params
-	int iNPCId = (int)params[1];
-	int iWeaponId = (int)params[2];
-	float fDamage = amx_ctof(params[3]);
-
-	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
-		return 0;
-	}
-
-	// Set the player weapon damage
-	return pServer->GetPlayerManager()->GetAt(iNPCId)->SetWeaponDamage(iWeaponId, fDamage) ? 1 : 0;
-}
-
-// native Float:FCNPC_GetWeaponDamage(npcid, weaponid);
-cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponDamage(AMX *amx, cell *params)
-{
-	CHECK_PARAMS(2, "FCNPC_GetWeaponDamage");
-
-	// Get params
-	int iNPCId = (int)params[1];
-	int iWeaponId = (int)params[2];
-	float fDamage = 0.0f;
-
-	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
-		return fDamage;
-	}
-
-	// Get the player weapon damage
-	fDamage = pServer->GetPlayerManager()->GetAt(iNPCId)->GetWeaponDamage(iWeaponId);
-	return amx_ftoc(fDamage);
-}
-
 // native FCNPC_SetWeaponReloadTime(npcid, weaponid, time);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponReloadTime(AMX *amx, cell *params)
 {
@@ -1315,7 +1276,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponClipSize(AMX *amx, cell *params)
 	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetWeaponClipSize(iWeaponId);
 }
 
-// native FCNPC_SetWeaponInfo(npcid, weaponid, Float:damage = -1.0, reload_time = -1, shoot_time = -1, clip_size = -1);
+// native FCNPC_SetWeaponInfo(npcid, weaponid, reload_time = -1, shoot_time = -1, clip_size = -1);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponInfo(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(6, "FCNPC_SetWeaponInfo");
@@ -1323,10 +1284,9 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponInfo(AMX *amx, cell *params)
 	// Get params
 	int iNPCId = (int)params[1];
 	int iWeaponId = (int)params[2];
-	float fDamage = amx_ctof(params[3]);
-	int iReloadTime = (int)params[4];
-	int iShootTime = (int)params[5];
-	int iClipSize = (int)params[6];
+	int iReloadTime = (int)params[3];
+	int iShootTime = (int)params[4];
+	int iClipSize = (int)params[5];
 
 	// Make sure the player is valid
 	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
@@ -1335,10 +1295,6 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponInfo(AMX *amx, cell *params)
 
 	// Set the player weapon info
 	SWeaponInfo sWeaponInfo = pServer->GetPlayerManager()->GetAt(iNPCId)->GetWeaponInfo(iWeaponId);
-
-	if (fDamage != -1.0f) {
-		sWeaponInfo.fDamage = fDamage;
-	}
 
 	if (iClipSize != -1) {
 		sWeaponInfo.iClipSize = iClipSize;
@@ -1355,7 +1311,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponInfo(AMX *amx, cell *params)
 	return pServer->GetPlayerManager()->GetAt(iNPCId)->SetWeaponInfo(iWeaponId, sWeaponInfo) ? 1 : 0;
 }
 
-// native FCNPC_GetWeaponInfo(npcid, weaponid, &Float:damage = -1.0, &reload_time = -1, &shoot_time = -1, &clip_size = -1);
+// native FCNPC_GetWeaponInfo(npcid, weaponid, &reload_time = -1, &shoot_time = -1, &clip_size = -1);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponInfo(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(6, "FCNPC_GetWeaponInfo");
@@ -1375,38 +1331,30 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponInfo(AMX *amx, cell *params)
 	// write data to amx
 	cell *pAddress = NULL;
 	amx_GetAddr(amx, params[2], &pAddress);
-	*pAddress = amx_ftoc(sWeaponInfo.fDamage);
-
-	amx_GetAddr(amx, params[3], &pAddress);
 	*pAddress = sWeaponInfo.iReloadTime;
 
-	amx_GetAddr(amx, params[4], &pAddress);
+	amx_GetAddr(amx, params[3], &pAddress);
 	*pAddress = sWeaponInfo.iShootTime;
 
-	amx_GetAddr(amx, params[5], &pAddress);
+	amx_GetAddr(amx, params[4], &pAddress);
 	*pAddress = sWeaponInfo.iClipSize;
 
 	return 1;
 }
 
-// native FCNPC_SetWeaponDefaultInfo(weaponid, Float:damage = -1.0, reload_time = -1, shoot_time = -1, clip_size = -1);
+// native FCNPC_SetWeaponDefaultInfo(weaponid, reload_time = -1, shoot_time = -1, clip_size = -1);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponDefaultInfo(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(5, "FCNPC_SetWeaponDefaultInfo");
 
 	// Get params
 	int iWeaponId = (int)params[1];
-	float fDamage = amx_ctof(params[2]);
-	int iReloadTime = (int)params[3];
-	int iShootTime = (int)params[4];
-	int iClipSize = (int)params[5];
+	int iReloadTime = (int)params[2];
+	int iShootTime = (int)params[3];
+	int iClipSize = (int)params[4];
 
 	// Set default weapon info
 	SWeaponInfo sWeaponInfo = CWeaponInfo::GetDefaultInfo(iWeaponId);
-
-	if (fDamage != -1.0f) {
-		sWeaponInfo.fDamage = fDamage;
-	}
 
 	if (iClipSize != -1) {
 		sWeaponInfo.iClipSize = iClipSize;
@@ -1423,7 +1371,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponDefaultInfo(AMX *amx, cell *params
 	return CWeaponInfo::SetDefaultInfo(iWeaponId, sWeaponInfo) ? 1 : 0;
 }
 
-// native FCNPC_GetWeaponDefaultInfo(weaponid, &Float:damage = -1.0, &reload_time = -1, &shoot_time = -1, &clip_size = -1);
+// native FCNPC_GetWeaponDefaultInfo(weaponid, &reload_time = -1, &shoot_time = -1, &clip_size = -1);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponDefaultInfo(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(5, "FCNPC_GetWeaponDefaultInfo");
@@ -1441,16 +1389,14 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponDefaultInfo(AMX *amx, cell *params
 
 	// write data to amx
 	cell *pAddress = NULL;
-	amx_GetAddr(amx, params[2], &pAddress);
-	*pAddress = amx_ftoc(sWeaponInfo.fDamage);
 
-	amx_GetAddr(amx, params[3], &pAddress);
+	amx_GetAddr(amx, params[2], &pAddress);
 	*pAddress = sWeaponInfo.iReloadTime;
 
-	amx_GetAddr(amx, params[4], &pAddress);
+	amx_GetAddr(amx, params[3], &pAddress);
 	*pAddress = sWeaponInfo.iShootTime;
 
-	amx_GetAddr(amx, params[5], &pAddress);
+	amx_GetAddr(amx, params[4], &pAddress);
 	*pAddress = sWeaponInfo.iClipSize;
 
 	return 1;
@@ -1993,52 +1939,6 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetSurfingPlayerObject(AMX *amx, cell *para
 
 	// Get the surfing object
 	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetSurfingPlayerObject();
-}
-
-// FCNPC_SetPassengerDriveBy(npcid, bool:status);
-cell AMX_NATIVE_CALL CNatives::FCNPC_SetPassengerDriveBy(AMX *amx, cell *params)
-{
-	CHECK_PARAMS(2, "FCNPC_SetPassengerDriveBy");
-
-	// Get params
-	int iNPCId = (int)params[1];
-	bool bDriveBy = (bool)params[2];
-
-	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
-		return 0;
-	}
-
-	// Make sure the player is in vehicle
-	if (pServer->GetPlayerManager()->GetAt(iNPCId)->GetVehicleId() == INVALID_VEHICLE_ID) {
-		return 0;
-	}
-
-	// Change siren state
-	pServer->GetPlayerManager()->GetAt(iNPCId)->SetPassengerDriveBy(bDriveBy);
-	return 1;
-}
-
-//native FCNPC_IsPassengerDriveBy(npcid);
-cell AMX_NATIVE_CALL CNatives::FCNPC_IsPassengerDriveBy(AMX *amx, cell *params)
-{
-	CHECK_PARAMS(1, "FCNPC_IsPassengerDriveBy");
-
-	// Get params
-	int iNPCId = (int)params[1];
-
-	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
-		return 0;
-	}
-
-	// Make sure the player is in vehicle
-	if (pServer->GetPlayerManager()->GetAt(iNPCId)->GetVehicleId() == INVALID_VEHICLE_ID) {
-		return 0;
-	}
-
-	// Get the vehicle health
-	return pServer->GetPlayerManager()->GetAt(iNPCId)->IsPassengerDriveBy();
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleReloading(AMX *amx, cell *params)

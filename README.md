@@ -105,18 +105,16 @@ native FCNPC_GetWeaponSkillLevel(npcid, skill);
 native FCNPC_SetWeaponState(npcid, weaponstate);
 native FCNPC_GetWeaponState(npcid);
 
-native FCNPC_SetWeaponDamage(npcid, weaponid, Float:damage);
-native Float:FCNPC_GetWeaponDamage(npcid, weaponid);
 native FCNPC_SetWeaponReloadTime(npcid, weaponid, time);
 native FCNPC_GetWeaponReloadTime(npcid, weaponid);
 native FCNPC_SetWeaponShootTime(npcid, weaponid, time);
 native FCNPC_GetWeaponShootTime(npcid, weaponid);
 native FCNPC_SetWeaponClipSize(npcid, weaponid, size);
 native FCNPC_GetWeaponClipSize(npcid, weaponid);
-native FCNPC_SetWeaponInfo(npcid, weaponid, Float:damage = -1.0, reload_time = -1, shoot_time = -1, clip_size = -1);
-native FCNPC_GetWeaponInfo(npcid, weaponid, &Float:damage = -1.0, &reload_time = -1, &shoot_time = -1, &clip_size = -1);
-native FCNPC_SetWeaponDefaultInfo(weaponid, Float:damage = -1.0, reload_time = -1, shoot_time = -1, clip_size = -1);
-native FCNPC_GetWeaponDefaultInfo(weaponid, &Float:damage = -1.0, &reload_time = -1, &shoot_time = -1, &clip_size = -1);
+native FCNPC_SetWeaponInfo(npcid, weaponid, reload_time = -1, shoot_time = -1, clip_size = -1);
+native FCNPC_GetWeaponInfo(npcid, weaponid, &reload_time = -1, &shoot_time = -1, &clip_size = -1);
+native FCNPC_SetWeaponDefaultInfo(weaponid, reload_time = -1, shoot_time = -1, clip_size = -1);
+native FCNPC_GetWeaponDefaultInfo(weaponid, &reload_time = -1, &shoot_time = -1, &clip_size = -1);
 
 native FCNPC_SetKeys(npcid, Keys);
 native FCNPC_GetKeys(npcid, &UDAnalog, &LRAnalog, &Keys);
