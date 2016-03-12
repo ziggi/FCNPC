@@ -382,7 +382,7 @@ void CPlayerData::UpdateAim()
 		if (m_byteHitType == BULLET_HIT_TYPE_PLAYER && m_wHitId != INVALID_PLAYER_ID) {
 			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[m_wHitId];
 			if (pPlayer) {
-				AimAt(pPlayer->vecPosition, m_bShooting, m_dwShootDelay);
+				AimAt(pPlayer->vecPosition, m_bShooting, m_dwShootDelay, m_bSetAimAngle);
 			} else {
 				StopAim();
 			}
@@ -1293,7 +1293,7 @@ void CPlayerData::ToggleInfiniteAmmo(bool bToggle)
 	m_bHasInfiniteAmmo = bToggle;
 }
 
-void CPlayerData::AimAt(CVector vecPoint, bool bShoot, DWORD dwShootDelay)
+void CPlayerData::AimAt(CVector vecPoint, bool bShoot, DWORD dwShootDelay, bool bSetAngle)
 {
 	// Set the aiming flag
 	if (!m_bAiming) {
@@ -1314,15 +1314,19 @@ void CPlayerData::AimAt(CVector vecPoint, bool bShoot, DWORD dwShootDelay)
 	float fYSquare = vecDistance.fY * vecDistance.fY;
 	float fZSquare = vecDistance.fZ * vecDistance.fZ;
 	float fZAngle = -acos((fXSquare + fYSquare) / (sqrt(fXSquare + fYSquare + fZSquare) * sqrt(fXSquare + fYSquare))) + 0.1f;
+	
 	// Get the destination angle
 	vecDistance /= fDistance;
-	SetAngle(CMath::RadiansToDegree(atan2(vecDistance.fY, vecDistance.fX)));
-	// Set the Z angle
+
+	if (bSetAngle) {
+		SetAngle(CMath::RadiansToDegree(atan2(vecDistance.fY, vecDistance.fX)));
+	}
+
+	// Set the aim sync data
 	m_pPlayer->aimSyncData.fZAim = fZAngle;
-	// Set the player aiming vector
 	m_pPlayer->aimSyncData.vecFront = vecDistance;
-	// Set the player camera position
 	m_pPlayer->aimSyncData.vecPosition = vecPosition;
+
 	// Set keys
 	if (!m_bAiming) {
 		m_bAiming = true;
@@ -1336,14 +1340,15 @@ void CPlayerData::AimAt(CVector vecPoint, bool bShoot, DWORD dwShootDelay)
 
 	m_dwShootDelay = dwShootDelay;
 
-	// set the shooting flag
+	// set the flags
 	m_bShooting = bShoot;
+	m_bSetAimAngle = bSetAngle;
 }
 
-void CPlayerData::AimAtPlayer(WORD wHitId, bool bShoot, DWORD dwShootDelay)
+void CPlayerData::AimAtPlayer(WORD wHitId, bool bShoot, DWORD dwShootDelay, bool bSetAngle)
 {
 	CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[wHitId];
-	AimAt(pPlayer->vecPosition, bShoot, dwShootDelay);
+	AimAt(pPlayer->vecPosition, bShoot, dwShootDelay, bSetAngle);
 	m_wHitId = wHitId;
 	m_byteHitType = BULLET_HIT_TYPE_PLAYER;
 }
@@ -1360,6 +1365,7 @@ void CPlayerData::StopAim()
 	m_bReloading = false;
 	m_bShooting = false;
 	m_wHitId = INVALID_PLAYER_ID;
+	m_bSetAimAngle = false;
 	m_byteHitType = BULLET_HIT_TYPE_NONE;
 	// Reset keys
 	SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_NONE);

@@ -123,8 +123,8 @@ public:
 	void ToggleReloading(bool bToggle);
 	void ToggleInfiniteAmmo(bool bToggle);
 
-	void AimAt(CVector vecPoint, bool bShoot, DWORD dwShootDelay);
-	void AimAtPlayer(WORD wHitId, bool bShoot, DWORD dwShootDelay);
+	void AimAt(CVector vecPoint, bool bShoot, DWORD dwShootDelay, bool bSetAngle);
+	void AimAtPlayer(WORD wHitId, bool bShoot, DWORD dwShootDelay, bool bSetAngle);
 	void StopAim();
 	bool MeleeAttack(int iTime, bool bUseFightstyle);
 	void StopAttack();
@@ -205,6 +205,7 @@ private:
 	BYTE m_byteWeaponId;
 	WORD m_wAmmo;
 	WORD m_wHitId;
+	bool m_bSetAimAngle;
 	BYTE m_byteHitType;
 	WORD m_wVehicleToEnter;
 	BYTE m_byteSeatToEnter;

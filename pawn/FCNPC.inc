@@ -135,8 +135,8 @@ native FCNPC_GoToPlayer(npcid, playerid, type = MOVE_TYPE_AUTO, Float:speed = 0.
 native FCNPC_Stop(npcid);
 native FCNPC_IsMoving(npcid);
 
-native FCNPC_AimAt(npcid, Float:X, Float:Y, Float:Z, bool:shoot = false, shoot_delay = 0);
-native FCNPC_AimAtPlayer(npcid, playerid, bool:shoot = false, shoot_delay = 0);
+native FCNPC_AimAt(npcid, Float:X, Float:Y, Float:Z, bool:shoot = false, shoot_delay = 0, bool:setangle = true);
+native FCNPC_AimAtPlayer(npcid, playerid, bool:shoot = false, shoot_delay = 0, bool:setangle = true);
 native FCNPC_StopAim(npcid);
 native FCNPC_MeleeAttack(npcid, delay = -1, bool:fightstyle = false);
 native FCNPC_StopAttack(npcid);

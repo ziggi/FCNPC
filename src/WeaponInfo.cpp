@@ -115,7 +115,7 @@ SWeaponInfo CWeaponInfo::GetInfo(int iWeaponId)
 int CWeaponInfo::GetType(int iWeaponId)
 {
 	if (!IsValid(iWeaponId)) {
-		return 0.0f;
+		return 0;
 	}
 
 	return m_pWeaponInfo[iWeaponId]->iType;

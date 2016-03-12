@@ -1458,7 +1458,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponDefaultInfo(AMX *amx, cell *params
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_AimAt(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(6, "FCNPC_AimAt");
+	CHECK_PARAMS(7, "FCNPC_AimAt");
 
 	// Get the params
 	int iNPCId = (int)params[1];
@@ -1467,6 +1467,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAt(AMX *amx, cell *params)
 	float fZ = amx_ctof(params[4]);
 	bool bShoot = (bool)params[5];
 	DWORD dwShootDelay = (DWORD)params[6];
+	bool bSetAngle = (bool)params[7];
 
 	// Make sure the player is valid
 	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
@@ -1477,11 +1478,12 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAt(AMX *amx, cell *params)
 
 	int iWeaponType = pPlayerData->GetWeaponType(pPlayerData->GetWeapon());
 	switch (iWeaponType) {
+		case WEAPON_TYPE_MELEE:
 		case WEAPON_TYPE_SHOOT:
 		case WEAPON_TYPE_ROCKET:
 		case WEAPON_TYPE_SPRAY:
 		case WEAPON_TYPE_THROW:
-			pPlayerData->AimAt(CVector(fX, fY, fZ), bShoot, dwShootDelay);
+			pPlayerData->AimAt(CVector(fX, fY, fZ), bShoot, dwShootDelay, bSetAngle);
 			return 1;
 	}
 
@@ -1490,13 +1492,14 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAt(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_AimAtPlayer(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(4, "FCNPC_AimAtPlayer");
+	CHECK_PARAMS(5, "FCNPC_AimAtPlayer");
 
 	// Get the params
 	int iNPCId = (int)params[1];
 	int iPlayerId = (int)params[2];
 	bool bShoot = (bool)params[3];
 	DWORD dwShootDelay = (DWORD)params[4];
+	bool bSetAngle = (bool)params[5];
 
 	// Make sure the npc is valid
 	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
@@ -1521,7 +1524,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAtPlayer(AMX *amx, cell *params)
 		case WEAPON_TYPE_ROCKET:
 		case WEAPON_TYPE_SPRAY:
 		case WEAPON_TYPE_THROW:
-			pServer->GetPlayerManager()->GetAt(iNPCId)->AimAtPlayer(iPlayerId, bShoot, dwShootDelay);
+			pServer->GetPlayerManager()->GetAt(iNPCId)->AimAtPlayer(iPlayerId, bShoot, dwShootDelay, bSetAngle);
 			return 1;
 	}
 
