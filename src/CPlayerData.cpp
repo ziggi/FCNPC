@@ -1197,7 +1197,7 @@ void CPlayerData::GetKeys(WORD *pwUDAnalog, WORD *pwLRAnalog, DWORD *pdwKeys)
 
 bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float fRadius, bool bGetAngle)
 {
-	// Validate the mouvement type
+	// Validate the movement type
 	if (iType == MOVE_TYPE_AUTO) {
 		iType = GetState() == PLAYER_STATE_DRIVER ? MOVE_TYPE_DRIVE : MOVE_TYPE_RUN;
 	}
@@ -1442,53 +1442,6 @@ bool CPlayerData::IsShooting()
 bool CPlayerData::IsReloading()
 {
 	return m_bReloading;
-}
-
-void CPlayerData::ProcessGiveDamage(int iDamagedId, float fHealthLoss, int iWeaponId, int iBodypart)
-{
-	CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[iDamagedId];
-	if (!pPlayer) {
-		return;
-	}
-
-	float fWeaponDamage = GetWeaponDamage(iWeaponId);
-
-	// Check the armour
-	if (pPlayer->fArmour > 0.0f) {
-		// Save the old armour
-		float fDiff = pPlayer->fArmour - fWeaponDamage;
-		// Decrease the armor
-		pPlayer->fArmour -= fWeaponDamage;
-		// If the damage is bigger than the armour then decrease the health aswell
-		if (fDiff < 0.0f) {
-			pPlayer->fHealth += fDiff;
-		}
-	} else {
-		pPlayer->fHealth -= fWeaponDamage;
-	}
-
-	if (pPlayer->fArmour < 0.0f) {
-		pPlayer->fArmour = 0.0f;
-	}
-
-	if (pPlayer->fHealth < 0.0f) {
-		pPlayer->fHealth = 0.0f;
-	}
-
-	RakNet::BitStream bsData;
-	bsData.Write(pPlayer->fHealth);
-	CFunctions::PlayerRPC(&RPC_SetPlayerHealth, &bsData, iDamagedId);
-
-	bsData.Reset();
-	bsData.Write(pPlayer->fArmour);
-	CFunctions::PlayerRPC(&RPC_SetPlayerArmour, &bsData, iDamagedId);
-
-	// Call the on take damage callback
-	int iReturn = CCallbackManager::OnGiveDamage((int)m_playerId, iDamagedId, iWeaponId, iBodypart, fWeaponDamage);
-	// Check the returned value
-	if (iReturn) {
-		CCallbackManager::OnPlayerTakeDamage(iDamagedId, (int)m_playerId, fWeaponDamage, iWeaponId, iBodypart);
-	}
 }
 
 void CPlayerData::ProcessDamage(int iDamagerId, float fHealthLoss, int iWeaponId, int iBodypart)

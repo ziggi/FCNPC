@@ -29,20 +29,6 @@ struct t_OnPlayerGiveDamage {
 
 t_OnPlayerGiveDamage pGiveDamage;
 
-// take damage
-bool bTakeDamage;
-bool bTakeDamageInternalCall;
-
-struct t_OnPlayerTakeDamage {
-	int iPlayerId;
-	int iDamagerId;
-	float fHealthLoss;
-	int iWeapon;
-	int iBodypart;
-};
-
-t_OnPlayerTakeDamage pTakeDamage;
-
 // weapon shoot
 bool bWeaponShot;
 
@@ -89,12 +75,6 @@ int amx_FindPublic_Hook(AMX *amx, const char *funcname, int *index)
 {
 	if (!strcmp(funcname, "OnPlayerGiveDamage")) {
 		bGiveDamage = true;
-	} else if (!strcmp(funcname, "OnPlayerTakeDamage")) {
-		if (bTakeDamageInternalCall) {
-			bTakeDamageInternalCall = false;
-		} else {
-			bTakeDamage = true;
-		}
 	} else if (!strcmp(funcname, "OnPlayerWeaponShot")) {
 		bWeaponShot = true;
 	} else if (!strcmp(funcname, "OnPlayerStreamIn")) {
@@ -133,30 +113,6 @@ int amx_Push_Hook(AMX *amx, cell value)
 
 			case 0:
 				pGiveDamage.iBodypart = value;
-				break;
-		}
-		// Increase the parameters count
-		bytePushCount++;
-	} else if (bTakeDamage) {
-		switch (bytePushCount) {
-			case 4:
-				pTakeDamage.iPlayerId = value;
-				break;
-
-			case 3:
-				pTakeDamage.iDamagerId = value;
-				break;
-
-			case 2:
-				pTakeDamage.fHealthLoss = amx_ctof(value);
-				break;
-
-			case 1:
-				pTakeDamage.iWeapon = value;
-				break;
-
-			case 0:
-				pTakeDamage.iBodypart = value;
 				break;
 		}
 		// Increase the parameters count
@@ -247,19 +203,6 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 		// call custom callback
 		if (pPlayerData) {
 			pPlayerData->ProcessDamage(pGiveDamage.iPlayerId, pGiveDamage.fHealthLoss, pGiveDamage.iWeapon, pGiveDamage.iBodypart);
-		}
-	} else if (bTakeDamage) {
-		bTakeDamage = false;
-
-		// get the player data
-		CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(pTakeDamage.iDamagerId);
-
-		if (pPlayerData) {
-			// call custom callback
-			pPlayerData->ProcessGiveDamage(pTakeDamage.iPlayerId, pTakeDamage.fHealthLoss, pTakeDamage.iWeapon, pTakeDamage.iBodypart);
-		} else {
-			// call hooked callback
-			ret = pfn_amx_Exec(amx, retval, index);
 		}
 	} else if (bWeaponShot) {
 		bWeaponShot = false;
