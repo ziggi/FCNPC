@@ -28,7 +28,7 @@ void CThreadFunctions::DamageThread(void *pThread)
 		while(bServerInit)
 		{
 			// Loop through all the players
-			for (int i = 0; i < MAX_PLAYERS; i++)
+			for (int i = 0; i < pNetGame->pPlayerPool->dwPlayerPoolSize; i++)
 			{
 				// Ignore non connected players
 				if (!pPlayerPool->bIsPlayerConnectedEx[i] ||
@@ -36,7 +36,7 @@ void CThreadFunctions::DamageThread(void *pThread)
 					continue;
 
 				// Loop through all the npcs
-				for (int j = (MAX_PLAYERS - 1); j != 0; j--)
+				for (int j = pNetGame->pPlayerPool->dwPlayerPoolSize; j != -1; j--)
 				{
 					// Ignore non connected NPCs
 					if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(j) || !pServer->GetPlayerManager()->GetAt(j)->IsSpawned())

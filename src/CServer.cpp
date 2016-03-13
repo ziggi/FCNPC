@@ -94,7 +94,7 @@ void CServer::Process()
 bool CServer::DoesNameExist(char *szName)
 {
 	// Loop through all the players
-	for (int i = 0; i < MAX_PLAYERS; i++) {
+	for (int i = 0; i < pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
 		// Ignore non connected players
 		if (!pNetGame->pPlayerPool->bIsPlayerConnectedEx[i]) {
 			continue;
@@ -144,7 +144,7 @@ WORD CServer::GetVehicleSeatPlayerId(WORD wVehicleId, BYTE byteSeatId)
 	CPlayer *pPlayer;
 
 	// Loop through all the players
-	for (int i = 0; i < MAX_PLAYERS; i++) {
+	for (int i = 0; i < pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
 		// Ignore non connected players and the same player
 		if (!pPlayerPool->bIsPlayerConnectedEx[i]) {
 			continue;

@@ -177,7 +177,7 @@ void CFunctions::PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE iWe
 
 	// find player in vecPoint
 	if (bulletSyncData.byteHitType == BULLET_HIT_TYPE_NONE) {
-		for (int i = 0; i < MAX_PLAYERS; i++) {
+		for (int i = 0; i < pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
 			if (!pNetGame->pPlayerPool->bIsPlayerConnectedEx[i] || iPlayerId == i) {
 				continue;
 			}
@@ -223,7 +223,7 @@ void CFunctions::AddedPlayersRPC(int* szUniqueID, RakNet::BitStream* bsParams, i
 {
 	CPlayer *pPlayer;
 
-	for (int i = 0; i < MAX_PLAYERS; i++) {
+	for (int i = 0; i < pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
 		if (pNetGame->pPlayerPool->bIsPlayerConnectedEx[i] && i != iPlayerId) {
 			pPlayer = pNetGame->pPlayerPool->pPlayer[i];
 
@@ -238,7 +238,7 @@ void CFunctions::AddedVehicleRPC(int* szUniqueID, RakNet::BitStream* bsParams, i
 {
 	CPlayer *pPlayer;
 
-	for (int i = 0; i < MAX_PLAYERS; i++) {
+	for (int i = 0; i < pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
 		if (pNetGame->pPlayerPool->bIsPlayerConnectedEx[i] && i != iExcludePlayerId) {
 			pPlayer = pNetGame->pPlayerPool->pPlayer[i];
 
