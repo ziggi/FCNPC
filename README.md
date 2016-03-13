@@ -135,8 +135,8 @@ native FCNPC_GetFightingStyle(npcid);
 native FCNPC_ToggleReloading(npcid, bool:toggle);
 native FCNPC_ToggleInfiniteAmmo(npcid, bool:toggle);
 
-native FCNPC_GoTo(npcid, Float:X, Float:Y, Float:Z, type = MOVE_TYPE_AUTO, Float:speed = 0.5, bool:UseMapAndreas = false, Float:radius = 0.0, bool:getangle = true);
-native FCNPC_GoToPlayer(npcid, playerid, type = MOVE_TYPE_AUTO, Float:speed = 0.5, bool:UseMapAndreas = false, Float:radius = 0.0, bool:getangle = true);
+native FCNPC_GoTo(npcid, Float:X, Float:Y, Float:Z, type = MOVE_TYPE_AUTO, Float:speed = 0.5, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true);
+native FCNPC_GoToPlayer(npcid, playerid, type = MOVE_TYPE_AUTO, Float:speed = 0.5, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true);
 native FCNPC_Stop(npcid);
 native FCNPC_IsMoving(npcid);
 
@@ -160,10 +160,6 @@ native FCNPC_SetVehicleSiren(npcid, bool:status);
 native FCNPC_IsVehicleSiren(npcid);
 native FCNPC_SetVehicleHealth(npcid, Float:health);
 native Float:FCNPC_GetVehicleHealth(npcid);
-
-// not working
-//native FCNPC_SetPassengerDriveBy(npcid, bool:status);
-//native FCNPC_IsPassengerDriveBy(npcid);
 
 native FCNPC_SetSurfingOffsets(npcid, Float:fX, Float:fY, Float:fZ);
 native FCNPC_GetSurfingOffsets(npcid, &Float:fX, &Float:fY, &Float:fZ);

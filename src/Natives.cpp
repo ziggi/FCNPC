@@ -927,7 +927,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetFightingStyle(AMX *amx, cell *params)
 	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetFightingStyle();
 }
 
-// native FCNPC_GoTo(npcid, Float:X, Float:Y, Float:Z, type = MOVE_TYPE_AUTO, Float:speed = 0.5, bool:UseZMap = false, Float:radius = 0.0, bool:getangle = true);
+// native FCNPC_GoTo(npcid, Float:X, Float:Y, Float:Z, type = MOVE_TYPE_AUTO, Float:speed = 0.5, bool:UseZMap = false, Float:radius = 0.0, bool:setangle = true);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GoTo(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(9, "FCNPC_GoTo");
@@ -946,7 +946,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GoTo(AMX *amx, cell *params)
 	// Get the radius
 	float fRadius = amx_ctof(params[8]);
 	// Get the radius
-	bool bGetAngle = (bool)params[9];
+	bool bSetAngle = (bool)params[9];
 	// Make sure the player is valid
 	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
 		return 0;
@@ -955,10 +955,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GoTo(AMX *amx, cell *params)
 	// Set the player velocity
 	pServer->GetPlayerManager()->GetAt(iNPCId)->SetVelocity(CVector(fSpeed, fSpeed, fSpeed));
 	// Move the player
-	return pServer->GetPlayerManager()->GetAt(iNPCId)->GoTo(CVector(fX, fY, fZ), iType, !iZMap ? false : true, fRadius, bGetAngle);
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->GoTo(CVector(fX, fY, fZ), iType, !iZMap ? false : true, fRadius, bSetAngle);
 }
 
-// native FCNPC_GoToPlayer(npcid, playereid, type, Float:speed, bool:UseZMap = false, Float:radius = 0.0, bool:getangle = true);
+// native FCNPC_GoToPlayer(npcid, playereid, type, Float:speed, bool:UseZMap = false, Float:radius = 0.0, bool:setangle = true);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GoToPlayer(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(7, "FCNPC_GoToPlayer");
@@ -970,7 +970,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GoToPlayer(AMX *amx, cell *params)
 	float fSpeed = amx_ctof(params[4]);
 	int iZMap = (int)params[5];
 	float fRadius = amx_ctof(params[6]);
-	bool bGetAngle = (bool)params[7];
+	bool bSetAngle = (bool)params[7];
 
 	// validation
 	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
@@ -990,7 +990,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GoToPlayer(AMX *amx, cell *params)
 
 	// move the player
 	CVector vecPos = pNetGame->pPlayerPool->pPlayer[iPlayerId]->vecPosition;
-	return pServer->GetPlayerManager()->GetAt(iNPCId)->GoTo(vecPos, iType, !iZMap ? false : true, fRadius, bGetAngle);
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->GoTo(vecPos, iType, !iZMap ? false : true, fRadius, bSetAngle);
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_Stop(AMX *amx, cell *params)
