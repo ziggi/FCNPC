@@ -352,32 +352,92 @@ void CPlayerData::Update(int iState)
 void CPlayerData::UpdateAim()
 {
 	if (m_bAiming) {
+		int iWeaponId = m_pPlayer->syncData.byteWeapon;
+		int iWeaponType = GetWeaponType(m_pPlayer->syncData.byteWeapon);
+
 		// Set the camera mode
-		if (GetWeaponType(m_pPlayer->syncData.byteWeapon) == WEAPON_TYPE_MELEE) {
+		if (iWeaponType == WEAPON_TYPE_MELEE) {
 			m_pPlayer->aimSyncData.byteCameraMode = 4;
-		} else if (m_pPlayer->syncData.byteWeapon == WEAPON_SNIPER) {
+		} else if (iWeaponId == WEAPON_SNIPER) {
 			m_pPlayer->aimSyncData.byteCameraMode = 7;
-		} else if (m_pPlayer->syncData.byteWeapon == WEAPON_CAMERA) {
+		} else if (iWeaponId == WEAPON_CAMERA) {
 			m_pPlayer->aimSyncData.byteCameraMode = 46;
-		} else if (m_pPlayer->syncData.byteWeapon == WEAPON_ROCKETLAUNCHER) {
+		} else if (iWeaponId == WEAPON_ROCKETLAUNCHER) {
 			m_pPlayer->aimSyncData.byteCameraMode = 8;
-		} else if (m_pPlayer->syncData.byteWeapon == WEAPON_HEATSEEKER) {
+		} else if (iWeaponId == WEAPON_HEATSEEKER) {
 			m_pPlayer->aimSyncData.byteCameraMode = 51;
 		} else {
 			m_pPlayer->aimSyncData.byteCameraMode = 53;
 		}
 
 		// Set the weapon state
-		if (m_bReloading) {
-			SetWeaponState(WEAPONSTATE_RELOADING);
-		} else if (m_wAmmo == 1) {
-			SetWeaponState(WEAPONSTATE_LAST_BULLET);
-		} else if (m_wAmmo == 0) {
-			SetWeaponState(WEAPONSTATE_NO_BULLETS);
-		} else {
-			SetWeaponState(WEAPONSTATE_MORE_BULLETS);
-		}
+		switch (iWeaponId) {
+			case 0:
+			case WEAPON_BRASSKNUCKLE:
+			case WEAPON_GOLFCLUB:
+			case WEAPON_NITESTICK:
+			case WEAPON_KNIFE:
+			case WEAPON_BAT:
+			case WEAPON_SHOVEL:
+			case WEAPON_POOLSTICK:
+			case WEAPON_KATANA:
+			case WEAPON_CHAINSAW:
+			case WEAPON_DILDO:
+			case WEAPON_DILDO2:
+			case WEAPON_VIBRATOR:
+			case WEAPON_VIBRATOR2:
+			case WEAPON_FLOWER:
+			case WEAPON_CANE:
+			case WEAPON_BOMB:
+			case WEAPON_CAMERA:
+			case WEAPON_NIGHTVISION:
+			case WEAPON_INFRARED:
+			case WEAPON_PARACHUTE:
+				SetWeaponState(WEAPONSTATE_NO_BULLETS);
+				break;
 
+			case WEAPON_GRENADE:
+			case WEAPON_TEARGAS:
+			case WEAPON_MOLTOV:
+			case WEAPON_SHOTGUN:
+			case WEAPON_SAWEDOFF:
+			case WEAPON_SHOTGSPA:
+			case WEAPON_RIFLE:
+			case WEAPON_SNIPER:
+			case WEAPON_ROCKETLAUNCHER:
+			case WEAPON_HEATSEEKER:
+			case WEAPON_SATCHEL:
+				SetWeaponState(WEAPONSTATE_LAST_BULLET);
+				break;
+
+			case WEAPON_COLT45:
+			case WEAPON_SILENCED:
+			case WEAPON_DEAGLE:
+			case WEAPON_UZI:
+			case WEAPON_MP5:
+			case WEAPON_AK47:
+			case WEAPON_M4:
+			case WEAPON_TEC9:
+			case WEAPON_FLAMETHROWER:
+			case WEAPON_MINIGUN:
+			case WEAPON_SPRAYCAN:
+			case WEAPON_FIREEXTINGUISHER:
+				if (m_bReloading) {
+					SetWeaponState(WEAPONSTATE_RELOADING);
+				} else if (m_wAmmo == 1) {
+					SetWeaponState(WEAPONSTATE_LAST_BULLET);
+				} else if (m_wAmmo == 0) {
+					SetWeaponState(WEAPONSTATE_NO_BULLETS);
+				} else {
+					SetWeaponState(WEAPONSTATE_MORE_BULLETS);
+				}
+				break;
+
+			default:
+				SetWeaponState(WEAPONSTATE_NO_BULLETS);
+				break;
+		}
+		
 		// Update vector pos
 		if (m_byteHitType == BULLET_HIT_TYPE_PLAYER && m_wHitId != INVALID_PLAYER_ID) {
 			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[m_wHitId];
