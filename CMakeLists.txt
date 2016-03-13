@@ -3,7 +3,7 @@ cmake_policy(SET CMP0054 NEW)
 
 project (FCNPC)
 
-set (VERSION "1.0.2")
+set (VERSION "1.0.3")
 add_definitions (-DVERSION="${VERSION}")
 
 set (CMAKE_SHARED_LIBRARY_PREFIX "")
