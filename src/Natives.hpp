@@ -62,8 +62,6 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_SetWeaponState(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetWeaponState(AMX *amx, cell *params);
 
-	static cell AMX_NATIVE_CALL FCNPC_SetWeaponDamage(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_GetWeaponDamage(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetWeaponReloadTime(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetWeaponReloadTime(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetWeaponShootTime(AMX *amx, cell *params);
@@ -119,9 +117,6 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_IsVehicleSiren(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetVehicleHealth(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetVehicleHealth(AMX *amx, cell *params);
-
-	static cell AMX_NATIVE_CALL FCNPC_SetPassengerDriveBy(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_IsPassengerDriveBy(AMX *amx, cell *params);
 
 	static cell AMX_NATIVE_CALL FCNPC_SetSurfingOffsets(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetSurfingOffsets(AMX *amx, cell *params);

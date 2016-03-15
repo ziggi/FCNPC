@@ -352,37 +352,97 @@ void CPlayerData::Update(int iState)
 void CPlayerData::UpdateAim()
 {
 	if (m_bAiming) {
+		int iWeaponId = m_pPlayer->syncData.byteWeapon;
+		int iWeaponType = GetWeaponType(m_pPlayer->syncData.byteWeapon);
+
 		// Set the camera mode
-		if (GetWeaponType(m_pPlayer->syncData.byteWeapon) == WEAPON_TYPE_MELEE) {
+		if (iWeaponType == WEAPON_TYPE_MELEE) {
 			m_pPlayer->aimSyncData.byteCameraMode = 4;
-		} else if (m_pPlayer->syncData.byteWeapon == WEAPON_SNIPER) {
+		} else if (iWeaponId == WEAPON_SNIPER) {
 			m_pPlayer->aimSyncData.byteCameraMode = 7;
-		} else if (m_pPlayer->syncData.byteWeapon == WEAPON_CAMERA) {
+		} else if (iWeaponId == WEAPON_CAMERA) {
 			m_pPlayer->aimSyncData.byteCameraMode = 46;
-		} else if (m_pPlayer->syncData.byteWeapon == WEAPON_ROCKETLAUNCHER) {
+		} else if (iWeaponId == WEAPON_ROCKETLAUNCHER) {
 			m_pPlayer->aimSyncData.byteCameraMode = 8;
-		} else if (m_pPlayer->syncData.byteWeapon == WEAPON_HEATSEEKER) {
+		} else if (iWeaponId == WEAPON_HEATSEEKER) {
 			m_pPlayer->aimSyncData.byteCameraMode = 51;
 		} else {
 			m_pPlayer->aimSyncData.byteCameraMode = 53;
 		}
 
 		// Set the weapon state
-		if (m_bReloading) {
-			SetWeaponState(WEAPONSTATE_RELOADING);
-		} else if (m_wAmmo == 1) {
-			SetWeaponState(WEAPONSTATE_LAST_BULLET);
-		} else if (m_wAmmo == 0) {
-			SetWeaponState(WEAPONSTATE_NO_BULLETS);
-		} else {
-			SetWeaponState(WEAPONSTATE_MORE_BULLETS);
-		}
+		switch (iWeaponId) {
+			case 0:
+			case WEAPON_BRASSKNUCKLE:
+			case WEAPON_GOLFCLUB:
+			case WEAPON_NITESTICK:
+			case WEAPON_KNIFE:
+			case WEAPON_BAT:
+			case WEAPON_SHOVEL:
+			case WEAPON_POOLSTICK:
+			case WEAPON_KATANA:
+			case WEAPON_CHAINSAW:
+			case WEAPON_DILDO:
+			case WEAPON_DILDO2:
+			case WEAPON_VIBRATOR:
+			case WEAPON_VIBRATOR2:
+			case WEAPON_FLOWER:
+			case WEAPON_CANE:
+			case WEAPON_BOMB:
+			case WEAPON_CAMERA:
+			case WEAPON_NIGHTVISION:
+			case WEAPON_INFRARED:
+			case WEAPON_PARACHUTE:
+				SetWeaponState(WEAPONSTATE_NO_BULLETS);
+				break;
 
+			case WEAPON_GRENADE:
+			case WEAPON_TEARGAS:
+			case WEAPON_MOLTOV:
+			case WEAPON_SHOTGUN:
+			case WEAPON_SAWEDOFF:
+			case WEAPON_SHOTGSPA:
+			case WEAPON_RIFLE:
+			case WEAPON_SNIPER:
+			case WEAPON_ROCKETLAUNCHER:
+			case WEAPON_HEATSEEKER:
+			case WEAPON_SATCHEL:
+				SetWeaponState(WEAPONSTATE_LAST_BULLET);
+				break;
+
+			case WEAPON_COLT45:
+			case WEAPON_SILENCED:
+			case WEAPON_DEAGLE:
+			case WEAPON_UZI:
+			case WEAPON_MP5:
+			case WEAPON_AK47:
+			case WEAPON_M4:
+			case WEAPON_TEC9:
+			case WEAPON_FLAMETHROWER:
+			case WEAPON_MINIGUN:
+			case WEAPON_SPRAYCAN:
+			case WEAPON_FIREEXTINGUISHER:
+				if (m_bReloading) {
+					SetWeaponState(WEAPONSTATE_RELOADING);
+				} else if (m_wAmmo == 1) {
+					SetWeaponState(WEAPONSTATE_LAST_BULLET);
+				} else if (m_wAmmo == 0) {
+					SetWeaponState(WEAPONSTATE_NO_BULLETS);
+				} else {
+					SetWeaponState(WEAPONSTATE_MORE_BULLETS);
+				}
+				break;
+
+			default:
+				SetWeaponState(WEAPONSTATE_NO_BULLETS);
+				break;
+		}
+		
 		// Update vector pos
 		if (m_byteHitType == BULLET_HIT_TYPE_PLAYER && m_wHitId != INVALID_PLAYER_ID) {
 			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[m_wHitId];
 			if (pPlayer) {
-				AimAt(pPlayer->vecPosition, m_bShooting, m_dwShootDelay);
+				AimAt(pPlayer->vecPosition, m_bShooting, m_dwShootDelay, m_bSetAimAngle);
 			} else {
 				StopAim();
 			}
@@ -996,22 +1056,6 @@ int CPlayerData::GetWeaponType(int iWeaponId)
 	return m_pWeaponInfo->GetType(iWeaponId);
 }
 
-bool CPlayerData::SetWeaponDamage(int iWeaponId, float fDamage)
-{
-	return m_pWeaponInfo->SetDamage(iWeaponId, fDamage);
-}
-
-float CPlayerData::GetWeaponDamage(int iWeaponId)
-{
-	float fDamage = m_pWeaponInfo->GetDamage(iWeaponId);
-
-	if (m_pWeaponInfo->IsDoubleHanded(iWeaponId) && GetWeaponSkill(m_pWeaponInfo->GetSkillID(iWeaponId)) == 999) {
-		fDamage *= 2.0f;
-	}
-
-	return fDamage;
-}
-
 bool CPlayerData::SetWeaponReloadTime(int iWeaponId, int iTime)
 {
 	return m_pWeaponInfo->SetReloadTime(iWeaponId, iTime);
@@ -1195,9 +1239,9 @@ void CPlayerData::GetKeys(WORD *pwUDAnalog, WORD *pwLRAnalog, DWORD *pdwKeys)
 	*pdwKeys = m_pPlayer->dwKeys;
 }
 
-bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float fRadius, bool bGetAngle)
+bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float fRadius, bool bSetAngle)
 {
-	// Validate the mouvement type
+	// Validate the movement type
 	if (iType == MOVE_TYPE_AUTO) {
 		iType = GetState() == PLAYER_STATE_DRIVER ? MOVE_TYPE_DRIVE : MOVE_TYPE_RUN;
 	}
@@ -1241,7 +1285,7 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float f
 	float fDistance = CMath::GetDistanceBetween3DPoints(vecPosition, m_vecDestination);
 	// Set the player to the destination angle
 	vecFront /= fDistance;
-	if (bGetAngle) {
+	if (bSetAngle) {
 		SetAngle(CMath::RadiansToDegree(atan2(vecFront.fY, vecFront.fX)));
 	}
 	// Set the moving velocity
@@ -1293,7 +1337,7 @@ void CPlayerData::ToggleInfiniteAmmo(bool bToggle)
 	m_bHasInfiniteAmmo = bToggle;
 }
 
-void CPlayerData::AimAt(CVector vecPoint, bool bShoot, DWORD dwShootDelay)
+void CPlayerData::AimAt(CVector vecPoint, bool bShoot, DWORD dwShootDelay, bool bSetAngle)
 {
 	// Set the aiming flag
 	if (!m_bAiming) {
@@ -1314,15 +1358,19 @@ void CPlayerData::AimAt(CVector vecPoint, bool bShoot, DWORD dwShootDelay)
 	float fYSquare = vecDistance.fY * vecDistance.fY;
 	float fZSquare = vecDistance.fZ * vecDistance.fZ;
 	float fZAngle = -acos((fXSquare + fYSquare) / (sqrt(fXSquare + fYSquare + fZSquare) * sqrt(fXSquare + fYSquare))) + 0.1f;
+	
 	// Get the destination angle
 	vecDistance /= fDistance;
-	SetAngle(CMath::RadiansToDegree(atan2(vecDistance.fY, vecDistance.fX)));
-	// Set the Z angle
+
+	if (bSetAngle) {
+		SetAngle(CMath::RadiansToDegree(atan2(vecDistance.fY, vecDistance.fX)));
+	}
+
+	// Set the aim sync data
 	m_pPlayer->aimSyncData.fZAim = fZAngle;
-	// Set the player aiming vector
 	m_pPlayer->aimSyncData.vecFront = vecDistance;
-	// Set the player camera position
 	m_pPlayer->aimSyncData.vecPosition = vecPosition;
+
 	// Set keys
 	if (!m_bAiming) {
 		m_bAiming = true;
@@ -1336,14 +1384,15 @@ void CPlayerData::AimAt(CVector vecPoint, bool bShoot, DWORD dwShootDelay)
 
 	m_dwShootDelay = dwShootDelay;
 
-	// set the shooting flag
+	// set the flags
 	m_bShooting = bShoot;
+	m_bSetAimAngle = bSetAngle;
 }
 
-void CPlayerData::AimAtPlayer(WORD wHitId, bool bShoot, DWORD dwShootDelay)
+void CPlayerData::AimAtPlayer(WORD wHitId, bool bShoot, DWORD dwShootDelay, bool bSetAngle)
 {
 	CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[wHitId];
-	AimAt(pPlayer->vecPosition, bShoot, dwShootDelay);
+	AimAt(pPlayer->vecPosition, bShoot, dwShootDelay, bSetAngle);
 	m_wHitId = wHitId;
 	m_byteHitType = BULLET_HIT_TYPE_PLAYER;
 }
@@ -1360,6 +1409,7 @@ void CPlayerData::StopAim()
 	m_bReloading = false;
 	m_bShooting = false;
 	m_wHitId = INVALID_PLAYER_ID;
+	m_bSetAimAngle = false;
 	m_byteHitType = BULLET_HIT_TYPE_NONE;
 	// Reset keys
 	SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_NONE);
@@ -1436,53 +1486,6 @@ bool CPlayerData::IsShooting()
 bool CPlayerData::IsReloading()
 {
 	return m_bReloading;
-}
-
-void CPlayerData::ProcessGiveDamage(int iDamagedId, float fHealthLoss, int iWeaponId, int iBodypart)
-{
-	CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[iDamagedId];
-	if (!pPlayer) {
-		return;
-	}
-
-	float fWeaponDamage = GetWeaponDamage(iWeaponId);
-
-	// Check the armour
-	if (pPlayer->fArmour > 0.0f) {
-		// Save the old armour
-		float fDiff = pPlayer->fArmour - fWeaponDamage;
-		// Decrease the armor
-		pPlayer->fArmour -= fWeaponDamage;
-		// If the damage is bigger than the armour then decrease the health aswell
-		if (fDiff < 0.0f) {
-			pPlayer->fHealth += fDiff;
-		}
-	} else {
-		pPlayer->fHealth -= fWeaponDamage;
-	}
-
-	if (pPlayer->fArmour < 0.0f) {
-		pPlayer->fArmour = 0.0f;
-	}
-
-	if (pPlayer->fHealth < 0.0f) {
-		pPlayer->fHealth = 0.0f;
-	}
-
-	RakNet::BitStream bsData;
-	bsData.Write(pPlayer->fHealth);
-	CFunctions::PlayerRPC(&RPC_SetPlayerHealth, &bsData, iDamagedId);
-
-	bsData.Reset();
-	bsData.Write(pPlayer->fArmour);
-	CFunctions::PlayerRPC(&RPC_SetPlayerArmour, &bsData, iDamagedId);
-
-	// Call the on take damage callback
-	int iReturn = CCallbackManager::OnGiveDamage((int)m_playerId, iDamagedId, iWeaponId, iBodypart, fWeaponDamage);
-	// Check the returned value
-	if (iReturn) {
-		CCallbackManager::OnPlayerTakeDamage(iDamagedId, (int)m_playerId, fWeaponDamage, iWeaponId, iBodypart);
-	}
 }
 
 void CPlayerData::ProcessDamage(int iDamagerId, float fHealthLoss, int iWeaponId, int iBodypart)
@@ -1757,17 +1760,6 @@ void CPlayerData::SetVehicleHealth(float fHealth)
 float CPlayerData::GetVehicleHealth()
 {
 	return m_pPlayer->vehicleSyncData.fHealth;
-}
-
-void CPlayerData::SetPassengerDriveBy(bool bState)
-{
-	m_pPlayer->passengerSyncData.byteDriveBy = bState ? 1 : 0;
-	m_pPlayer->aimSyncData.byteCameraMode = 55;
-}
-
-bool CPlayerData::IsPassengerDriveBy()
-{
-	return m_pPlayer->passengerSyncData.byteDriveBy != 0;
 }
 
 void CPlayerData::SetSurfingOffsets(CVector vecOffsets)

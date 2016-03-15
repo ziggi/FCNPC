@@ -82,8 +82,6 @@ public:
 	WORD GetWeaponState();
 
 	int GetWeaponType(int iWeaponId);
-	bool SetWeaponDamage(int iWeaponId, float fDamage);
-	float GetWeaponDamage(int iWeaponId);
 	bool SetWeaponReloadTime(int iWeaponId, int iTime);
 	int GetWeaponReloadTime(int iWeaponId);
 	bool SetWeaponShootTime(int iWeaponId, int iTime);
@@ -116,15 +114,15 @@ public:
 	void ApplyAnimation(char *szAnimationLib, char *szAnimationName, float fDelta, bool bLoop, bool bLockX, bool bLockY, bool bFreeze, int iTime);
 	void ClearAnimations();
 
-	bool GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float fRadius = 0.0, bool bGetAngle = true);
+	bool GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float fRadius = 0.0, bool bSetAngle = true);
 	void StopMoving();
 	bool IsMoving();
 
 	void ToggleReloading(bool bToggle);
 	void ToggleInfiniteAmmo(bool bToggle);
 
-	void AimAt(CVector vecPoint, bool bShoot, DWORD dwShootDelay);
-	void AimAtPlayer(WORD wHitId, bool bShoot, DWORD dwShootDelay);
+	void AimAt(CVector vecPoint, bool bShoot, DWORD dwShootDelay, bool bSetAngle);
+	void AimAtPlayer(WORD wHitId, bool bShoot, DWORD dwShootDelay, bool bSetAngle);
 	void StopAim();
 	bool MeleeAttack(int iTime, bool bUseFightstyle);
 	void StopAttack();
@@ -132,7 +130,6 @@ public:
 	bool IsShooting();
 	bool IsReloading();
 
-	void ProcessGiveDamage(int iDamagedId, float fHealthLoss, int iWeaponId, int iBodypart);
 	void ProcessDamage(int iDamagerId, float fHealthLoss, int iWeaponId, int iBodypart);
 	void ProcessVehicleDamage(int iDamagerId, int iVehicleId, int iWeaponId, CVector vecHit);
 
@@ -149,9 +146,6 @@ public:
 	bool IsVehicleSiren();
 	void SetVehicleHealth(float fHealth);
 	float GetVehicleHealth();
-
-	void SetPassengerDriveBy(bool bState);
-	bool IsPassengerDriveBy();
 
 	void SetSurfingOffsets(CVector vecOffsets);
 	void GetSurfingOffsets(CVector *vecOffsets);
@@ -205,6 +199,7 @@ private:
 	BYTE m_byteWeaponId;
 	WORD m_wAmmo;
 	WORD m_wHitId;
+	bool m_bSetAimAngle;
 	BYTE m_byteHitType;
 	WORD m_wVehicleToEnter;
 	BYTE m_byteSeatToEnter;

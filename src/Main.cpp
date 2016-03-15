@@ -134,8 +134,6 @@ AMX_NATIVE_INFO PluginNatives[ ] = {
 	{ "FCNPC_SetWeaponState", CNatives::FCNPC_SetWeaponState },
 	{ "FCNPC_GetWeaponState", CNatives::FCNPC_GetWeaponState },
 
-	{ "FCNPC_SetWeaponDamage", CNatives::FCNPC_SetWeaponDamage},
-	{ "FCNPC_GetWeaponDamage", CNatives::FCNPC_GetWeaponDamage},
 	{ "FCNPC_SetWeaponReloadTime", CNatives::FCNPC_SetWeaponReloadTime},
 	{ "FCNPC_GetWeaponReloadTime", CNatives::FCNPC_GetWeaponReloadTime},
 	{ "FCNPC_SetWeaponShootTime", CNatives::FCNPC_SetWeaponShootTime},
@@ -191,9 +189,6 @@ AMX_NATIVE_INFO PluginNatives[ ] = {
 	{ "FCNPC_IsVehicleSiren", CNatives::FCNPC_IsVehicleSiren },
 	{ "FCNPC_SetVehicleHealth", CNatives::FCNPC_SetVehicleHealth },
 	{ "FCNPC_GetVehicleHealth", CNatives::FCNPC_GetVehicleHealth },
-
-	{ "FCNPC_SetPassengerDriveBy", CNatives::FCNPC_SetPassengerDriveBy},
-	{ "FCNPC_IsPassengerDriveBy", CNatives::FCNPC_IsPassengerDriveBy},
 
 	{ "FCNPC_SetSurfingOffsets", CNatives::FCNPC_SetSurfingOffsets },
 	{ "FCNPC_GetSurfingOffsets", CNatives::FCNPC_GetSurfingOffsets },

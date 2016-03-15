@@ -127,54 +127,6 @@ void CCallbackManager::OnVehicleExitComplete(int iGameId)
 	}
 }
 
-int CCallbackManager::OnGiveDamage(int iGameId, int iDamagedId, int iWeapon, int iBodyPart, float fHealthLoss)
-{
-	cell cReturn = 1;
-	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {
-		// Get the function index
-		int iIndex;
-		if (!amx_FindPublic((*i), "FCNPC_OnGiveDamage", &iIndex)) {
-			// Push the parameters
-			amx_Push((*i), amx_ftoc(fHealthLoss));
-			amx_Push((*i), iBodyPart);
-			amx_Push((*i), iWeapon);
-			amx_Push((*i), iDamagedId);
-			amx_Push((*i), iGameId);
-			// Execute the callback
-			if (cReturn) {
-				amx_Exec((*i), &cReturn, iIndex);
-			} else {
-				amx_Exec((*i), NULL, iIndex);
-			}
-		}
-	}
-	return cReturn;
-}
-
-int CCallbackManager::OnPlayerTakeDamage(int iPlayerId, int iDamagerId, float fHealthLoss, int iWeaponId, int iBodypart)
-{
-	bTakeDamageInternalCall = true;
-	cell cReturn = 0;
-	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {
-		// Get the function index
-		int iIndex;
-		if (!amx_FindPublic((*i), "OnPlayerTakeDamage", &iIndex)) {
-			// Push the parameters
-			amx_Push((*i), iBodypart);
-			amx_Push((*i), iWeaponId);
-			amx_Push((*i), amx_ftoc(fHealthLoss));
-			amx_Push((*i), iDamagerId);
-			amx_Push((*i), iPlayerId);
-			// Execute the callback
-			amx_Exec((*i), &cReturn, iIndex);
-			if (cReturn) {
-				break;
-			}
-		}
-	}
-	return cReturn;
-}
-
 int CCallbackManager::OnTakeDamage(int iGameId, int iDamagerId, int iWeapon, int iBodyPart, float fHealthLoss)
 {
 	cell cReturn = 1;
