@@ -8,7 +8,7 @@
 
   =========================================*/
 
-#include "Main.h"
+#include "Main.hpp"
 
 void CPatches::InstallFunctionDisablePatch(DWORD dwFunction, BYTE byteReturn = 0)
 {

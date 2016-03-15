@@ -8,7 +8,7 @@
 
   =========================================*/
 
-#include "Main.h"
+#include "Main.hpp"
 
 static SWeaponInfo g_sDefaultWeaponInfo[MAX_WEAPONS] = {
 	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0}, // fists (0)

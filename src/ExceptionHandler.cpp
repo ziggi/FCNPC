@@ -8,7 +8,7 @@ FCNPC - Fully Controllable NPC
 
 =========================================*/
 
-#include "Main.h"
+#include "Main.hpp"
 
 extern CServer *pServer;
 

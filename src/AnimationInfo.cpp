@@ -8,7 +8,7 @@
 
   =========================================*/
 
-#include "Main.h"
+#include "Main.hpp"
 
 char CAnimationInfo::m_cAnimationsName[MAX_ANIMATIONS][MAX_ANIMATION_NAME] = {
 	"", "AIRPORT:THRW_BARL_THRW", "ATTRACTORS:STEPSIT_IN", "ATTRACTORS:STEPSIT_LOOP", "ATTRACTORS:STEPSIT_OUT",

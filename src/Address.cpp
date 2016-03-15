@@ -9,7 +9,7 @@
   =========================================*/
 
 
-#include "Main.h"
+#include "Main.hpp"
 
 #if defined(WIN32)
 	DWORD CAddress::FUNC_Logprintf_037 = 0x0048A0B0;

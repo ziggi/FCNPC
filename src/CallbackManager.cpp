@@ -9,7 +9,7 @@
   =========================================*/
 
 
-#include "Main.h"
+#include "Main.hpp"
 
 std::list<AMX *> CCallbackManager::m_listAMX;
 

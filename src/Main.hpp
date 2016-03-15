@@ -3,7 +3,7 @@
 		FCNPC - Fully Controllable NPC
 			----------------------
 
-	- File: Main.h
+	- File: Main.hpp
 	- Author(s): OrMisicL
 
   =========================================*/

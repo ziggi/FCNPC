@@ -8,7 +8,7 @@
 
   =========================================*/
 
-#include "Main.h"
+#include "Main.hpp"
 
 extern logprintf_t logprintf;
 extern CNetGame *pNetGame;

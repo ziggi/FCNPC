@@ -8,7 +8,7 @@
 
   =========================================*/
 
-#include "Main.h"
+#include "Main.hpp"
 
 #if defined(WIN32)
 	#include <Psapi.h>

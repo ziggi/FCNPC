@@ -9,7 +9,7 @@
   =========================================*/
 
 
-#include "Main.h"
+#include "Main.hpp"
 
 extern CServer			*pServer;
 bool					bCreated = false;

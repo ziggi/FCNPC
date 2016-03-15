@@ -8,7 +8,7 @@
 
   =========================================*/
 
-#include "Main.h"
+#include "Main.hpp"
 
 extern CServer     *pServer;
 extern bool        bServerInit;

@@ -8,7 +8,7 @@
 
   =========================================*/
 
-#include "Main.h"
+#include "Main.hpp"
 
 // thanks to MTA SA team for this array
 static const BYTE wMaxPassengers[212] = {
