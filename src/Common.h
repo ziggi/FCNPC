@@ -58,10 +58,6 @@ extern logprintf_t          logprintf;
 #define PLAYBACK_TYPE_NONE              0
 #define PLAYBACK_TYPE_DRIVER            1
 #define PLAYBACK_TYPE_ONFOOT            2
-// Vehicle mode info
-#define VEHICLE_MODEL_INFO_SIZE         1
-#define VEHICLE_MODEL_INFO_FRONTSEAT    2
-#define VEHICLE_MODEL_INFO_REARSEAT     3
 // Node types
 #define NODE_TYPE_NONE                  (-1)
 #define NODE_TYPE_PED                   0
@@ -265,6 +261,32 @@ extern logprintf_t          logprintf;
 #define BULLET_HIT_TYPE_VEHICLE (2)
 #define BULLET_HIT_TYPE_OBJECT (3)
 #define BULLET_HIT_TYPE_PLAYER_OBJECT (4)
+#define CARMODTYPE_SPOILER (0)
+#define CARMODTYPE_HOOD (1)
+#define CARMODTYPE_ROOF (2)
+#define CARMODTYPE_SIDESKIRT (3)
+#define CARMODTYPE_LAMPS (4)
+#define CARMODTYPE_NITRO (5)
+#define CARMODTYPE_EXHAUST (6)
+#define CARMODTYPE_WHEELS (7)
+#define CARMODTYPE_STEREO (8)
+#define CARMODTYPE_HYDRAULICS (9)
+#define CARMODTYPE_FRONT_BUMPER (10)
+#define CARMODTYPE_REAR_BUMPER (11)
+#define CARMODTYPE_VENT_RIGHT (12)
+#define CARMODTYPE_VENT_LEFT (13)
+#define VEHICLE_PARAMS_UNSET (-1)
+#define VEHICLE_PARAMS_OFF (0)
+#define VEHICLE_PARAMS_ON (1)
+#define VEHICLE_MODEL_INFO_SIZE (1)
+#define VEHICLE_MODEL_INFO_FRONTSEAT (2)
+#define VEHICLE_MODEL_INFO_REARSEAT (3)
+#define VEHICLE_MODEL_INFO_PETROLCAP (4)
+#define VEHICLE_MODEL_INFO_WHEELSFRONT (5)
+#define VEHICLE_MODEL_INFO_WHEELSREAR (6)
+#define VEHICLE_MODEL_INFO_WHEELSMID (7)
+#define VEHICLE_MODEL_INFO_FRONT_BUMPER_Z (8)
+#define VEHICLE_MODEL_INFO_REAR_BUMPER_Z (9)
 
 // Other
 #define MAX_DAMAGE_DISTANCE             200.0f
