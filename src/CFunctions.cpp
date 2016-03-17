@@ -120,24 +120,24 @@ void CFunctions::DeletePlayer(int iPlayerId)
 	pfn__CPlayerPool__DeletePlayer(pNetGame->pPlayerPool, iPlayerId, 0);
 }
 
-void CFunctions::SpawnPlayer(int iPlayerId)
+void CFunctions::SpawnPlayer(CPlayer *pPlayer)
 {
-	pfn__CPlayer__SpawnForWorld(pNetGame->pPlayerPool->pPlayer[iPlayerId]);
+	pfn__CPlayer__SpawnForWorld(pPlayer);
 }
 
-void CFunctions::KillPlayer(int iPlayerId, int iKillerId, int iWeapon)
+void CFunctions::KillPlayer(CPlayer *pPlayer, int iKillerId, int iWeapon)
 {
-	pfn__CPlayer__Kill(pNetGame->pPlayerPool->pPlayer[iPlayerId], iKillerId, iWeapon);
+	pfn__CPlayer__Kill(pPlayer, iKillerId, iWeapon);
 }
 
-void CFunctions::PlayerEnterVehicle(int iPlayerId, int iVehicleId, int iSeatId)
+void CFunctions::PlayerEnterVehicle(CPlayer *pPlayer, int iVehicleId, int iSeatId)
 {
-	pfn__CPlayer__EnterVehicle(pNetGame->pPlayerPool->pPlayer[iPlayerId], iVehicleId, iSeatId);
+	pfn__CPlayer__EnterVehicle(pPlayer, iVehicleId, iSeatId);
 }
 
-void CFunctions::PlayerExitVehicle(int iPlayerId, int iVehicleId)
+void CFunctions::PlayerExitVehicle(CPlayer *pPlayer, int iVehicleId)
 {
-	pfn__CPlayer__ExitVehicle(pNetGame->pPlayerPool->pPlayer[iPlayerId], iVehicleId);
+	pfn__CPlayer__ExitVehicle(pPlayer, iVehicleId);
 }
 
 CVector *CFunctions::GetVehicleModelInfoEx(int iModelId, int iInfoType)
