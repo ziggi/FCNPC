@@ -42,10 +42,10 @@ public:
 	static int		GetFreePlayerSlot();
 	static int		NewPlayer(char *szName);
 	static void		DeletePlayer(int iPlayerId);
-	static void		SpawnPlayer(int iPlayerId);
-	static void		KillPlayer(int iPlayerId, int iKillerId, int iWeapon);
-	static void		PlayerEnterVehicle(int iPlayerId, int iVehicleId, int iSeatId);
-	static void		PlayerExitVehicle(int iPlayerId, int iVehicleId);
+	static void		SpawnPlayer(CPlayer *pPlayer);
+	static void		KillPlayer(CPlayer *pPlayer, int iKillerId, int iWeapon);
+	static void		PlayerEnterVehicle(CPlayer *pPlayer, int iVehicleId, int iSeatId);
+	static void		PlayerExitVehicle(CPlayer *pPlayer, int iVehicleId);
 	static CVector	*GetVehicleModelInfoEx(int iModelId, int iInfoType);
 	static int		GetMaxPlayers();
 	static int		GetMaxNPC();

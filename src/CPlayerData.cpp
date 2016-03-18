@@ -122,7 +122,7 @@ bool CPlayerData::Spawn(int iSkinId)
 	// Set the player skin
 	m_pPlayer->spawn.iSkin = iSkinId;
 	// Call the SAMP spawn functions
-	CFunctions::SpawnPlayer((int)m_playerId);
+	CFunctions::SpawnPlayer(m_pPlayer);
 	// Set the player stats
 	SetHealth(100.0f);
 	SetArmour(0.0f);
@@ -160,7 +160,7 @@ bool CPlayerData::Respawn()
 	BYTE byteSpecialAction = m_pPlayer->syncData.byteSpecialAction;
 	// Call the SAMP spawn functions
 	m_pPlayer->bReadyToSpawn = TRUE;
-	CFunctions::SpawnPlayer((int)m_playerId);
+	CFunctions::SpawnPlayer(m_pPlayer);
 	// Set the player state onfoot
 	SetState(PLAYER_STATE_ONFOOT);
 	// Reset vehicle and seat id
@@ -507,7 +507,7 @@ void CPlayerData::Kill(int iKillerId, int iWeapon)
 	StopMoving();
 	StopAim();
 	// Kill the NPC
-	CFunctions::KillPlayer(m_playerId, iWeapon, iKillerId);
+	CFunctions::KillPlayer(m_pPlayer, iWeapon, iKillerId);
 	// Set the NPC state
 	SetState(PLAYER_STATE_WASTED);
 	// Call the NPC death callback
@@ -605,7 +605,7 @@ void CPlayerData::Process()
 					}
 
 					// Call the SAMP enter vehicle function
-					CFunctions::PlayerEnterVehicle((int)m_playerId, (int)m_wVehicleToEnter, (int)m_byteSeatToEnter);
+					CFunctions::PlayerEnterVehicle(m_pPlayer, (int)m_wVehicleToEnter, (int)m_byteSeatToEnter);
 				} else {
 					// Are we playing a node ?
 					if (m_bPlayingNode) {
@@ -1590,7 +1590,7 @@ bool CPlayerData::EnterVehicle(int iVehicleId, int iSeatId, int iType)
 		}
 
 		// Call the SAMP enter vehicle function
-		CFunctions::PlayerEnterVehicle((int)m_playerId, (int)m_wVehicleToEnter, (int)m_byteSeatToEnter);
+		CFunctions::PlayerEnterVehicle(m_pPlayer, (int)m_wVehicleToEnter, (int)m_byteSeatToEnter);
 	} else {
 		// Go to the vehicle
 		GoTo(vecDestination, iType, true);
@@ -1612,7 +1612,7 @@ bool CPlayerData::ExitVehicle()
 	}
 
 	// Call the SAMP exit vehicle function
-	CFunctions::PlayerExitVehicle(m_playerId, m_pPlayer->wVehicleId);
+	CFunctions::PlayerExitVehicle(m_pPlayer, m_pPlayer->wVehicleId);
 	// Set the player state
 	SetState(PLAYER_STATE_EXIT_VEHICLE);
 	// Set the exit start tick

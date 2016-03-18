@@ -114,7 +114,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_Kill(AMX *amx, cell *params)
 	}
 
 	// Kill the player
-	pServer->GetPlayerManager()->GetAt(iNPCId)->Kill(INVALID_PLAYER_ID, 0);
+	pServer->GetPlayerManager()->GetAt(iNPCId)->Kill(INVALID_PLAYER_ID, 255);
 	return 1;
 }
 
