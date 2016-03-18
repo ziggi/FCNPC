@@ -1,9 +1,12 @@
 cmake_minimum_required (VERSION 2.8.4)
-cmake_policy(SET CMP0054 NEW)
+
+if (VERSION GREATER 3.1.3)
+	cmake_policy(SET CMP0054 NEW)
+endif ()
 
 project (FCNPC)
 
-set (VERSION "1.0.3")
+set (VERSION "1.0.4")
 add_definitions (-DVERSION="${VERSION}")
 
 set (CMAKE_SHARED_LIBRARY_PREFIX "")
