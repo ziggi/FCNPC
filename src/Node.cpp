@@ -39,7 +39,7 @@ bool CNode::Initialize()
 
 	// Format the file path
 	char szPath[MAX_PATH];
-	snprintf(szPath, sizeof(szPath), "scriptfiles/FCNPC/Nodes/NODES%d.DAT", m_iNodeId);
+	snprintf(szPath, sizeof(szPath), "scriptfiles/FCNPC/nodes/NODES%d.DAT", m_iNodeId);
 	// Try to open the node file
 	fopen_s(&m_pFile, szPath, "rb");
 	if (!m_pFile) {
