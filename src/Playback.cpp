@@ -45,6 +45,7 @@ bool CPlayback::Initialize()
 	// Try to open the playback file
 	fopen_s(&m_pFile, szPath, "rb");
 	if (!m_pFile) {
+		logprintf("FCNPC Error: file '%s' not found.", szPath);
 		return false;
 	}
 
