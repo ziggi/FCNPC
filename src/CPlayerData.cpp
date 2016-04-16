@@ -527,7 +527,6 @@ void CPlayerData::Process()
 		if (!m_pPlayback->Process(this)) {
 			StopPlayingPlayback();
 		}
-
 		return;
 	}
 
@@ -788,9 +787,8 @@ void CPlayerData::Process()
 					} else {
 						StopPlayingNode();
 					}
-				} else
+				} else {
 					// Call the reach destination callback
-				{
 					CCallbackManager::OnReachDestination((int)m_playerId);
 				}
 			}

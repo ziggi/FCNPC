@@ -123,23 +123,27 @@ bool CPlayback::Process(CPlayerData *pPlayerData)
 
 			// Get the vehicle interface
 			CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[pPlayerData->GetVehicleId()];
-			// Set the data
-			pVehicle->vecPosition = vehicleSyncData.vecPosition;
-			pVehicle->vecVelocity = vehicleSyncData.vecVelocity;
+
 			// Apply the sync data
 			pPlayerData->SetState(PLAYER_STATE_DRIVER);
-			// Save the position
-			pPlayerData->SetPosition(vehicleSyncData.vecPosition);
-			// Save the quaternion
+			pPlayerData->SetKeys(vehicleSyncData.wUDAnalog, vehicleSyncData.wLRAnalog, vehicleSyncData.wKeys);
 			pPlayerData->SetQuaternion(vehicleSyncData.fQuaternion);
-			// Set vehicle sync data
+			pPlayerData->SetPosition(vehicleSyncData.vecPosition);
+			pPlayerData->SetVelocity(vehicleSyncData.vecVelocity);
+			pPlayerData->SetVehicleHealth(vehicleSyncData.fHealth);
+			pPlayerData->SetHealth(vehicleSyncData.bytePlayerHealth);
+			pPlayerData->SetArmour(vehicleSyncData.bytePlayerArmour);
+			pPlayerData->SetWeapon(vehicleSyncData.bytePlayerWeapon);
+			pPlayerData->SetVehicleSiren(vehicleSyncData.byteSirenState);
 			pPlayerData->SetVehicleSync(&vehicleSyncData);
+
 			// Save the last onfoot sync
 			memcpy(&m_vehicleSyncData, &vehicleSyncData, sizeof(CVehicleSyncData));
+
 			// Update the player
-			pPlayerData->UpdateSync(UPDATE_STATE_DRIVER);
+			pPlayerData->Update(UPDATE_STATE_DRIVER);
 		} else {
-			// Read the in car sync data
+			// Read the on foot sync data
 			CSyncData syncData;
 			if (!fread(&syncData, sizeof(CSyncData), 1, m_pFile)) {
 				return false;
@@ -147,16 +151,23 @@ bool CPlayback::Process(CPlayerData *pPlayerData)
 
 			// Apply the sync data
 			pPlayerData->SetState(PLAYER_STATE_ONFOOT);
-			// Save the position
+			pPlayerData->SetKeys(syncData.wUDAnalog, syncData.wLRAnalog, syncData.wKeys);
 			pPlayerData->SetPosition(syncData.vecPosition);
-			// Save the quaternion
 			pPlayerData->SetQuaternion(syncData.fQuaternion);
-			// Set onfoot data
+			pPlayerData->SetHealth(syncData.byteHealth);
+			pPlayerData->SetArmour(syncData.byteArmour);
+			pPlayerData->SetWeapon(syncData.byteWeapon);
+			pPlayerData->SetSpecialAction(syncData.byteSpecialAction);
+			pPlayerData->SetVelocity(syncData.vecVelocity);
+			pPlayerData->SetSurfingOffsets(syncData.vecSurfing);
+			pPlayerData->SetSurfingVehicle(syncData.wSurfingInfo);
 			pPlayerData->SetOnFootSync(&syncData);
+
 			// Save the last onfoot sync
 			memcpy(&m_syncData, &syncData, sizeof(CSyncData));
+
 			// Update the player
-			pPlayerData->UpdateSync(UPDATE_STATE_ONFOOT);
+			pPlayerData->Update(UPDATE_STATE_ONFOOT);
 		}
 		// Update the time
 		if (!fread(&m_dwTime, sizeof(DWORD), 1, m_pFile)) {
