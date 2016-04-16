@@ -6,7 +6,7 @@ endif ()
 
 project (FCNPC)
 
-set (VERSION "1.0.4")
+set (VERSION "1.0.5")
 add_definitions (-DVERSION="${VERSION}")
 
 set (CMAKE_SHARED_LIBRARY_PREFIX "")
