@@ -49,7 +49,6 @@ class CGangZonePool;
 // Defines
 #define	MAX_ATTACHED_OBJECTS		10
 #define	MAX_FILTER_SCRIPTS			16
-#define AFK_ACCURACY				1500
 
 #define MAX_PVARS					800
 #define MAX_PVAR_NAME				40
@@ -114,7 +113,7 @@ struct CAimSyncData
 	CVector			vecPosition;			// 13 - 25
 	float			fZAim;					// 25 - 29
 	BYTE			byteCameraZoom : 6;		// 29
-	BYTE			byteWeaponState : 2;	// 29
+	BYTE			byteWeaponState  : 2;	// 29
 	BYTE			unk;					// 30 - 31
 	WORD			wCameraObject;			// 31 - 33
 	WORD			wCameraVehicle;			// 33 - 35
@@ -129,7 +128,7 @@ struct CVehicleSyncData
 	WORD			wUDAnalog;				// 0x0021 - 0x0023
 	WORD			wLRAnalog;				// 0x0023 - 0x0025
 	WORD			wKeys;					// 0x0025 - 0x0027
-	float			fQuaternion[4];			// 0x0027 - 0x0037x
+	float			fQuaternion[4];			// 0x002B - 0x0037
 	CVector			vecPosition;			// 0x0037 - 0x0043
 	CVector			vecVelocity;			// 0x0043 - 0x004F
 	float			fHealth;				// 0x004F - 0x0053
