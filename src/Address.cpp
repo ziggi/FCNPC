@@ -12,9 +12,12 @@
 #include "Main.hpp"
 
 #if defined(WIN32)
+	DWORD CAddress::FUNC_Logprintf_03z_R4 = 0x004875F0;
 	DWORD CAddress::FUNC_Logprintf_037 = 0x0048A0B0;
 	DWORD CAddress::FUNC_Logprintf_037_R2_1 = 0x0048C8D0;
 #elif defined(LINUX)
+	DWORD CAddress::FUNC_Logprintf_03z_R4 = 0x080A7A90;
+	DWORD CAddress::FUNC_Logprintf_03z_R4_1000p = 0x080A7A90;
 	DWORD CAddress::FUNC_Logprintf_037 = 0x080A9000;
 	DWORD CAddress::FUNC_Logprintf_037_R2_1 = 0x080A91D0;
 #endif
@@ -46,6 +49,23 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 {
 #if defined(WIN32)
 	switch (sampVersion) {
+		case SAMP_VERSION_03z_R4:
+			FUNC_CPlayerPool__DeletePlayer = 0x4661A0;
+			FUNC_CPlayer__Kill = 0x480f80;
+			FUNC_CPlayer__EnterVehicle = 0x481510;
+			FUNC_CPlayer__ExitVehicle = 0x4817F0;
+			FUNC_CPlayer__SpawnForWorld = 0x483590;
+			FUNC_GetVehicleModelInfo = 0x484aa0;
+			FUNC_CConsole__GetIntVariable = 0x4862f0;
+			FUNC_ClientJoin_RPC = 0x48C460;
+			VAR_ServerAuthentication = 0x4f3390;
+			VAR_NetVersion = 0xfcf;
+			OFFSET_RemoteSystemManager = 0x33c;
+			OFFSET_RemoteSystemSize = 0xcb8;
+			OFFSET_RemoteSystem__ConnectMode = 0xcb0;
+			OFFSET_RemoteSystem__Unknown = 0xcb5;
+			break;
+
 		case SAMP_VERSION_037:
 			FUNC_CPlayerPool__DeletePlayer = 0x466740;
 			FUNC_CPlayer__Kill = 0x4831f0;
@@ -104,6 +124,40 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 	}
 #elif defined(LINUX)
 	switch (sampVersion) {
+		case SAMP_VERSION_03z_R4:
+			FUNC_CPlayerPool__DeletePlayer = 0x80ce870;
+			FUNC_CPlayer__Kill = 0x80c9620;
+			FUNC_CPlayer__EnterVehicle = 0x80ca360;
+			FUNC_CPlayer__ExitVehicle = 0x80ca4e0;
+			FUNC_CPlayer__SpawnForWorld = 0x80cb160;
+			FUNC_GetVehicleModelInfo = 0x80d3a20;
+			FUNC_CConsole__GetIntVariable = 0x809efe0;
+			FUNC_ClientJoin_RPC = 0x80ae660;
+			VAR_ServerAuthentication = 0x819cb8c;
+			VAR_NetVersion = 0xfcf;
+			OFFSET_RemoteSystemManager = 0x334;
+			OFFSET_RemoteSystemSize = 0xc69;
+			OFFSET_RemoteSystem__ConnectMode = 0xc62;
+			OFFSET_RemoteSystem__Unknown = 0xc67;
+			break;
+
+		case SAMP_VERSION_03z_R4_1000p:
+			FUNC_CPlayerPool__DeletePlayer = 0x80ce870;
+			FUNC_CPlayer__Kill = 0x80c9620;
+			FUNC_CPlayer__EnterVehicle = 0x80ca360;
+			FUNC_CPlayer__ExitVehicle = 0x80ca4e0;
+			FUNC_CPlayer__SpawnForWorld = 0x80cb160;
+			FUNC_GetVehicleModelInfo = 0x80d3a30;
+			FUNC_CConsole__GetIntVariable = 0x809efe0;
+			FUNC_ClientJoin_RPC = 0x80ae660;
+			VAR_ServerAuthentication = 0x819c5ac;
+			VAR_NetVersion = 0xfcf;
+			OFFSET_RemoteSystemManager = 0x334;
+			OFFSET_RemoteSystemSize = 0xc69;
+			OFFSET_RemoteSystem__ConnectMode = 0xc62;
+			OFFSET_RemoteSystem__Unknown = 0xc67;
+			break;
+
 		case SAMP_VERSION_037:
 			FUNC_CPlayerPool__DeletePlayer = 0x80d0600;
 			FUNC_CPlayer__Kill = 0x80cadb0;

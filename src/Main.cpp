@@ -38,7 +38,13 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	// Check server version
 	eSAMPVersion version;
 
-	if ((DWORD)logprintf == CAddress::FUNC_Logprintf_037) {
+	if ((DWORD)logprintf == CAddress::FUNC_Logprintf_03z_R4) {
+		version = SAMP_VERSION_03z_R4;
+		strlcpy(szSampVersion, "0.3z R4", sizeof(szSampVersion));
+	} else if ((DWORD)logprintf == CAddress::FUNC_Logprintf_03z_R4) {
+		version = SAMP_VERSION_03z_R4_1000p;
+		strlcpy(szSampVersion, "0.3z R4-1000p", sizeof(szSampVersion));
+	} else if ((DWORD)logprintf == CAddress::FUNC_Logprintf_037) {
 		version = SAMP_VERSION_037;
 		strlcpy(szSampVersion, "0.3.7", sizeof(szSampVersion));
 	} else if ((DWORD)logprintf == CAddress::FUNC_Logprintf_037_R2_1) {
