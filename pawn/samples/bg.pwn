@@ -195,7 +195,7 @@ public FCNPC_OnTakeDamage(npcid, damagerid, weaponid, bodypart, Float:health_los
 	new msg[128];
  	format(msg, 128, "NPC(%d) was damaged by %s(%d) with %d in the %s (hp: %f)", npcid, name, damagerid, weaponid, bp, health_loss);
  	SendClientMessageToAll(0xFF0000FF, msg);
- 	return 0;
+ 	return 1;
 }
 
 strtok(const string[], &index)
