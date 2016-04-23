@@ -132,6 +132,8 @@ public:
 
 	void ProcessDamage(int iDamagerId, float fHealthLoss, int iWeaponId, int iBodypart);
 	void ProcessVehicleDamage(int iDamagerId, int iVehicleId, int iWeaponId, CVector vecHit);
+	void ProcessStreamIn(int iForPlayerId);
+	void ProcessStreamOut(int iForPlayerId);
 
 	bool EnterVehicle(int iVehicleId, int iSeatId, int iType);
 	bool ExitVehicle();

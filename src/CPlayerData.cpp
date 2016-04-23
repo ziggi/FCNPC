@@ -247,8 +247,10 @@ void CPlayerData::Update(int iState)
 		return;
 	}
 
+	BYTE byteState = GetState();
+
 	// Update onfoot state
-	if (iState == UPDATE_STATE_ONFOOT && (GetState() == PLAYER_STATE_ONFOOT || GetState() == PLAYER_STATE_ENTER_VEHICLE_DRIVER || GetState() == PLAYER_STATE_ENTER_VEHICLE_PASSENGER)) {
+	if (iState == UPDATE_STATE_ONFOOT && (byteState == PLAYER_STATE_ONFOOT || byteState == PLAYER_STATE_ENTER_VEHICLE_DRIVER || byteState == PLAYER_STATE_ENTER_VEHICLE_PASSENGER)) {
 		// Set the sync position
 		m_pPlayer->syncData.vecPosition = m_pPlayer->vecPosition;
 		// Set the sync velocity vector
@@ -272,7 +274,7 @@ void CPlayerData::Update(int iState)
 		m_pPlayer->iUpdateState = iState;
 	}
 	// Update driver state
-	else if (iState == UPDATE_STATE_DRIVER && GetState() == PLAYER_STATE_DRIVER) {
+	else if (iState == UPDATE_STATE_DRIVER && byteState == PLAYER_STATE_DRIVER) {
 		// Dont process if we dont have any vehicle
 		if (m_pPlayer->wVehicleId == INVALID_VEHICLE_ID) {
 			return;
@@ -318,7 +320,7 @@ void CPlayerData::Update(int iState)
 		m_pPlayer->iUpdateState = iState;
 	}
 	// Update passenger state
-	else if (iState == UPDATE_STATE_PASSENGER && GetState() == PLAYER_STATE_PASSENGER) {
+	else if (iState == UPDATE_STATE_PASSENGER && byteState == PLAYER_STATE_PASSENGER) {
 		// Dont process if we dont have any vehicle
 		if (m_pPlayer->wVehicleId == INVALID_VEHICLE_ID) {
 			return;
@@ -531,9 +533,10 @@ void CPlayerData::Process()
 	}
 
 	DWORD dwThisTick = GetTickCount();
+	BYTE byteState = GetState();
 
 	// Process death
-	if (GetHealth() <= 0.0f && GetState() != PLAYER_STATE_WASTED && GetState() != PLAYER_STATE_SPAWNED) {
+	if (GetHealth() <= 0.0f && byteState != PLAYER_STATE_WASTED && byteState != PLAYER_STATE_SPAWNED) {
 		// Get the last damager weapon
 		BYTE byteWeapon = -1;
 		if (m_iLastDamager != INVALID_PLAYER_ID) {
@@ -541,7 +544,7 @@ void CPlayerData::Process()
 		}
 
 		// check on vehicle
-		if (GetState() == PLAYER_STATE_DRIVER || GetState() == PLAYER_STATE_PASSENGER) {
+		if (byteState == PLAYER_STATE_DRIVER || byteState == PLAYER_STATE_PASSENGER) {
 			RemoveFromVehicle();
 			m_dwKillVehicleTickCount = dwThisTick;
 		}
@@ -554,7 +557,7 @@ void CPlayerData::Process()
 	}
 
 	// Update the player depending on his state
-	if (GetState() == PLAYER_STATE_ONFOOT) {
+	if (byteState == PLAYER_STATE_ONFOOT) {
 		// Process the player mouvement
 		if (m_bMoving) {
 			// Get the player position
@@ -729,7 +732,7 @@ void CPlayerData::Process()
 		Update(UPDATE_STATE_ONFOOT);
 	}
 	// Process driver state
-	else if (GetState() == PLAYER_STATE_DRIVER) {
+	else if (byteState == PLAYER_STATE_DRIVER) {
 		// Process driving
 		if (m_bMoving) {
 			// Validate the player vehicle
@@ -797,12 +800,12 @@ void CPlayerData::Process()
 		Update(UPDATE_STATE_DRIVER);
 	}
 	// Process passenger state
-	else if (GetState() == PLAYER_STATE_PASSENGER) {
+	else if (byteState == PLAYER_STATE_PASSENGER) {
 		// Update the player
 		Update(UPDATE_STATE_PASSENGER);
 	}
 	// Process vehicle exiting
-	else if (GetState() == PLAYER_STATE_EXIT_VEHICLE) {
+	else if (byteState == PLAYER_STATE_EXIT_VEHICLE) {
 		if ((dwThisTick - m_dwEnterExitTickCount) > 1500) {
 			RemoveFromVehicle();
 			// Call the vehicle exit complete callback
@@ -1533,6 +1536,22 @@ void CPlayerData::ProcessVehicleDamage(int iDamagerId, int iVehicleId, int iWeap
 			pVehicle->wKillerID = iDamagerId;
 		}
 	}
+}
+
+void CPlayerData::ProcessStreamIn(int iForPlayerId)
+{
+	CCallbackManager::OnStreamIn((int)m_playerId, iForPlayerId);
+
+	if (GetState() == PLAYER_STATE_WASTED) {
+		RakNet::BitStream bsData;
+		bsData.Write(m_playerId);
+		CFunctions::PlayerRPC(&RPC_WorldPlayerDeath, &bsData, iForPlayerId);
+	}
+}
+
+void CPlayerData::ProcessStreamOut(int iForPlayerId)
+{
+	CCallbackManager::OnStreamOut((int)m_playerId, iForPlayerId);
 }
 
 bool CPlayerData::EnterVehicle(int iVehicleId, int iSeatId, int iType)

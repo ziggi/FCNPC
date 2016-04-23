@@ -224,7 +224,7 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 
 		if (pServer->GetPlayerManager()->IsPlayerConnectedEx(pStreamIn.iPlayerId)) {
 			// call custom callback
-			CCallbackManager::OnStreamIn(pStreamIn.iPlayerId, pStreamIn.iForPlayerId);
+			pServer->GetPlayerManager()->GetAt(pStreamIn.iPlayerId)->ProcessStreamIn(pStreamIn.iForPlayerId);
 		} else {
 			// call hooked callback
 			ret = pfn_amx_Exec(amx, retval, index);
@@ -234,7 +234,7 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 
 		if (pServer->GetPlayerManager()->IsPlayerConnectedEx(pStreamIn.iPlayerId)) {
 			// call custom callback
-			CCallbackManager::OnStreamOut(pStreamIn.iPlayerId, pStreamIn.iForPlayerId);
+			pServer->GetPlayerManager()->GetAt(pStreamIn.iPlayerId)->ProcessStreamOut(pStreamIn.iForPlayerId);
 		} else {
 			// call hooked callback
 			ret = pfn_amx_Exec(amx, retval, index);

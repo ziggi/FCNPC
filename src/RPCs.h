@@ -49,6 +49,7 @@ extern int RPC_StopFlashGangZone;
 extern int RPC_RemovePlayerAttachedObject;
 extern int RPC_WorldPlayerAdd;
 extern int RPC_WorldPlayerRemove;
+extern int RPC_WorldPlayerDeath;
 extern int RPC_ChatBubble;
 extern int RPC_SetPlayerSkin;
 extern int RPC_SetPlayerName;

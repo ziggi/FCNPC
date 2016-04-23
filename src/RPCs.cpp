@@ -19,6 +19,7 @@ int RPC_StopFlashGangZone = 0x55;
 int RPC_RemovePlayerAttachedObject = 0x71;
 int RPC_WorldPlayerAdd = 32;
 int RPC_WorldPlayerRemove = 163;
+int RPC_WorldPlayerDeath = 166;
 int RPC_ChatBubble = 0x3B;
 int RPC_SetPlayerSkin = 0x99;
 int RPC_SetPlayerName = 0x0B;
