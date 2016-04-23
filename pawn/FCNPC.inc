@@ -38,9 +38,8 @@ forward FCNPC_OnVehicleExitComplete(npcid);
 forward FCNPC_OnReachDestination(npcid);
 forward FCNPC_OnFinishPlayback(npcid);
 
-forward FCNPC_OnGiveDamage(npcid, damagedid, weaponid, bodypart, Float:health_loss);
 forward FCNPC_OnTakeDamage(npcid, damagerid, weaponid, bodypart, Float:health_loss);
-forward FCNPC_OnVehicleTakeDamage(npcid, damagerid, vehicleid, weaponid, Float:fX, Float:fY, Float:fZ);
+forward FCNPC_OnVehicleTakeDamage(npcid, damagerid, vehicleid, weaponid, Float:x, Float:y, Float:z);
 
 forward FCNPC_OnFinishNodePoint(npcid, point);
 forward FCNPC_OnChangeNode(npcid, nodeid);
@@ -55,7 +54,7 @@ native FCNPC_InitMapAndreas(address);
 
 native FCNPC_Create(name[]);
 native FCNPC_Destroy(npcid);
-native FCNPC_Spawn(npcid, skinid, Float:X, Float:Y, Float:Z);
+native FCNPC_Spawn(npcid, skinid, Float:x, Float:y, Float:z);
 native FCNPC_Respawn(npcid);
 native FCNPC_IsSpawned(npcid);
 native FCNPC_Kill(npcid);
@@ -64,16 +63,16 @@ native FCNPC_IsValid(npcid);
 native FCNPC_IsStreamedIn(npcid, forplayerid);
 native FCNPC_IsStreamedForAnyone(npcid);
 
-native FCNPC_SetPosition(npcid, Float:X, Float:Y, Float:Z);
-native FCNPC_GetPosition(npcid, &Float:X, &Float:Y, &Float:Z);
-native FCNPC_SetAngle(npcid, Float:Angle);
-native FCNPC_SetAngleToPos(npcid, Float:X, Float:Y);
+native FCNPC_SetPosition(npcid, Float:x, Float:y, Float:z);
+native FCNPC_GetPosition(npcid, &Float:x, &Float:y, &Float:z);
+native FCNPC_SetAngle(npcid, Float:angle);
+native FCNPC_SetAngleToPos(npcid, Float:x, Float:y);
 native FCNPC_SetAngleToPlayer(npcid, playerid);
 native Float:FCNPC_GetAngle(npcid);
-native FCNPC_SetQuaternion(npcid, Float:W, Float:X, Float:Y, Float:Z);
-native FCNPC_GetQuaternion(npcid, &Float:W, &Float:X, &Float:Y, &Float:Z);
-native FCNPC_SetVelocity(npcid, Float:X, Float:Y, Float:Z);
-native FCNPC_GetVelocity(npcid, &Float:X, &Float:Y, &Float:Z);
+native FCNPC_SetQuaternion(npcid, Float:w, Float:x, Float:y, Float:z);
+native FCNPC_GetQuaternion(npcid, &Float:w, &Float:x, &Float:y, &Float:z);
+native FCNPC_SetVelocity(npcid, Float:x, Float:y, Float:z);
+native FCNPC_GetVelocity(npcid, &Float:x, &Float:y, &Float:z);
 native FCNPC_SetInterior(npcid, interiorid);
 native FCNPC_GetInterior(npcid);
 native FCNPC_SetVirtualWorld(npcid, worldid);
@@ -129,12 +128,12 @@ native FCNPC_GetFightingStyle(npcid);
 native FCNPC_ToggleReloading(npcid, bool:toggle);
 native FCNPC_ToggleInfiniteAmmo(npcid, bool:toggle);
 
-native FCNPC_GoTo(npcid, Float:X, Float:Y, Float:Z, type = MOVE_TYPE_AUTO, Float:speed = 0.5, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true);
+native FCNPC_GoTo(npcid, Float:x, Float:y, Float:z, type = MOVE_TYPE_AUTO, Float:speed = 0.5, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true);
 native FCNPC_GoToPlayer(npcid, playerid, type = MOVE_TYPE_AUTO, Float:speed = 0.5, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true);
 native FCNPC_Stop(npcid);
 native FCNPC_IsMoving(npcid);
 
-native FCNPC_AimAt(npcid, Float:X, Float:Y, Float:Z, bool:shoot = false, shoot_delay = 0, bool:setangle = true);
+native FCNPC_AimAt(npcid, Float:x, Float:y, Float:z, bool:shoot = false, shoot_delay = 0, bool:setangle = true);
 native FCNPC_AimAtPlayer(npcid, playerid, bool:shoot = false, shoot_delay = 0, bool:setangle = true);
 native FCNPC_StopAim(npcid);
 native FCNPC_MeleeAttack(npcid, delay = -1, bool:fightstyle = false);
@@ -155,12 +154,8 @@ native FCNPC_IsVehicleSiren(npcid);
 native FCNPC_SetVehicleHealth(npcid, Float:health);
 native Float:FCNPC_GetVehicleHealth(npcid);
 
-// not working
-//native FCNPC_SetPassengerDriveBy(npcid, bool:status);
-//native FCNPC_IsPassengerDriveBy(npcid);
-
-native FCNPC_SetSurfingOffsets(npcid, Float:fX, Float:fY, Float:fZ);
-native FCNPC_GetSurfingOffsets(npcid, &Float:fX, &Float:fY, &Float:fZ);
+native FCNPC_SetSurfingOffsets(npcid, Float:x, Float:y, Float:z);
+native FCNPC_GetSurfingOffsets(npcid, &Float:x, &Float:y, &Float:z);
 native FCNPC_SetSurfingVehicle(npcid, vehicleid);
 native FCNPC_GetSurfingVehicle(npcid);
 native FCNPC_SetSurfingObject(npcid, objectid);
@@ -178,7 +173,7 @@ native FCNPC_CloseNode(nodeid);
 native FCNPC_IsNodeOpen(nodeid);
 native FCNPC_GetNodeType(nodeid);
 native FCNPC_SetNodePoint(nodeid, point);
-native FCNPC_GetNodePointPosition(nodeid, &Float:X, &Float:Y, &Float:Z);
+native FCNPC_GetNodePointPosition(nodeid, &Float:x, &Float:y, &Float:z);
 native FCNPC_GetNodePointCount(nodeid);
 native FCNPC_GetNodeInfo(nodeid, &vehnodes, &pednodes, &navinode);
 native FCNPC_PlayNode(npcid, nodeid, type);
