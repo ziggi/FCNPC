@@ -491,7 +491,7 @@ BYTE CPlayerData::GetState()
 	return m_pPlayer->byteState;
 }
 
-void CPlayerData::Kill(int iKillerId, int iWeapon)
+void CPlayerData::Kill(WORD wKillerId, BYTE byteReason)
 {
 	// Stop Playing any playback
 	if (m_bPlaying) {
@@ -507,11 +507,11 @@ void CPlayerData::Kill(int iKillerId, int iWeapon)
 	StopMoving();
 	StopAim();
 	// Kill the NPC
-	CFunctions::KillPlayer(m_pPlayer, iWeapon, iKillerId);
+	CFunctions::KillPlayer(m_pPlayer, byteReason, wKillerId);
 	// Set the NPC state
 	SetState(PLAYER_STATE_WASTED);
 	// Call the NPC death callback
-	CCallbackManager::OnDeath((int)m_playerId, iKillerId, iWeapon);
+	CCallbackManager::OnDeath((int)m_playerId, wKillerId, byteReason);
 }
 
 void CPlayerData::Process()
@@ -549,7 +549,7 @@ void CPlayerData::Process()
 		// Kill the player
 		if (dwThisTick - m_dwKillVehicleTickCount >= pServer->GetUpdateRate()) {
 			m_dwKillVehicleTickCount = 0;
-			Kill(m_iLastDamager, (int)byteWeapon);
+			Kill(m_iLastDamager, byteWeapon);
 		}
 	}
 

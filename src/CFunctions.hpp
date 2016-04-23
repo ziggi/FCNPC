@@ -23,7 +23,7 @@ typedef int  (*GetRakServer_t)();
 
 typedef void (THISCALL *CPlayerPool__DeletePlayer_t)(void *pPlayerPool, int iPlayerId, int iReason);
 typedef void (THISCALL *CPlayer__SpawnForWorld_t)(void *pPlayer);
-typedef void (THISCALL *CPlayer__Kill_t)(void *pPlayer, int iKillerId, int iWeapon);
+typedef void (THISCALL *CPlayer__Kill_t)(void *pPlayer, BYTE byteReason, WORD wKillerId);
 typedef void (THISCALL *CPlayer__EnterVehicle_t)(void *pPlayer, int iVehicleId, int iSeatId);
 typedef void (THISCALL *CPlayer__ExitVehicle_t)(void *pPlayer, int iVehicleId);
 typedef int  (THISCALL *CConsole__GetIntVariable_t)(void *pConfig, char *szKey);
@@ -43,7 +43,7 @@ public:
 	static int		NewPlayer(char *szName);
 	static void		DeletePlayer(int iPlayerId);
 	static void		SpawnPlayer(CPlayer *pPlayer);
-	static void		KillPlayer(CPlayer *pPlayer, int iKillerId, int iWeapon);
+	static void		KillPlayer(CPlayer *pPlayer, BYTE byteReason, WORD wKillerId);
 	static void		PlayerEnterVehicle(CPlayer *pPlayer, int iVehicleId, int iSeatId);
 	static void		PlayerExitVehicle(CPlayer *pPlayer, int iVehicleId);
 	static CVector	*GetVehicleModelInfoEx(int iModelId, int iInfoType);

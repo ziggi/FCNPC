@@ -125,9 +125,9 @@ void CFunctions::SpawnPlayer(CPlayer *pPlayer)
 	pfn__CPlayer__SpawnForWorld(pPlayer);
 }
 
-void CFunctions::KillPlayer(CPlayer *pPlayer, int iKillerId, int iWeapon)
+void CFunctions::KillPlayer(CPlayer *pPlayer, BYTE byteReason, WORD wKillerId)
 {
-	pfn__CPlayer__Kill(pPlayer, iKillerId, iWeapon);
+	pfn__CPlayer__Kill(pPlayer, byteReason, wKillerId);
 }
 
 void CFunctions::PlayerEnterVehicle(CPlayer *pPlayer, int iVehicleId, int iSeatId)

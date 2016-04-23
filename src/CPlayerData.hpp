@@ -39,7 +39,7 @@ public:
 	bool Spawn(int iSkinId);
 	bool Respawn();
 	void SetSpawnPosition(CVector vecPosition);
-	void Kill(int iKillerId, int iWeapon);
+	void Kill(WORD wKillerId, BYTE byteReason);
 	void Update(int iState);
 	void UpdateSync(int iState);
 	void UpdateAim();
