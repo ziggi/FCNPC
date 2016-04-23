@@ -1247,7 +1247,7 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float f
 		iType = GetState() == PLAYER_STATE_DRIVER ? MOVE_TYPE_DRIVE : MOVE_TYPE_RUN;
 	}
 
-	if (iType > MOVE_TYPE_DRIVE || iType < MOVE_TYPE_WALK) {
+	if (iType != MOVE_TYPE_WALK && iType != MOVE_TYPE_RUN && iType != MOVE_TYPE_SPRINT && iType != MOVE_TYPE_DRIVE) {
 		return false;
 	}
 
@@ -1258,24 +1258,45 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float f
 		m_vecDestination -= CVector(CUtils::RandomFloat(-fRadius, fRadius), CUtils::RandomFloat(-fRadius, fRadius), 0.0);
 	}
 	// Get the moving type key and speed
-	DWORD dwMoveKey = KEY_NONE;
-	float fMoveSpeed = MOVE_SPEED_RUN;
-	if (iType == MOVE_TYPE_WALK) {
-		fMoveSpeed = MOVE_SPEED_WALK;
-		dwMoveKey = KEY_WALK;
-	} else if (iType == MOVE_TYPE_SPRINT) {
-		fMoveSpeed = MOVE_SPEED_SPRINT;
-		dwMoveKey = KEY_SPRINT;
+	/*
+	in vehicle
+		up: dwKeys: 8 (KEY_SPRINT)
+		down: dwKeys: 32 (KEY_JUMP)
+		left: wUDAnalog: 65408 (-KEY_HANDBRAKE)
+		right:  wUDAnalog: 128 (KEY_HANDBRAKE)
+
+	on foot
+		up: wLRAnalog: 65408 (-KEY_HANDBRAKE)
+		down: wLRAnalog: 128 (KEY_HANDBRAKE)
+		left: wUDAnalog: 65408 (-KEY_HANDBRAKE)
+		right: wUDAnalog: 128 (KEY_HANDBRAKE)
+	*/
+
+	WORD wUDKey = m_pPlayer->wUDAnalog;
+	WORD wLRKey = m_pPlayer->wLRAnalog;
+	DWORD dwMoveKey = m_pPlayer->dwKeys;
+	float fMoveSpeed = 0.0f;
+
+	if (iType == MOVE_TYPE_WALK || iType == MOVE_TYPE_RUN || iType == MOVE_TYPE_SPRINT) {
+		wLRKey = -KEY_HANDBRAKE;
+
+		if (iType == MOVE_TYPE_RUN) {
+			fMoveSpeed = MOVE_SPEED_RUN;
+			dwMoveKey = KEY_NONE;
+		} else if (iType == MOVE_TYPE_WALK) {
+			fMoveSpeed = MOVE_SPEED_WALK;
+			dwMoveKey = KEY_WALK;
+		} else if (iType == MOVE_TYPE_SPRINT) {
+			fMoveSpeed = MOVE_SPEED_SPRINT;
+			dwMoveKey = KEY_SPRINT;
+		}
 	} else if (iType == MOVE_TYPE_DRIVE) {
 		fMoveSpeed = m_pPlayer->vecVelocity.fX;
-		dwMoveKey = KEY_NONE;
+		dwMoveKey = KEY_SPRINT;
 	}
+
 	// Set the moving keys
-	if (iType != MOVE_TYPE_DRIVE) {
-		SetKeys(0x8000, KEY_NONE, dwMoveKey);
-	} else {
-		SetKeys(KEY_NONE, KEY_NONE, KEY_NONE);
-	}
+	SetKeys(wUDKey, wLRKey, dwMoveKey);
 
 	// Get the player position
 	CVector vecPosition;
@@ -1313,8 +1334,12 @@ void CPlayerData::StopMoving()
 
 	// Reset moving flag
 	m_bMoving = false;
-	// Reset analogs
-	SetKeys(0, 0, m_pPlayer->dwKeys);
+	// Reset changed keys
+	if (GetState() == PLAYER_STATE_DRIVER) {
+		SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_NONE);
+	} else {
+		SetKeys(KEY_NONE, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys);
+	}
 	// Reset other moving variables
 	m_dwMoveTime = 0;
 	m_dwMoveStartTime = 0;
