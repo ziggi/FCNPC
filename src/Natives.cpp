@@ -661,20 +661,19 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetSkin(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetKeys(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "FCNPC_SetKeys");
-	// Get the NPC id
+	CHECK_PARAMS(4, "FCNPC_SetKeys");
+
+	// Get the params
 	int iNPCId = (int)params[1];
-	// Get the keys
-	DWORD dwKeys = (DWORD)params[2];
+	WORD wUDAnalog = (WORD)params[2];
+	WORD wLRAnalog = (WORD)params[3];
+	DWORD dwKeys = (DWORD)params[4];
+
 	// Make sure the player is valid
 	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
 		return 0;
 	}
 
-	// Get the player keys
-	WORD wUDAnalog = 0, wLRAnalog = 0;
-	DWORD _dwKeys = 0;
-	pServer->GetPlayerManager()->GetAt(iNPCId)->GetKeys(&wUDAnalog, &wLRAnalog, &_dwKeys);
 	// Set the player keys
 	pServer->GetPlayerManager()->GetAt(iNPCId)->SetKeys(wUDAnalog, wLRAnalog, dwKeys);
 	return 1;

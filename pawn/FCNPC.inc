@@ -1,6 +1,6 @@
 /* ---------------------------------
 	 FCNPC Plugin PAWN include
-		
+
 - File: FCNPC.inc
 - Author: OrMisicL
 - Contributor: ziggi
@@ -110,8 +110,8 @@ native FCNPC_GetWeaponInfo(npcid, weaponid, &reload_time = -1, &shoot_time = -1,
 native FCNPC_SetWeaponDefaultInfo(weaponid, reload_time = -1, shoot_time = -1, clip_size = -1);
 native FCNPC_GetWeaponDefaultInfo(weaponid, &reload_time = -1, &shoot_time = -1, &clip_size = -1);
 
-native FCNPC_SetKeys(npcid, Keys);
-native FCNPC_GetKeys(npcid, &UDAnalog, &LRAnalog, &Keys);
+native FCNPC_SetKeys(npcid, ud_analog, lr_analog, keys);
+native FCNPC_GetKeys(npcid, &ud_analog, &lr_analog, &keys);
 
 native FCNPC_SetSpecialAction(npcid, actionid);
 native FCNPC_GetSpecialAction(npcid);
