@@ -523,6 +523,11 @@ void CPlayerData::Process()
 		return;
 	}
 
+	if (!pNetGame->pPlayerPool->bIsPlayerConnectedEx[m_playerId]) {
+		pServer->GetPlayerManager()->DeletePlayer(m_playerId);
+		return;
+	}
+
 	// Process Playing
 	if (m_bPlaying) {
 		// Process the player playback
