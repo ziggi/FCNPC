@@ -125,8 +125,8 @@ struct CAimSyncData
 struct CVehicleSyncData
 {
 	WORD			wVehicleId;				// 0x001F - 0x0021
-	WORD			wUDAnalog;				// 0x0021 - 0x0023
-	WORD			wLRAnalog;				// 0x0023 - 0x0025
+	WORD			wLRAnalog;				// 0x0021 - 0x0023
+	WORD			wUDAnalog;				// 0x0023 - 0x0025
 	WORD			wKeys;					// 0x0025 - 0x0027
 	float			fQuaternion[4];			// 0x002B - 0x0037
 	CVector			vecPosition;			// 0x0037 - 0x0043
@@ -155,8 +155,8 @@ struct CPassengerSyncData
 	BYTE			bytePlayerWeapon;		// 0x0061 - 0x0062
 	BYTE			bytePlayerHealth;		// 0x0062 - 0x0063
 	BYTE			bytePlayerArmour;		// 0x0063 - 0x0064
-	WORD			wUDAnalog;				// 0x0064 - 0x0066
-	WORD			wLRAnalog;				// 0x0066 - 0x0068
+	WORD			wLRAnalog;				// 0x0064 - 0x0066
+	WORD			wUDAnalog;				// 0x0066 - 0x0068
 	WORD			wKeys;					// 0x0068 - 0x006A
 	CVector			vecPosition;			// 0x006A - 0x0076
 	// Size = 24
@@ -164,8 +164,8 @@ struct CPassengerSyncData
 
 struct CSyncData
 {
-	WORD			wUDAnalog;				// 0x0076 - 0x0078
-	WORD			wLRAnalog;				// 0x0078 - 0x007A
+	WORD			wLRAnalog;				// 0x0076 - 0x0078
+	WORD			wUDAnalog;				// 0x0078 - 0x007A
 	WORD			wKeys;					// 0x007A - 0x007C
 	CVector			vecPosition;			// 0x007C - 0x0088
 	float			fQuaternion[4];			// 0x0088 - 0x008C
@@ -354,8 +354,8 @@ struct CPlayer
 	float					fQuaternion[4];		// 10537 - 10553
 	float					fAngle;				// 10553 - 10557
 	CVector					vecVelocity;		// 10557 - 10569
-	WORD					wUDAnalog;			// 10569
-	WORD					wLRAnalog;			// 10571
+	WORD					wLRAnalog;			// 10569
+	WORD					wUDAnalog;			// 10571
 	DWORD					dwKeys;				// 10573 - 10577
 	DWORD					dwOldKeys;			// 10577 - 10581
 	BOOL					bEditObject;		// 10581 - 10585

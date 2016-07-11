@@ -1262,28 +1262,15 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float f
 	if (fRadius != 0.0f) {
 		m_vecDestination -= CVector(CUtils::RandomFloat(-fRadius, fRadius), CUtils::RandomFloat(-fRadius, fRadius), 0.0);
 	}
+
 	// Get the moving type key and speed
-	/*
-	in vehicle
-		up: dwKeys: 8 (KEY_SPRINT)
-		down: dwKeys: 32 (KEY_JUMP)
-		left: wUDAnalog: 65408 (-KEY_HANDBRAKE)
-		right:  wUDAnalog: 128 (KEY_HANDBRAKE)
-
-	on foot
-		up: wLRAnalog: 65408 (-KEY_HANDBRAKE)
-		down: wLRAnalog: 128 (KEY_HANDBRAKE)
-		left: wUDAnalog: 65408 (-KEY_HANDBRAKE)
-		right: wUDAnalog: 128 (KEY_HANDBRAKE)
-	*/
-
 	WORD wUDKey = m_pPlayer->wUDAnalog;
 	WORD wLRKey = m_pPlayer->wLRAnalog;
 	DWORD dwMoveKey = m_pPlayer->dwKeys;
 	float fMoveSpeed = 0.0f;
 
 	if (iType == MOVE_TYPE_WALK || iType == MOVE_TYPE_RUN || iType == MOVE_TYPE_SPRINT) {
-		wLRKey = -KEY_HANDBRAKE;
+		wLRKey = KEY_UP;
 
 		if (iType == MOVE_TYPE_RUN) {
 			fMoveSpeed = MOVE_SPEED_RUN;
