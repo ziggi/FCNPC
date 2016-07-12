@@ -1632,12 +1632,12 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ExitVehicle(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL CNatives::FCNPC_PutInVehicle(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(3, "FCNPC_PutInVehicle");
-	// Get the NPC id
+
+	// Get the parameters
 	int iNPCId = (int)params[1];
-	// Get the vehicle id
 	int iVehicleId = (int)params[2];
-	// Get the seat id
 	int iSeatId = (int)params[3];
+
 	// Make sure the player is valid
 	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
 		return 0;
@@ -1657,14 +1657,17 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_RemoveFromVehicle(AMX *amx, cell *params)
 		return 0;
 	}
 
+	// Get the player data pointer
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(iNPCId);
+
 	// Validate the player state
-	int iState = pServer->GetPlayerManager()->GetAt(iNPCId)->GetState();
+	int iState = pPlayerData->GetState();
 	if (iState != PLAYER_STATE_DRIVER && iState != PLAYER_STATE_PASSENGER) {
 		return 0;
 	}
 
 	// Make the player exit the vehicle
-	return pServer->GetPlayerManager()->GetAt(iNPCId)->RemoveFromVehicle() ? 1 : 0;
+	return pPlayerData->RemoveFromVehicle() ? 1 : 0;
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleID(AMX *amx, cell *params)
@@ -1684,19 +1687,24 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleID(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleSeat(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_GetVehicleSeat");
+
 	// Get the NPC id
 	int iNPCId = (int)params[1];
+
 	// Make sure the player is valid
 	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
 		return 0;
 	}
 
+	// Get the player data pointer
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(iNPCId);
+
 	// Make the player exit the vehicle
-	if (pServer->GetPlayerManager()->GetAt(iNPCId)->GetVehicleId() == INVALID_VEHICLE_ID) {
+	if (pPlayerData->GetVehicleId() == INVALID_VEHICLE_ID) {
 		return 128;
 	}
 
-	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetSeatId();
+	return pPlayerData->GetSeatId();
 }
 
 // native FCNPC_SetVehicleSiren(npcid, bool:status);
@@ -1713,13 +1721,16 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVehicleSiren(AMX *amx, cell *params)
 		return 0;
 	}
 
+	// Get the player data pointer
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(iNPCId);
+
 	// Make sure the player is in vehicle
-	if (pServer->GetPlayerManager()->GetAt(iNPCId)->GetVehicleId() == INVALID_VEHICLE_ID) {
+	if (pPlayerData->GetVehicleId() == INVALID_VEHICLE_ID) {
 		return 0;
 	}
 
 	// Change siren state
-	pServer->GetPlayerManager()->GetAt(iNPCId)->SetVehicleSiren(bSiren);
+	pPlayerData->SetVehicleSiren(bSiren);
 	return 1;
 }
 
@@ -1736,13 +1747,16 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsVehicleSiren(AMX *amx, cell *params)
 		return 0;
 	}
 
+	// Get the player data pointer
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(iNPCId);
+
 	// Make sure the player is in vehicle
-	if (pServer->GetPlayerManager()->GetAt(iNPCId)->GetVehicleId() == INVALID_VEHICLE_ID) {
+	if (pPlayerData->GetVehicleId() == INVALID_VEHICLE_ID) {
 		return 0;
 	}
 
 	// Return siren state
-	return pServer->GetPlayerManager()->GetAt(iNPCId)->IsVehicleSiren() ? 1 : 0;
+	return pPlayerData->IsVehicleSiren() ? 1 : 0;
 }
 
 // native FCNPC_SetVehicleHealth(npcid, Float:health);
@@ -1759,13 +1773,16 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVehicleHealth(AMX *amx, cell *params)
 		return 0;
 	}
 
+	// Get the player data pointer
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(iNPCId);
+
 	// Make sure the player is in vehicle
-	if (pServer->GetPlayerManager()->GetAt(iNPCId)->GetVehicleId() == INVALID_VEHICLE_ID) {
+	if (pPlayerData->GetVehicleId() == INVALID_VEHICLE_ID) {
 		return 0;
 	}
 
 	// Change vehicle health
-	pServer->GetPlayerManager()->GetAt(iNPCId)->SetVehicleHealth(fHealth);
+	pPlayerData->SetVehicleHealth(fHealth);
 	return 1;
 }
 
@@ -2012,7 +2029,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StartPlayingPlayback(AMX *amx, cell *params
 	amx_GetAddr(amx, params[2], &pAddress);
 	amx_StrLen(pAddress, &iLength);
 	// Make sure the length is valid
-	if (!iLength) {
+	if (iLength == 0) {
 		return 0;
 	}
 
@@ -2084,8 +2101,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetUpdateRate(AMX *amx, cell *params)
 	// Get the update rate
 	int iRate = (int)params[1];
 	// Set the update rate
-	pServer->SetUpdateRate(iRate);
-	return 1;
+	return pServer->SetUpdateRate(iRate) ? 1 : 0;
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_OpenNode(AMX *amx, cell *params)

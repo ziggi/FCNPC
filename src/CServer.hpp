@@ -47,9 +47,13 @@ public:
 
 	bool DoesNameExist(char *szName);
 
-	void SetUpdateRate(DWORD dwRate)
+	bool SetUpdateRate(DWORD dwRate)
 	{
+		if (dwRate < 0) {
+			return false;
+		}
 		m_dwUpdateRate = dwRate;
+		return true;
 	};
 	DWORD GetUpdateRate()
 	{
