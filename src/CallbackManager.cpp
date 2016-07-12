@@ -142,7 +142,7 @@ int CCallbackManager::OnTakeDamage(int iGameId, int iDamagerId, int iWeapon, int
 			amx_Push((*i), iGameId);
 			// Execute the callback
 			amx_Exec((*i), &cReturn, iIndex);
-			if (cReturn) {
+			if (!cReturn) {
 				return cReturn;
 			}
 		}
@@ -167,7 +167,7 @@ int CCallbackManager::OnVehicleTakeDamage(int iGameId, int iDamagerId, int iVehi
 			amx_Push((*i), iGameId);
 			// Execute the callback
 			amx_Exec((*i), &cReturn, iIndex);
-			if (cReturn) {
+			if (!cReturn) {
 				return cReturn;
 			}
 		}
