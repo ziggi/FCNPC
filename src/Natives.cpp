@@ -1455,6 +1455,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAt(AMX *amx, cell *params)
 		case WEAPON_TYPE_ROCKET:
 		case WEAPON_TYPE_SPRAY:
 		case WEAPON_TYPE_THROW:
+			pPlayerData->StopAim();
 			pPlayerData->AimAt(CVector(fX, fY, fZ), bShoot, dwShootDelay, bSetAngle);
 			return 1;
 	}
@@ -1492,11 +1493,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAtPlayer(AMX *amx, cell *params)
 
 	int iWeaponType = pPlayerData->GetWeaponType(pPlayerData->GetWeapon());
 	switch (iWeaponType) {
+		case WEAPON_TYPE_MELEE:
 		case WEAPON_TYPE_SHOOT:
 		case WEAPON_TYPE_ROCKET:
 		case WEAPON_TYPE_SPRAY:
 		case WEAPON_TYPE_THROW:
-			pServer->GetPlayerManager()->GetAt(iNPCId)->AimAtPlayer(iPlayerId, bShoot, dwShootDelay, bSetAngle);
+			pPlayerData->StopAim();
+			pPlayerData->AimAtPlayer(iPlayerId, bShoot, dwShootDelay, bSetAngle);
 			return 1;
 	}
 
