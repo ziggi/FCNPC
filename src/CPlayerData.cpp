@@ -1473,13 +1473,8 @@ bool CPlayerData::MeleeAttack(int iTime, bool bUseFightstyle)
 	m_bMeleeAttack = true;
 	// Set the melee use fightstyle flag
 	m_bMeleeFightstyle = bUseFightstyle;
-	// Reset the aiming flag
-	m_bAiming = false;
-	m_wHitId = INVALID_PLAYER_ID;
-	m_byteHitType = BULLET_HIT_TYPE_NONE;
 	// Set the melee keys
 	SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_FIRE);
-
 	return true;
 }
 
