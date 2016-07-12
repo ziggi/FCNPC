@@ -141,10 +141,9 @@ int CCallbackManager::OnTakeDamage(int iGameId, int iDamagerId, int iWeapon, int
 			amx_Push((*i), iDamagerId);
 			amx_Push((*i), iGameId);
 			// Execute the callback
+			amx_Exec((*i), &cReturn, iIndex);
 			if (cReturn) {
-				amx_Exec((*i), &cReturn, iIndex);
-			} else {
-				amx_Exec((*i), NULL, iIndex);
+				return cReturn;
 			}
 		}
 	}
@@ -167,10 +166,9 @@ int CCallbackManager::OnVehicleTakeDamage(int iGameId, int iDamagerId, int iVehi
 			amx_Push((*i), iDamagerId);
 			amx_Push((*i), iGameId);
 			// Execute the callback
+			amx_Exec((*i), &cReturn, iIndex);
 			if (cReturn) {
-				amx_Exec((*i), &cReturn, iIndex);
-			} else {
-				amx_Exec((*i), NULL, iIndex);
+				return cReturn;
 			}
 		}
 	}
@@ -202,10 +200,9 @@ int CCallbackManager::OnChangeNode(int iGameId, int iNodeId)
 			amx_Push((*i), iNodeId);
 			amx_Push((*i), iGameId);
 			// Execute the callback
-			if (cReturn) {
-				amx_Exec((*i), &cReturn, iIndex);
-			} else {
-				amx_Exec((*i), NULL, iIndex);
+			amx_Exec((*i), &cReturn, iIndex);
+			if (!cReturn) {
+				return cReturn;
 			}
 		}
 	}
@@ -223,10 +220,9 @@ int CCallbackManager::OnFinishNodePoint(int iGameId, int iNodePoint)
 			amx_Push((*i), iNodePoint);
 			amx_Push((*i), iGameId);
 			// Execute the callback
-			if (cReturn) {
-				amx_Exec((*i), &cReturn, iIndex);
-			} else {
-				amx_Exec((*i), NULL, iIndex);
+			amx_Exec((*i), &cReturn, iIndex);
+			if (!cReturn) {
+				return cReturn;
 			}
 		}
 	}
