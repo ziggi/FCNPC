@@ -1,0 +1,9 @@
+language: cpp
+addons:
+  apt:
+    packages:
+      - gcc-multilib
+      - g++-multilib
+script:
+  - cmake .
+  - make
