@@ -1,4 +1,6 @@
 # FCNPC - Fully Controllable NPC
+[![GitHub version](https://badge.fury.io/gh/Open-GTO%2FFCNPC.svg)](https://badge.fury.io/gh/Open-GTO%2FFCNPC) [![Build Status](https://travis-ci.org/Open-GTO/FCNPC.svg?branch=master)](https://travis-ci.org/Open-GTO/FCNPC)
+
 By OrMisicL
 
 [Forum thread](http://forum.sa-mp.com/showthread.php?t=428066)
