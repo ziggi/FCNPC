@@ -3,6 +3,13 @@ By OrMisicL
 
 [Forum thread](http://forum.sa-mp.com/showthread.php?t=428066)
 
+# Usage notes
+If you want to see that your scripts will work correctly, you need to declare this callback functions at least in one of your scripts:
+- OnPlayerGiveDamage
+- OnPlayerWeaponShot
+- OnPlayerStreamIn
+- OnPlayerStreamOut
+
 # Building (Windows)
 You can use Visual Studio for build too. Just use CMake for generate VS project:
 ```bash

@@ -15,7 +15,6 @@ struct CPlayer;
 
 extern CServer  *pServer;
 extern CNetGame *pNetGame;
-extern bool bHookIsEnded;
 
 CPlayerData::CPlayerData(WORD playerId, char *szName)
 {
@@ -1512,7 +1511,6 @@ void CPlayerData::ProcessDamage(int iDamagerId, float fHealthLoss, int iWeaponId
 {
 	// Call the on take damage callback
 	int iReturn = CCallbackManager::OnTakeDamage((int)m_playerId, iDamagerId, iWeaponId, iBodypart, fHealthLoss);
-	bHookIsEnded = true;
 	// Check the returned value
 	if (iReturn) {
 		// Check the armour
@@ -1536,7 +1534,6 @@ void CPlayerData::ProcessDamage(int iDamagerId, float fHealthLoss, int iWeaponId
 void CPlayerData::ProcessVehicleDamage(int iDamagerId, int iVehicleId, int iWeaponId, CVector vecHit)
 {
 	int iReturn = CCallbackManager::OnVehicleTakeDamage((int)m_playerId, iDamagerId, iVehicleId, iWeaponId, vecHit);
-	bHookIsEnded = true;
 
 	if (iReturn) {
 		float fHealth = GetVehicleHealth();
@@ -1562,7 +1559,6 @@ void CPlayerData::ProcessVehicleDamage(int iDamagerId, int iVehicleId, int iWeap
 void CPlayerData::ProcessStreamIn(int iForPlayerId)
 {
 	CCallbackManager::OnStreamIn((int)m_playerId, iForPlayerId);
-	bHookIsEnded = true;
 
 	if (GetState() == PLAYER_STATE_WASTED) {
 		RakNet::BitStream bsData;
@@ -1574,7 +1570,6 @@ void CPlayerData::ProcessStreamIn(int iForPlayerId)
 void CPlayerData::ProcessStreamOut(int iForPlayerId)
 {
 	CCallbackManager::OnStreamOut((int)m_playerId, iForPlayerId);
-	bHookIsEnded = true;
 }
 
 bool CPlayerData::EnterVehicle(int iVehicleId, int iSeatId, int iType)

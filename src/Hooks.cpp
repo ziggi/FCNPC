@@ -16,7 +16,9 @@ extern void         *pAMXFunctions;
 
 BYTE bytePushCount;
 char szPreviousFuncName[32];
-bool bHookIsEnded;
+bool bHookIsExec;
+bool bFindPublicIsBlocked;
+bool bIsPublicFound;
 
 // give damage
 bool bGiveDamage;
@@ -76,30 +78,43 @@ amx_Exec_t pfn_amx_Exec = NULL;
 int amx_FindPublic_Hook(AMX *amx, const char *funcname, int *index)
 {
 	pfn_amx_FindPublic = (amx_FindPublic_t)(subhook_get_trampoline(hookFindPublic));
-
-	if (!strcmp(funcname, szPreviousFuncName)) {
-		return pfn_amx_FindPublic(amx, funcname, index);
-	}
-
-	if (!strcmp(funcname, "OnPlayerGiveDamage")) {
-		bHookIsEnded = true;
-		bGiveDamage = true;
-	} else if (!strcmp(funcname, "OnPlayerWeaponShot")) {
-		bHookIsEnded = true;
-		bWeaponShot = true;
-	} else if (!strcmp(funcname, "OnPlayerStreamIn")) {
-		bHookIsEnded = true;
-		bStreamIn = true;
-	} else if (!strcmp(funcname, "OnPlayerStreamOut")) {
-		bHookIsEnded = true;
-		bStreamOut = true;
-	}
-
-	if (bHookIsEnded) {
-		bHookIsEnded = false;
-		strlcpy(szPreviousFuncName, funcname, sizeof(szPreviousFuncName));
-	}
 	bytePushCount = 0;
+
+	if (bHookIsExec) {
+		if (!strcmp(funcname, szPreviousFuncName)) {
+			if (bFindPublicIsBlocked) {
+				return 1;
+			} else {
+				return pfn_amx_FindPublic(amx, funcname, index);
+			}
+		} else {
+			bFindPublicIsBlocked = false;
+			bHookIsExec = false;
+			bIsPublicFound = false;
+			szPreviousFuncName[0] = '\0';
+		}
+	}
+
+	if (!bHookIsExec && !bIsPublicFound) {
+		if (!strcmp(funcname, "OnPlayerGiveDamage")) {
+			bIsPublicFound = true;
+			bGiveDamage = true;
+		} else if (!strcmp(funcname, "OnPlayerWeaponShot")) {
+			bIsPublicFound = true;
+			bWeaponShot = true;
+		} else if (!strcmp(funcname, "OnPlayerStreamIn")) {
+			bIsPublicFound = true;
+			bStreamIn = true;
+		} else if (!strcmp(funcname, "OnPlayerStreamOut")) {
+			bIsPublicFound = true;
+			bStreamOut = true;
+		}
+
+		if (bIsPublicFound) {
+			strlcpy(szPreviousFuncName, funcname, sizeof(szPreviousFuncName));
+		}
+	}
+
 	return pfn_amx_FindPublic(amx, funcname, index);
 }
 
@@ -206,17 +221,17 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 		CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(pGiveDamage.iDamagedId);
 
 		// check on invulnerable
-		if (pPlayerData && pPlayerData->IsInvulnerable()) {
-			return ret;
+		if (!pPlayerData || !pPlayerData->IsInvulnerable()) {
+			// call hooked callback
+			ret = pfn_amx_Exec(amx, retval, index);
+
+			// call custom callback
+			if (pPlayerData) {
+				pPlayerData->ProcessDamage(pGiveDamage.iPlayerId, pGiveDamage.fHealthLoss, pGiveDamage.iWeapon, pGiveDamage.iBodypart);
+			}
 		}
 
-		// call hooked callback
-		ret = pfn_amx_Exec(amx, retval, index);
-
-		// call custom callback
-		if (pPlayerData) {
-			pPlayerData->ProcessDamage(pGiveDamage.iPlayerId, pGiveDamage.fHealthLoss, pGiveDamage.iWeapon, pGiveDamage.iBodypart);
-		}
+		bHookIsExec = true;
 	} else if (bWeaponShot) {
 		bWeaponShot = false;
 
@@ -229,29 +244,37 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 
 			if (pServer->GetPlayerManager()->IsPlayerConnectedEx(wPlayerId)) {
 				pServer->GetPlayerManager()->GetAt(wPlayerId)->ProcessVehicleDamage(
-				    pWeaponShot.iPlayerId, pWeaponShot.iHitId, pWeaponShot.iWeaponId, pWeaponShot.vecHit);
+					pWeaponShot.iPlayerId, pWeaponShot.iHitId, pWeaponShot.iWeaponId, pWeaponShot.vecHit);
 			}
 		}
+
+		bHookIsExec = true;
 	} else if (bStreamIn) {
 		bStreamIn = false;
 
 		if (pServer->GetPlayerManager()->IsPlayerConnectedEx(pStreamIn.iPlayerId)) {
 			// call custom callback
 			pServer->GetPlayerManager()->GetAt(pStreamIn.iPlayerId)->ProcessStreamIn(pStreamIn.iForPlayerId);
+			bFindPublicIsBlocked = true;
 		} else {
 			// call hooked callback
 			ret = pfn_amx_Exec(amx, retval, index);
 		}
+
+		bHookIsExec = true;
 	} else if (bStreamOut) {
 		bStreamOut = false;
 
 		if (pServer->GetPlayerManager()->IsPlayerConnectedEx(pStreamIn.iPlayerId)) {
 			// call custom callback
 			pServer->GetPlayerManager()->GetAt(pStreamIn.iPlayerId)->ProcessStreamOut(pStreamIn.iForPlayerId);
+			bFindPublicIsBlocked = true;
 		} else {
 			// call hooked callback
 			ret = pfn_amx_Exec(amx, retval, index);
 		}
+
+		bHookIsExec = true;
 	} else {
 		ret = pfn_amx_Exec(amx, retval, index);
 	}
@@ -262,7 +285,13 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 void CHooks::InstallHooks()
 {
 	// Reset public flag
+	bHookIsExec = false;
+	bFindPublicIsBlocked = false;
+	bIsPublicFound = false;
 	bGiveDamage = false;
+	bWeaponShot = false;
+	bStreamIn = false;
+	bStreamOut = false;
 
 	// Find the function pointers
 	BYTE *pFindPublic = *(BYTE **)((DWORD)pAMXFunctions + PLUGIN_AMX_EXPORT_FindPublic * 4);
