@@ -1270,7 +1270,7 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float f
 	float fMoveSpeed = 0.0f;
 
 	if (iType == MOVE_TYPE_WALK || iType == MOVE_TYPE_RUN || iType == MOVE_TYPE_SPRINT) {
-		wLRKey = KEY_UP;
+		wUDKey = KEY_UP;
 
 		if (iType == MOVE_TYPE_RUN) {
 			fMoveSpeed = MOVE_SPEED_RUN;
