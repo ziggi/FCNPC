@@ -15,6 +15,8 @@ extern logprintf_t  logprintf;
 extern void         *pAMXFunctions;
 
 BYTE bytePushCount;
+char szPreviousFuncName[32];
+bool bHookIsEnded;
 
 // give damage
 bool bGiveDamage;
@@ -73,20 +75,31 @@ amx_Exec_t pfn_amx_Exec = NULL;
 
 int amx_FindPublic_Hook(AMX *amx, const char *funcname, int *index)
 {
+	pfn_amx_FindPublic = (amx_FindPublic_t)(subhook_get_trampoline(hookFindPublic));
+
+	if (!strcmp(funcname, szPreviousFuncName)) {
+		return pfn_amx_FindPublic(amx, funcname, index);
+	}
+
 	if (!strcmp(funcname, "OnPlayerGiveDamage")) {
+		bHookIsEnded = true;
 		bGiveDamage = true;
 	} else if (!strcmp(funcname, "OnPlayerWeaponShot")) {
+		bHookIsEnded = true;
 		bWeaponShot = true;
 	} else if (!strcmp(funcname, "OnPlayerStreamIn")) {
+		bHookIsEnded = true;
 		bStreamIn = true;
 	} else if (!strcmp(funcname, "OnPlayerStreamOut")) {
+		bHookIsEnded = true;
 		bStreamOut = true;
 	}
 
+	if (bHookIsEnded) {
+		bHookIsEnded = false;
+		strlcpy(szPreviousFuncName, funcname, sizeof(szPreviousFuncName));
+	}
 	bytePushCount = 0;
-
-	pfn_amx_FindPublic = (amx_FindPublic_t)(subhook_get_trampoline(hookFindPublic));
-
 	return pfn_amx_FindPublic(amx, funcname, index);
 }
 
