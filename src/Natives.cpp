@@ -2280,6 +2280,9 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_InitMapAndreas(AMX *amx, cell *params)
 	CMapAndreas *pAddress = (CMapAndreas*)params[1];
 
 	// Set the address
-	pServer->SetMapAndreas(new CMapAndreas(pAddress));
-	return 1;
+	if (pAddress != NULL) {
+		pServer->SetMapAndreas(new CMapAndreas(pAddress));
+		return 1;
+	}
+	return 0;
 }
