@@ -1375,8 +1375,14 @@ void CPlayerData::AimAt(CVector vecPoint, bool bShoot, DWORD dwShootDelay, bool 
 	float fXSquare = vecDistance.fX * vecDistance.fX;
 	float fYSquare = vecDistance.fY * vecDistance.fY;
 	float fZSquare = vecDistance.fZ * vecDistance.fZ;
-	float fZAngle = -acos((fXSquare + fYSquare) / (sqrt(fXSquare + fYSquare + fZSquare) * sqrt(fXSquare + fYSquare))) + 0.1f;
-	
+	float fZAngle = (fXSquare + fYSquare) / (sqrt(fXSquare + fYSquare + fZSquare) * sqrt(fXSquare + fYSquare));
+	if (fZAngle > 1.0) {
+		fZAngle = 1.0;
+	} else if (fZAngle < -1.0) {
+		fZAngle = -1.0;
+	}
+	fZAngle = -acos(fZAngle);
+
 	// Get the destination angle
 	vecDistance /= fDistance;
 
