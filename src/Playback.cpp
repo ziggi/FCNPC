@@ -63,7 +63,7 @@ bool CPlayback::Initialize()
 	fread(&dwFile, sizeof(DWORD), 1, m_pFile);
 	fread(&iPlaybackType, sizeof(int), 1, m_pFile);
 	// Save the playback type
-	if (iPlaybackType < PLAYBACK_TYPE_DRIVER || iPlaybackType > PLAYBACK_TYPE_ONFOOT) {
+	if (iPlaybackType != PLAYBACK_TYPE_DRIVER && iPlaybackType != PLAYBACK_TYPE_ONFOOT) {
 		fclose(m_pFile);
 		return false;
 	}
@@ -95,7 +95,7 @@ bool CPlayback::Process(CPlayerData *pPlayerData)
 			pPlayerData->SetVehicleSync(&m_vehicleSyncData);
 			// Update the player
 			pPlayerData->UpdateSync(UPDATE_STATE_DRIVER);
-		} else {
+		} else if (m_iPlaybackType == PLAYBACK_TYPE_ONFOOT) {
 			// Set the state
 			pPlayerData->SetState(PLAYER_STATE_ONFOOT);
 			// Pause the sync data
@@ -143,7 +143,7 @@ bool CPlayback::Process(CPlayerData *pPlayerData)
 
 			// Update the player
 			pPlayerData->Update(UPDATE_STATE_DRIVER);
-		} else {
+		} else if (m_iPlaybackType == PLAYBACK_TYPE_ONFOOT) {
 			// Read the on foot sync data
 			CSyncData syncData;
 			if (!fread(&syncData, sizeof(CSyncData), 1, m_pFile)) {
