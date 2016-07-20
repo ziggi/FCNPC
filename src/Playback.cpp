@@ -123,7 +123,12 @@ bool CPlayback::Process(CPlayerData *pPlayerData)
 			}
 
 			// Get the vehicle interface
-			CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[pPlayerData->GetVehicleId()];
+			int vehicleid = pPlayerData->GetVehicleId();
+			if (vehicleid == INVALID_VEHICLE_ID) {
+				return false;
+			}
+
+			CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[vehicleid];
 
 			// Apply the sync data
 			pPlayerData->SetState(PLAYER_STATE_DRIVER);
