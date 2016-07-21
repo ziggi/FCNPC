@@ -114,7 +114,7 @@ public:
 	void ApplyAnimation(char *szAnimationLib, char *szAnimationName, float fDelta, bool bLoop, bool bLockX, bool bLockY, bool bFreeze, int iTime);
 	void ClearAnimations();
 
-	bool GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float fRadius = 0.0, bool bSetAngle = true);
+	bool GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f);
 	void StopMoving();
 	bool IsMoving();
 

@@ -1261,7 +1261,7 @@ void CPlayerData::GetKeys(WORD *pwUDAnalog, WORD *pwLRAnalog, DWORD *pdwKeys)
 	*pdwKeys = m_pPlayer->dwKeys;
 }
 
-bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float fRadius, bool bSetAngle)
+bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float fRadius, bool bSetAngle, float fSpeed)
 {
 	// Validate the movement type
 	if (iType == MOVE_TYPE_AUTO) {
@@ -1283,24 +1283,39 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float f
 	WORD wUDKey = m_pPlayer->wUDAnalog;
 	WORD wLRKey = m_pPlayer->wLRAnalog;
 	DWORD dwMoveKey = m_pPlayer->dwKeys;
-	float fMoveSpeed = 0.0f;
 
 	if (iType == MOVE_TYPE_WALK || iType == MOVE_TYPE_RUN || iType == MOVE_TYPE_SPRINT) {
 		wUDKey = KEY_UP;
 
-		if (iType == MOVE_TYPE_RUN) {
-			fMoveSpeed = MOVE_SPEED_RUN;
-			dwMoveKey = KEY_NONE;
-		} else if (iType == MOVE_TYPE_WALK) {
-			fMoveSpeed = MOVE_SPEED_WALK;
-			dwMoveKey = KEY_WALK;
-		} else if (iType == MOVE_TYPE_SPRINT) {
-			fMoveSpeed = MOVE_SPEED_SPRINT;
-			dwMoveKey = KEY_SPRINT;
+		if (fSpeed == -1.0f) {
+			if (iType == MOVE_TYPE_RUN) {
+				fSpeed = MOVE_SPEED_RUN;
+				dwMoveKey = KEY_NONE;
+			} else if (iType == MOVE_TYPE_WALK) {
+				fSpeed = MOVE_SPEED_WALK;
+				dwMoveKey = KEY_WALK;
+			} else if (iType == MOVE_TYPE_SPRINT) {
+				fSpeed = MOVE_SPEED_SPRINT;
+				dwMoveKey = KEY_SPRINT;
+			}
+		} else {
+			if (fSpeed >= MOVE_SPEED_SPRINT) {
+				iType = MOVE_TYPE_SPRINT;
+				dwMoveKey = KEY_SPRINT;
+			} else if (fSpeed >= MOVE_SPEED_RUN) {
+				iType = MOVE_TYPE_RUN;
+				dwMoveKey = KEY_NONE;
+			} else if (fSpeed >= MOVE_SPEED_WALK) {
+				iType = MOVE_TYPE_WALK;
+				dwMoveKey = KEY_WALK;
+			}
 		}
 	} else if (iType == MOVE_TYPE_DRIVE) {
-		fMoveSpeed = m_pPlayer->vecVelocity.fX;
 		dwMoveKey = KEY_SPRINT;
+
+		if (fSpeed == -1.0f) {
+			fSpeed = 1.0f;
+		}
 	}
 
 	// Set the moving keys
@@ -1319,7 +1334,7 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float f
 		SetAngle(CMath::RadiansToDegree(atan2(vecFront.fY, vecFront.fX)));
 	}
 	// Set the moving velocity
-	vecFront *= (fMoveSpeed / 100.0f); // Step per 1ms
+	vecFront *= (fSpeed / 100.0f); // Step per 1ms
 	SetVelocity(vecFront);
 	// Calculate the moving time
 	m_dwMoveTime = (DWORD)(fDistance / vecFront.Length());
