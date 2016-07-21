@@ -251,6 +251,22 @@ void CPlayerData::Update(int iState)
 
 	// Update onfoot state
 	if (iState == UPDATE_STATE_ONFOOT && (byteState == PLAYER_STATE_ONFOOT || byteState == PLAYER_STATE_ENTER_VEHICLE_DRIVER || byteState == PLAYER_STATE_ENTER_VEHICLE_PASSENGER)) {
+		// Is NPC is surfing
+		if (m_wSurfingInfo != 0) {
+			int iVehicleId = m_wSurfingInfo;
+			if (iVehicleId >= 1 && iVehicleId <= MAX_VEHICLES) {
+				m_pPlayer->vecPosition = pNetGame->pVehiclePool->pVehicle[iVehicleId]->vecPosition + m_vecSurfing;
+			} else {
+				int iObjectId = m_wSurfingInfo - MAX_VEHICLES;
+				if (iObjectId >= 0 && iObjectId < MAX_OBJECTS) {
+					if (pNetGame->pObjectPool->bObjectSlotState[iObjectId]) {
+						m_pPlayer->vecPosition = pNetGame->pObjectPool->pObjects[iObjectId]->matWorld.pos + m_vecSurfing;
+					} else if (pNetGame->pObjectPool->bPlayerObjectSlotState[m_playerId][iObjectId]) {
+						m_pPlayer->vecPosition = pNetGame->pObjectPool->pPlayerObjects[m_playerId][iObjectId]->matWorld.pos + m_vecSurfing;
+					}
+				}
+			}
+		}
 		// Set the sync position
 		m_pPlayer->syncData.vecPosition = m_pPlayer->vecPosition;
 		// Set the sync velocity vector
