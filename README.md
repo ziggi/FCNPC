@@ -179,6 +179,7 @@ native FCNPC_SetSurfingObject(npcid, objectid);
 native FCNPC_GetSurfingObject(npcid);
 native FCNPC_SetSurfingPlayerObject(npcid, objectid);
 native FCNPC_GetSurfingPlayerObject(npcid);
+native FCNPC_StopSurfing(npcid);
 
 native FCNPC_StartPlayingPlayback(npcid, file[]);
 native FCNPC_StopPlayingPlayback(npcid);

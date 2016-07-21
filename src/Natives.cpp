@@ -1987,6 +1987,24 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetSurfingPlayerObject(AMX *amx, cell *para
 	return pServer->GetPlayerManager()->GetAt(iNPCId)->GetSurfingPlayerObject();
 }
 
+// native FCNPC_StopSurfing(npcid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_StopSurfing(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_StopSurfing");
+
+	// Get params
+	int iNPCId = (int)params[1];
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
+		return 0;
+	}
+
+	// Get the surfing object
+	pServer->GetPlayerManager()->GetAt(iNPCId)->StopSurfing();
+	return 1;
+}
+
 cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleReloading(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_ToggleReloading");

@@ -157,6 +157,7 @@ public:
 	int GetSurfingObject();
 	void SetSurfingPlayerObject(int iObjectId);
 	int GetSurfingPlayerObject();
+	void StopSurfing();
 
 	bool StartPlayingPlayback(char *szFile);
 	void StopPlayingPlayback();

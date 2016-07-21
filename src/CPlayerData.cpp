@@ -1851,6 +1851,18 @@ int CPlayerData::GetSurfingPlayerObject()
 	return INVALID_OBJECT_ID;
 }
 
+void CPlayerData::StopSurfing()
+{
+	int iObjectId = m_wSurfingInfo - MAX_VEHICLES;
+	if (iObjectId >= 0 && iObjectId < MAX_OBJECTS) {
+		pNetGame->pObjectPool->bObjectSlotState[iObjectId] = false;
+		pNetGame->pObjectPool->bPlayerObjectSlotState[m_playerId][iObjectId] = false;
+	}
+
+	m_wSurfingInfo = 0;
+	m_vecSurfing = CVector(0.0f, 0.0f, 0.0f);
+}
+
 bool CPlayerData::StartPlayingPlayback(char *szFile)
 {
 	// Make sure the player is not already Playing
