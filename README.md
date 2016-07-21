@@ -1,9 +1,11 @@
 # FCNPC - Fully Controllable NPC
 [![GitHub version](https://badge.fury.io/gh/Open-GTO%2FFCNPC.svg)](https://badge.fury.io/gh/Open-GTO%2FFCNPC) [![Build Status](https://travis-ci.org/Open-GTO/FCNPC.svg?branch=master)](https://travis-ci.org/Open-GTO/FCNPC)
 
-By OrMisicL
+This is a fork of [original repository](https://github.com/OrMisicL/FCNPC) by [OrMisicL](https://github.com/OrMisicL/).
 
-[Forum thread](http://forum.sa-mp.com/showthread.php?t=428066)
+If you found a bug or get crash, create issue in [issues section](https://github.com/Open-GTO/FCNPC/issues) with your **crashlog** and your **Pawn script**.
+
+Discussion in [forum thread](http://forum.sa-mp.com/showthread.php?t=428066). Or in [Russian forum thread](http://forum.sa-mp.com/showthread.php?t=602965).
 
 # Usage notes
 If you want to see that your scripts will work correctly, you need to declare this callback functions at least in one of your scripts:
@@ -13,9 +15,9 @@ If you want to see that your scripts will work correctly, you need to declare th
 - OnPlayerStreamOut
 
 # Building (Windows)
-You can use Visual Studio for build too. Just use CMake for generate VS project:
+You can use Visual Studio for build. Just use CMake for generate VS project:
 ```bash
-cmake -G "Visual Studio 12 2013"
+cmake -G "Visual Studio 12"
 ```
 
 # Building (Linux)
