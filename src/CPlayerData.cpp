@@ -524,6 +524,7 @@ void CPlayerData::Kill(WORD wKillerId, BYTE byteReason)
 	// Stop moving and aiming
 	StopMoving();
 	StopAim();
+	SetKeys(KEY_NONE, KEY_NONE, KEY_NONE);
 	// Kill the NPC
 	CFunctions::KillPlayer(m_pPlayer, byteReason, wKillerId);
 	// Set the NPC state
