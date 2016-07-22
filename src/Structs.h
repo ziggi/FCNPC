@@ -71,14 +71,14 @@ typedef void(*VARCHANGEFUNC)();
 /* -------------------------------------------------------- */
 typedef struct _MATRIX4X4
 {
-	CVector right;
-	DWORD  flags;
-	CVector up;
-	float  pad_u;
-	CVector at;
-	float  pad_a;
-	CVector pos;
-	float  pad_p;
+	CVector right;	// 0 - 12
+	DWORD  flags;	// 12 - 16
+	CVector up;		// 16 - 28
+	float  pad_u;	// 28 - 32
+	CVector at;		// 32 - 44
+	float  pad_a;	// 44 - 48
+	CVector pos;	// 48 - 60
+	float  pad_p;	// 60 - 64
 } MATRIX4X4, *PMATRIX4X4;
 
 struct ConsoleVariable_s
@@ -508,7 +508,9 @@ struct CVehicle
     BYTE			bDeathNotification; // 255 - 256
     BYTE			bOccupied;			// 256 - 257
     DWORD			vehOccupiedTick;	// 257 - 261
-    DWORD			vehRespawnTick;		// 261 -265
+    DWORD			vehRespawnTick;		// 261 - 265
+	BYTE			sirenEnabled;		// 265 - 266
+	BYTE			newSirenState;		// 266 - 267 passed to OnVehicleSirenStateChange
 };
 
 struct CVehiclePool
@@ -543,7 +545,7 @@ struct CPickupPool
 // CObject
 /* -------------------------------------------------------- */
 
-struct CObjectMaterial // sizeof = 212
+struct CObjectMaterial // sizeof = 215
 {
 	BYTE			byteUsed;				// 197 - 198
 	BYTE			byteSlot;				// 198 - 199
@@ -560,7 +562,7 @@ struct CObjectMaterial // sizeof = 212
 	BYTE			byteAlignment;			// 411 - 412
 };
 
-struct CObject // sizeof = 3700
+struct CObject // sizeof = 3712
 {
 	WORD			wObjectID;			// 0 - 2
 	int				iModel;				// 2 - 6
@@ -571,7 +573,7 @@ struct CObject // sizeof = 3700
 	BYTE			bIsMoving;			// 150 - 151
 	BYTE			bNoCameraCol;		// 151 - 152
 	float			fMoveSpeed;			// 152 - 156
-	DWORD			unk_4;				// 156 -160
+	DWORD			unk_4;				// 156 - 160
 	float			fDrawDistance;		// 160 - 164
 	WORD			wAttachedVehicleID;	// 164 - 166
 	WORD			wAttachedObjectID;	// 166 - 168
@@ -976,7 +978,7 @@ public:
 	virtual bool Start(unsigned short AllowedPlayers, unsigned int depreciated, int threadSleepTimer, unsigned short port, const char *forceHostAddress = 0) = 0; // 4
 	virtual void DisableSecurity( void ); // 8
 	virtual void SetPassword( const char *_password );	// 12
-	virtual bool HasPassword( void );	// 16
+	virtual bool HasPassword( void );	// 16 these two may be switched
 	virtual void Disconnect( unsigned int blockDuration, unsigned char orderingChannel=0 );	// 20
 	virtual bool Send_ASD(const char *data, const int length, int priority, int reliability, char orderingChannel, PlayerID playerId, bool broadcast); // 24
 	virtual bool Send(RakNet::BitStream* parameters, int priority, int reliability, unsigned orderingChannel, PlayerID playerId, bool broadcast);	// 28
@@ -1024,28 +1026,41 @@ public:
 	virtual void _C4();
 	virtual void _C8();
 	virtual void _CC();
-	virtual const char* GetLocalIP( unsigned int index );
-	virtual PlayerID GetInternalID( void ) const;
-	virtual void PushBackPacket( Packet *packet, bool pushAtHead );
-	virtual void SetRouterInterface( void *routerInterface );
-	virtual void RemoveRouterInterface( void *routerInterface );
-	virtual int GetIndexFromPlayerID( PlayerID playerId ); // E4
+	virtual const char* GetLocalIP( unsigned int index ); // 208
+	virtual PlayerID GetInternalID( void ) const; // 212
+	virtual void PushBackPacket( Packet *packet, bool pushAtHead ); // 216
+	virtual void SetRouterInterface( void *routerInterface ); // 220
+	virtual void RemoveRouterInterface( void *routerInterface ); // 224
+	virtual int GetIndexFromPlayerID( PlayerID playerId ); // E4 - 228
 	virtual PlayerID GetPlayerIDFromIndex( int index ); // E8 - 232 - 236
-	virtual void UNKNOWN(void); // 236 - 240
+	virtual void UNKNOWN(void); // 236 - 240 ; possibly GetPlayerIPFromIndex(struct in_addr *, _DWORD)
 	virtual void AddToBanList( const char *IP, unsigned int milliseconds=0 ); // 240 - 244
-	virtual void RemoveFromBanList( const char *IP );
-	virtual void ClearBanList( void );
-	virtual bool IsBanned( const char *IP );
-	virtual bool IsActivePlayerID( const PlayerID playerId );
-	virtual void SetTimeoutTime( RakNetTime timeMS, const PlayerID target );
-	virtual bool SetMTUSize( int size );
-	virtual int GetMTUSize( void ) const;
-	virtual void AdvertiseSystem( const char *host, unsigned short remotePort, const char *data, int dataLength );
-	virtual RakNetStatisticsStruct * const GetStatistics( const PlayerID playerId );
-	virtual void ApplyNetworkSimulator( double maxSendBPS, unsigned short minExtraPing, unsigned short extraPingVariance);
+	virtual void RemoveFromBanList( const char *IP ); // 244
+	virtual void ClearBanList( void ); // 248
+	virtual bool _IsBanned( const char *IP ); // 252
+	virtual bool IsActivePlayerID( const PlayerID playerId ); // 256
+	virtual void SetTimeoutTime( RakNetTime timeMS, const PlayerID target ); // 260
+	virtual bool SetMTUSize( int size ); // 264
+	virtual int GetMTUSize( void ) const; // 268
+	virtual void AdvertiseSystem( const char *host, unsigned short remotePort, const char *data, int dataLength ); // 272
+	virtual RakNetStatisticsStruct * const GetStatistics( const PlayerID playerId ); // 276
+	virtual void ApplyNetworkSimulator( double maxSendBPS, unsigned short minExtraPing, unsigned short extraPingVariance); // 280
 };
 
 #else
+
+struct RakBanStruct
+{
+	char *IP;
+	unsigned int timeout;
+};
+
+struct RakBanList
+{
+	RakBanStruct* *listArray;
+	unsigned int list_size;
+	unsigned int allocation_size;
+};
 
 class RakServer
 {
@@ -1113,8 +1128,10 @@ public:
 	virtual PlayerID GetPlayerIDFromIndex( int index ); // F0 - 240 - 244
 	virtual void AddToBanList( const char *IP, unsigned int milliseconds=0 ); // 244 - 248
 	virtual void RemoveFromBanList( const char *IP ); // 248 - 252
-	virtual void ClearBanList( void );
-	virtual bool IsBanned( const char *IP );
+	virtual void ClearBanList( void ); // 252
+private:
+	virtual bool _IsBanned( const char *IP ); // 256
+public:
 	virtual bool IsActivePlayerID( const PlayerID playerId );
 	virtual void SetTimeoutTime( RakNetTime timeMS, const PlayerID target );
 	virtual bool SetMTUSize( int size );
@@ -1122,6 +1139,11 @@ public:
 	virtual void AdvertiseSystem( const char *host, unsigned short remotePort, const char *data, int dataLength );
 	virtual RakNetStatisticsStruct * const GetStatistics( const PlayerID playerId );
 	virtual void ApplyNetworkSimulator( double maxSendBPS, unsigned short minExtraPing, unsigned short extraPingVariance);
+
+	RakBanList* GetBanList()
+	{
+		return reinterpret_cast<RakBanList*>(((char*)this)+4+929);
+	}
 };
 #endif
 
