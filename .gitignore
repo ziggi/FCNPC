@@ -1,5 +1,5 @@
 # Pawn
-pawn/*.ini
+pawn/*.inc
 
 # binary
 *.dll
