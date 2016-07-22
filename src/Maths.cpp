@@ -20,22 +20,12 @@ float CMath::GetDistanceBetween3DPoints(CVector vecPosition, CVector _vecPositio
 	return ((float)sqrt(fSX + fSY + fSZ));
 }
 
-float CMath::GetDistanceFromRayToPoint(CVector p, CVector a, CVector b)
+float CMath::GetDistanceFromRayToPoint(CVector vecStartPosition, CVector vecEndPosition, CVector vecPoint)
 {
-	CVector n = b - a;
-	CVector pa = a - p;
-
-	float c = n.DotProduct(&pa);
-
-	if (c > 0.0f) {
-		return pa.DotProduct(&pa);
-	}
-
-	CVector e = pa - n * (c / n.DotProduct(&n));
-
-	return e.DotProduct(&e);
+	CVector vecDirection = (vecEndPosition - vecStartPosition) / GetDistanceBetween3DPoints(vecStartPosition, vecEndPosition);
+	CVector vecTemp = vecDirection * GetDistanceBetween3DPoints(vecStartPosition, vecPoint) + vecStartPosition;
+	return GetDistanceBetween3DPoints(vecTemp, vecPoint);
 }
-
 
 float CMath::Max(const float a, const float b)
 {

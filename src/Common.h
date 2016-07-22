@@ -17,6 +17,12 @@
 typedef void (* logprintf_t)(const char *szFormat, ...);
 extern logprintf_t          logprintf;
 
+// Settings
+#define SHOOTING_ACCURACY               0.4f
+#define MAX_DAMAGE_DISTANCE             200.0f
+#define MAX_DISTANCE_TO_ENTER_VEHICLE   30.0f
+#define DEFAULT_UPDATE_RATE             50
+
 // General definitions
 #define MAX_NODES           64
 #define MAX_FILTERSCRIPTS   16
@@ -287,11 +293,6 @@ extern logprintf_t          logprintf;
 #define VEHICLE_MODEL_INFO_WHEELSMID (7)
 #define VEHICLE_MODEL_INFO_FRONT_BUMPER_Z (8)
 #define VEHICLE_MODEL_INFO_REAR_BUMPER_Z (9)
-
-// Other
-#define MAX_DAMAGE_DISTANCE             200.0f
-#define MAX_DISTANCE_TO_ENTER_VEHICLE   30.0f
-#define DEFAULT_UPDATE_RATE             50
 
 // Hook functions
 #if defined(WIN32)

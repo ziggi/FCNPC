@@ -184,8 +184,10 @@ void CFunctions::PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE iWe
 
 			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[i];
 
-			if (CMath::GetDistanceFromRayToPoint(vecPoint, vecPosition, pPlayer->vecPosition) < 1.0f &&
-			        CMath::GetDistanceBetween3DPoints(vecPosition, pPlayer->vecPosition) < MAX_DAMAGE_DISTANCE) {
+			bool bIsPlayerOnRay = CMath::GetDistanceFromRayToPoint(vecPosition, vecPoint, pPlayer->vecPosition) < SHOOTING_ACCURACY;
+			bool bIsPlayerInDamageRange = bIsPlayerOnRay && CMath::GetDistanceBetween3DPoints(vecPosition, pPlayer->vecPosition) < MAX_DAMAGE_DISTANCE;
+
+			if (bIsPlayerOnRay && bIsPlayerInDamageRange) {
 				bulletSyncData.byteHitType = BULLET_HIT_TYPE_PLAYER;
 				bulletSyncData.wHitID = i;
 				break;

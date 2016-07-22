@@ -21,7 +21,7 @@ class CMath
 {
 public:
 	static float GetDistanceBetween3DPoints(CVector vecPosition, CVector _vecPosition);
-	static float GetDistanceFromRayToPoint(const CVector p, const CVector v, const CVector w);
+	static float GetDistanceFromRayToPoint(CVector vecStartPosition, CVector vecEndPosition, CVector vecPoint);
 
 	static void  GetQuaternionFromMatrix(MATRIX4X4 matrix, float *fQuaternion);
 	static void  GetMatrixFromQuaternion(float *fQuaternion, MATRIX4X4 *matrix);
