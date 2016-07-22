@@ -195,6 +195,17 @@ void CFunctions::PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE iWe
 		}
 	}
 
+	// if it is a NPC
+	if (bulletSyncData.byteHitType == BULLET_HIT_TYPE_PLAYER && pServer->GetPlayerManager()->IsPlayerConnectedEx(bulletSyncData.wHitID)) {
+		CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(bulletSyncData.wHitID);
+
+		if (!pPlayerData->IsInvulnerable()) {
+			SWeaponInfo sWeaponInfo = CWeaponInfo::GetDefaultInfo(iWeaponId);
+
+			pPlayerData->ProcessDamage(iPlayerId, sWeaponInfo.fDamage, iWeaponId, BODY_PART_TORSO);
+		}
+	}
+
 	// Write it to BitStream
 	RakNet::BitStream bsSend;
 	bsSend.Write((BYTE)ID_BULLET_SYNC);
