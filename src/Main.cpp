@@ -176,6 +176,7 @@ AMX_NATIVE_INFO PluginNatives[ ] = {
 	{"FCNPC_StopAim", CNatives::FCNPC_StopAim},
 	{"FCNPC_MeleeAttack", CNatives::FCNPC_MeleeAttack},
 	{"FCNPC_StopAttack", CNatives::FCNPC_StopAttack},
+	{"FCNPC_IsAttacking", CNatives::FCNPC_IsAttacking},
 	{"FCNPC_IsAiming", CNatives::FCNPC_IsAiming},
 	{"FCNPC_IsShooting", CNatives::FCNPC_IsShooting},
 	{"FCNPC_IsReloading", CNatives::FCNPC_IsReloading},

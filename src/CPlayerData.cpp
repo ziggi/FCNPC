@@ -1529,6 +1529,11 @@ void CPlayerData::StopAttack()
 	SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_NONE);
 }
 
+bool CPlayerData::IsAttacking()
+{
+	return m_bMeleeAttack;
+}
+
 bool CPlayerData::IsAiming()
 {
 	return m_bAiming;

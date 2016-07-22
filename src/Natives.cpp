@@ -1501,6 +1501,21 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAtPlayer(AMX *amx, cell *params)
 	return 0;
 }
 
+cell AMX_NATIVE_CALL CNatives::FCNPC_StopAim(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_StopAim");
+	// Get the NPC id
+	int iNPCId = (int)params[1];
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
+		return 0;
+	}
+
+	// Stop the player aim
+	pServer->GetPlayerManager()->GetAt(iNPCId)->StopAim();
+	return 1;
+}
+
 // native FCNPC_MeleeAttack(npcid, delay = -1, bool:fightstyle = true);
 cell AMX_NATIVE_CALL CNatives::FCNPC_MeleeAttack(AMX *amx, cell *params)
 {
@@ -1535,10 +1550,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StopAttack(AMX *amx, cell *params)
 	return 1;
 }
 
-
-cell AMX_NATIVE_CALL CNatives::FCNPC_StopAim(AMX *amx, cell *params)
+// native FCNPC_IsAttacking(npcid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_IsAttacking(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "FCNPC_StopAim");
+	CHECK_PARAMS(1, "FCNPC_IsAttacking");
 	// Get the NPC id
 	int iNPCId = (int)params[1];
 	// Make sure the player is valid
@@ -1546,9 +1561,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StopAim(AMX *amx, cell *params)
 		return 0;
 	}
 
-	// Stop the player aim
-	pServer->GetPlayerManager()->GetAt(iNPCId)->StopAim();
-	return 1;
+	// Get the player attacking state
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->IsAttacking() ? 1 : 0;
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsAiming(AMX *amx, cell *params)

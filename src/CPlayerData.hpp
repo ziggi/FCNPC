@@ -126,6 +126,7 @@ public:
 	void StopAim();
 	bool MeleeAttack(int iTime, bool bUseFightstyle);
 	void StopAttack();
+	bool IsAttacking();
 	bool IsAiming();
 	bool IsShooting();
 	bool IsReloading();
