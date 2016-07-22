@@ -37,8 +37,21 @@ CServer::~CServer()
 	SAFE_DELETE(m_pMapAndreas);
 }
 
-BYTE CServer::Initialize()
+BYTE CServer::Initialize(AMX *pAMX)
 {
+	// Check include version
+	int iIncludeVersion = 0;
+	int iIndex;
+	if (!amx_FindPubVar(pAMX, "FCNPC_IncludeVersion", &iIndex)) {
+		cell *pAddress = NULL;
+		if (!amx_GetAddr(pAMX, iIndex, &pAddress)) {
+			iIncludeVersion = *pAddress;
+		}
+	}
+	if (iIncludeVersion != INCLUDE_VERSION) {
+		return 6;
+	}
+
 	// Initialize necessary samp functions
 	CFunctions::PreInitialize();
 	// Initialize addresses
@@ -168,7 +181,7 @@ float CServer::GetVehicleAngle(CVehicle *pVehicle)
 
 	bool bIsBadMatrix = pVehicle->vehMatrix.up.fX == 0.0f && pVehicle->vehMatrix.up.fY == 0.0f;
 	bool bIsTrain = pVehicle->customSpawn.iModelID == 537 || pVehicle->customSpawn.iModelID == 538;
-	
+
 	if (bIsBadMatrix || bIsTrain) {
 		fAngle = pVehicle->customSpawn.fRot;
 	} else {
@@ -212,6 +225,6 @@ CVector CServer::GetVehicleSeatPos(CVehicle *pVehicle, int iSeatId)
 	CVector vecSeatPosition(vecSeat.fX * cos(_fAngle) - vecSeat.fY * sin(_fAngle),
 	                        vecSeat.fX * sin(_fAngle) + vecSeat.fY * cos(_fAngle),
 	                        vecSeat.fZ);
-	
+
 	return vecSeatPosition + pServer->GetVehiclePos(pVehicle);
 }

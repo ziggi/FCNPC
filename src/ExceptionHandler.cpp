@@ -63,7 +63,7 @@ long WINAPI CExceptionHandler::ExceptionHandlerCallback(_EXCEPTION_POINTERS *pEx
 	fprintf(pFile, "\nInformation:\n");
 	fprintf(pFile, "  System: %s\n", SYSTEM_NAME);
 	fprintf(pFile, "  SA-MP: %s\n", szSampVersion);
-	fprintf(pFile, "  FCNPC: %s\n", VERSION);
+	fprintf(pFile, "  FCNPC: %s\n", PLUGIN_VERSION);
 
 	fprintf(pFile, "\nFunctions:\n");
 	fprintf(pFile, "  FUNC_CPlayerPool__DeletePlayer: 0x%lx\n", CAddress::FUNC_CPlayerPool__DeletePlayer);
@@ -134,7 +134,7 @@ void CExceptionHandler::ExceptionHandlerCallback(int signum, siginfo_t * info, v
 	fprintf(pFile, "\nInformation:\n");
 	fprintf(pFile, "  System: %s\n", SYSTEM_NAME);
 	fprintf(pFile, "  SA-MP: %s\n", szSampVersion);
-	fprintf(pFile, "  FCNPC: %s\n", VERSION);
+	fprintf(pFile, "  FCNPC: %s\n", PLUGIN_VERSION);
 
 	fprintf(pFile, "\nFunctions:\n");
 	fprintf(pFile, "  FUNC_CPlayerPool__DeletePlayer: 0x%lx\n", CAddress::FUNC_CPlayerPool__DeletePlayer);

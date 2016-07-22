@@ -53,6 +53,10 @@ void CUtils::GetPluginError(BYTE byteError, char *szError, size_t sSize)
 			strlcpy(szError, "Failed to create RPCParams instance", sSize);
 			break;
 
+		case 6:
+			strlcpy(szError, "Include file version does not match plugin version", sSize);
+			break;
+
 		default:
 			strlcpy(szError, "", sSize);
 			break;

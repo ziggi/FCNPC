@@ -30,7 +30,7 @@ public:
 	CServer(eSAMPVersion version);
 	~CServer();
 
-	BYTE Initialize();
+	BYTE Initialize(AMX *pAMX);
 	void Process();
 
 	void SetTickRate(int rate) { m_iTickRate = rate; }

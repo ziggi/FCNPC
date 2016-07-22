@@ -51,7 +51,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	// Print the loading message
 	logprintf("");
 	logprintf("-------------------------------------------------");
-	logprintf("     FCNPC - Fully Controllable NPC v" VERSION "");
+	logprintf("     FCNPC - Fully Controllable NPC v" PLUGIN_VERSION "");
 	logprintf("");
 	logprintf("- Author: OrMisicL");
 	logprintf("- Contributors: ziggi, Neutralneu");
@@ -226,7 +226,7 @@ PLUGIN_EXPORT int PLUGIN_CALL AmxLoad(AMX *pAMX)
 	if (!bServerInit) {
 		// Initialize the server
 		BYTE byteError = 0;
-		if ((byteError = pServer->Initialize()) != 0) {
+		if ((byteError = pServer->Initialize(pAMX)) != 0) {
 			// Get the error
 			char szError[64];
 			CUtils::GetPluginError(byteError, szError, sizeof(szError));

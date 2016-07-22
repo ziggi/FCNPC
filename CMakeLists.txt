@@ -6,8 +6,9 @@ endif ()
 
 project (FCNPC)
 
-set (VERSION "1.0.7")
-add_definitions (-DVERSION="${VERSION}")
+set (INCLUDE_VERSION 107)
+set (PLUGIN_VERSION "1.0.7")
+add_definitions (-DPLUGIN_VERSION="${PLUGIN_VERSION}" -DINCLUDE_VERSION=${INCLUDE_VERSION})
 
 set (CMAKE_SHARED_LIBRARY_PREFIX "")
 
@@ -67,3 +68,4 @@ file (GLOB FCNPC_SRC
 add_library (${PROJECT_NAME} SHARED ${FCNPC_SRC})
 
 target_link_libraries (${PROJECT_NAME} subhook)
+configure_file(pawn/FCNPC.inc.in pawn/FCNPC.inc)
