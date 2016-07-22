@@ -456,6 +456,11 @@ void CPlayerData::UpdateAim()
 				break;
 		}
 		
+		// Is NPC is surfing
+		if (m_wSurfingInfo != 0) {
+			AimAt(m_vecAimAt, m_bShooting, m_dwShootDelay, m_bSetAimAngle);
+		}
+
 		// Update vector pos
 		if (m_byteHitType == BULLET_HIT_TYPE_PLAYER && m_wHitId != INVALID_PLAYER_ID) {
 			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[m_wHitId];
