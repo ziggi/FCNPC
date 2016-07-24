@@ -19,7 +19,7 @@ extern CNetGame *pNetGame;
 CPlayerData::CPlayerData(WORD playerId, char *szName)
 {
 	// Save the player id
-	m_playerId = playerId;
+	m_wPlayerId = playerId;
 	// Save player name
 	SetName(szName);
 	// Reset variables
@@ -69,7 +69,7 @@ CPlayerData::~CPlayerData()
 
 int CPlayerData::GetId()
 {
-	return (int)m_playerId;
+	return (int)m_wPlayerId;
 }
 
 void CPlayerData::Destroy()
@@ -87,19 +87,19 @@ void CPlayerData::Destroy()
 	// Set the player state to none
 	SetState(PLAYER_STATE_NONE);
 	// Remove the player from the SAMP playerpool
-	CFunctions::DeletePlayer(m_playerId);
+	CFunctions::DeletePlayer(m_wPlayerId);
 	// Reset the setup flag
 	m_bSetup = false;
 }
 
 bool CPlayerData::Setup()
 {
-	if (m_playerId == INVALID_PLAYER_ID) {
+	if (m_wPlayerId == INVALID_PLAYER_ID) {
 		return false;
 	}
 
 	// Get the player interface
-	m_pPlayer = pNetGame->pPlayerPool->pPlayer[m_playerId];
+	m_pPlayer = pNetGame->pPlayerPool->pPlayer[m_wPlayerId];
 	// Validate the interface
 	if (!m_pPlayer) {
 		return false;
@@ -140,7 +140,7 @@ bool CPlayerData::Spawn(int iSkinId)
 	m_iLastDamager = INVALID_PLAYER_ID;
 	SetVehicle(INVALID_VEHICLE_ID, 0);
 	// Call the NPC spawn callback
-	CCallbackManager::OnSpawn((int)m_playerId);
+	CCallbackManager::OnSpawn((int)m_wPlayerId);
 	return true;
 }
 
@@ -192,7 +192,7 @@ bool CPlayerData::Respawn()
 	// Reset stats
 	m_iLastDamager = INVALID_PLAYER_ID;
 	// Call the NPC spawn callback
-	CCallbackManager::OnRespawn((int)m_playerId);
+	CCallbackManager::OnRespawn((int)m_wPlayerId);
 	return true;
 }
 
@@ -258,16 +258,16 @@ void CPlayerData::Update(int iState)
 	if (iState == UPDATE_STATE_ONFOOT && (byteState == PLAYER_STATE_ONFOOT || byteState == PLAYER_STATE_ENTER_VEHICLE_DRIVER || byteState == PLAYER_STATE_ENTER_VEHICLE_PASSENGER)) {
 		// Is NPC is surfing
 		if (m_wSurfingInfo != 0) {
-			int iVehicleId = m_wSurfingInfo;
-			if (iVehicleId >= 1 && iVehicleId <= MAX_VEHICLES) {
-				m_pPlayer->vecPosition = pNetGame->pVehiclePool->pVehicle[iVehicleId]->vecPosition + m_vecSurfing;
+			WORD wVehicleId = m_wSurfingInfo;
+			if (wVehicleId >= 1 && wVehicleId <= MAX_VEHICLES) {
+				m_pPlayer->vecPosition = pNetGame->pVehiclePool->pVehicle[wVehicleId]->vecPosition + m_vecSurfing;
 			} else {
-				int iObjectId = m_wSurfingInfo - MAX_VEHICLES;
-				if (iObjectId >= 0 && iObjectId < MAX_OBJECTS) {
-					if (pNetGame->pObjectPool->bObjectSlotState[iObjectId]) {
-						m_pPlayer->vecPosition = pNetGame->pObjectPool->pObjects[iObjectId]->matWorld.pos + m_vecSurfing;
-					} else if (pNetGame->pObjectPool->bPlayerObjectSlotState[m_playerId][iObjectId]) {
-						m_pPlayer->vecPosition = pNetGame->pObjectPool->pPlayerObjects[m_playerId][iObjectId]->matWorld.pos + m_vecSurfing;
+				WORD wObjectId = m_wSurfingInfo - MAX_VEHICLES;
+				if (wObjectId >= 0 && wObjectId < MAX_OBJECTS) {
+					if (pNetGame->pObjectPool->bObjectSlotState[wObjectId]) {
+						m_pPlayer->vecPosition = pNetGame->pObjectPool->pObjects[wObjectId]->matWorld.pos + m_vecSurfing;
+					} else if (pNetGame->pObjectPool->bPlayerObjectSlotState[m_wPlayerId][wObjectId]) {
+						m_pPlayer->vecPosition = pNetGame->pObjectPool->pPlayerObjects[m_wPlayerId][wObjectId]->matWorld.pos + m_vecSurfing;
 					}
 				}
 			}
@@ -375,26 +375,26 @@ void CPlayerData::Update(int iState)
 void CPlayerData::UpdateAim()
 {
 	if (m_bAiming) {
-		int iWeaponId = m_pPlayer->syncData.byteWeapon;
+		BYTE byteWeaponId = m_pPlayer->syncData.byteWeapon;
 		int iWeaponType = GetWeaponType(m_pPlayer->syncData.byteWeapon);
 
 		// Set the camera mode
 		if (iWeaponType == WEAPON_TYPE_MELEE) {
 			m_pPlayer->aimSyncData.byteCameraMode = 4;
-		} else if (iWeaponId == WEAPON_SNIPER) {
+		} else if (byteWeaponId == WEAPON_SNIPER) {
 			m_pPlayer->aimSyncData.byteCameraMode = 7;
-		} else if (iWeaponId == WEAPON_CAMERA) {
+		} else if (byteWeaponId == WEAPON_CAMERA) {
 			m_pPlayer->aimSyncData.byteCameraMode = 46;
-		} else if (iWeaponId == WEAPON_ROCKETLAUNCHER) {
+		} else if (byteWeaponId == WEAPON_ROCKETLAUNCHER) {
 			m_pPlayer->aimSyncData.byteCameraMode = 8;
-		} else if (iWeaponId == WEAPON_HEATSEEKER) {
+		} else if (byteWeaponId == WEAPON_HEATSEEKER) {
 			m_pPlayer->aimSyncData.byteCameraMode = 51;
 		} else {
 			m_pPlayer->aimSyncData.byteCameraMode = 53;
 		}
 
 		// Set the weapon state
-		switch (iWeaponId) {
+		switch (byteWeaponId) {
 			case 0:
 			case WEAPON_BRASSKNUCKLE:
 			case WEAPON_GOLFCLUB:
@@ -482,9 +482,9 @@ bool CPlayerData::IsSpawned()
 	return m_bSpawned;
 }
 
-bool CPlayerData::IsStreamedIn(int iForPlayerId)
+bool CPlayerData::IsStreamedIn(WORD wForPlayerId)
 {
-	return pNetGame->pPlayerPool->pPlayer[iForPlayerId]->byteStreamedIn[m_playerId] != 0;
+	return pNetGame->pPlayerPool->pPlayer[wForPlayerId]->byteStreamedIn[m_wPlayerId] != 0;
 }
 
 bool CPlayerData::SetState(BYTE byteState)
@@ -525,7 +525,7 @@ void CPlayerData::Kill(WORD wKillerId, BYTE byteReason)
 	// Set the NPC state
 	SetState(PLAYER_STATE_WASTED);
 	// Call the NPC death callback
-	CCallbackManager::OnDeath((int)m_playerId, wKillerId, byteReason);
+	CCallbackManager::OnDeath((int)m_wPlayerId, wKillerId, byteReason);
 }
 
 void CPlayerData::Process()
@@ -535,8 +535,8 @@ void CPlayerData::Process()
 		return;
 	}
 
-	if (!pServer->GetPlayerManager()->IsPlayerConnected(m_playerId)) {
-		pServer->GetPlayerManager()->DeletePlayer(m_playerId);
+	if (!pServer->GetPlayerManager()->IsPlayerConnected(m_wPlayerId)) {
+		pServer->GetPlayerManager()->DeletePlayer(m_wPlayerId);
 		return;
 	}
 
@@ -632,7 +632,7 @@ void CPlayerData::Process()
 					m_dwEnterExitTickCount = dwThisTick;
 					m_bEntering = true;
 					// Check whether the player is jacking the vehicle or not
-					if (pServer->IsVehicleSeatOccupied((int)m_playerId, (int)m_wVehicleToEnter, (int)m_byteSeatToEnter)) {
+					if (pServer->IsVehicleSeatOccupied((int)m_wPlayerId, (int)m_wVehicleToEnter, (int)m_byteSeatToEnter)) {
 						m_bJacking = true;
 					}
 
@@ -642,7 +642,7 @@ void CPlayerData::Process()
 					// Are we playing a node ?
 					if (m_bPlayingNode) {
 						// Check the return value of the point finish callback
-						if (CCallbackManager::OnFinishNodePoint((int)m_playerId, m_iNodePoint)) {
+						if (CCallbackManager::OnFinishNodePoint((int)m_wPlayerId, m_iNodePoint)) {
 							// Process the next position
 							int iNewPoint = m_pNode->Process(this, m_iNodePoint, m_iNodeLastPoint, m_iNodeType, m_vecNodeVelocity);
 							// Update the points
@@ -653,7 +653,7 @@ void CPlayerData::Process()
 						}
 					} else {
 						// Call the reach destination callback
-						CCallbackManager::OnReachDestination((int)m_playerId);
+						CCallbackManager::OnReachDestination((int)m_wPlayerId);
 					}
 				}
 			}
@@ -669,7 +669,7 @@ void CPlayerData::Process()
 				m_bEntering = false;
 				m_bJacking = false;
 				// Call the vehicle entry complete callback
-				CCallbackManager::OnVehicleEntryComplete((int)m_playerId, (int)m_wVehicleToEnter, (int)m_byteSeatToEnter);
+				CCallbackManager::OnVehicleEntryComplete((int)m_wPlayerId, (int)m_wVehicleToEnter, (int)m_byteSeatToEnter);
 				// Set the player vehicle and seat
 				SetVehicle(m_wVehicleToEnter, m_byteSeatToEnter);
 				// Set the angle
@@ -755,7 +755,7 @@ void CPlayerData::Process()
 
 					// Send bullet
 					if (GetWeaponType(m_byteWeaponId) == WEAPON_TYPE_SHOOT) {
-						CFunctions::PlayerShoot((int)m_playerId, m_wHitId, m_byteHitType, m_byteWeaponId, m_vecAimAt);
+						CFunctions::PlayerShoot((int)m_wPlayerId, m_wHitId, m_byteHitType, m_byteWeaponId, m_vecAimAt);
 					}
 
 					SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM | KEY_FIRE);
@@ -831,7 +831,7 @@ void CPlayerData::Process()
 				// Are we playing a node ?
 				if (m_bPlayingNode) {
 					// Check the return value of the point finish callback
-					if (CCallbackManager::OnFinishNodePoint((int)m_playerId, m_iNodePoint)) {
+					if (CCallbackManager::OnFinishNodePoint((int)m_wPlayerId, m_iNodePoint)) {
 						// Process the next position
 						int iNewPoint = m_pNode->Process(this, m_iNodePoint, m_iNodeLastPoint, m_iNodeType, m_vecNodeVelocity);
 						// Update the points
@@ -842,7 +842,7 @@ void CPlayerData::Process()
 					}
 				} else {
 					// Call the reach destination callback
-					CCallbackManager::OnReachDestination((int)m_playerId);
+					CCallbackManager::OnReachDestination((int)m_wPlayerId);
 				}
 			}
 		}
@@ -859,7 +859,7 @@ void CPlayerData::Process()
 		if ((dwThisTick - m_dwEnterExitTickCount) > 1500) {
 			RemoveFromVehicle();
 			// Call the vehicle exit complete callback
-			CCallbackManager::OnVehicleExitComplete((int)m_playerId);
+			CCallbackManager::OnVehicleExitComplete((int)m_wPlayerId);
 		}
 	}
 }
@@ -1001,7 +1001,7 @@ void CPlayerData::SetSkin(int iSkin)
 		RakNet::BitStream bsData;
 		bsData.Write((int)m_pPlayer->wPlayerId);
 		bsData.Write(iSkin);
-		CFunctions::AddedPlayersRPC(&RPC_SetPlayerSkin, &bsData, m_playerId);
+		CFunctions::AddedPlayersRPC(&RPC_SetPlayerSkin, &bsData, m_wPlayerId);
 	}
 
 	// Set the player skin
@@ -1026,12 +1026,12 @@ int CPlayerData::GetInterior()
 
 void CPlayerData::SetVirtualWorld(int iVirtualWorld)
 {
-	pNetGame->pPlayerPool->dwVirtualWorld[m_playerId] = iVirtualWorld;
+	pNetGame->pPlayerPool->dwVirtualWorld[m_wPlayerId] = iVirtualWorld;
 }
 
 int CPlayerData::GetVirtualWorld()
 {
-	return pNetGame->pPlayerPool->dwVirtualWorld[m_playerId];
+	return pNetGame->pPlayerPool->dwVirtualWorld[m_wPlayerId];
 }
 
 void CPlayerData::SetWeapon(BYTE byteWeaponId)
@@ -1066,26 +1066,26 @@ WORD CPlayerData::GetAmmo()
 	return m_wAmmo;
 }
 
-void CPlayerData::SetWeaponSkill(int iSkill, int iLevel)
+void CPlayerData::SetWeaponSkill(DWORD dwSkill, WORD wLevel)
 {
 	if (m_pPlayer->byteState < 11) {
-		m_pPlayer->wSkillLevel[iSkill] = iLevel;
+		m_pPlayer->wSkillLevel[dwSkill] = wLevel;
 
 		RakNet::BitStream bsData;
-		bsData.Write(m_playerId);
-		bsData.Write(iSkill);
-		bsData.Write(iLevel);
+		bsData.Write(m_wPlayerId);
+		bsData.Write(dwSkill);
+		bsData.Write(wLevel);
 
-		CFunctions::PlayerRPC(&RPC_SetPlayerSkillLevel, &bsData, m_playerId);
+		CFunctions::PlayerRPC(&RPC_SetPlayerSkillLevel, &bsData, m_wPlayerId);
 		if (m_pPlayer->byteState > 0 && m_pPlayer->byteState != PLAYER_STATE_SPECTATING) {
-			CFunctions::AddedPlayersRPC(&RPC_SetPlayerSkillLevel, &bsData, m_playerId);
+			CFunctions::AddedPlayersRPC(&RPC_SetPlayerSkillLevel, &bsData, m_wPlayerId);
 		}
 	}
 }
 
-WORD CPlayerData::GetWeaponSkill(int iSkill)
+WORD CPlayerData::GetWeaponSkill(DWORD dwSkill)
 {
-	return m_pPlayer->wSkillLevel[iSkill];
+	return m_pPlayer->wSkillLevel[dwSkill];
 }
 
 void CPlayerData::SetWeaponState(int iState)
@@ -1102,55 +1102,55 @@ WORD CPlayerData::GetWeaponState()
 	return WEAPONSTATE_UNKNOWN;
 }
 
-int CPlayerData::GetWeaponType(int iWeaponId)
+int CPlayerData::GetWeaponType(BYTE byteWeaponId)
 {
-	return m_pWeaponInfo->GetType(iWeaponId);
+	return m_pWeaponInfo->GetType(byteWeaponId);
 }
 
-bool CPlayerData::SetWeaponReloadTime(int iWeaponId, int iTime)
+bool CPlayerData::SetWeaponReloadTime(BYTE byteWeaponId, int iTime)
 {
-	return m_pWeaponInfo->SetReloadTime(iWeaponId, iTime);
+	return m_pWeaponInfo->SetReloadTime(byteWeaponId, iTime);
 }
 
-int CPlayerData::GetWeaponReloadTime(int iWeaponId)
+int CPlayerData::GetWeaponReloadTime(BYTE byteWeaponId)
 {
-	return m_pWeaponInfo->GetReloadTime(iWeaponId);
+	return m_pWeaponInfo->GetReloadTime(byteWeaponId);
 }
 
-bool CPlayerData::SetWeaponShootTime(int iWeaponId, int iTime)
+bool CPlayerData::SetWeaponShootTime(BYTE byteWeaponId, int iTime)
 {
-	return m_pWeaponInfo->SetShootTime(iWeaponId, iTime);
+	return m_pWeaponInfo->SetShootTime(byteWeaponId, iTime);
 }
 
-int CPlayerData::GetWeaponShootTime(int iWeaponId)
+int CPlayerData::GetWeaponShootTime(BYTE byteWeaponId)
 {
-	return m_pWeaponInfo->GetShootTime(iWeaponId);
+	return m_pWeaponInfo->GetShootTime(byteWeaponId);
 }
 
-bool CPlayerData::SetWeaponClipSize(int iWeaponId, int iSize)
+bool CPlayerData::SetWeaponClipSize(BYTE byteWeaponId, int iSize)
 {
-	return m_pWeaponInfo->SetClipSize(iWeaponId, iSize);
+	return m_pWeaponInfo->SetClipSize(byteWeaponId, iSize);
 }
 
-int CPlayerData::GetWeaponClipSize(int iWeaponId)
+int CPlayerData::GetWeaponClipSize(BYTE byteWeaponId)
 {
-	int iSize = m_pWeaponInfo->GetClipSize(iWeaponId);
+	int iSize = m_pWeaponInfo->GetClipSize(byteWeaponId);
 
-	if (m_pWeaponInfo->IsDoubleHanded(iWeaponId) && GetWeaponSkill(m_pWeaponInfo->GetSkillID(iWeaponId)) == 999) {
+	if (m_pWeaponInfo->IsDoubleHanded(byteWeaponId) && GetWeaponSkill(m_pWeaponInfo->GetSkillID(byteWeaponId)) == 999) {
 		iSize *= 2;
 	}
 
 	return iSize;
 }
 
-bool CPlayerData::SetWeaponInfo(int iWeaponId, SWeaponInfo sWeaponInfo)
+bool CPlayerData::SetWeaponInfo(BYTE byteWeaponId, SWeaponInfo sWeaponInfo)
 {
-	return m_pWeaponInfo->SetInfo(iWeaponId, sWeaponInfo);
+	return m_pWeaponInfo->SetInfo(byteWeaponId, sWeaponInfo);
 }
 
-SWeaponInfo CPlayerData::GetWeaponInfo(int iWeaponId)
+SWeaponInfo CPlayerData::GetWeaponInfo(BYTE byteWeaponId)
 {
-	return m_pWeaponInfo->GetInfo(iWeaponId);
+	return m_pWeaponInfo->GetInfo(byteWeaponId);
 }
 
 void CPlayerData::SetSpecialAction(BYTE byteActionId)
@@ -1174,11 +1174,11 @@ void CPlayerData::SetFightingStyle(int iStyle)
 	m_pPlayer->byteFightingStyle = iStyle;
 
 	RakNet::BitStream bsData;
-	bsData.Write(m_playerId);
+	bsData.Write(m_wPlayerId);
 	bsData.Write(iStyle);
 
-	CFunctions::AddedPlayersRPC(&RPC_SetFightingStyle, &bsData, m_playerId);
-	CFunctions::PlayerRPC(&RPC_SetFightingStyle, &bsData, m_playerId);
+	CFunctions::AddedPlayersRPC(&RPC_SetFightingStyle, &bsData, m_wPlayerId);
+	CFunctions::PlayerRPC(&RPC_SetFightingStyle, &bsData, m_wPlayerId);
 }
 
 int CPlayerData::GetFightingStyle()
@@ -1225,7 +1225,7 @@ void CPlayerData::ApplyAnimation(char *szAnimationLib, char *szAnimationName, fl
 {
 	RakNet::BitStream bsData;
 
-	bsData.Write(m_playerId);
+	bsData.Write(m_wPlayerId);
 	bsData.Write((BYTE)strlen(szAnimationLib));
 	bsData.Write((char*)szAnimationLib, strlen(szAnimationLib));
 	bsData.Write((BYTE)strlen(szAnimationName));
@@ -1237,14 +1237,14 @@ void CPlayerData::ApplyAnimation(char *szAnimationLib, char *szAnimationName, fl
 	bsData.Write(bFreeze);
 	bsData.Write(iTime);
 
-	CFunctions::AddedPlayersRPC(&RPC_ApplyAnimation, &bsData, m_playerId);
+	CFunctions::AddedPlayersRPC(&RPC_ApplyAnimation, &bsData, m_wPlayerId);
 }
 
 void CPlayerData::ClearAnimations()
 {
 	RakNet::BitStream bsData;
-	bsData.Write(m_playerId);
-	CFunctions::AddedPlayersRPC(&RPC_ClearAnimations, &bsData, m_playerId);
+	bsData.Write(m_wPlayerId);
+	CFunctions::AddedPlayersRPC(&RPC_ClearAnimations, &bsData, m_wPlayerId);
 }
 
 void CPlayerData::SetVelocity(CVector vecVelocity)
@@ -1611,10 +1611,10 @@ bool CPlayerData::IsReloading()
 	return m_bReloading;
 }
 
-void CPlayerData::ProcessDamage(int iDamagerId, float fHealthLoss, int iWeaponId, int iBodypart)
+void CPlayerData::ProcessDamage(WORD wDamagerId, float fHealthLoss, BYTE byteWeaponId, int iBodypart)
 {
 	// Call the on take damage callback
-	int iReturn = CCallbackManager::OnTakeDamage((int)m_playerId, iDamagerId, iWeaponId, iBodypart, fHealthLoss);
+	int iReturn = CCallbackManager::OnTakeDamage((int)m_wPlayerId, wDamagerId, byteWeaponId, iBodypart, fHealthLoss);
 	// Check the returned value
 	if (iReturn) {
 		// Check the armour
@@ -1632,16 +1632,16 @@ void CPlayerData::ProcessDamage(int iDamagerId, float fHealthLoss, int iWeaponId
 		}
 	}
 	// Save the last damager
-	m_iLastDamager = iDamagerId;
+	m_iLastDamager = wDamagerId;
 }
 
-void CPlayerData::ProcessVehicleDamage(int iDamagerId, int iVehicleId, int iWeaponId, CVector vecHit)
+void CPlayerData::ProcessVehicleDamage(WORD wDamagerId, WORD wVehicleId, BYTE byteWeaponId, CVector vecHit)
 {
-	int iReturn = CCallbackManager::OnVehicleTakeDamage((int)m_playerId, iDamagerId, iVehicleId, iWeaponId, vecHit);
+	int iReturn = CCallbackManager::OnVehicleTakeDamage((int)m_wPlayerId, wDamagerId, wVehicleId, byteWeaponId, vecHit);
 
 	if (iReturn) {
 		float fHealth = GetVehicleHealth();
-		SWeaponInfo sWeaponInfo = CWeaponInfo::GetDefaultInfo(iWeaponId);
+		SWeaponInfo sWeaponInfo = CWeaponInfo::GetDefaultInfo(byteWeaponId);
 
 		if (fHealth > 0.0f) {
 			fHealth -= sWeaponInfo.fDamage;
@@ -1654,32 +1654,32 @@ void CPlayerData::ProcessVehicleDamage(int iDamagerId, int iVehicleId, int iWeap
 		SetVehicleHealth(fHealth);
 
 		if (fHealth < 250.0f) {
-			CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[iVehicleId];
-			pVehicle->wKillerID = iDamagerId;
+			CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[wVehicleId];
+			pVehicle->wKillerID = wDamagerId;
 		}
 	}
 }
 
-void CPlayerData::ProcessStreamIn(int iForPlayerId)
+void CPlayerData::ProcessStreamIn(WORD wForPlayerId)
 {
-	CCallbackManager::OnStreamIn((int)m_playerId, iForPlayerId);
+	CCallbackManager::OnStreamIn((int)m_wPlayerId, wForPlayerId);
 
 	if (GetState() == PLAYER_STATE_WASTED) {
 		RakNet::BitStream bsData;
-		bsData.Write(m_playerId);
-		CFunctions::PlayerRPC(&RPC_WorldPlayerDeath, &bsData, iForPlayerId);
+		bsData.Write(m_wPlayerId);
+		CFunctions::PlayerRPC(&RPC_WorldPlayerDeath, &bsData, wForPlayerId);
 	}
 }
 
-void CPlayerData::ProcessStreamOut(int iForPlayerId)
+void CPlayerData::ProcessStreamOut(WORD wForPlayerId)
 {
-	CCallbackManager::OnStreamOut((int)m_playerId, iForPlayerId);
+	CCallbackManager::OnStreamOut((int)m_wPlayerId, wForPlayerId);
 }
 
-bool CPlayerData::EnterVehicle(int iVehicleId, int iSeatId, int iType)
+bool CPlayerData::EnterVehicle(WORD wVehicleId, BYTE byteSeatId, int iType)
 {
 	// Validate the vehicle
-	if (iVehicleId < 1 || iVehicleId > MAX_VEHICLES) {
+	if (wVehicleId < 1 || wVehicleId > MAX_VEHICLES) {
 		return false;
 	}
 
@@ -1694,19 +1694,19 @@ bool CPlayerData::EnterVehicle(int iVehicleId, int iSeatId, int iType)
 	}
 
 	// Validate the vehicle
-	CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[iVehicleId];
+	CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[wVehicleId];
 
 	if (!pVehicle) {
 		return false;
 	}
 
 	// Validate the seat id
-	if (!CVehicleInfo::IsValidPassengerSeat(iSeatId, pVehicle->customSpawn.iModelID)) {
+	if (!CVehicleInfo::IsValidPassengerSeat(byteSeatId, pVehicle->customSpawn.iModelID)) {
 		return false;
 	}
 
 	// Validate the distance to enter
-	CVector vecDestination = pServer->GetVehicleSeatPos(pVehicle, iSeatId);
+	CVector vecDestination = pServer->GetVehicleSeatPos(pVehicle, byteSeatId);
 
 	float fDistance = CMath::GetDistanceBetween3DPoints(m_pPlayer->vecPosition, vecDestination);
 	if (fDistance > MAX_DISTANCE_TO_ENTER_VEHICLE) {
@@ -1714,8 +1714,8 @@ bool CPlayerData::EnterVehicle(int iVehicleId, int iSeatId, int iType)
 	}
 
 	// Save the entering stats
-	m_wVehicleToEnter = (WORD)iVehicleId;
-	m_byteSeatToEnter = (BYTE)iSeatId;
+	m_wVehicleToEnter = (WORD)wVehicleId;
+	m_byteSeatToEnter = (BYTE)byteSeatId;
 
 	// Check distance
 	if (fDistance < 0.5f) {
@@ -1724,7 +1724,7 @@ bool CPlayerData::EnterVehicle(int iVehicleId, int iSeatId, int iType)
 		m_bEntering = true;
 
 		// Check whether the player is jacking the vehicle or not
-		if (pServer->IsVehicleSeatOccupied((int)m_playerId, (int)m_wVehicleToEnter, (int)m_byteSeatToEnter)) {
+		if (pServer->IsVehicleSeatOccupied((int)m_wPlayerId, (int)m_wVehicleToEnter, (int)m_byteSeatToEnter)) {
 			m_bJacking = true;
 		}
 
@@ -1759,10 +1759,10 @@ bool CPlayerData::ExitVehicle()
 	return true;
 }
 
-bool CPlayerData::PutInVehicle(int iVehicleId, int iSeatId)
+bool CPlayerData::PutInVehicle(WORD wVehicleId, BYTE byteSeatId)
 {
 	// Validate the vehicle
-	if (iVehicleId < 1 || iVehicleId > MAX_VEHICLES) {
+	if (wVehicleId < 1 || wVehicleId > MAX_VEHICLES) {
 		return false;
 	}
 
@@ -1772,21 +1772,21 @@ bool CPlayerData::PutInVehicle(int iVehicleId, int iSeatId)
 	}
 
 	// Validate the vehicle
-	CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[iVehicleId];
+	CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[wVehicleId];
 
 	if (!pVehicle) {
 		return false;
 	}
 
 	// Validate the seat id
-	if (!CVehicleInfo::IsValidPassengerSeat(iSeatId, pVehicle->customSpawn.iModelID)) {
+	if (!CVehicleInfo::IsValidPassengerSeat(byteSeatId, pVehicle->customSpawn.iModelID)) {
 		return false;
 	}
 
 	// Set the player params
-	SetVehicle((WORD)iVehicleId, (BYTE)iSeatId);
+	SetVehicle((WORD)wVehicleId, (BYTE)byteSeatId);
 	SetPosition(pServer->GetVehiclePos(pVehicle));
-	SetState(iSeatId == 0 ? PLAYER_STATE_DRIVER : PLAYER_STATE_PASSENGER);
+	SetState(byteSeatId == 0 ? PLAYER_STATE_DRIVER : PLAYER_STATE_PASSENGER);
 	SetAngle(pServer->GetVehicleAngle(pVehicle));
 	return true;
 }
@@ -1817,12 +1817,12 @@ bool CPlayerData::IsInVehicle()
 	return m_pPlayer->wVehicleId == INVALID_VEHICLE_ID;
 }
 
-int CPlayerData::GetVehicleId()
+WORD CPlayerData::GetVehicleId()
 {
 	return m_pPlayer->wVehicleId;
 }
 
-int CPlayerData::GetSeatId()
+BYTE CPlayerData::GetSeatId()
 {
 	return m_pPlayer->byteSeatId;
 }
@@ -1852,7 +1852,7 @@ void CPlayerData::SetVehicle(WORD wVehicleId, BYTE byteSeatId)
 	}
 
 	// set the vehicle params
-	pVehicle->wLastDriverID = m_playerId;
+	pVehicle->wLastDriverID = m_wPlayerId;
 	pVehicle->bOccupied = true;
 	pVehicle->vehOccupiedTick = GetTickCount();
 	pVehicle->vehActive = true;
@@ -1911,9 +1911,9 @@ void CPlayerData::GetSurfingOffsets(CVector *vecOffsets)
 	*vecOffsets = m_vecSurfing;
 }
 
-void CPlayerData::SetSurfingVehicle(int iVehicleId)
+void CPlayerData::SetSurfingVehicle(WORD wVehicleId)
 {
-	m_wSurfingInfo = iVehicleId;
+	m_wSurfingInfo = wVehicleId;
 }
 
 int CPlayerData::GetSurfingVehicle()
@@ -1921,35 +1921,35 @@ int CPlayerData::GetSurfingVehicle()
 	return m_wSurfingInfo;
 }
 
-void CPlayerData::SetSurfingObject(int iObjectId)
+void CPlayerData::SetSurfingObject(WORD wObjectId)
 {
-	m_wSurfingInfo = MAX_VEHICLES + iObjectId;
-	pNetGame->pObjectPool->bObjectSlotState[iObjectId] = true;
+	m_wSurfingInfo = MAX_VEHICLES + wObjectId;
+	pNetGame->pObjectPool->bObjectSlotState[wObjectId] = true;
 }
 
 int CPlayerData::GetSurfingObject()
 {
-	int iObjectId = m_wSurfingInfo - MAX_VEHICLES;
-	if (iObjectId >= 0 && iObjectId < MAX_OBJECTS) {
-		if (pNetGame->pObjectPool->bObjectSlotState[iObjectId]) {
-			return iObjectId;
+	WORD wObjectId = m_wSurfingInfo - MAX_VEHICLES;
+	if (wObjectId >= 0 && wObjectId < MAX_OBJECTS) {
+		if (pNetGame->pObjectPool->bObjectSlotState[wObjectId]) {
+			return wObjectId;
 		}
 	}
 	return INVALID_OBJECT_ID;
 }
 
-void CPlayerData::SetSurfingPlayerObject(int iObjectId)
+void CPlayerData::SetSurfingPlayerObject(WORD wObjectId)
 {
-	m_wSurfingInfo = MAX_VEHICLES + iObjectId;
-	pNetGame->pObjectPool->bPlayerObjectSlotState[m_playerId][iObjectId] = true;
+	m_wSurfingInfo = MAX_VEHICLES + wObjectId;
+	pNetGame->pObjectPool->bPlayerObjectSlotState[m_wPlayerId][wObjectId] = true;
 }
 
 int CPlayerData::GetSurfingPlayerObject()
 {
-	int iObjectId = m_wSurfingInfo - MAX_VEHICLES;
-	if (iObjectId >= 0 && iObjectId < MAX_OBJECTS) {
-		if (pNetGame->pObjectPool->bPlayerObjectSlotState[m_playerId][iObjectId]) {
-			return iObjectId;
+	WORD wObjectId = m_wSurfingInfo - MAX_VEHICLES;
+	if (wObjectId >= 0 && wObjectId < MAX_OBJECTS) {
+		if (pNetGame->pObjectPool->bPlayerObjectSlotState[m_wPlayerId][wObjectId]) {
+			return wObjectId;
 		}
 	}
 	return INVALID_OBJECT_ID;
@@ -1957,10 +1957,10 @@ int CPlayerData::GetSurfingPlayerObject()
 
 void CPlayerData::StopSurfing()
 {
-	int iObjectId = m_wSurfingInfo - MAX_VEHICLES;
-	if (iObjectId >= 0 && iObjectId < MAX_OBJECTS) {
-		pNetGame->pObjectPool->bObjectSlotState[iObjectId] = false;
-		pNetGame->pObjectPool->bPlayerObjectSlotState[m_playerId][iObjectId] = false;
+	WORD wObjectId = m_wSurfingInfo - MAX_VEHICLES;
+	if (wObjectId >= 0 && wObjectId < MAX_OBJECTS) {
+		pNetGame->pObjectPool->bObjectSlotState[wObjectId] = false;
+		pNetGame->pObjectPool->bPlayerObjectSlotState[m_wPlayerId][wObjectId] = false;
 	}
 
 	m_wSurfingInfo = 0;
@@ -2006,7 +2006,7 @@ void CPlayerData::StopPlayingPlayback()
 	// Reset the Playing flag
 	m_bPlaying = false;
 	// Call the playback finish callback
-	CCallbackManager::OnFinishPlayback((int)m_playerId);
+	CCallbackManager::OnFinishPlayback((int)m_wPlayerId);
 }
 
 void CPlayerData::PausePlayingPlayback()
@@ -2090,7 +2090,7 @@ void CPlayerData::StopPlayingNode()
 	m_iNodeLastPoint = 0;
 	m_iNodeType = 0;
 	// Call the node finish callback
-	CCallbackManager::OnFinishNode((int)m_playerId);
+	CCallbackManager::OnFinishNode((int)m_wPlayerId);
 }
 
 int CPlayerData::ChangeNode(int iNodeId, unsigned short usLinkId)

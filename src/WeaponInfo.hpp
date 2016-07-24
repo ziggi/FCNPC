@@ -38,30 +38,30 @@ public:
 	CWeaponInfo();
 	~CWeaponInfo();
 
-	static bool SetDefaultInfo(int iWeaponId, SWeaponInfo sWeaponInfo);
-	static SWeaponInfo GetDefaultInfo(int iWeaponId);
+	static bool SetDefaultInfo(BYTE byteWeaponId, SWeaponInfo sWeaponInfo);
+	static SWeaponInfo GetDefaultInfo(BYTE byteWeaponId);
 
-	bool SetInfo(int iWeaponId, SWeaponInfo sWeaponInfo);
-	SWeaponInfo GetInfo(int iWeaponId);
+	bool SetInfo(BYTE byteWeaponId, SWeaponInfo sWeaponInfo);
+	SWeaponInfo GetInfo(BYTE byteWeaponId);
 
-	int GetType(int iWeaponId);
-	bool SetType(int iWeaponId, int iType);
+	int GetType(BYTE byteWeaponId);
+	bool SetType(BYTE byteWeaponId, int iType);
 
-	float GetDamage(int iWeaponId);
-	bool SetDamage(int iWeaponId, float fDamage);
+	float GetDamage(BYTE byteWeaponId);
+	bool SetDamage(BYTE byteWeaponId, float fDamage);
 
-	int GetClipSize(int iWeaponId);
-	bool SetClipSize(int iWeaponId, int iClipSize);
+	int GetClipSize(BYTE byteWeaponId);
+	bool SetClipSize(BYTE byteWeaponId, int iClipSize);
 
-	int GetShootTime(int iWeaponId);
-	bool SetShootTime(int iWeaponId, int iTime);
+	int GetShootTime(BYTE byteWeaponId);
+	bool SetShootTime(BYTE byteWeaponId, int iTime);
 
-	int GetReloadTime(int iWeaponId);
-	bool SetReloadTime(int iWeaponId, int iTime);
+	int GetReloadTime(BYTE byteWeaponId);
+	bool SetReloadTime(BYTE byteWeaponId, int iTime);
 
-	static bool IsValid(int iWeaponId);
-	bool IsDoubleHanded(int iWeaponId);
-	int GetSkillID(int iWeaponId);
+	static bool IsValid(BYTE byteWeaponId);
+	bool IsDoubleHanded(BYTE byteWeaponId);
+	int GetSkillID(BYTE byteWeaponId);
 
 private:
 	SWeaponInfo *m_pWeaponInfo[MAX_WEAPONS];

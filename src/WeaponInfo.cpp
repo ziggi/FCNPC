@@ -74,155 +74,155 @@ CWeaponInfo::~CWeaponInfo()
 	}
 }
 
-bool CWeaponInfo::SetDefaultInfo(int iWeaponId, SWeaponInfo sWeaponInfo)
+bool CWeaponInfo::SetDefaultInfo(BYTE byteWeaponId, SWeaponInfo sWeaponInfo)
 {
-	if (!CWeaponInfo::IsValid(iWeaponId)) {
+	if (!CWeaponInfo::IsValid(byteWeaponId)) {
 		return false;
 	}
 
-	g_sDefaultWeaponInfo[iWeaponId] = sWeaponInfo;
+	g_sDefaultWeaponInfo[byteWeaponId] = sWeaponInfo;
 	return true;
 }
 
-SWeaponInfo CWeaponInfo::GetDefaultInfo(int iWeaponId)
+SWeaponInfo CWeaponInfo::GetDefaultInfo(BYTE byteWeaponId)
 {
-	if (!CWeaponInfo::IsValid(iWeaponId)) {
+	if (!CWeaponInfo::IsValid(byteWeaponId)) {
 		return SWeaponInfo();
 	}
 
-	return g_sDefaultWeaponInfo[iWeaponId];
+	return g_sDefaultWeaponInfo[byteWeaponId];
 }
 
-bool CWeaponInfo::SetInfo(int iWeaponId, SWeaponInfo sWeaponInfo)
+bool CWeaponInfo::SetInfo(BYTE byteWeaponId, SWeaponInfo sWeaponInfo)
 {
-	if (!IsValid(iWeaponId)) {
+	if (!IsValid(byteWeaponId)) {
 		return false;
 	}
 
-	*m_pWeaponInfo[iWeaponId] = sWeaponInfo;
+	*m_pWeaponInfo[byteWeaponId] = sWeaponInfo;
 	return true;
 }
 
-SWeaponInfo CWeaponInfo::GetInfo(int iWeaponId)
+SWeaponInfo CWeaponInfo::GetInfo(BYTE byteWeaponId)
 {
-	if (!IsValid(iWeaponId)) {
+	if (!IsValid(byteWeaponId)) {
 		return SWeaponInfo();
 	}
 
-	return *m_pWeaponInfo[iWeaponId];
+	return *m_pWeaponInfo[byteWeaponId];
 }
 
-int CWeaponInfo::GetType(int iWeaponId)
+int CWeaponInfo::GetType(BYTE byteWeaponId)
 {
-	if (!IsValid(iWeaponId)) {
+	if (!IsValid(byteWeaponId)) {
 		return 0;
 	}
 
-	return m_pWeaponInfo[iWeaponId]->iType;
+	return m_pWeaponInfo[byteWeaponId]->iType;
 }
 
-bool CWeaponInfo::SetType(int iWeaponId, int iType)
+bool CWeaponInfo::SetType(BYTE byteWeaponId, int iType)
 {
-	if (!IsValid(iWeaponId)) {
+	if (!IsValid(byteWeaponId)) {
 		return false;
 	}
 
-	m_pWeaponInfo[iWeaponId]->iType = iType;
+	m_pWeaponInfo[byteWeaponId]->iType = iType;
 	return true;
 }
 
-float CWeaponInfo::GetDamage(int iWeaponId)
+float CWeaponInfo::GetDamage(BYTE byteWeaponId)
 {
-	if (!IsValid(iWeaponId)) {
+	if (!IsValid(byteWeaponId)) {
 		return 0.0f;
 	}
 
-	return m_pWeaponInfo[iWeaponId]->fDamage;
+	return m_pWeaponInfo[byteWeaponId]->fDamage;
 }
 
-bool CWeaponInfo::SetDamage(int iWeaponId, float fDamage)
+bool CWeaponInfo::SetDamage(BYTE byteWeaponId, float fDamage)
 {
-	if (!IsValid(iWeaponId)) {
+	if (!IsValid(byteWeaponId)) {
 		return false;
 	}
 
-	m_pWeaponInfo[iWeaponId]->fDamage = fDamage;
+	m_pWeaponInfo[byteWeaponId]->fDamage = fDamage;
 	return true;
 }
 
-int CWeaponInfo::GetClipSize(int iWeaponId)
+int CWeaponInfo::GetClipSize(BYTE byteWeaponId)
 {
-	if (!IsValid(iWeaponId)) {
+	if (!IsValid(byteWeaponId)) {
 		return -1;
 	}
 
-	return m_pWeaponInfo[iWeaponId]->iClipSize;
+	return m_pWeaponInfo[byteWeaponId]->iClipSize;
 }
 
-bool CWeaponInfo::SetClipSize(int iWeaponId, int iClipSize)
+bool CWeaponInfo::SetClipSize(BYTE byteWeaponId, int iClipSize)
 {
-	if (!IsValid(iWeaponId)) {
+	if (!IsValid(byteWeaponId)) {
 		return false;
 	}
 
-	m_pWeaponInfo[iWeaponId]->iClipSize = iClipSize;
+	m_pWeaponInfo[byteWeaponId]->iClipSize = iClipSize;
 	return true;
 }
 
 // The fastest possible gap between weapon shots in milliseconds by oscar-broman
-int CWeaponInfo::GetShootTime(int iWeaponId)
+int CWeaponInfo::GetShootTime(BYTE byteWeaponId)
 {
-	if (!IsValid(iWeaponId)) {
+	if (!IsValid(byteWeaponId)) {
 		return -1;
 	}
 
-	return m_pWeaponInfo[iWeaponId]->iShootTime;
+	return m_pWeaponInfo[byteWeaponId]->iShootTime;
 }
 
-bool CWeaponInfo::SetShootTime(int iWeaponId, int iShootTime)
+bool CWeaponInfo::SetShootTime(BYTE byteWeaponId, int iShootTime)
 {
-	if (!IsValid(iWeaponId)) {
+	if (!IsValid(byteWeaponId)) {
 		return false;
 	}
 
-	m_pWeaponInfo[iWeaponId]->iShootTime = iShootTime;
+	m_pWeaponInfo[byteWeaponId]->iShootTime = iShootTime;
 	return true;
 }
 
-int CWeaponInfo::GetReloadTime(int iWeaponId)
+int CWeaponInfo::GetReloadTime(BYTE byteWeaponId)
 {
-	if (!IsValid(iWeaponId)) {
+	if (!IsValid(byteWeaponId)) {
 		return -1;
 	}
 
-	return m_pWeaponInfo[iWeaponId]->iReloadTime;
+	return m_pWeaponInfo[byteWeaponId]->iReloadTime;
 }
 
-bool CWeaponInfo::SetReloadTime(int iWeaponId, int iReloadTime)
+bool CWeaponInfo::SetReloadTime(BYTE byteWeaponId, int iReloadTime)
 {
-	if (!IsValid(iWeaponId)) {
+	if (!IsValid(byteWeaponId)) {
 		return false;
 	}
 
-	m_pWeaponInfo[iWeaponId]->iReloadTime = iReloadTime;
+	m_pWeaponInfo[byteWeaponId]->iReloadTime = iReloadTime;
 	return true;
 }
 
-bool CWeaponInfo::IsValid(int iWeaponId)
+bool CWeaponInfo::IsValid(BYTE byteWeaponId)
 {
-	return iWeaponId >= 0 && iWeaponId < MAX_WEAPONS;
+	return byteWeaponId >= 0 && byteWeaponId < MAX_WEAPONS;
 }
 
-bool CWeaponInfo::IsDoubleHanded(int iWeaponId)
+bool CWeaponInfo::IsDoubleHanded(BYTE byteWeaponId)
 {
-	if (iWeaponId == 22 || iWeaponId == 26 || iWeaponId == 28 || iWeaponId == 32) {
+	if (byteWeaponId == 22 || byteWeaponId == 26 || byteWeaponId == 28 || byteWeaponId == 32) {
 		return true;
 	}
 
 	return false;
 }
 
-int CWeaponInfo::GetSkillID(int iWeaponId)
+int CWeaponInfo::GetSkillID(BYTE byteWeaponId)
 {
 	static int iSkills[] = {
 		WEAPONSKILL_PISTOL, // 22
@@ -240,9 +240,9 @@ int CWeaponInfo::GetSkillID(int iWeaponId)
 		WEAPONSKILL_SNIPERRIFLE // 34
 	};
 
-	if (!IsValid(iWeaponId)) {
+	if (!IsValid(byteWeaponId)) {
 		return -1;
 	}
 
-	return iSkills[iWeaponId - 22];
+	return iSkills[byteWeaponId - 22];
 }

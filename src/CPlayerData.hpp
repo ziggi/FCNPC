@@ -44,7 +44,7 @@ public:
 	void UpdateSync(int iState);
 	void UpdateAim();
 	bool IsSpawned();
-	bool IsStreamedIn(int iForPlayerId);
+	bool IsStreamedIn(WORD wForPlayerId);
 
 	void SetOnFootSync(CSyncData *syncData);
 	void SetVehicleSync(CVehicleSyncData *syncData);
@@ -76,20 +76,20 @@ public:
 	BYTE GetWeapon();
 	void SetAmmo(WORD wAmmo);
 	WORD GetAmmo();
-	void SetWeaponSkill(int iSkill, int iLevel);
-	WORD GetWeaponSkill(int iSkill);
+	void SetWeaponSkill(DWORD dwSkill, WORD wLevel);
+	WORD GetWeaponSkill(DWORD dwSkill);
 	void SetWeaponState(int iState);
 	WORD GetWeaponState();
 
-	int GetWeaponType(int iWeaponId);
-	bool SetWeaponReloadTime(int iWeaponId, int iTime);
-	int GetWeaponReloadTime(int iWeaponId);
-	bool SetWeaponShootTime(int iWeaponId, int iTime);
-	int GetWeaponShootTime(int iWeaponId);
-	bool SetWeaponClipSize(int iWeaponId, int iSize);
-	int GetWeaponClipSize(int iWeaponId);
-	bool SetWeaponInfo(int iWeaponId, SWeaponInfo sWeaponInfo);
-	SWeaponInfo GetWeaponInfo(int iWeaponId);
+	int GetWeaponType(BYTE byteWeaponId);
+	bool SetWeaponReloadTime(BYTE byteWeaponId, int iTime);
+	int GetWeaponReloadTime(BYTE byteWeaponId);
+	bool SetWeaponShootTime(BYTE byteWeaponId, int iTime);
+	int GetWeaponShootTime(BYTE byteWeaponId);
+	bool SetWeaponClipSize(BYTE byteWeaponId, int iSize);
+	int GetWeaponClipSize(BYTE byteWeaponId);
+	bool SetWeaponInfo(BYTE byteWeaponId, SWeaponInfo sWeaponInfo);
+	SWeaponInfo GetWeaponInfo(BYTE byteWeaponId);
 
 	void SetSkin(int iSkin);
 	int GetSkin();
@@ -136,18 +136,18 @@ public:
 	bool IsShooting();
 	bool IsReloading();
 
-	void ProcessDamage(int iDamagerId, float fHealthLoss, int iWeaponId, int iBodypart);
-	void ProcessVehicleDamage(int iDamagerId, int iVehicleId, int iWeaponId, CVector vecHit);
-	void ProcessStreamIn(int iForPlayerId);
-	void ProcessStreamOut(int iForPlayerId);
+	void ProcessDamage(WORD wDamagerId, float fHealthLoss, BYTE byteWeaponId, int iBodypart);
+	void ProcessVehicleDamage(WORD wDamagerId, WORD wVehicleId, BYTE byteWeaponId, CVector vecHit);
+	void ProcessStreamIn(WORD wForPlayerId);
+	void ProcessStreamOut(WORD wForPlayerId);
 
-	bool EnterVehicle(int iVehicleId, int iSeatId, int iType);
+	bool EnterVehicle(WORD wVehicleId, BYTE byteSeatId, int iType);
 	bool ExitVehicle();
-	bool PutInVehicle(int iVehicleId, int iSeatId);
+	bool PutInVehicle(WORD wVehicleId, BYTE byteSeatId);
 	bool RemoveFromVehicle();
 	bool IsInVehicle();
-	int GetVehicleId();
-	int GetSeatId();
+	WORD GetVehicleId();
+	BYTE GetSeatId();
 	void SetVehicle(WORD wVehicleId, BYTE byteSeatId);
 	CVehicle *GetVehicle();
 	void SetVehicleSiren(bool bState);
@@ -157,11 +157,11 @@ public:
 
 	void SetSurfingOffsets(CVector vecOffsets);
 	void GetSurfingOffsets(CVector *vecOffsets);
-	void SetSurfingVehicle(int iVehicleId);
+	void SetSurfingVehicle(WORD wVehicleId);
 	int GetSurfingVehicle();
-	void SetSurfingObject(int iObjectId);
+	void SetSurfingObject(WORD wObjectId);
 	int GetSurfingObject();
-	void SetSurfingPlayerObject(int iObjectId);
+	void SetSurfingPlayerObject(WORD wObjectId);
 	int GetSurfingPlayerObject();
 	void StopSurfing();
 
@@ -175,7 +175,7 @@ public:
 	int ChangeNode(int iNodeId, unsigned short usLinkId);
 
 private:
-	WORD m_playerId;
+	WORD m_wPlayerId;
 	bool m_bSetup;
 	char m_szName[MAX_PLAYER_NAME];
 	bool m_bSpawned;

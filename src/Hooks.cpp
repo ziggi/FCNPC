@@ -38,7 +38,7 @@ bool bWeaponShot;
 
 struct t_OnPlayerWeaponShot {
 	int iPlayerId;
-	int iWeaponId;
+	BYTE byteWeaponId;
 	int iHitType;
 	int iHitId;
 	CVector vecHit;
@@ -49,7 +49,7 @@ t_OnPlayerWeaponShot pWeaponShot;
 // stream in/out
 struct t_OnPlayerStream {
 	int iPlayerId;
-	int iForPlayerId;
+	WORD wForPlayerId;
 };
 
 t_OnPlayerStream pStreamIn;
@@ -152,7 +152,7 @@ int amx_Push_Hook(AMX *amx, cell value)
 				break;
 
 			case 5:
-				pWeaponShot.iWeaponId = value;
+				pWeaponShot.byteWeaponId = value;
 				break;
 
 			case 4:
@@ -184,7 +184,7 @@ int amx_Push_Hook(AMX *amx, cell value)
 				break;
 
 			case 0:
-				pStreamIn.iForPlayerId = value;
+				pStreamIn.wForPlayerId = value;
 				break;
 		}
 		// Increase the parameters count
@@ -196,7 +196,7 @@ int amx_Push_Hook(AMX *amx, cell value)
 				break;
 
 			case 0:
-				pStreamOut.iForPlayerId = value;
+				pStreamOut.wForPlayerId = value;
 				break;
 		}
 		// Increase the parameters count
@@ -244,7 +244,7 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 
 			if (pServer->GetPlayerManager()->IsNpcConnected(wPlayerId)) {
 				pServer->GetPlayerManager()->GetAt(wPlayerId)->ProcessVehicleDamage(
-					pWeaponShot.iPlayerId, pWeaponShot.iHitId, pWeaponShot.iWeaponId, pWeaponShot.vecHit);
+					pWeaponShot.iPlayerId, pWeaponShot.iHitId, pWeaponShot.byteWeaponId, pWeaponShot.vecHit);
 			}
 		}
 
@@ -254,7 +254,7 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 
 		if (pServer->GetPlayerManager()->IsNpcConnected(pStreamIn.iPlayerId)) {
 			// call custom callback
-			pServer->GetPlayerManager()->GetAt(pStreamIn.iPlayerId)->ProcessStreamIn(pStreamIn.iForPlayerId);
+			pServer->GetPlayerManager()->GetAt(pStreamIn.iPlayerId)->ProcessStreamIn(pStreamIn.wForPlayerId);
 			bFindPublicIsBlocked = true;
 		} else {
 			// call hooked callback
@@ -267,7 +267,7 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 
 		if (pServer->GetPlayerManager()->IsNpcConnected(pStreamIn.iPlayerId)) {
 			// call custom callback
-			pServer->GetPlayerManager()->GetAt(pStreamIn.iPlayerId)->ProcessStreamOut(pStreamIn.iForPlayerId);
+			pServer->GetPlayerManager()->GetAt(pStreamIn.iPlayerId)->ProcessStreamOut(pStreamIn.wForPlayerId);
 			bFindPublicIsBlocked = true;
 		} else {
 			// call hooked callback

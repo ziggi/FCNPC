@@ -68,7 +68,7 @@ public:
 	WORD GetVehicleSeatPlayerId(WORD wVehicleId, BYTE byteSeatId);
 	float GetVehicleAngle(CVehicle *pVehicle);
 	CVector GetVehiclePos(CVehicle *pVehicle);
-	CVector GetVehicleSeatPos(CVehicle *pVehicle, int iSeatId);
+	CVector GetVehicleSeatPos(CVehicle *pVehicle, BYTE byteSeatId);
 
 	eSAMPVersion GetVersion()
 	{

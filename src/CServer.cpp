@@ -198,12 +198,12 @@ CVector CServer::GetVehiclePos(CVehicle *pVehicle)
 	return pVehicle->vecPosition;
 }
 
-CVector CServer::GetVehicleSeatPos(CVehicle *pVehicle, int iSeatId)
+CVector CServer::GetVehicleSeatPos(CVehicle *pVehicle, BYTE byteSeatId)
 {
 	// Get the seat position
 	CVector *pvecSeat;
 
-	if (iSeatId == 0 || iSeatId == 1) {
+	if (byteSeatId == 0 || byteSeatId == 1) {
 		pvecSeat = CFunctions::GetVehicleModelInfoEx(pVehicle->customSpawn.iModelID, VEHICLE_MODEL_INFO_FRONTSEAT);
 	} else {
 		pvecSeat = CFunctions::GetVehicleModelInfoEx(pVehicle->customSpawn.iModelID, VEHICLE_MODEL_INFO_REARSEAT);
@@ -212,7 +212,7 @@ CVector CServer::GetVehicleSeatPos(CVehicle *pVehicle, int iSeatId)
 	// Adjust the seat vector
 	CVector vecSeat(pvecSeat->fX + 1.3f, pvecSeat->fY - 0.6f, pvecSeat->fZ);
 
-	if (iSeatId == 0 || iSeatId == 2) {
+	if (byteSeatId == 0 || byteSeatId == 2) {
 		vecSeat.fX = -vecSeat.fX;
 	}
 

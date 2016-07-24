@@ -24,8 +24,8 @@ typedef int  (*GetRakServer_t)();
 typedef void (THISCALL *CPlayerPool__DeletePlayer_t)(void *pPlayerPool, int iPlayerId, int iReason);
 typedef void (THISCALL *CPlayer__SpawnForWorld_t)(void *pPlayer);
 typedef void (THISCALL *CPlayer__Kill_t)(void *pPlayer, BYTE byteReason, WORD wKillerId);
-typedef void (THISCALL *CPlayer__EnterVehicle_t)(void *pPlayer, int iVehicleId, int iSeatId);
-typedef void (THISCALL *CPlayer__ExitVehicle_t)(void *pPlayer, int iVehicleId);
+typedef void (THISCALL *CPlayer__EnterVehicle_t)(void *pPlayer, WORD wVehicleId, BYTE byteSeatId);
+typedef void (THISCALL *CPlayer__ExitVehicle_t)(void *pPlayer, WORD wVehicleId);
 typedef int  (THISCALL *CConsole__GetIntVariable_t)(void *pConfig, char *szKey);
 typedef bool (THISCALL *RakNet__Send_t)(void* ppRakServer, RakNet::BitStream* parameters, PacketPriority priority, PacketReliability reliability, unsigned orderingChannel, PlayerID playerId, bool broadcast);
 typedef bool (THISCALL *RakNet__RPC_t)(void* ppRakServer, int* uniqueID, RakNet::BitStream* parameters, PacketPriority priority, PacketReliability reliability, unsigned orderingChannel, PlayerID playerId, bool broadcast, bool shiftTimestamp);
@@ -44,12 +44,12 @@ public:
 	static void		DeletePlayer(int iPlayerId);
 	static void		SpawnPlayer(CPlayer *pPlayer);
 	static void		KillPlayer(CPlayer *pPlayer, BYTE byteReason, WORD wKillerId);
-	static void		PlayerEnterVehicle(CPlayer *pPlayer, int iVehicleId, int iSeatId);
-	static void		PlayerExitVehicle(CPlayer *pPlayer, int iVehicleId);
+	static void		PlayerEnterVehicle(CPlayer *pPlayer, WORD wVehicleId, BYTE byteSeatId);
+	static void		PlayerExitVehicle(CPlayer *pPlayer, WORD wVehicleId);
 	static CVector	*GetVehicleModelInfoEx(int iModelId, int iInfoType);
 	static int		GetMaxPlayers();
 	static int		GetMaxNPC();
-	static void		PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE iWeaponId, CVector vecPoint);
+	static void		PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE byteWeaponId, CVector vecPoint);
 	static int		GetNetGame()
 	{
 		return pfn__GetNetGame();
@@ -65,7 +65,7 @@ public:
 
 	static void		GlobalRPC(int* szUniqueID, RakNet::BitStream* bsParams, int iExcludePlayerId = INVALID_PLAYER_ID, char PacketStream = 2);
 	static void		AddedPlayersRPC(int* szUniqueID, RakNet::BitStream* bsParams, int iPlayerId, char PacketStream = 2);
-	static void		AddedVehicleRPC(int* szUniqueID, RakNet::BitStream* bsParams, int iVehicleId, int iExcludePlayerId = INVALID_PLAYER_ID, char PacketStream = 2);
+	static void		AddedVehicleRPC(int* szUniqueID, RakNet::BitStream* bsParams, WORD wVehicleId, int iExcludePlayerId = INVALID_PLAYER_ID, char PacketStream = 2);
 	static void		PlayerRPC(int* szUniqueID, RakNet::BitStream* bsParams, int iPlayerId, char PacketStream = 2);
 
 	static void		GlobalPacket(RakNet::BitStream* bsParams);

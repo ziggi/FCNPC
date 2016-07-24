@@ -97,7 +97,7 @@ void CCallbackManager::OnReachDestination(int iGameId)
 	}
 }
 
-void CCallbackManager::OnVehicleEntryComplete(int iGameId, int iVehicleId, int iSeat)
+void CCallbackManager::OnVehicleEntryComplete(int iGameId, WORD wVehicleId, int iSeat)
 {
 	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {
 		// Get the function index
@@ -105,7 +105,7 @@ void CCallbackManager::OnVehicleEntryComplete(int iGameId, int iVehicleId, int i
 		if (!amx_FindPublic((*i), "FCNPC_OnVehicleEntryComplete", &iIndex)) {
 			// Push the parameters
 			amx_Push((*i), iSeat);
-			amx_Push((*i), iVehicleId);
+			amx_Push((*i), wVehicleId);
 			amx_Push((*i), iGameId);
 			// Execute the callback
 			amx_Exec((*i), NULL, iIndex);
@@ -127,7 +127,7 @@ void CCallbackManager::OnVehicleExitComplete(int iGameId)
 	}
 }
 
-int CCallbackManager::OnTakeDamage(int iGameId, int iDamagerId, int iWeapon, int iBodyPart, float fHealthLoss)
+int CCallbackManager::OnTakeDamage(int iGameId, WORD wDamagerId, int iWeapon, int iBodyPart, float fHealthLoss)
 {
 	cell cReturn = 1;
 	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {
@@ -138,7 +138,7 @@ int CCallbackManager::OnTakeDamage(int iGameId, int iDamagerId, int iWeapon, int
 			amx_Push((*i), amx_ftoc(fHealthLoss));
 			amx_Push((*i), iBodyPart);
 			amx_Push((*i), iWeapon);
-			amx_Push((*i), iDamagerId);
+			amx_Push((*i), wDamagerId);
 			amx_Push((*i), iGameId);
 			// Execute the callback
 			amx_Exec((*i), &cReturn, iIndex);
@@ -150,7 +150,7 @@ int CCallbackManager::OnTakeDamage(int iGameId, int iDamagerId, int iWeapon, int
 	return cReturn;
 }
 
-int CCallbackManager::OnVehicleTakeDamage(int iGameId, int iDamagerId, int iVehicleId, int iWeaponId, CVector vecHit)
+int CCallbackManager::OnVehicleTakeDamage(int iGameId, WORD wDamagerId, WORD wVehicleId, BYTE byteWeaponId, CVector vecHit)
 {
 	cell cReturn = 1;
 	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {
@@ -161,9 +161,9 @@ int CCallbackManager::OnVehicleTakeDamage(int iGameId, int iDamagerId, int iVehi
 			amx_Push((*i), amx_ftoc(vecHit.fZ));
 			amx_Push((*i), amx_ftoc(vecHit.fY));
 			amx_Push((*i), amx_ftoc(vecHit.fX));
-			amx_Push((*i), iWeaponId);
-			amx_Push((*i), iVehicleId);
-			amx_Push((*i), iDamagerId);
+			amx_Push((*i), byteWeaponId);
+			amx_Push((*i), wVehicleId);
+			amx_Push((*i), wDamagerId);
 			amx_Push((*i), iGameId);
 			// Execute the callback
 			amx_Exec((*i), &cReturn, iIndex);
@@ -243,14 +243,14 @@ void CCallbackManager::OnFinishNode(int iGameId)
 	}
 }
 
-void CCallbackManager::OnStreamIn(int iNPCId, int iForPlayerId)
+void CCallbackManager::OnStreamIn(int iNPCId, WORD wForPlayerId)
 {
 	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {
 		// Get the function index
 		int iIndex;
 		if (!amx_FindPublic((*i), "FCNPC_OnStreamIn", &iIndex)) {
 			// Push the parameters
-			amx_Push((*i), iForPlayerId);
+			amx_Push((*i), wForPlayerId);
 			amx_Push((*i), iNPCId);
 			// Execute the callback
 			amx_Exec((*i), NULL, iIndex);
@@ -258,14 +258,14 @@ void CCallbackManager::OnStreamIn(int iNPCId, int iForPlayerId)
 	}
 }
 
-void CCallbackManager::OnStreamOut(int iNPCId, int iForPlayerId)
+void CCallbackManager::OnStreamOut(int iNPCId, WORD wForPlayerId)
 {
 	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {
 		// Get the function index
 		int iIndex;
 		if (!amx_FindPublic((*i), "FCNPC_OnStreamOut", &iIndex)) {
 			// Push the parameters
-			amx_Push((*i), iForPlayerId);
+			amx_Push((*i), wForPlayerId);
 			amx_Push((*i), iNPCId);
 			// Execute the callback
 			amx_Exec((*i), NULL, iIndex);

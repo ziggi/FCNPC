@@ -130,14 +130,14 @@ void CFunctions::KillPlayer(CPlayer *pPlayer, BYTE byteReason, WORD wKillerId)
 	pfn__CPlayer__Kill(pPlayer, byteReason, wKillerId);
 }
 
-void CFunctions::PlayerEnterVehicle(CPlayer *pPlayer, int iVehicleId, int iSeatId)
+void CFunctions::PlayerEnterVehicle(CPlayer *pPlayer, WORD wVehicleId, BYTE byteSeatId)
 {
-	pfn__CPlayer__EnterVehicle(pPlayer, iVehicleId, iSeatId);
+	pfn__CPlayer__EnterVehicle(pPlayer, wVehicleId, byteSeatId);
 }
 
-void CFunctions::PlayerExitVehicle(CPlayer *pPlayer, int iVehicleId)
+void CFunctions::PlayerExitVehicle(CPlayer *pPlayer, WORD wVehicleId)
 {
-	pfn__CPlayer__ExitVehicle(pPlayer, iVehicleId);
+	pfn__CPlayer__ExitVehicle(pPlayer, wVehicleId);
 }
 
 CVector *CFunctions::GetVehicleModelInfoEx(int iModelId, int iInfoType)
@@ -155,7 +155,7 @@ int CFunctions::GetMaxNPC()
 	return pfn__CConsole__GetIntVariable(pConsole, "maxnpc");
 }
 
-void CFunctions::PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE iWeaponId, CVector vecPoint)
+void CFunctions::PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE byteWeaponId, CVector vecPoint)
 {
 	// Validate the player
 	if (!pServer->GetPlayerManager()->IsNpcConnected(iPlayerId)) {
@@ -170,7 +170,7 @@ void CFunctions::PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE iWe
 	CBulletSyncData bulletSyncData;
 	bulletSyncData.wHitID = iHitId;
 	bulletSyncData.byteHitType = iHitType;
-	bulletSyncData.byteWeaponID = iWeaponId;
+	bulletSyncData.byteWeaponID = byteWeaponId;
 	bulletSyncData.vecCenterOfHit = CVector(0.1f, 0.1f, 0.1f);
 	bulletSyncData.vecHitOrigin = vecPosition;
 	bulletSyncData.vecHitTarget = vecPoint;
@@ -200,9 +200,9 @@ void CFunctions::PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE iWe
 		CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(bulletSyncData.wHitID);
 
 		if (!pPlayerData->IsInvulnerable()) {
-			SWeaponInfo sWeaponInfo = CWeaponInfo::GetDefaultInfo(iWeaponId);
+			SWeaponInfo sWeaponInfo = CWeaponInfo::GetDefaultInfo(byteWeaponId);
 
-			pPlayerData->ProcessDamage(iPlayerId, sWeaponInfo.fDamage, iWeaponId, BODY_PART_TORSO);
+			pPlayerData->ProcessDamage(iPlayerId, sWeaponInfo.fDamage, byteWeaponId, BODY_PART_TORSO);
 		}
 	}
 
@@ -247,7 +247,7 @@ void CFunctions::AddedPlayersRPC(int* szUniqueID, RakNet::BitStream* bsParams, i
 	}
 }
 
-void CFunctions::AddedVehicleRPC(int* szUniqueID, RakNet::BitStream* bsParams, int iVehicleId, int iExcludePlayerId, char PacketStream)
+void CFunctions::AddedVehicleRPC(int* szUniqueID, RakNet::BitStream* bsParams, WORD wVehicleId, int iExcludePlayerId, char PacketStream)
 {
 	CPlayer *pPlayer;
 
@@ -255,7 +255,7 @@ void CFunctions::AddedVehicleRPC(int* szUniqueID, RakNet::BitStream* bsParams, i
 		if (pNetGame->pPlayerPool->bIsPlayerConnectedEx[i] && i != iExcludePlayerId) {
 			pPlayer = pNetGame->pPlayerPool->pPlayer[i];
 
-			if (pPlayer && pPlayer->byteVehicleStreamedIn[iVehicleId]) {
+			if (pPlayer && pPlayer->byteVehicleStreamedIn[wVehicleId]) {
 				pRakServer->RPC(szUniqueID, bsParams, HIGH_PRIORITY, RELIABLE_ORDERED, PacketStream, pRakServer->GetPlayerIDFromIndex(i), false, false);
 			}
 		}

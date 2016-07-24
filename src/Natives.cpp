@@ -138,7 +138,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsStreamedIn(AMX *amx, cell *params)
 
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);
-	int iForPlayerId = static_cast<int>(params[2]);
+	WORD wForPlayerId = static_cast<WORD>(params[2]);
 
 	// Make sure the npc is valid
 	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
@@ -146,12 +146,12 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsStreamedIn(AMX *amx, cell *params)
 	}
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsPlayerConnected(iForPlayerId) || iForPlayerId == wNpcId) {
+	if (!pServer->GetPlayerManager()->IsPlayerConnected(wForPlayerId) || wForPlayerId == wNpcId) {
 		return 0;
 	}
 
 	// Return the player is streamed
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->IsStreamedIn(iForPlayerId);
+	return pServer->GetPlayerManager()->GetAt(wNpcId)->IsStreamedIn(wForPlayerId);
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsStreamedForAnyone(AMX *amx, cell *params)
@@ -1150,20 +1150,20 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponSkillLevel(AMX *amx, cell *params)
 
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);
-	int iSkill = static_cast<int>(params[2]);
-	int iLevel = static_cast<int>(params[3]);
+	DWORD dwSkill = static_cast<DWORD>(params[2]);
+	WORD wLevel = static_cast<WORD>(params[3]);
 
 	// Make sure the player is valid
 	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
 		return 0;
 	}
 
-	if (iSkill < 0 || iSkill > 10) {
+	if (dwSkill < 0 || dwSkill > 10) {
 		return 0;
 	}
 
 	// Set the player weapon skill level
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetWeaponSkill(iSkill, iLevel);
+	pServer->GetPlayerManager()->GetAt(wNpcId)->SetWeaponSkill(dwSkill, wLevel);
 	return 1;
 }
 
@@ -1173,7 +1173,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponSkillLevel(AMX *amx, cell *params)
 
 	// Get params
 	WORD wNpcId = static_cast<WORD>(params[1]);
-	int iSkill = static_cast<int>(params[2]);
+	DWORD dwSkill = static_cast<DWORD>(params[2]);
 
 	// Make sure the player is valid
 	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
@@ -1181,7 +1181,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponSkillLevel(AMX *amx, cell *params)
 	}
 
 	// Get the player weapon skill level
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetWeaponSkill(iSkill);
+	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetWeaponSkill(dwSkill);
 }
 
 // native FCNPC_SetWeaponState(npcid, weaponstate);
@@ -1234,7 +1234,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponReloadTime(AMX *amx, cell *params)
 
 	// Get params
 	WORD wNpcId = static_cast<WORD>(params[1]);
-	int iWeaponId = static_cast<int>(params[2]);
+	BYTE byteWeaponId = static_cast<BYTE>(params[2]);
 	int iReloadTime = static_cast<int>(params[3]);
 
 	// Make sure the player is valid
@@ -1243,7 +1243,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponReloadTime(AMX *amx, cell *params)
 	}
 
 	// Set the player weapon reload time
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->SetWeaponReloadTime(iWeaponId, iReloadTime);
+	return pServer->GetPlayerManager()->GetAt(wNpcId)->SetWeaponReloadTime(byteWeaponId, iReloadTime);
 }
 
 // native FCNPC_GetWeaponReloadTime(npcid, weaponid);
@@ -1253,7 +1253,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponReloadTime(AMX *amx, cell *params)
 
 	// Get params
 	WORD wNpcId = static_cast<WORD>(params[1]);
-	int iWeaponId = static_cast<int>(params[2]);
+	BYTE byteWeaponId = static_cast<BYTE>(params[2]);
 
 	// Make sure the player is valid
 	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
@@ -1261,7 +1261,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponReloadTime(AMX *amx, cell *params)
 	}
 
 	// Get the player weapon reload time
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetWeaponReloadTime(iWeaponId);
+	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetWeaponReloadTime(byteWeaponId);
 }
 
 // native FCNPC_SetWeaponShootTime(npcid, weaponid, time);
@@ -1271,7 +1271,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponShootTime(AMX *amx, cell *params)
 
 	// Get params
 	WORD wNpcId = static_cast<WORD>(params[1]);
-	int iWeaponId = static_cast<int>(params[2]);
+	BYTE byteWeaponId = static_cast<BYTE>(params[2]);
 	int iShootTime = static_cast<int>(params[3]);
 
 	// Make sure the player is valid
@@ -1280,7 +1280,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponShootTime(AMX *amx, cell *params)
 	}
 
 	// Set the player weapon shoot time
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->SetWeaponShootTime(iWeaponId, iShootTime);
+	return pServer->GetPlayerManager()->GetAt(wNpcId)->SetWeaponShootTime(byteWeaponId, iShootTime);
 }
 
 // native FCNPC_GetWeaponShootTime(npcid, weaponid);
@@ -1290,7 +1290,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponShootTime(AMX *amx, cell *params)
 
 	// Get params
 	WORD wNpcId = static_cast<WORD>(params[1]);
-	int iWeaponId = static_cast<int>(params[2]);
+	BYTE byteWeaponId = static_cast<BYTE>(params[2]);
 
 	// Make sure the player is valid
 	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
@@ -1298,7 +1298,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponShootTime(AMX *amx, cell *params)
 	}
 
 	// Get the player weapon shoot time
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetWeaponShootTime(iWeaponId);
+	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetWeaponShootTime(byteWeaponId);
 }
 
 // native FCNPC_SetWeaponClipSize(npcid, weaponid, size);
@@ -1308,7 +1308,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponClipSize(AMX *amx, cell *params)
 
 	// Get params
 	WORD wNpcId = static_cast<WORD>(params[1]);
-	int iWeaponId = static_cast<int>(params[2]);
+	BYTE byteWeaponId = static_cast<BYTE>(params[2]);
 	int iClipSize = static_cast<int>(params[3]);
 
 	// Make sure the player is valid
@@ -1317,7 +1317,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponClipSize(AMX *amx, cell *params)
 	}
 
 	// Set the player weapon clip size
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->SetWeaponClipSize(iWeaponId, iClipSize);
+	return pServer->GetPlayerManager()->GetAt(wNpcId)->SetWeaponClipSize(byteWeaponId, iClipSize);
 }
 
 // native FCNPC_GetWeaponClipSize(npcid, weaponid);
@@ -1327,7 +1327,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponClipSize(AMX *amx, cell *params)
 
 	// Get params
 	WORD wNpcId = static_cast<WORD>(params[1]);
-	int iWeaponId = static_cast<int>(params[2]);
+	BYTE byteWeaponId = static_cast<BYTE>(params[2]);
 
 	// Make sure the player is valid
 	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
@@ -1335,7 +1335,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponClipSize(AMX *amx, cell *params)
 	}
 
 	// Get the player weapon clip size
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetWeaponClipSize(iWeaponId);
+	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetWeaponClipSize(byteWeaponId);
 }
 
 // native FCNPC_SetWeaponInfo(npcid, weaponid, reload_time = -1, shoot_time = -1, clip_size = -1);
@@ -1345,7 +1345,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponInfo(AMX *amx, cell *params)
 
 	// Get params
 	WORD wNpcId = static_cast<WORD>(params[1]);
-	int iWeaponId = static_cast<int>(params[2]);
+	BYTE byteWeaponId = static_cast<BYTE>(params[2]);
 	int iReloadTime = static_cast<int>(params[3]);
 	int iShootTime = static_cast<int>(params[4]);
 	int iClipSize = static_cast<int>(params[5]);
@@ -1356,7 +1356,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponInfo(AMX *amx, cell *params)
 	}
 
 	// Set the player weapon info
-	SWeaponInfo sWeaponInfo = pServer->GetPlayerManager()->GetAt(wNpcId)->GetWeaponInfo(iWeaponId);
+	SWeaponInfo sWeaponInfo = pServer->GetPlayerManager()->GetAt(wNpcId)->GetWeaponInfo(byteWeaponId);
 
 	if (iClipSize != -1) {
 		sWeaponInfo.iClipSize = iClipSize;
@@ -1370,7 +1370,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponInfo(AMX *amx, cell *params)
 		sWeaponInfo.iShootTime = iShootTime;
 	}
 
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->SetWeaponInfo(iWeaponId, sWeaponInfo);
+	return pServer->GetPlayerManager()->GetAt(wNpcId)->SetWeaponInfo(byteWeaponId, sWeaponInfo);
 }
 
 // native FCNPC_GetWeaponInfo(npcid, weaponid, &reload_time = -1, &shoot_time = -1, &clip_size = -1);
@@ -1380,15 +1380,15 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponInfo(AMX *amx, cell *params)
 
 	// get params
 	WORD wNpcId = static_cast<WORD>(params[1]);
-	int iWeaponId = static_cast<int>(params[2]);
+	BYTE byteWeaponId = static_cast<BYTE>(params[2]);
 
 	// valid weapon
-	if (!CWeaponInfo::IsValid(iWeaponId)) {
+	if (!CWeaponInfo::IsValid(byteWeaponId)) {
 		return 0;
 	}
 
 	// get weapon info
-	SWeaponInfo sWeaponInfo = pServer->GetPlayerManager()->GetAt(wNpcId)->GetWeaponInfo(iWeaponId);
+	SWeaponInfo sWeaponInfo = pServer->GetPlayerManager()->GetAt(wNpcId)->GetWeaponInfo(byteWeaponId);
 
 	// write data to amx
 	cell *pAddress = NULL;
@@ -1410,13 +1410,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponDefaultInfo(AMX *amx, cell *params
 	CHECK_PARAMS(5, "FCNPC_SetWeaponDefaultInfo");
 
 	// Get params
-	int iWeaponId = static_cast<int>(params[1]);
+	BYTE byteWeaponId = static_cast<BYTE>(params[1]);
 	int iReloadTime = static_cast<int>(params[2]);
 	int iShootTime = static_cast<int>(params[3]);
 	int iClipSize = static_cast<int>(params[4]);
 
 	// Set default weapon info
-	SWeaponInfo sWeaponInfo = CWeaponInfo::GetDefaultInfo(iWeaponId);
+	SWeaponInfo sWeaponInfo = CWeaponInfo::GetDefaultInfo(byteWeaponId);
 
 	if (iClipSize != -1) {
 		sWeaponInfo.iClipSize = iClipSize;
@@ -1430,7 +1430,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponDefaultInfo(AMX *amx, cell *params
 		sWeaponInfo.iShootTime = iShootTime;
 	}
 
-	return CWeaponInfo::SetDefaultInfo(iWeaponId, sWeaponInfo);
+	return CWeaponInfo::SetDefaultInfo(byteWeaponId, sWeaponInfo);
 }
 
 // native FCNPC_GetWeaponDefaultInfo(weaponid, &reload_time = -1, &shoot_time = -1, &clip_size = -1);
@@ -1439,15 +1439,15 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponDefaultInfo(AMX *amx, cell *params
 	CHECK_PARAMS(5, "FCNPC_GetWeaponDefaultInfo");
 
 	// get params
-	int iWeaponId = static_cast<int>(params[1]);
+	BYTE byteWeaponId = static_cast<BYTE>(params[1]);
 
 	// valid weapon
-	if (!CWeaponInfo::IsValid(iWeaponId)) {
+	if (!CWeaponInfo::IsValid(byteWeaponId)) {
 		return 0;
 	}
 
 	// get weapon info
-	SWeaponInfo sWeaponInfo = CWeaponInfo::GetDefaultInfo(iWeaponId);
+	SWeaponInfo sWeaponInfo = CWeaponInfo::GetDefaultInfo(byteWeaponId);
 
 	// write data to amx
 	cell *pAddress = NULL;
@@ -1682,8 +1682,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_EnterVehicle(AMX *amx, cell *params)
 
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);
-	int iVehicleId = static_cast<int>(params[2]);
-	int iSeatId = static_cast<int>(params[3]);
+	WORD wVehicleId = static_cast<WORD>(params[2]);
+	BYTE byteSeatId = static_cast<BYTE>(params[3]);
 	int iType = static_cast<int>(params[4]);
 
 	// Make sure the player is valid
@@ -1692,7 +1692,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_EnterVehicle(AMX *amx, cell *params)
 	}
 
 	// Make the player enter the vehicle
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->EnterVehicle(iVehicleId, iSeatId, iType);
+	return pServer->GetPlayerManager()->GetAt(wNpcId)->EnterVehicle(wVehicleId, byteSeatId, iType);
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_ExitVehicle(AMX *amx, cell *params)
@@ -1717,8 +1717,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_PutInVehicle(AMX *amx, cell *params)
 
 	// Get the parameters
 	WORD wNpcId = static_cast<WORD>(params[1]);
-	int iVehicleId = static_cast<int>(params[2]);
-	int iSeatId = static_cast<int>(params[3]);
+	WORD wVehicleId = static_cast<WORD>(params[2]);
+	BYTE byteSeatId = static_cast<BYTE>(params[3]);
 
 	// Make sure the player is valid
 	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
@@ -1726,7 +1726,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_PutInVehicle(AMX *amx, cell *params)
 	}
 
 	// Make the player enter the vehicle
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->PutInVehicle(iVehicleId, iSeatId);
+	return pServer->GetPlayerManager()->GetAt(wNpcId)->PutInVehicle(wVehicleId, byteSeatId);
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_RemoveFromVehicle(AMX *amx, cell *params)
@@ -1952,7 +1952,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetSurfingVehicle(AMX *amx, cell *params)
 
 	// Get params
 	WORD wNpcId = static_cast<WORD>(params[1]);
-	int iVehicleId = static_cast<int>(params[2]);
+	WORD wVehicleId = static_cast<WORD>(params[2]);
 
 	// Make sure the player is valid
 	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
@@ -1960,12 +1960,12 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetSurfingVehicle(AMX *amx, cell *params)
 	}
 
 	// Valid vehicle
-	if (iVehicleId < 1 || iVehicleId > MAX_VEHICLES) {
+	if (wVehicleId < 1 || wVehicleId > MAX_VEHICLES) {
 		return 0;
 	}
 
 	// Set the surfing vehicle
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetSurfingVehicle(iVehicleId);
+	pServer->GetPlayerManager()->GetAt(wNpcId)->SetSurfingVehicle(wVehicleId);
 	return 1;
 }
 
@@ -1993,7 +1993,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetSurfingObject(AMX *amx, cell *params)
 
 	// Get params
 	WORD wNpcId = static_cast<WORD>(params[1]);
-	int iObjectId = static_cast<int>(params[2]);
+	WORD wObjectId = static_cast<WORD>(params[2]);
 
 	// Make sure the player is valid
 	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
@@ -2001,12 +2001,12 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetSurfingObject(AMX *amx, cell *params)
 	}
 
 	// Validate the object
-	if (iObjectId < 1 || iObjectId > MAX_OBJECTS) {
+	if (wObjectId < 1 || wObjectId > MAX_OBJECTS) {
 		return 0;
 	}
 
 	// Set the surfing object
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetSurfingObject(iObjectId);
+	pServer->GetPlayerManager()->GetAt(wNpcId)->SetSurfingObject(wObjectId);
 	return 1;
 }
 
@@ -2034,7 +2034,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetSurfingPlayerObject(AMX *amx, cell *para
 
 	// Get params
 	WORD wNpcId = static_cast<WORD>(params[1]);
-	int iObjectId = static_cast<int>(params[2]);
+	WORD wObjectId = static_cast<WORD>(params[2]);
 
 	// Make sure the player is valid
 	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
@@ -2042,12 +2042,12 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetSurfingPlayerObject(AMX *amx, cell *para
 	}
 
 	// Validate the object
-	if (iObjectId < 1 || iObjectId > MAX_OBJECTS) {
+	if (wObjectId < 1 || wObjectId > MAX_OBJECTS) {
 		return 0;
 	}
 
 	// Set the surfing object
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetSurfingPlayerObject(iObjectId);
+	pServer->GetPlayerManager()->GetAt(wNpcId)->SetSurfingPlayerObject(wObjectId);
 	return 1;
 }
 

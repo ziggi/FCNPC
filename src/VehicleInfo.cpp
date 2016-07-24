@@ -28,7 +28,7 @@ static const BYTE wMaxPassengers[212] = {
 	3, 1, 255, 255, 255, 3, 255, 255
 };                          // 605->611
 
-bool CVehicleInfo::IsValidPassengerSeat(BYTE iSeatId, WORD iModelId)
+bool CVehicleInfo::IsValidPassengerSeat(BYTE byteSeatId, WORD iModelId)
 {
 	if (!IsValidModel(iModelId)) {
 		return false;
@@ -36,7 +36,7 @@ bool CVehicleInfo::IsValidPassengerSeat(BYTE iSeatId, WORD iModelId)
 
 	WORD maxPassengers = GetMaxPassengers(iModelId);
 
-	if (iSeatId < 0 || iSeatId > maxPassengers || maxPassengers == 0xFF) {
+	if (byteSeatId < 0 || byteSeatId > maxPassengers || maxPassengers == 0xFF) {
 		return false;
 	}
 
