@@ -310,27 +310,3 @@ void CHooks::InstallHooks()
 	hookExec = subhook_new(pExec, (BYTE *)&amx_Exec_Hook);
 	subhook_install(hookExec);
 }
-
-void CHooks::InstallCallHook(DWORD dwInstallAddress, DWORD dwHookFunction)
-{
-	// Unprotect the address
-	CUtils::UnProtect(dwInstallAddress, 5);
-	// Calculate the installing address
-	DWORD dwFunction = dwHookFunction - (dwInstallAddress + 5);
-	// Write the call instruction
-	*(BYTE *)dwInstallAddress = 0xE8;
-	// Write the hook function address
-	*(DWORD *)(dwInstallAddress + 1) = dwFunction;
-}
-
-void CHooks::InstallJmpHook(DWORD dwInstallAddress, DWORD dwHookFunction)
-{
-	// Unprotect the address
-	CUtils::UnProtect(dwInstallAddress, 5);
-	// Calculate the installing address
-	DWORD dwFunction = dwHookFunction - (dwInstallAddress + 5);
-	// Write the jmp instruction
-	*(BYTE *)dwInstallAddress = 0xE9;
-	// Write the hook function address
-	*(DWORD *)(dwInstallAddress + 1) = dwFunction;
-}
