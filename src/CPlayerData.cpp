@@ -1493,7 +1493,11 @@ void CPlayerData::UpdateAimingData(CVector vecPoint, bool bSetAngle)
 	} else if (fZAngle < -1.0) {
 		fZAngle = -1.0;
 	}
-	fZAngle = -acos(fZAngle);
+	if (vecDistance.fZ < 0) {
+		fZAngle = acos(fZAngle);
+	} else {
+		fZAngle = -acos(fZAngle);
+	}
 
 	// Get the destination angle
 	vecDistance /= fDistance;
