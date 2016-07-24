@@ -22,7 +22,6 @@ CServer::CServer(eSAMPVersion version)
 	// Reset instances
 	m_pPlayerDataManager = NULL;
 	m_pNodeManager = NULL;
-	m_pDamageThread = NULL;
 	m_pMapAndreas = NULL;
 	// Initialize the update rate
 	m_dwUpdateRate = DEFAULT_UPDATE_RATE;
@@ -33,7 +32,6 @@ CServer::~CServer()
 	// Delete instance
 	SAFE_DELETE(m_pPlayerDataManager);
 	SAFE_DELETE(m_pNodeManager);
-	SAFE_DELETE(m_pDamageThread);
 	SAFE_DELETE(m_pMapAndreas);
 }
 

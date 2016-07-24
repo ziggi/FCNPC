@@ -51,7 +51,6 @@
 #include "Utils.hpp"
 #include "Common.h"
 #include "CVector.h"
-#include "Thread.hpp"
 #include "raknet/BitStream.h"
 // Nodes includes
 #include "Playback.hpp"
@@ -65,7 +64,6 @@
 #include "VehicleInfo.hpp"
 #include "WeaponInfo.hpp"
 #include "AnimationInfo.hpp"
-#include "ThreadFunctions.hpp"
 // SAMP includes
 #include "SAMPRakPeer.hpp"
 #include "CFunctions.hpp"

@@ -79,7 +79,6 @@ private:
 	eSAMPVersion   m_Version;
 	CPlayerManager *m_pPlayerDataManager;
 	CNodeManager   *m_pNodeManager;
-	CThread        *m_pDamageThread;
 	CMapAndreas    *m_pMapAndreas;
 	DWORD          m_dwUpdateRate;
 
