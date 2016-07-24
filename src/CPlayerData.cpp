@@ -1418,9 +1418,6 @@ bool CPlayerData::IsMoving()
 
 bool CPlayerData::IsMovingAtPlayer(WORD wPlayerId)
 {
-	if (wPlayerId <= 0 || wPlayerId > MAX_PLAYERS) {
-		return false;
-	}
 	return m_bMoving && m_wMoveId == wPlayerId;
 }
 
@@ -1583,9 +1580,6 @@ bool CPlayerData::IsAiming()
 
 bool CPlayerData::IsAimingAtPlayer(WORD wPlayerId)
 {
-	if (wPlayerId <= 0 || wPlayerId > MAX_PLAYERS) {
-		return false;
-	}
 	return m_bAiming && m_byteHitType == BULLET_HIT_TYPE_PLAYER && m_wHitId == wPlayerId;
 }
 
