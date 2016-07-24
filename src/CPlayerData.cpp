@@ -575,7 +575,7 @@ void CPlayerData::Process()
 
 	// Is the player moving at player
 	if (byteState == PLAYER_STATE_ONFOOT || byteState == PLAYER_STATE_DRIVER) {
-		if (IsMovingAtPlayer(m_wMoveId)) {
+		if (m_wMoveId >= 0 && m_wMoveId < MAX_PLAYERS && IsMovingAtPlayer(m_wMoveId)) {
 			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[m_wMoveId];
 			if (pPlayer) {
 				if (m_vecDestination != pPlayer->vecPosition) {
@@ -687,7 +687,7 @@ void CPlayerData::Process()
 			}
 
 			// Update vector pos
-			if (IsAimingAtPlayer(m_wHitId)) {
+			if (m_wHitId >= 0 && m_wHitId < MAX_PLAYERS && IsAimingAtPlayer(m_wHitId)) {
 				CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[m_wHitId];
 				if (pPlayer) {
 					if (m_vecAimAt != pPlayer->vecPosition) {
