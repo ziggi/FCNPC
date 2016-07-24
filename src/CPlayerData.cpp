@@ -455,14 +455,14 @@ void CPlayerData::UpdateAim()
 				SetWeaponState(WEAPONSTATE_NO_BULLETS);
 				break;
 		}
-		
+
 		// Is NPC is surfing
 		if (m_wSurfingInfo != 0) {
 			AimAt(m_vecAimAt, m_bShooting, m_dwShootDelay, m_bSetAimAngle);
 		}
 
 		// Update vector pos
-		if (m_byteHitType == BULLET_HIT_TYPE_PLAYER && m_wHitId != INVALID_PLAYER_ID) {
+		if (IsAimingAtPlayer(m_wHitId)) {
 			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[m_wHitId];
 			if (pPlayer) {
 				AimAt(pPlayer->vecPosition, m_bShooting, m_dwShootDelay, m_bSetAimAngle);
@@ -1537,6 +1537,11 @@ bool CPlayerData::IsAttacking()
 bool CPlayerData::IsAiming()
 {
 	return m_bAiming;
+}
+
+bool CPlayerData::IsAimingAtPlayer(int iPlayerId)
+{
+	return m_bAiming && m_byteHitType == BULLET_HIT_TYPE_PLAYER && m_wHitId == iPlayerId;
 }
 
 bool CPlayerData::IsShooting()

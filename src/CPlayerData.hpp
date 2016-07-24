@@ -128,6 +128,7 @@ public:
 	void StopAttack();
 	bool IsAttacking();
 	bool IsAiming();
+	bool IsAimingAtPlayer(int iPlayerId);
 	bool IsShooting();
 	bool IsReloading();
 

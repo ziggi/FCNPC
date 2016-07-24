@@ -1579,6 +1579,32 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsAiming(AMX *amx, cell *params)
 	return pServer->GetPlayerManager()->GetAt(iNPCId)->IsAiming() ? 1 : 0;
 }
 
+// native FCNPC_IsAimingAtPlayer(npcid, playerid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_IsAimingAtPlayer(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_IsAimingAtPlayer");
+
+	// Get the params
+	int iNPCId = (int)params[1];
+	int iPlayerId = (int)params[2];
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
+		return 0;
+	}
+
+	if (iPlayerId < 0 || iPlayerId >= MAX_PLAYERS) {
+		return 0;
+	}
+
+	if (!pNetGame->pPlayerPool->bIsPlayerConnectedEx[iPlayerId] || iPlayerId == iNPCId) {
+		return 0;
+	}
+
+	// Get the player aiming state
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->IsAimingAtPlayer(iPlayerId) ? 1 : 0;
+}
+
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsShooting(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_IsShooting");
