@@ -158,7 +158,7 @@ int CFunctions::GetMaxNPC()
 void CFunctions::PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE iWeaponId, CVector vecPoint)
 {
 	// Validate the player
-	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iPlayerId)) {
+	if (!pServer->GetPlayerManager()->IsNpcConnected(iPlayerId)) {
 		return;
 	}
 
@@ -178,7 +178,7 @@ void CFunctions::PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE iWe
 	// find player in vecPoint
 	if (bulletSyncData.byteHitType == BULLET_HIT_TYPE_NONE) {
 		for (int i = 0; i < pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
-			if (!pNetGame->pPlayerPool->bIsPlayerConnectedEx[i] || iPlayerId == i) {
+			if (!pServer->GetPlayerManager()->IsPlayerConnected(iPlayerId) || iPlayerId == i) {
 				continue;
 			}
 
@@ -196,7 +196,7 @@ void CFunctions::PlayerShoot(int iPlayerId, WORD iHitId, BYTE iHitType, BYTE iWe
 	}
 
 	// if it is a NPC
-	if (bulletSyncData.byteHitType == BULLET_HIT_TYPE_PLAYER && pServer->GetPlayerManager()->IsPlayerConnectedEx(bulletSyncData.wHitID)) {
+	if (bulletSyncData.byteHitType == BULLET_HIT_TYPE_PLAYER && pServer->GetPlayerManager()->IsNpcConnected(bulletSyncData.wHitID)) {
 		CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(bulletSyncData.wHitID);
 
 		if (!pPlayerData->IsInvulnerable()) {

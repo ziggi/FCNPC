@@ -242,7 +242,7 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 		if (pWeaponShot.iHitType == BULLET_HIT_TYPE_VEHICLE) {
 			WORD wPlayerId = pServer->GetVehicleSeatPlayerId(pWeaponShot.iHitId, 0);
 
-			if (pServer->GetPlayerManager()->IsPlayerConnectedEx(wPlayerId)) {
+			if (pServer->GetPlayerManager()->IsNpcConnected(wPlayerId)) {
 				pServer->GetPlayerManager()->GetAt(wPlayerId)->ProcessVehicleDamage(
 					pWeaponShot.iPlayerId, pWeaponShot.iHitId, pWeaponShot.iWeaponId, pWeaponShot.vecHit);
 			}
@@ -252,7 +252,7 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 	} else if (bStreamIn) {
 		bStreamIn = false;
 
-		if (pServer->GetPlayerManager()->IsPlayerConnectedEx(pStreamIn.iPlayerId)) {
+		if (pServer->GetPlayerManager()->IsNpcConnected(pStreamIn.iPlayerId)) {
 			// call custom callback
 			pServer->GetPlayerManager()->GetAt(pStreamIn.iPlayerId)->ProcessStreamIn(pStreamIn.iForPlayerId);
 			bFindPublicIsBlocked = true;
@@ -265,7 +265,7 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 	} else if (bStreamOut) {
 		bStreamOut = false;
 
-		if (pServer->GetPlayerManager()->IsPlayerConnectedEx(pStreamIn.iPlayerId)) {
+		if (pServer->GetPlayerManager()->IsNpcConnected(pStreamIn.iPlayerId)) {
 			// call custom callback
 			pServer->GetPlayerManager()->GetAt(pStreamIn.iPlayerId)->ProcessStreamOut(pStreamIn.iForPlayerId);
 			bFindPublicIsBlocked = true;

@@ -535,7 +535,7 @@ void CPlayerData::Process()
 		return;
 	}
 
-	if (!pNetGame->pPlayerPool->bIsPlayerConnectedEx[m_playerId]) {
+	if (!pServer->GetPlayerManager()->IsPlayerConnected(m_playerId)) {
 		pServer->GetPlayerManager()->DeletePlayer(m_playerId);
 		return;
 	}
@@ -736,7 +736,7 @@ void CPlayerData::Process()
 				if (iShootTime != -1 && iShootTime < m_iShootDelay) {
 					m_iShootDelay = iShootTime - pServer->GetUpdateRate();
 				}
-				
+
 				if ((dwThisTick - m_dwShootTickCount) >= m_iShootDelay) {
 					SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM);
 				}
@@ -1153,16 +1153,15 @@ SWeaponInfo CPlayerData::GetWeaponInfo(int iWeaponId)
 	return m_pWeaponInfo->GetInfo(iWeaponId);
 }
 
-void CPlayerData::SetSpecialAction(int iActionId)
+void CPlayerData::SetSpecialAction(BYTE byteActionId)
 {
 	// Validate the action id
-	if (iActionId < 0 || (iActionId > 13 && (iActionId != 20 && iActionId != 21 && iActionId != 22
-	                      && iActionId != 23 && iActionId != 24 && iActionId != 25 && iActionId != 68))) {
+	if (byteActionId < 0 || byteActionId > 13 && byteActionId < 20 || byteActionId > 25 && byteActionId != 68) {
 		return;
 	}
 
 	// Set the player action
-	m_pPlayer->syncData.byteSpecialAction = (BYTE)iActionId;
+	m_pPlayer->syncData.byteSpecialAction = byteActionId;
 }
 
 int CPlayerData::GetSpecialAction()

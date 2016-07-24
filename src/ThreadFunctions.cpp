@@ -31,7 +31,7 @@ void CThreadFunctions::DamageThread(void *pThread)
 			for (int i = 0; i < pNetGame->pPlayerPool->dwPlayerPoolSize; i++)
 			{
 				// Ignore non connected players
-				if (!pPlayerPool->bIsPlayerConnectedEx[i] ||
+				if (!pServer->GetPlayerManager()->IsPlayerConnected(i) ||
 					(pServer->GetPlayerManager()->IsNPC(i) && !pServer->GetPlayerManager()->GetAt(i)->IsSpawned()))
 					continue;
 
@@ -39,7 +39,7 @@ void CThreadFunctions::DamageThread(void *pThread)
 				for (int j = pNetGame->pPlayerPool->dwPlayerPoolSize; j != -1; j--)
 				{
 					// Ignore non connected NPCs
-					if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(j) || !pServer->GetPlayerManager()->GetAt(j)->IsSpawned())
+					if (!pServer->GetPlayerManager()->IsNpcConnected(j) || !pServer->GetPlayerManager()->GetAt(j)->IsSpawned())
 						continue;
 
 					// Process damage for players

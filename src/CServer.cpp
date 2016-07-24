@@ -159,7 +159,7 @@ WORD CServer::GetVehicleSeatPlayerId(WORD wVehicleId, BYTE byteSeatId)
 	// Loop through all the players
 	for (int i = 0; i < pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
 		// Ignore non connected players and the same player
-		if (!pPlayerPool->bIsPlayerConnectedEx[i]) {
+		if (!pServer->GetPlayerManager()->IsPlayerConnected(i)) {
 			continue;
 		}
 

@@ -101,7 +101,7 @@ public:
 	void SetKeys(WORD wUDAnalog, WORD wLRAnalog, DWORD dwKeys);
 	void GetKeys(WORD *pwUDAnalog, WORD *pwLRAnalog, DWORD *pdwKeys);
 
-	void SetSpecialAction(int iActionId);
+	void SetSpecialAction(BYTE byteActionId);
 	int GetSpecialAction();
 
 	void SetFightingStyle(int iStyle);

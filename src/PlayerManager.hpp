@@ -19,16 +19,17 @@ public:
 	CPlayerManager();
 	~CPlayerManager();
 
-	bool IsPlayerConnectedEx(WORD playerId);
-	CPlayerData *GetAt(WORD playerId);
-	bool SetupPlayer(WORD playerId);
+	bool IsNpcConnected(WORD wPlayerId);
+	bool IsPlayerConnected(WORD wPlayerId);
+	CPlayerData *GetAt(WORD wPlayerId);
+	bool SetupPlayer(WORD wPlayerId);
 
 	WORD AddPlayer(char *szName);
-	bool DeletePlayer(WORD playerId);
+	bool DeletePlayer(WORD wPlayerId);
 
 	void Process();
 
-	bool IsNPC(int iPlayerId);
+	bool IsNPC(WORD wPlayerId);
 
 private:
 	WORD m_players;

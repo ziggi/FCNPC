@@ -75,19 +75,19 @@ WORD CPlayerManager::AddPlayer(char *szName)
 	return iGameId;
 }
 
-bool CPlayerManager::DeletePlayer(WORD playerId)
+bool CPlayerManager::DeletePlayer(WORD wPlayerId)
 {
 	// If he's not connected then dont go any further
-	if (!m_bConnected[playerId]) {
+	if (!m_bConnected[wPlayerId]) {
 		return false;
 	}
 
 	// Destroy the player
-	m_pPlayerData[playerId]->Destroy();
+	m_pPlayerData[wPlayerId]->Destroy();
 	// Delete the player instance
-	SAFE_DELETE(m_pPlayerData[playerId]);
+	SAFE_DELETE(m_pPlayerData[wPlayerId]);
 	// Mark not connected
-	m_bConnected[playerId] = false;
+	m_bConnected[wPlayerId] = false;
 	// Decrease players count
 	m_players--;
 	return true;
@@ -103,27 +103,32 @@ void CPlayerManager::Process()
 	}
 }
 
-bool CPlayerManager::IsPlayerConnectedEx(WORD playerId)
+bool CPlayerManager::IsNpcConnected(WORD wPlayerId)
 {
-	if (playerId >= MAX_PLAYERS || playerId < 0) {
+	return IsPlayerConnected(wPlayerId) && IsNPC(wPlayerId);
+}
+
+bool CPlayerManager::IsPlayerConnected(WORD wPlayerId)
+{
+	if (wPlayerId >= MAX_PLAYERS || wPlayerId < 0) {
 		return false;
 	} else {
-		return m_bConnected[playerId];
+		return pNetGame->pPlayerPool->bIsPlayerConnectedEx[wPlayerId];
 	}
 }
 
-CPlayerData *CPlayerManager::GetAt(WORD playerId)
+CPlayerData *CPlayerManager::GetAt(WORD wPlayerId)
 {
-	return m_pPlayerData[playerId];
+	return m_pPlayerData[wPlayerId];
 }
 
-bool CPlayerManager::SetupPlayer(WORD playerId)
+bool CPlayerManager::SetupPlayer(WORD wPlayerId)
 {
 	// Setup the NPC
-	return GetAt(playerId)->Setup();
+	return GetAt(wPlayerId)->Setup();
 }
 
-bool CPlayerManager::IsNPC(int iPlayerId)
+bool CPlayerManager::IsNPC(WORD wPlayerId)
 {
-	return m_bConnected[iPlayerId];
+	return m_bConnected[wPlayerId];
 }
