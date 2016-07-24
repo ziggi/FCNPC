@@ -126,6 +126,7 @@ public:
 
 	void AimAt(CVector vecPoint, bool bShoot, int iShootDelay, bool bSetAngle);
 	void AimAtPlayer(WORD wHitId, bool bShoot, int iShootDelay, bool bSetAngle);
+	void UpdateAimingData(CVector vecPoint, bool bSetAngle);
 	void StopAim();
 	bool MeleeAttack(int iTime, bool bUseFightstyle);
 	void StopAttack();
@@ -207,7 +208,7 @@ private:
 	BYTE m_byteWeaponId;
 	WORD m_wAmmo;
 	WORD m_wHitId;
-	bool m_bSetAimAngle;
+	bool m_bAimSetAngle;
 	BYTE m_byteHitType;
 	WORD m_wVehicleToEnter;
 	BYTE m_byteSeatToEnter;

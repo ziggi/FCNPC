@@ -460,21 +460,6 @@ void CPlayerData::UpdateAim()
 				SetWeaponState(WEAPONSTATE_NO_BULLETS);
 				break;
 		}
-
-		// Is NPC is surfing
-		if (m_wSurfingInfo != 0) {
-			AimAt(m_vecAimAt, m_bShooting, m_iShootDelay, m_bSetAimAngle);
-		}
-
-		// Update vector pos
-		if (IsAimingAtPlayer(m_wHitId)) {
-			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[m_wHitId];
-			if (pPlayer) {
-				AimAt(pPlayer->vecPosition, m_bShooting, m_iShootDelay, m_bSetAimAngle);
-			} else {
-				StopAim();
-			}
-		}
 	} else {
 		// Set the camera mode and weapon state
 		m_pPlayer->aimSyncData.byteCameraMode = 0;
@@ -594,8 +579,7 @@ void CPlayerData::Process()
 			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[m_wMoveId];
 			if (pPlayer) {
 				if (m_vecDestination != pPlayer->vecPosition) {
-					m_vecDestination = pPlayer->vecPosition;
-					UpdateMovingData(m_vecDestination, m_bMoveSetAngle, m_fMoveSpeed);
+					UpdateMovingData(pPlayer->vecPosition, m_bMoveSetAngle, m_fMoveSpeed);
 				}
 			} else {
 				StopMoving();
@@ -695,6 +679,25 @@ void CPlayerData::Process()
 				m_byteSeatToEnter = 0;
 			}
 		}
+		// Process player aiming
+		if (m_bAiming) {
+			// Is NPC is surfing
+			if (m_wSurfingInfo != 0) {
+				UpdateAimingData(m_vecAimAt, m_bAimSetAngle);
+			}
+
+			// Update vector pos
+			if (IsAimingAtPlayer(m_wHitId)) {
+				CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[m_wHitId];
+				if (pPlayer) {
+					if (m_vecAimAt != pPlayer->vecPosition) {
+						UpdateAimingData(pPlayer->vecPosition, m_bAimSetAngle);
+					}
+				} else {
+					StopAim();
+				}
+			}
+		}
 		// Process player reloading
 		if (m_bReloading) {
 			// Get the reload time
@@ -724,15 +727,16 @@ void CPlayerData::Process()
 					// This is done so the NPC would keep reloading even if the infinite ammo flag is set
 					m_wAmmo = 500;
 				}
-			} else {
+			}
+			if (m_wAmmo > 0) {
 				// Get the shoot time
 				int iShootTime = GetWeaponShootTime(m_byteWeaponId);
 
 				// shoot delay
-				if (iShootTime != -1 && (DWORD)iShootTime < m_iShootDelay) {
-					m_iShootDelay = (DWORD)iShootTime - pServer->GetUpdateRate();
+				if (iShootTime != -1 && iShootTime < m_iShootDelay) {
+					m_iShootDelay = iShootTime - pServer->GetUpdateRate();
 				}
-
+				
 				if ((dwThisTick - m_dwShootTickCount) >= m_iShootDelay) {
 					SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM);
 				}
@@ -1297,11 +1301,9 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float f
 		return false;
 	}
 
-	// Save the destination point
-	m_vecDestination = vecPoint;
 	// Add radius
 	if (fRadius != 0.0f) {
-		m_vecDestination -= CVector(CUtils::RandomFloat(-fRadius, fRadius), CUtils::RandomFloat(-fRadius, fRadius), 0.0);
+		vecPoint -= CVector(CUtils::RandomFloat(-fRadius, fRadius), CUtils::RandomFloat(-fRadius, fRadius), 0.0);
 	}
 
 	// Get the moving type key and speed
@@ -1346,15 +1348,13 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float f
 	// Set the moving keys
 	SetKeys(wUDKey, wLRKey, dwMoveKey);
 	// Update moving data
-	UpdateMovingData(m_vecDestination, bSetAngle, fSpeed);
+	UpdateMovingData(vecPoint, bSetAngle, fSpeed);
 	// Mark as moving
 	m_bMoving = true;
 	// Save the flags
 	m_bUseMapAndreas = bUseMapAndreas;
 	m_iMoveType = iType;
 	m_fMoveRadius = fRadius;
-	m_bMoveSetAngle = bSetAngle;
-	m_fMoveSpeed = fSpeed;
 	return true;
 }
 
@@ -1388,6 +1388,10 @@ void CPlayerData::UpdateMovingData(CVector vecDestination, bool bSetAngle, float
 	// Get the start move tick
 	m_dwMoveTickCount =
 		m_dwMoveStartTime = GetTickCount();
+	// Save the flags
+	m_vecDestination = vecDestination;
+	m_bMoveSetAngle = bSetAngle;
+	m_fMoveSpeed = fSpeed;
 }
 
 void CPlayerData::StopMoving()
@@ -1442,10 +1446,39 @@ void CPlayerData::AimAt(CVector vecPoint, bool bShoot, int iShootDelay, bool bSe
 		m_dwShootTickCount = GetTickCount();
 		m_bReloading = false;
 	}
+
+	// Update aiming data
+	UpdateAimingData(vecPoint, bSetAngle);
+
+	// Set keys
+	if (!m_bAiming) {
+		m_bAiming = true;
+		SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM);
+	}
+
+	// set the shoot delay
+	if (iShootDelay <= pServer->GetUpdateRate()) {
+		iShootDelay = pServer->GetUpdateRate() + 5;
+	}
+
+	m_iShootDelay = iShootDelay;
+
+	// set the shooting flag
+	m_bShooting = bShoot;
+}
+
+void CPlayerData::AimAtPlayer(WORD wHitId, bool bShoot, int iShootDelay, bool bSetAngle)
+{
+	CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[wHitId];
+	AimAt(pPlayer->vecPosition, bShoot, iShootDelay, bSetAngle);
+	m_wHitId = wHitId;
+	m_byteHitType = BULLET_HIT_TYPE_PLAYER;
+}
+
+void CPlayerData::UpdateAimingData(CVector vecPoint, bool bSetAngle)
+{
 	// Adjust the player position
 	CVector vecPosition = m_pPlayer->vecPosition;
-	// Save the aiming point
-	m_vecAimAt = vecPoint;
 	// Get the aiming distance
 	CVector vecDistance = vecPoint - vecPosition;
 	// Get the distance to the destination point
@@ -1474,30 +1507,9 @@ void CPlayerData::AimAt(CVector vecPoint, bool bShoot, int iShootDelay, bool bSe
 	m_pPlayer->aimSyncData.vecFront = vecDistance;
 	m_pPlayer->aimSyncData.vecPosition = vecPosition;
 
-	// Set keys
-	if (!m_bAiming) {
-		m_bAiming = true;
-		SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM);
-	}
-
-	// set the shoot delay
-	if (iShootDelay <= pServer->GetUpdateRate()) {
-		iShootDelay = pServer->GetUpdateRate() + 5;
-	}
-
-	m_iShootDelay = iShootDelay;
-
 	// set the flags
-	m_bShooting = bShoot;
-	m_bSetAimAngle = bSetAngle;
-}
-
-void CPlayerData::AimAtPlayer(WORD wHitId, bool bShoot, int iShootDelay, bool bSetAngle)
-{
-	CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[wHitId];
-	AimAt(pPlayer->vecPosition, bShoot, iShootDelay, bSetAngle);
-	m_wHitId = wHitId;
-	m_byteHitType = BULLET_HIT_TYPE_PLAYER;
+	m_vecAimAt = vecPoint;
+	m_bAimSetAngle = bSetAngle;
 }
 
 void CPlayerData::StopAim()
@@ -1512,7 +1524,7 @@ void CPlayerData::StopAim()
 	m_bReloading = false;
 	m_bShooting = false;
 	m_wHitId = INVALID_PLAYER_ID;
-	m_bSetAimAngle = false;
+	m_bAimSetAngle = false;
 	m_byteHitType = BULLET_HIT_TYPE_NONE;
 	// Reset keys
 	SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_NONE);
