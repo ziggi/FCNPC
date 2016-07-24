@@ -115,8 +115,11 @@ public:
 	void ClearAnimations();
 
 	bool GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f);
+	bool GoToPlayer(WORD wPlayerId, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f);
+	void UpdateMovingData(CVector vecDestination, bool bSetAngle, float fSpeed);
 	void StopMoving();
 	bool IsMoving();
+	bool IsMovingAtPlayer(WORD wPlayerId);
 
 	void ToggleReloading(bool bToggle);
 	void ToggleInfiniteAmmo(bool bToggle);
@@ -128,7 +131,7 @@ public:
 	void StopAttack();
 	bool IsAttacking();
 	bool IsAiming();
-	bool IsAimingAtPlayer(int iPlayerId);
+	bool IsAimingAtPlayer(WORD wPlayerId);
 	bool IsShooting();
 	bool IsReloading();
 
@@ -222,7 +225,11 @@ private:
 	CVector m_vecSurfing;
 	WORD m_wSurfingInfo;
 	CWeaponInfo *m_pWeaponInfo;
-
+	WORD m_wMoveId;
+	int m_iMoveType;
+	float m_fMoveRadius;
+	bool m_bMoveSetAngle;
+	float m_fMoveSpeed;
 };
 
 #endif

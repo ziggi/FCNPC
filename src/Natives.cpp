@@ -968,7 +968,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GoTo(AMX *amx, cell *params)
 	// Get the mouvement driving speed
 	float fSpeed = amx_ctof(params[6]);
 	// Get the ZMap status
-	int iZMap = (int)params[7];
+	int bZMap = (int)params[7];
 	// Get the radius
 	float fRadius = amx_ctof(params[8]);
 	// Get the radius
@@ -979,7 +979,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GoTo(AMX *amx, cell *params)
 	}
 
 	// Move the player
-	return pServer->GetPlayerManager()->GetAt(iNPCId)->GoTo(CVector(fX, fY, fZ), iType, !iZMap ? false : true, fRadius, bSetAngle, fSpeed);
+	return pServer->GetPlayerManager()->GetAt(iNPCId)->GoTo(CVector(fX, fY, fZ), iType, bZMap, fRadius, bSetAngle, fSpeed);
 }
 
 // native FCNPC_GoToPlayer(npcid, playereid, type, Float:speed, bool:UseZMap = false, Float:radius = 0.0, bool:setangle = true);
@@ -988,30 +988,29 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GoToPlayer(AMX *amx, cell *params)
 	CHECK_PARAMS(7, "FCNPC_GoToPlayer");
 
 	// get params
-	int iNPCId = (int)params[1];
-	int iPlayerId = (int)params[2];
+	int wNPCId = (WORD)params[1];
+	int wPlayerId = (WORD)params[2];
 	int iType = (int)params[3];
 	float fSpeed = amx_ctof(params[4]);
-	int iZMap = (int)params[5];
+	int bZMap = (bool)params[5];
 	float fRadius = amx_ctof(params[6]);
 	bool bSetAngle = (bool)params[7];
 
 	// validation
-	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(iNPCId)) {
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(wNPCId)) {
 		return 0;
 	}
 
-	if (iPlayerId < 0 || iPlayerId >= MAX_PLAYERS) {
+	if (wPlayerId < 0 || wPlayerId >= MAX_PLAYERS) {
 		return 0;
 	}
 
-	if (!pNetGame->pPlayerPool->bIsPlayerConnectedEx[iPlayerId] || iPlayerId == iNPCId) {
+	if (!pNetGame->pPlayerPool->bIsPlayerConnectedEx[wPlayerId] || wPlayerId == wNPCId) {
 		return 0;
 	}
 
 	// move the player
-	CVector vecPos = pNetGame->pPlayerPool->pPlayer[iPlayerId]->vecPosition;
-	return pServer->GetPlayerManager()->GetAt(iNPCId)->GoTo(vecPos, iType, !iZMap ? false : true, fRadius, bSetAngle, fSpeed);
+	return pServer->GetPlayerManager()->GetAt(wNPCId)->GoToPlayer(wPlayerId, iType, bZMap, fRadius, bSetAngle, fSpeed);
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_Stop(AMX *amx, cell *params)

@@ -55,6 +55,11 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_vecSurfing = CVector();
 	m_wSurfingInfo = 0;
 	m_pWeaponInfo = new CWeaponInfo();
+	m_wMoveId = INVALID_PLAYER_ID;
+	m_iMoveType = MOVE_TYPE_AUTO;
+	m_fMoveRadius = 0.0f;
+	m_bMoveSetAngle = false;
+	m_fMoveSpeed = -1.0;
 }
 
 CPlayerData::~CPlayerData()
@@ -583,6 +588,20 @@ void CPlayerData::Process()
 		}
 	}
 
+	// Is the player moving at player
+	if (byteState == PLAYER_STATE_ONFOOT || byteState == PLAYER_STATE_DRIVER) {
+		if (IsMovingAtPlayer(m_wMoveId)) {
+			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[m_wMoveId];
+			if (pPlayer) {
+				if (m_vecDestination != pPlayer->vecPosition) {
+					m_vecDestination = pPlayer->vecPosition;
+					UpdateMovingData(m_vecDestination, m_bMoveSetAngle, m_fMoveSpeed);
+				}
+			} else {
+				StopMoving();
+			}
+		}
+	}
 	// Update the player depending on his state
 	if (byteState == PLAYER_STATE_ONFOOT) {
 		// Process the player mouvement
@@ -1326,16 +1345,35 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float f
 
 	// Set the moving keys
 	SetKeys(wUDKey, wLRKey, dwMoveKey);
+	// Update moving data
+	UpdateMovingData(m_vecDestination, bSetAngle, fSpeed);
+	// Mark as moving
+	m_bMoving = true;
+	// Save the flags
+	m_bUseMapAndreas = bUseMapAndreas;
+	m_iMoveType = iType;
+	m_fMoveRadius = fRadius;
+	m_bMoveSetAngle = bSetAngle;
+	m_fMoveSpeed = fSpeed;
+	return true;
+}
 
-	// Get the player position
+bool CPlayerData::GoToPlayer(WORD wPlayerId, int iType, bool bUseMapAndreas, float fRadius, bool bSetAngle, float fSpeed)
+{
+	CVector vecPos = pNetGame->pPlayerPool->pPlayer[wPlayerId]->vecPosition;
+	GoTo(vecPos, iType, bUseMapAndreas, fRadius, bSetAngle, fSpeed);
+	m_wMoveId = wPlayerId;
+}
+
+void CPlayerData::UpdateMovingData(CVector vecDestination, bool bSetAngle, float fSpeed)
+{
 	CVector vecPosition;
 	GetPosition(&vecPosition);
-	// Get the moving front vector
-	CVector vecFront = m_vecDestination - vecPosition;
-	// Get the distance to the destination point
-	float fDistance = CMath::GetDistanceBetween3DPoints(vecPosition, m_vecDestination);
-	// Set the player to the destination angle
-	vecFront /= fDistance;
+
+	float fDistance = CMath::GetDistanceBetween3DPoints(vecPosition, vecDestination);
+
+	CVector vecFront = (vecDestination - vecPosition) / fDistance;
+
 	if (bSetAngle) {
 		SetAngle(CMath::RadiansToDegree(atan2(vecFront.fY, vecFront.fX)));
 	}
@@ -1347,11 +1385,6 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float f
 	// Get the start move tick
 	m_dwMoveTickCount =
 		m_dwMoveStartTime = GetTickCount();
-	// Mark as moving
-	m_bMoving = true;
-	// Save the MapAndreas usage
-	m_bUseMapAndreas = bUseMapAndreas;
-	return true;
 }
 
 void CPlayerData::StopMoving()
@@ -1363,6 +1396,7 @@ void CPlayerData::StopMoving()
 
 	// Reset moving flag
 	m_bMoving = false;
+	m_wMoveId = INVALID_PLAYER_ID;
 	// Reset changed keys
 	if (GetState() == PLAYER_STATE_DRIVER) {
 		SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_NONE);
@@ -1380,6 +1414,14 @@ void CPlayerData::StopMoving()
 bool CPlayerData::IsMoving()
 {
 	return m_bMoving;
+}
+
+bool CPlayerData::IsMovingAtPlayer(WORD wPlayerId)
+{
+	if (wPlayerId <= 0 || wPlayerId > MAX_PLAYERS) {
+		return false;
+	}
+	return m_bMoving && m_wMoveId == wPlayerId;
 }
 
 void CPlayerData::ToggleReloading(bool bToggle)
@@ -1539,9 +1581,12 @@ bool CPlayerData::IsAiming()
 	return m_bAiming;
 }
 
-bool CPlayerData::IsAimingAtPlayer(int iPlayerId)
+bool CPlayerData::IsAimingAtPlayer(WORD wPlayerId)
 {
-	return m_bAiming && m_byteHitType == BULLET_HIT_TYPE_PLAYER && m_wHitId == iPlayerId;
+	if (wPlayerId <= 0 || wPlayerId > MAX_PLAYERS) {
+		return false;
+	}
+	return m_bAiming && m_byteHitType == BULLET_HIT_TYPE_PLAYER && m_wHitId == wPlayerId;
 }
 
 bool CPlayerData::IsShooting()
