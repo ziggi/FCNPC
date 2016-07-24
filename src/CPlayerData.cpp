@@ -463,14 +463,14 @@ void CPlayerData::UpdateAim()
 
 		// Is NPC is surfing
 		if (m_wSurfingInfo != 0) {
-			AimAt(m_vecAimAt, m_bShooting, m_dwShootDelay, m_bSetAimAngle);
+			AimAt(m_vecAimAt, m_bShooting, m_iShootDelay, m_bSetAimAngle);
 		}
 
 		// Update vector pos
 		if (IsAimingAtPlayer(m_wHitId)) {
 			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[m_wHitId];
 			if (pPlayer) {
-				AimAt(pPlayer->vecPosition, m_bShooting, m_dwShootDelay, m_bSetAimAngle);
+				AimAt(pPlayer->vecPosition, m_bShooting, m_iShootDelay, m_bSetAimAngle);
 			} else {
 				StopAim();
 			}
@@ -729,11 +729,11 @@ void CPlayerData::Process()
 				int iShootTime = GetWeaponShootTime(m_byteWeaponId);
 
 				// shoot delay
-				if (iShootTime != -1 && (DWORD)iShootTime < m_dwShootDelay) {
-					m_dwShootDelay = (DWORD)iShootTime - pServer->GetUpdateRate();
+				if (iShootTime != -1 && (DWORD)iShootTime < m_iShootDelay) {
+					m_iShootDelay = (DWORD)iShootTime - pServer->GetUpdateRate();
 				}
 
-				if ((dwThisTick - m_dwShootTickCount) >= m_dwShootDelay) {
+				if ((dwThisTick - m_dwShootTickCount) >= m_iShootDelay) {
 					SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM);
 				}
 
@@ -1431,7 +1431,7 @@ void CPlayerData::ToggleInfiniteAmmo(bool bToggle)
 	m_bHasInfiniteAmmo = bToggle;
 }
 
-void CPlayerData::AimAt(CVector vecPoint, bool bShoot, DWORD dwShootDelay, bool bSetAngle)
+void CPlayerData::AimAt(CVector vecPoint, bool bShoot, int iShootDelay, bool bSetAngle)
 {
 	// Set the aiming flag
 	if (!m_bAiming) {
@@ -1478,21 +1478,21 @@ void CPlayerData::AimAt(CVector vecPoint, bool bShoot, DWORD dwShootDelay, bool 
 	}
 
 	// set the shoot delay
-	if (dwShootDelay <= pServer->GetUpdateRate()) {
-		dwShootDelay = pServer->GetUpdateRate() + 5;
+	if (iShootDelay <= pServer->GetUpdateRate()) {
+		iShootDelay = pServer->GetUpdateRate() + 5;
 	}
 
-	m_dwShootDelay = dwShootDelay;
+	m_iShootDelay = iShootDelay;
 
 	// set the flags
 	m_bShooting = bShoot;
 	m_bSetAimAngle = bSetAngle;
 }
 
-void CPlayerData::AimAtPlayer(WORD wHitId, bool bShoot, DWORD dwShootDelay, bool bSetAngle)
+void CPlayerData::AimAtPlayer(WORD wHitId, bool bShoot, int iShootDelay, bool bSetAngle)
 {
 	CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[wHitId];
-	AimAt(pPlayer->vecPosition, bShoot, dwShootDelay, bSetAngle);
+	AimAt(pPlayer->vecPosition, bShoot, iShootDelay, bSetAngle);
 	m_wHitId = wHitId;
 	m_byteHitType = BULLET_HIT_TYPE_PLAYER;
 }

@@ -1458,7 +1458,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAt(AMX *amx, cell *params)
 	float fY = amx_ctof(params[3]);
 	float fZ = amx_ctof(params[4]);
 	bool bShoot = (bool)params[5];
-	DWORD dwShootDelay = (DWORD)params[6];
+	int iShootDelay = (int)params[6];
 	bool bSetAngle = (bool)params[7];
 
 	// Make sure the player is valid
@@ -1476,7 +1476,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAt(AMX *amx, cell *params)
 		case WEAPON_TYPE_SPRAY:
 		case WEAPON_TYPE_THROW:
 			pPlayerData->StopAim();
-			pPlayerData->AimAt(CVector(fX, fY, fZ), bShoot, dwShootDelay, bSetAngle);
+			pPlayerData->AimAt(CVector(fX, fY, fZ), bShoot, iShootDelay, bSetAngle);
 			return 1;
 	}
 
@@ -1491,7 +1491,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAtPlayer(AMX *amx, cell *params)
 	int iNPCId = (int)params[1];
 	int iPlayerId = (int)params[2];
 	bool bShoot = (bool)params[3];
-	DWORD dwShootDelay = (DWORD)params[4];
+	int iShootDelay = (int)params[4];
 	bool bSetAngle = (bool)params[5];
 
 	// Make sure the npc is valid
@@ -1519,7 +1519,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAtPlayer(AMX *amx, cell *params)
 		case WEAPON_TYPE_SPRAY:
 		case WEAPON_TYPE_THROW:
 			pPlayerData->StopAim();
-			pPlayerData->AimAtPlayer(iPlayerId, bShoot, dwShootDelay, bSetAngle);
+			pPlayerData->AimAtPlayer(iPlayerId, bShoot, iShootDelay, bSetAngle);
 			return 1;
 	}
 

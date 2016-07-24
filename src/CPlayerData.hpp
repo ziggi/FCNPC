@@ -124,8 +124,8 @@ public:
 	void ToggleReloading(bool bToggle);
 	void ToggleInfiniteAmmo(bool bToggle);
 
-	void AimAt(CVector vecPoint, bool bShoot, DWORD dwShootDelay, bool bSetAngle);
-	void AimAtPlayer(WORD wHitId, bool bShoot, DWORD dwShootDelay, bool bSetAngle);
+	void AimAt(CVector vecPoint, bool bShoot, int iShootDelay, bool bSetAngle);
+	void AimAtPlayer(WORD wHitId, bool bShoot, int iShootDelay, bool bSetAngle);
 	void StopAim();
 	bool MeleeAttack(int iTime, bool bUseFightstyle);
 	void StopAttack();
