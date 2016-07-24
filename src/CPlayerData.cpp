@@ -1361,8 +1361,11 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float f
 bool CPlayerData::GoToPlayer(WORD wPlayerId, int iType, bool bUseMapAndreas, float fRadius, bool bSetAngle, float fSpeed)
 {
 	CVector vecPos = pNetGame->pPlayerPool->pPlayer[wPlayerId]->vecPosition;
-	GoTo(vecPos, iType, bUseMapAndreas, fRadius, bSetAngle, fSpeed);
-	m_wMoveId = wPlayerId;
+	if (GoTo(vecPos, iType, bUseMapAndreas, fRadius, bSetAngle, fSpeed)) {
+		m_wMoveId = wPlayerId;
+		return true;
+	}
+	return false;
 }
 
 void CPlayerData::UpdateMovingData(CVector vecDestination, bool bSetAngle, float fSpeed)

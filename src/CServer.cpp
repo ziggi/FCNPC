@@ -41,10 +41,10 @@ BYTE CServer::Initialize(AMX *pAMX)
 {
 	// Check include version
 	int iIncludeVersion = 0;
-	int iIndex;
-	if (!amx_FindPubVar(pAMX, "FCNPC_IncludeVersion", &iIndex)) {
+	cell cellIndex;
+	if (!amx_FindPubVar(pAMX, "FCNPC_IncludeVersion", &cellIndex)) {
 		cell *pAddress = NULL;
-		if (!amx_GetAddr(pAMX, iIndex, &pAddress)) {
+		if (!amx_GetAddr(pAMX, cellIndex, &pAddress)) {
 			iIncludeVersion = *pAddress;
 		}
 	}
