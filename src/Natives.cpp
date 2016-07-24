@@ -1341,7 +1341,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponClipSize(AMX *amx, cell *params)
 // native FCNPC_SetWeaponInfo(npcid, weaponid, reload_time = -1, shoot_time = -1, clip_size = -1);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponInfo(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(6, "FCNPC_SetWeaponInfo");
+	CHECK_PARAMS(5, "FCNPC_SetWeaponInfo");
 
 	// Get params
 	WORD wNpcId = static_cast<WORD>(params[1]);
@@ -1376,7 +1376,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponInfo(AMX *amx, cell *params)
 // native FCNPC_GetWeaponInfo(npcid, weaponid, &reload_time = -1, &shoot_time = -1, &clip_size = -1);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponInfo(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(6, "FCNPC_GetWeaponInfo");
+	CHECK_PARAMS(5, "FCNPC_GetWeaponInfo");
 
 	// get params
 	WORD wNpcId = static_cast<WORD>(params[1]);
@@ -1407,7 +1407,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponInfo(AMX *amx, cell *params)
 // native FCNPC_SetWeaponDefaultInfo(weaponid, reload_time = -1, shoot_time = -1, clip_size = -1);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponDefaultInfo(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(5, "FCNPC_SetWeaponDefaultInfo");
+	CHECK_PARAMS(4, "FCNPC_SetWeaponDefaultInfo");
 
 	// Get params
 	BYTE byteWeaponId = static_cast<BYTE>(params[1]);
@@ -1436,7 +1436,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponDefaultInfo(AMX *amx, cell *params
 // native FCNPC_GetWeaponDefaultInfo(weaponid, &reload_time = -1, &shoot_time = -1, &clip_size = -1);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponDefaultInfo(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(5, "FCNPC_GetWeaponDefaultInfo");
+	CHECK_PARAMS(4, "FCNPC_GetWeaponDefaultInfo");
 
 	// get params
 	BYTE byteWeaponId = static_cast<BYTE>(params[1]);
