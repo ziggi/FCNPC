@@ -170,6 +170,7 @@ AMX_NATIVE_INFO PluginNatives[ ] = {
 	{"FCNPC_GoToPlayer", CNatives::FCNPC_GoToPlayer},
 	{"FCNPC_Stop", CNatives::FCNPC_Stop},
 	{"FCNPC_IsMoving", CNatives::FCNPC_IsMoving},
+	{"FCNPC_IsMovingAtPlayer", CNatives::FCNPC_IsMovingAtPlayer},
 
 	{"FCNPC_AimAt", CNatives::FCNPC_AimAt},
 	{"FCNPC_AimAtPlayer", CNatives::FCNPC_AimAtPlayer},
@@ -178,6 +179,7 @@ AMX_NATIVE_INFO PluginNatives[ ] = {
 	{"FCNPC_StopAttack", CNatives::FCNPC_StopAttack},
 	{"FCNPC_IsAttacking", CNatives::FCNPC_IsAttacking},
 	{"FCNPC_IsAiming", CNatives::FCNPC_IsAiming},
+	{"FCNPC_IsAimingAtPlayer", CNatives::FCNPC_IsAimingAtPlayer},
 	{"FCNPC_IsShooting", CNatives::FCNPC_IsShooting},
 	{"FCNPC_IsReloading", CNatives::FCNPC_IsReloading},
 
