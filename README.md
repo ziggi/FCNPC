@@ -151,6 +151,7 @@ native FCNPC_GoTo(npcid, Float:x, Float:y, Float:z, type = MOVE_TYPE_AUTO, Float
 native FCNPC_GoToPlayer(npcid, playerid, type = MOVE_TYPE_AUTO, Float:speed = -1.0, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true);
 native FCNPC_Stop(npcid);
 native FCNPC_IsMoving(npcid);
+native FCNPC_IsMovingAtPlayer(npcid, playerid);
 
 native FCNPC_AimAt(npcid, Float:x, Float:y, Float:z, bool:shoot = false, shoot_delay = 0, bool:setangle = true);
 native FCNPC_AimAtPlayer(npcid, playerid, bool:shoot = false, shoot_delay = 0, bool:setangle = true);

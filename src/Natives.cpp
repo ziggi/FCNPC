@@ -1042,6 +1042,32 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsMoving(AMX *amx, cell *params)
 	return pServer->GetPlayerManager()->GetAt(iNPCId)->IsMoving() ? 1 : 0;
 }
 
+// native FCNPC_IsMovingAtPlayer(npcid, playerid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_IsMovingAtPlayer(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_IsMovingAtPlayer");
+
+	// get params
+	int wNPCId = (WORD)params[1];
+	int wPlayerId = (WORD)params[2];
+
+	// validation
+	if (!pServer->GetPlayerManager()->IsPlayerConnectedEx(wNPCId)) {
+		return 0;
+	}
+
+	if (wPlayerId < 0 || wPlayerId >= MAX_PLAYERS) {
+		return 0;
+	}
+
+	if (!pNetGame->pPlayerPool->bIsPlayerConnectedEx[wPlayerId] || wPlayerId == wNPCId) {
+		return 0;
+	}
+
+	// Get the player moving state
+	return pServer->GetPlayerManager()->GetAt(wNPCId)->IsMovingAtPlayer(wPlayerId) ? 1 : 0;
+}
+
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeapon(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_SetWeapon");

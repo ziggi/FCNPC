@@ -95,6 +95,7 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_GoToPlayer(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_Stop(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_IsMoving(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_IsMovingAtPlayer(AMX *amx, cell *params);
 
 	static cell AMX_NATIVE_CALL FCNPC_AimAt(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_AimAtPlayer(AMX *amx, cell *params);
