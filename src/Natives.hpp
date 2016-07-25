@@ -121,6 +121,8 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_IsVehicleSiren(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetVehicleHealth(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetVehicleHealth(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_SetVehicleHydraThrusters(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_GetVehicleHydraThrusters(AMX *amx, cell *params);
 
 	static cell AMX_NATIVE_CALL FCNPC_SetSurfingOffsets(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetSurfingOffsets(AMX *amx, cell *params);

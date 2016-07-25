@@ -154,6 +154,8 @@ public:
 	bool IsVehicleSiren();
 	void SetVehicleHealth(float fHealth);
 	float GetVehicleHealth();
+	void SetVehicleHydraThrusters(DWORD dwDirection);
+	DWORD GetVehicleHydraThrusters();
 
 	void SetSurfingOffsets(CVector vecOffsets);
 	void GetSurfingOffsets(CVector *vecOffsets);

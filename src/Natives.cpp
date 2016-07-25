@@ -1896,6 +1896,41 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleHealth(AMX *amx, cell *params)
 	return amx_ftoc(fHealth);
 }
 
+// native FCNPC_SetVehicleHydraThrusters(npcid, direction);
+cell AMX_NATIVE_CALL CNatives::FCNPC_SetVehicleHydraThrusters(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_SetVehicleHydraThrusters");
+
+	// Get params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+	DWORD dwDirection = static_cast<DWORD>(params[2]);
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+		return 0;
+	}
+
+	// Change vehicle hydra thrusters
+	pServer->GetPlayerManager()->GetAt(wNpcId)->SetVehicleHydraThrusters(dwDirection);
+	return 1;
+}
+
+// native FCNPC_GetVehicleHydraThrusters(npcid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleHydraThrusters(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_GetVehicleHydraThrusters");
+
+	// Get params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+		return 0;
+	}
+
+	// Get the vehicle hydra thrusters
+	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetVehicleHydraThrusters();
+}
 
 // native FCNPC_SetSurfingOffsets(npcid, Float:fX, Float:fY, Float:fZ);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetSurfingOffsets(AMX *amx, cell *params)

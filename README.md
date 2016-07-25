@@ -175,6 +175,8 @@ native FCNPC_SetVehicleSiren(npcid, bool:status);
 native FCNPC_IsVehicleSiren(npcid);
 native FCNPC_SetVehicleHealth(npcid, Float:health);
 native Float:FCNPC_GetVehicleHealth(npcid);
+native FCNPC_SetVehicleHydraThrusters(npcid, direction);
+native FCNPC_GetVehicleHydraThrusters(npcid);
 
 native FCNPC_SetSurfingOffsets(npcid, Float:x, Float:y, Float:z);
 native FCNPC_GetSurfingOffsets(npcid, &Float:x, &Float:y, &Float:z);

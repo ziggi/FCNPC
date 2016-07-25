@@ -1901,6 +1901,16 @@ float CPlayerData::GetVehicleHealth()
 	return m_pPlayer->vehicleSyncData.fHealth;
 }
 
+void CPlayerData::SetVehicleHydraThrusters(DWORD dwDirection)
+{
+	m_pPlayer->vehicleSyncData.dwHydraThrustAngle = dwDirection;
+}
+
+DWORD CPlayerData::GetVehicleHydraThrusters()
+{
+	return m_pPlayer->vehicleSyncData.dwHydraThrustAngle;
+}
+
 void CPlayerData::SetSurfingOffsets(CVector vecOffsets)
 {
 	m_vecSurfing = vecOffsets;
