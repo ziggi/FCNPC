@@ -62,6 +62,7 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_fMoveSpeed = -1.0;
 	m_wHydraThrustAngle[0] =
 		m_wHydraThrustAngle[1] = 5000;
+	m_byteGearState = 0;
 }
 
 CPlayerData::~CPlayerData()
@@ -339,9 +340,11 @@ void CPlayerData::Update(int iState)
 		m_pPlayer->vehicleSyncData.bytePlayerArmour = (BYTE)m_pPlayer->fArmour;
 		// Set the player weapon
 		m_pPlayer->vehicleSyncData.bytePlayerWeapon = m_byteWeaponId;
-		// Set the player weapon
+		// Set the player hydra thrust angle
 		m_pPlayer->vehicleSyncData.wHydraReactorAngle[0] = m_wHydraThrustAngle[0];
 		m_pPlayer->vehicleSyncData.wHydraReactorAngle[1] = m_wHydraThrustAngle[1];
+		// Set the player gear state
+		m_pPlayer->vehicleSyncData.byteGearState = m_byteGearState;
 		// Set the new update state
 		m_pPlayer->iUpdateState = iState;
 	}
@@ -1915,6 +1918,16 @@ void CPlayerData::SetVehicleHydraThrusters(WORD wDirection)
 WORD CPlayerData::GetVehicleHydraThrusters()
 {
 	return m_wHydraThrustAngle[0];
+}
+
+void CPlayerData::SetVehicleGearState(BYTE byteGearState)
+{
+	m_byteGearState = byteGearState;
+}
+
+BYTE CPlayerData::GetVehicleGearState()
+{
+	return m_byteGearState;
 }
 
 void CPlayerData::SetSurfingOffsets(CVector vecOffsets)

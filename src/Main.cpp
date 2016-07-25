@@ -195,6 +195,8 @@ AMX_NATIVE_INFO PluginNatives[ ] = {
 	{"FCNPC_GetVehicleHealth", CNatives::FCNPC_GetVehicleHealth},
 	{"FCNPC_SetVehicleHydraThrusters", CNatives::FCNPC_SetVehicleHydraThrusters},
 	{"FCNPC_GetVehicleHydraThrusters", CNatives::FCNPC_GetVehicleHydraThrusters},
+	{"FCNPC_SetVehicleGearState", CNatives::FCNPC_SetVehicleGearState},
+	{"FCNPC_GetVehicleGearState", CNatives::FCNPC_GetVehicleGearState},
 
 	{"FCNPC_SetSurfingOffsets", CNatives::FCNPC_SetSurfingOffsets},
 	{"FCNPC_GetSurfingOffsets", CNatives::FCNPC_GetSurfingOffsets},

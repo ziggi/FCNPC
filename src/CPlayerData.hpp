@@ -156,6 +156,8 @@ public:
 	float GetVehicleHealth();
 	void SetVehicleHydraThrusters(WORD wDirection);
 	WORD GetVehicleHydraThrusters();
+	void SetVehicleGearState(BYTE byteGearState);
+	BYTE GetVehicleGearState();
 
 	void SetSurfingOffsets(CVector vecOffsets);
 	void GetSurfingOffsets(CVector *vecOffsets);
@@ -234,6 +236,7 @@ private:
 	bool m_bMoveSetAngle;
 	float m_fMoveSpeed;
 	WORD m_wHydraThrustAngle[2];
+	BYTE m_byteGearState;
 };
 
 #endif

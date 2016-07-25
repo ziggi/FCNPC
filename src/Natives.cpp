@@ -1903,7 +1903,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVehicleHydraThrusters(AMX *amx, cell *pa
 
 	// Get params
 	WORD wNpcId = static_cast<WORD>(params[1]);
-	WORD dwDirection = static_cast<WORD>(params[2]);
+	WORD wDirection = static_cast<WORD>(params[2]);
 
 	// Make sure the player is valid
 	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
@@ -1911,7 +1911,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVehicleHydraThrusters(AMX *amx, cell *pa
 	}
 
 	// Change vehicle hydra thrusters
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetVehicleHydraThrusters(dwDirection);
+	pServer->GetPlayerManager()->GetAt(wNpcId)->SetVehicleHydraThrusters(wDirection);
 	return 1;
 }
 
@@ -1930,6 +1930,42 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleHydraThrusters(AMX *amx, cell *pa
 
 	// Get the vehicle hydra thrusters
 	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetVehicleHydraThrusters();
+}
+
+// native FCNPC_SetVehicleGearState(npcid, gear_state);
+cell AMX_NATIVE_CALL CNatives::FCNPC_SetVehicleGearState(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_SetVehicleGearState");
+
+	// Get params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+	BYTE byteState = static_cast<BYTE>(params[2]);
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+		return 0;
+	}
+
+	// Change vehicle hydra thrusters
+	pServer->GetPlayerManager()->GetAt(wNpcId)->SetVehicleGearState(byteState);
+	return 1;
+}
+
+// native FCNPC_GetVehicleGearState(npcid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleGearState(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_GetVehicleGearState");
+
+	// Get params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+
+	// Make sure the player is valid
+	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+		return 0;
+	}
+
+	// Get the vehicle hydra thrusters
+	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetVehicleGearState();
 }
 
 // native FCNPC_SetSurfingOffsets(npcid, Float:fX, Float:fY, Float:fZ);
