@@ -1903,7 +1903,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVehicleHydraThrusters(AMX *amx, cell *pa
 
 	// Get params
 	WORD wNpcId = static_cast<WORD>(params[1]);
-	DWORD dwDirection = static_cast<DWORD>(params[2]);
+	WORD dwDirection = static_cast<WORD>(params[2]);
 
 	// Make sure the player is valid
 	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {

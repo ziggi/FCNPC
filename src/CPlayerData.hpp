@@ -154,8 +154,8 @@ public:
 	bool IsVehicleSiren();
 	void SetVehicleHealth(float fHealth);
 	float GetVehicleHealth();
-	void SetVehicleHydraThrusters(DWORD dwDirection);
-	DWORD GetVehicleHydraThrusters();
+	void SetVehicleHydraThrusters(WORD wDirection);
+	WORD GetVehicleHydraThrusters();
 
 	void SetSurfingOffsets(CVector vecOffsets);
 	void GetSurfingOffsets(CVector *vecOffsets);
@@ -233,6 +233,7 @@ private:
 	float m_fMoveRadius;
 	bool m_bMoveSetAngle;
 	float m_fMoveSpeed;
+	WORD m_wHydraThrustAngle[2];
 };
 
 #endif

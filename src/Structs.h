@@ -139,8 +139,11 @@ struct CVehicleSyncData
 	BYTE			byteSirenState;			// 0x0056 - 0x0057
 	BYTE			byteGearState;			// 0x0057 -	0x0058
 	WORD			wTrailerID;				// 0x0058 - 0x005A
-	DWORD			dwHydraThrustAngle;
-    float           fTrainSpeed;
+	union
+	{
+		WORD			wHydraReactorAngle[2];
+		float           fTrainSpeed;
+	};
 	// Size = 63
 };
 
