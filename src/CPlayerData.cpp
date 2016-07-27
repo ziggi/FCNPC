@@ -597,15 +597,17 @@ void CPlayerData::Process()
 						pObject = pNetGame->pObjectPool->pPlayerObjects[m_wPlayerId][wObjectId];
 					}
 
-					if (pObject->wAttachedObjectID != INVALID_OBJECT_ID) {
-						vecPos = pObject->vecAttachedOffset + pNetGame->pObjectPool->pObjects[pObject->wAttachedObjectID]->matWorld.pos;
-					} else if (pObject->wAttachedVehicleID != INVALID_VEHICLE_ID) {
-						vecPos = pObject->vecAttachedOffset + pNetGame->pVehiclePool->pVehicle[pObject->wAttachedVehicleID]->vecPosition;
-					} else {
-						vecPos = pObject->matWorld.pos;
-					}
+					if (pObject) {
+						if (pObject->wAttachedObjectID != INVALID_OBJECT_ID) {
+							vecPos = pObject->vecAttachedOffset + pNetGame->pObjectPool->pObjects[pObject->wAttachedObjectID]->matWorld.pos;
+						} else if (pObject->wAttachedVehicleID != INVALID_VEHICLE_ID) {
+							vecPos = pObject->vecAttachedOffset + pNetGame->pVehiclePool->pVehicle[pObject->wAttachedVehicleID]->vecPosition;
+						} else {
+							vecPos = pObject->matWorld.pos;
+						}
 
-					m_pPlayer->vecPosition = vecPos + m_vecSurfing;
+						m_pPlayer->vecPosition = vecPos + m_vecSurfing;
+					}
 				}
 			}
 		}
