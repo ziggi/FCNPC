@@ -262,11 +262,11 @@ void CPlayerData::Update(int iState)
 		// Is NPC is surfing
 		if (m_wSurfingInfo != 0) {
 			WORD wVehicleId = m_wSurfingInfo;
-			if (wVehicleId >= 1 && wVehicleId <= MAX_VEHICLES) {
+			if (wVehicleId > 0 && wVehicleId < MAX_VEHICLES) {
 				m_pPlayer->vecPosition = pNetGame->pVehiclePool->pVehicle[wVehicleId]->vecPosition + m_vecSurfing;
 			} else {
 				WORD wObjectId = m_wSurfingInfo - MAX_VEHICLES;
-				if (wObjectId >= 0 && wObjectId < MAX_OBJECTS) {
+				if (wObjectId > 0 && wObjectId < MAX_OBJECTS) {
 					if (pNetGame->pObjectPool->bObjectSlotState[wObjectId]) {
 						m_pPlayer->vecPosition = pNetGame->pObjectPool->pObjects[wObjectId]->matWorld.pos + m_vecSurfing;
 					} else if (pNetGame->pObjectPool->bPlayerObjectSlotState[m_wPlayerId][wObjectId]) {
