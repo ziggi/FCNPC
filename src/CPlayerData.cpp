@@ -259,22 +259,6 @@ void CPlayerData::Update(int iState)
 
 	// Update onfoot state
 	if (iState == UPDATE_STATE_ONFOOT && (byteState == PLAYER_STATE_ONFOOT || byteState == PLAYER_STATE_ENTER_VEHICLE_DRIVER || byteState == PLAYER_STATE_ENTER_VEHICLE_PASSENGER)) {
-		// Is NPC is surfing
-		if (m_wSurfingInfo != 0) {
-			WORD wVehicleId = m_wSurfingInfo;
-			if (wVehicleId > 0 && wVehicleId < MAX_VEHICLES) {
-				m_pPlayer->vecPosition = pNetGame->pVehiclePool->pVehicle[wVehicleId]->vecPosition + m_vecSurfing;
-			} else {
-				WORD wObjectId = m_wSurfingInfo - MAX_VEHICLES;
-				if (wObjectId > 0 && wObjectId < MAX_OBJECTS) {
-					if (pNetGame->pObjectPool->bObjectSlotState[wObjectId]) {
-						m_pPlayer->vecPosition = pNetGame->pObjectPool->pObjects[wObjectId]->matWorld.pos + m_vecSurfing;
-					} else if (pNetGame->pObjectPool->bPlayerObjectSlotState[m_wPlayerId][wObjectId]) {
-						m_pPlayer->vecPosition = pNetGame->pObjectPool->pPlayerObjects[m_wPlayerId][wObjectId]->matWorld.pos + m_vecSurfing;
-					}
-				}
-			}
-		}
 		// Set the sync position
 		m_pPlayer->syncData.vecPosition = m_pPlayer->vecPosition;
 		// Set the sync velocity vector
@@ -596,6 +580,35 @@ void CPlayerData::Process()
 	}
 	// Update the player depending on his state
 	if (byteState == PLAYER_STATE_ONFOOT) {
+		// Process the player surfing
+		if (m_wSurfingInfo != 0) {
+			WORD wVehicleId = m_wSurfingInfo;
+			if (wVehicleId > 0 && wVehicleId < MAX_VEHICLES) {
+				m_pPlayer->vecPosition = pNetGame->pVehiclePool->pVehicle[wVehicleId]->vecPosition + m_vecSurfing;
+			} else {
+				WORD wObjectId = m_wSurfingInfo - MAX_VEHICLES;
+				if (wObjectId > 0 && wObjectId < MAX_OBJECTS) {
+					CObject *pObject;
+					CVector vecPos;
+
+					if (pNetGame->pObjectPool->bObjectSlotState[wObjectId]) {
+						pObject = pNetGame->pObjectPool->pObjects[wObjectId];
+					} else if (pNetGame->pObjectPool->bPlayerObjectSlotState[m_wPlayerId][wObjectId]) {
+						pObject = pNetGame->pObjectPool->pPlayerObjects[m_wPlayerId][wObjectId];
+					}
+
+					if (pObject->wAttachedObjectID != INVALID_OBJECT_ID) {
+						vecPos = pObject->vecAttachedOffset + pNetGame->pObjectPool->pObjects[pObject->wAttachedObjectID]->matWorld.pos;
+					} else if (pObject->wAttachedVehicleID != INVALID_VEHICLE_ID) {
+						vecPos = pObject->vecAttachedOffset + pNetGame->pVehiclePool->pVehicle[pObject->wAttachedVehicleID]->vecPosition;
+					} else {
+						vecPos = pObject->matWorld.pos;
+					}
+
+					m_pPlayer->vecPosition = vecPos + m_vecSurfing;
+				}
+			}
+		}
 		// Process the player mouvement
 		if (m_bMoving) {
 			// Get the player position
