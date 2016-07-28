@@ -60,6 +60,7 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_fMoveRadius = 0.0f;
 	m_bMoveSetAngle = false;
 	m_fMoveSpeed = -1.0;
+	m_vecMovePlayerPosition = CVector();
 	m_wHydraThrustAngle[0] =
 		m_wHydraThrustAngle[1] = 5000;
 	m_byteGearState = 0;
@@ -570,8 +571,9 @@ void CPlayerData::Process()
 		if (m_wMoveId >= 0 && m_wMoveId < MAX_PLAYERS && IsMovingAtPlayer(m_wMoveId)) {
 			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[m_wMoveId];
 			if (pPlayer) {
-				if (m_vecDestination != pPlayer->vecPosition) {
-					UpdateMovingData(pPlayer->vecPosition, m_bMoveSetAngle, m_fMoveSpeed);
+				if (m_vecMovePlayerPosition != pPlayer->vecPosition) {
+					m_vecMovePlayerPosition = pPlayer->vecPosition;
+					UpdateMovingData(pPlayer->vecPosition, m_fMoveRadius, m_bMoveSetAngle, m_fMoveSpeed);
 				}
 			} else {
 				StopMoving();
@@ -1323,11 +1325,6 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float f
 		return false;
 	}
 
-	// Add radius
-	if (fRadius != 0.0f) {
-		vecPoint -= CVector(CUtils::RandomFloat(-fRadius, fRadius), CUtils::RandomFloat(-fRadius, fRadius), 0.0);
-	}
-
 	// Get the moving type key and speed
 	WORD wUDKey = m_pPlayer->wUDAnalog;
 	WORD wLRKey = m_pPlayer->wLRAnalog;
@@ -1370,13 +1367,12 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float f
 	// Set the moving keys
 	SetKeys(wUDKey, wLRKey, dwMoveKey);
 	// Update moving data
-	UpdateMovingData(vecPoint, bSetAngle, fSpeed);
+	UpdateMovingData(vecPoint, fRadius, bSetAngle, fSpeed);
 	// Mark as moving
 	m_bMoving = true;
 	// Save the flags
 	m_bUseMapAndreas = bUseMapAndreas;
 	m_iMoveType = iType;
-	m_fMoveRadius = fRadius;
 	return true;
 }
 
@@ -1385,13 +1381,18 @@ bool CPlayerData::GoToPlayer(WORD wPlayerId, int iType, bool bUseMapAndreas, flo
 	CVector vecPos = pNetGame->pPlayerPool->pPlayer[wPlayerId]->vecPosition;
 	if (GoTo(vecPos, iType, bUseMapAndreas, fRadius, bSetAngle, fSpeed)) {
 		m_wMoveId = wPlayerId;
+		m_vecMovePlayerPosition = vecPos;
 		return true;
 	}
 	return false;
 }
 
-void CPlayerData::UpdateMovingData(CVector vecDestination, bool bSetAngle, float fSpeed)
+void CPlayerData::UpdateMovingData(CVector vecDestination, float fRadius, bool bSetAngle, float fSpeed)
 {
+	if (fRadius != 0.0f) {
+		vecDestination -= CVector(CUtils::RandomFloat(-fRadius, fRadius), CUtils::RandomFloat(-fRadius, fRadius), 0.0);
+	}
+
 	CVector vecPosition;
 	GetPosition(&vecPosition);
 
@@ -1406,12 +1407,13 @@ void CPlayerData::UpdateMovingData(CVector vecDestination, bool bSetAngle, float
 	vecFront *= (fSpeed / 100.0f); // Step per 1ms
 	SetVelocity(vecFront);
 	// Calculate the moving time
-	m_dwMoveTime = (DWORD)(fDistance / vecFront.Length());
+	m_dwMoveTime = static_cast<DWORD>(fDistance / vecFront.Length());
 	// Get the start move tick
 	m_dwMoveTickCount =
 		m_dwMoveStartTime = GetTickCount();
 	// Save the flags
 	m_vecDestination = vecDestination;
+	m_fMoveRadius = fRadius;
 	m_bMoveSetAngle = bSetAngle;
 	m_fMoveSpeed = fSpeed;
 }
