@@ -37,17 +37,35 @@ CServer::~CServer()
 
 BYTE CServer::Initialize(AMX *pAMX)
 {
-	// Check include version
-	int iIncludeVersion = 0;
-	cell cellIndex;
-	if (!amx_FindPubVar(pAMX, "FCNPC_IncludeVersion", &cellIndex)) {
-		cell *pAddress = NULL;
-		if (!amx_GetAddr(pAMX, cellIndex, &pAddress)) {
-			iIncludeVersion = *pAddress;
+	// Check for native usage
+	AMX_HEADER * pAmxHeader = reinterpret_cast<AMX_HEADER *>(pAMX->base);
+	AMX_FUNCSTUBNT *pAmxNativeTable = reinterpret_cast<AMX_FUNCSTUBNT *>(pAMX->base + pAmxHeader->natives);
+	char *szName;
+	bool bIsHaveNatives = false;
+	int iNativesCount;
+	amx_NumNatives(pAMX, &iNativesCount);
+
+	for (int i = 0; i < iNativesCount; i++) {
+		szName = reinterpret_cast<char *>(pAMX->base + pAmxNativeTable[i].nameofs);
+		if (strstr(szName, "FCNPC_") != NULL) {
+			bIsHaveNatives = true;
+			break;
 		}
 	}
-	if (iIncludeVersion != INCLUDE_VERSION) {
-		return 6;
+
+	// Check include version
+	if (bIsHaveNatives) {
+		int iIncludeVersion = 0;
+		cell cellIndex;
+		if (!amx_FindPubVar(pAMX, "FCNPC_IncludeVersion", &cellIndex)) {
+			cell *pAddress = NULL;
+			if (!amx_GetAddr(pAMX, cellIndex, &pAddress)) {
+				iIncludeVersion = *pAddress;
+			}
+		}
+		if (iIncludeVersion != INCLUDE_VERSION) {
+			return 6;
+		}
 	}
 
 	// Initialize necessary samp functions
