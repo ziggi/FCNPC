@@ -147,7 +147,7 @@ bool CServer::IsVehicleSeatOccupied(int iPlayerId, WORD wVehicleId, BYTE byteSea
 
 WORD CServer::GetVehicleSeatPlayerId(WORD wVehicleId, BYTE byteSeatId)
 {
-	if (wVehicleId < 1 || wVehicleId > MAX_VEHICLES) {
+	if (wVehicleId < 1 || wVehicleId >= MAX_VEHICLES) {
 		return INVALID_PLAYER_ID;
 	}
 

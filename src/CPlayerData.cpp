@@ -1701,11 +1701,6 @@ void CPlayerData::ProcessStreamOut(WORD wForPlayerId)
 
 bool CPlayerData::EnterVehicle(WORD wVehicleId, BYTE byteSeatId, int iType)
 {
-	// Validate the vehicle
-	if (wVehicleId < 1 || wVehicleId > MAX_VEHICLES) {
-		return false;
-	}
-
 	// Validate the player state
 	if (GetState() != PLAYER_STATE_ONFOOT) {
 		return false;
@@ -1784,11 +1779,6 @@ bool CPlayerData::ExitVehicle()
 
 bool CPlayerData::PutInVehicle(WORD wVehicleId, BYTE byteSeatId)
 {
-	// Validate the vehicle
-	if (wVehicleId < 1 || wVehicleId > MAX_VEHICLES) {
-		return false;
-	}
-
 	// Validate the player state
 	if (GetState() != PLAYER_STATE_ONFOOT) {
 		return false;
@@ -1864,7 +1854,7 @@ void CPlayerData::SetVehicle(WORD wVehicleId, BYTE byteSeatId)
 	}
 
 	// validate vehicle
-	if (wVehicleId < 1 || wVehicleId > MAX_VEHICLES) {
+	if (wVehicleId < 1 || wVehicleId >= MAX_VEHICLES) {
 		return;
 	}
 
@@ -1883,7 +1873,7 @@ void CPlayerData::SetVehicle(WORD wVehicleId, BYTE byteSeatId)
 
 CVehicle *CPlayerData::GetVehicle()
 {
-	if (m_pPlayer->wVehicleId < 1 || m_pPlayer->wVehicleId > MAX_VEHICLES) {
+	if (m_pPlayer->wVehicleId < 1 || m_pPlayer->wVehicleId >= MAX_VEHICLES) {
 		return NULL;
 	}
 
@@ -1974,7 +1964,7 @@ void CPlayerData::SetSurfingObject(WORD wObjectId)
 int CPlayerData::GetSurfingObject()
 {
 	WORD wObjectId = m_wSurfingInfo - MAX_VEHICLES;
-	if (wObjectId >= 0 && wObjectId < MAX_OBJECTS) {
+	if (wObjectId > 0 && wObjectId < MAX_OBJECTS) {
 		if (pNetGame->pObjectPool->bObjectSlotState[wObjectId]) {
 			return wObjectId;
 		}
@@ -1991,7 +1981,7 @@ void CPlayerData::SetSurfingPlayerObject(WORD wObjectId)
 int CPlayerData::GetSurfingPlayerObject()
 {
 	WORD wObjectId = m_wSurfingInfo - MAX_VEHICLES;
-	if (wObjectId >= 0 && wObjectId < MAX_OBJECTS) {
+	if (wObjectId > 0 && wObjectId < MAX_OBJECTS) {
 		if (pNetGame->pObjectPool->bPlayerObjectSlotState[m_wPlayerId][wObjectId]) {
 			return wObjectId;
 		}
@@ -2002,7 +1992,7 @@ int CPlayerData::GetSurfingPlayerObject()
 void CPlayerData::StopSurfing()
 {
 	WORD wObjectId = m_wSurfingInfo - MAX_VEHICLES;
-	if (wObjectId >= 0 && wObjectId < MAX_OBJECTS) {
+	if (wObjectId > 0 && wObjectId < MAX_OBJECTS) {
 		pNetGame->pObjectPool->bObjectSlotState[wObjectId] = false;
 		pNetGame->pObjectPool->bPlayerObjectSlotState[m_wPlayerId][wObjectId] = false;
 	}
