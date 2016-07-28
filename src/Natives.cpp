@@ -1691,6 +1691,11 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_EnterVehicle(AMX *amx, cell *params)
 		return 0;
 	}
 
+	// Validate the vehicle
+	if (wVehicleId < 1 || wVehicleId >= MAX_VEHICLES) {
+		return 0;
+	}
+
 	// Make the player enter the vehicle
 	return pServer->GetPlayerManager()->GetAt(wNpcId)->EnterVehicle(wVehicleId, byteSeatId, iType);
 }
@@ -1722,6 +1727,11 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_PutInVehicle(AMX *amx, cell *params)
 
 	// Make sure the player is valid
 	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+		return 0;
+	}
+
+	// Validate the vehicle
+	if (wVehicleId < 1 || wVehicleId >= MAX_VEHICLES) {
 		return 0;
 	}
 
@@ -2030,8 +2040,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetSurfingVehicle(AMX *amx, cell *params)
 		return 0;
 	}
 
-	// Valid vehicle
-	if (wVehicleId < 1 || wVehicleId > MAX_VEHICLES) {
+	// Validate the vehicle
+	if (wVehicleId < 1 || wVehicleId >= MAX_VEHICLES) {
 		return 0;
 	}
 
@@ -2072,7 +2082,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetSurfingObject(AMX *amx, cell *params)
 	}
 
 	// Validate the object
-	if (wObjectId < 1 || wObjectId > MAX_OBJECTS) {
+	if (wObjectId < 1 || wObjectId >= MAX_OBJECTS) {
 		return 0;
 	}
 
@@ -2113,7 +2123,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetSurfingPlayerObject(AMX *amx, cell *para
 	}
 
 	// Validate the object
-	if (wObjectId < 1 || wObjectId > MAX_OBJECTS) {
+	if (wObjectId < 1 || wObjectId >= MAX_OBJECTS) {
 		return 0;
 	}
 
