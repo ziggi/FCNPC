@@ -1210,7 +1210,7 @@ void CPlayerData::GetKeys(WORD *pwUDAnalog, WORD *pwLRAnalog, DWORD *pdwKeys)
 
 bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float fRadius, bool bSetAngle, float fSpeed)
 {
-	// Validate the movement 
+	// Validate the movement
 	if (iType == MOVE_TYPE_AUTO && GetState() == PLAYER_STATE_DRIVER) {
 		iType = MOVE_TYPE_DRIVE;
 	}
@@ -1240,8 +1240,8 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float f
 				fSpeed = MOVE_SPEED_SPRINT;
 			}
 		} else {
-			std::vector<float> fVectorSpeeds{MOVE_SPEED_WALK, MOVE_SPEED_RUN, MOVE_SPEED_SPRINT};
-			float fNearestSpeed = CUtils::GetNearestValue(fSpeed, fVectorSpeeds);
+			float fSpeedValues[] = {MOVE_SPEED_WALK, MOVE_SPEED_RUN, MOVE_SPEED_SPRINT};
+			float fNearestSpeed = CUtils::GetNearestFloatValue(fSpeed, fSpeedValues, sizeof(fSpeedValues) / sizeof(float));
 
 			if (fNearestSpeed == MOVE_SPEED_SPRINT) {
 				iType = MOVE_TYPE_SPRINT;

@@ -119,7 +119,21 @@ DWORD CUtils::FindPattern(const char *szPattern, const char *szMask)
 float CUtils::RandomFloat(float min, float max)
 {
 	assert(max > min);
-	float random = ((float) rand()) / (float) RAND_MAX;
+	float random = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
 	float range = max - min;
 	return (random * range) + min;
+}
+
+float CUtils::GetNearestFloatValue(float value, float *array, const size_t size)
+{
+	assert(size > 0);
+	float nearest = array[0];
+
+	for (int i = 1; i < size; i++) {
+		if (std::abs(array[i] - value) < std::abs(nearest - value)) {
+			nearest = array[i];
+		}
+	}
+
+	return nearest;
 }
