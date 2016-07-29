@@ -152,11 +152,11 @@ bool CServer::IsMapAndreasInited()
 	return m_pMapAndreas != NULL && m_pMapAndreas->IsInited();
 }
 
-bool CServer::IsVehicleSeatOccupied(int iPlayerId, WORD wVehicleId, BYTE byteSeatId)
+bool CServer::IsVehicleSeatOccupied(WORD wPlayerId, WORD wVehicleId, BYTE byteSeatId)
 {
-	WORD wPlayerId = GetVehicleSeatPlayerId(wVehicleId, byteSeatId);
+	WORD wSeatPlayerId = GetVehicleSeatPlayerId(wVehicleId, byteSeatId);
 
-	if (wPlayerId != (WORD)iPlayerId && wPlayerId != INVALID_PLAYER_ID) {
+	if (wSeatPlayerId != wPlayerId && wSeatPlayerId != INVALID_PLAYER_ID) {
 		return true;
 	}
 

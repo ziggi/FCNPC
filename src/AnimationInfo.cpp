@@ -376,22 +376,21 @@ char CAnimationInfo::m_cAnimationsName[MAX_ANIMATIONS][MAX_ANIMATION_NAME] = {
 	"RUNNINGMAN:DANCE_B16", "RUNNINGMAN:DANCE_LOOP", "SAMP:FISHINGIDLE"
 };
 
-char *CAnimationInfo::GetNameByIndex(int index)
+char *CAnimationInfo::GetNameByIndex(WORD wIndex)
 {
-	if (index >= MAX_ANIMATIONS || index < 1) {
-		return (char*)0;
+	if (wIndex >= MAX_ANIMATIONS || wIndex < 1) {
+		return reinterpret_cast<char *>(0);
 	}
 
-	return (char*)m_cAnimationsName[index];
+	return reinterpret_cast<char *>(m_cAnimationsName[wIndex]);
 }
 
-int CAnimationInfo::GetIndexByName(char *name)
+WORD CAnimationInfo::GetIndexByName(char *szName)
 {
-	for (int i = 0; i < MAX_ANIMATIONS; i++) {
-		if (strcmp(name, m_cAnimationsName[i]) == 0) {
+	for (WORD i = 0; i < MAX_ANIMATIONS; i++) {
+		if (strcmp(szName, m_cAnimationsName[i]) == 0) {
 			return i;
 		}
 	}
-
 	return 0;
 }

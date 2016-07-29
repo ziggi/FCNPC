@@ -25,79 +25,79 @@ void CCallbackManager::UnregisterAMX(AMX *pAMX)
 	m_listAMX.remove(pAMX);
 }
 
-void CCallbackManager::OnCreate(int iGameId)
+void CCallbackManager::OnCreate(WORD wPlayerId)
 {
 	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {
 		// Get the function index
 		int iIndex;
 		if (!amx_FindPublic((*i), "FCNPC_OnCreate", &iIndex)) {
 			// Push the NPC ID
-			amx_Push((*i), iGameId);
+			amx_Push((*i), wPlayerId);
 			// Execute the callback
 			amx_Exec((*i), NULL, iIndex);
 		}
 	}
 }
 
-void CCallbackManager::OnSpawn(int iGameId)
+void CCallbackManager::OnSpawn(WORD wPlayerId)
 {
 	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {
 		// Get the function index
 		int iIndex;
 		if (!amx_FindPublic((*i), "FCNPC_OnSpawn", &iIndex)) {
 			// Push the NPC ID
-			amx_Push((*i), iGameId);
+			amx_Push((*i), wPlayerId);
 			// Execute the callback
 			amx_Exec((*i), NULL, iIndex);
 		}
 	}
 }
 
-void CCallbackManager::OnRespawn(int iGameId)
+void CCallbackManager::OnRespawn(WORD wPlayerId)
 {
 	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {
 		// Get the function index
 		int iIndex;
 		if (!amx_FindPublic((*i), "FCNPC_OnRespawn", &iIndex)) {
 			// Push the NPC ID
-			amx_Push((*i), iGameId);
+			amx_Push((*i), wPlayerId);
 			// Execute the callback
 			amx_Exec((*i), NULL, iIndex);
 		}
 	}
 }
 
-void CCallbackManager::OnDeath(int iGameId, int iKillerId, int iWeapon)
+void CCallbackManager::OnDeath(WORD wPlayerId, WORD wKillerId, BYTE byteWeaponId)
 {
 	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {
 		// Get the function index
 		int iIndex;
 		if (!amx_FindPublic((*i), "FCNPC_OnDeath", &iIndex)) {
 			// Push the parameters
-			amx_Push((*i), iWeapon);
-			amx_Push((*i), iKillerId);
-			amx_Push((*i), iGameId);
+			amx_Push((*i), byteWeaponId);
+			amx_Push((*i), wKillerId);
+			amx_Push((*i), wPlayerId);
 			// Execute the callback
 			amx_Exec((*i), NULL, iIndex);
 		}
 	}
 }
 
-void CCallbackManager::OnReachDestination(int iGameId)
+void CCallbackManager::OnReachDestination(WORD wPlayerId)
 {
 	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {
 		// Get the function index
 		int iIndex;
 		if (!amx_FindPublic((*i), "FCNPC_OnReachDestination", &iIndex)) {
 			// Push the parameters
-			amx_Push((*i), iGameId);
+			amx_Push((*i), wPlayerId);
 			// Execute the callback
 			amx_Exec((*i), NULL, iIndex);
 		}
 	}
 }
 
-void CCallbackManager::OnVehicleEntryComplete(int iGameId, WORD wVehicleId, int iSeat)
+void CCallbackManager::OnVehicleEntryComplete(WORD wPlayerId, WORD wVehicleId, int iSeat)
 {
 	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {
 		// Get the function index
@@ -106,28 +106,28 @@ void CCallbackManager::OnVehicleEntryComplete(int iGameId, WORD wVehicleId, int 
 			// Push the parameters
 			amx_Push((*i), iSeat);
 			amx_Push((*i), wVehicleId);
-			amx_Push((*i), iGameId);
+			amx_Push((*i), wPlayerId);
 			// Execute the callback
 			amx_Exec((*i), NULL, iIndex);
 		}
 	}
 }
 
-void CCallbackManager::OnVehicleExitComplete(int iGameId)
+void CCallbackManager::OnVehicleExitComplete(WORD wPlayerId)
 {
 	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {
 		// Get the function index
 		int iIndex;
 		if (!amx_FindPublic((*i), "FCNPC_OnVehicleExitComplete", &iIndex)) {
 			// Push the parameters
-			amx_Push((*i), iGameId);
+			amx_Push((*i), wPlayerId);
 			// Execute the callback
 			amx_Exec((*i), NULL, iIndex);
 		}
 	}
 }
 
-int CCallbackManager::OnTakeDamage(int iGameId, WORD wDamagerId, int iWeapon, int iBodyPart, float fHealthLoss)
+int CCallbackManager::OnTakeDamage(WORD wPlayerId, WORD wDamagerId, BYTE byteWeaponId, int iBodyPart, float fHealthLoss)
 {
 	cell cReturn = 1;
 	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {
@@ -137,9 +137,9 @@ int CCallbackManager::OnTakeDamage(int iGameId, WORD wDamagerId, int iWeapon, in
 			// Push the parameters
 			amx_Push((*i), amx_ftoc(fHealthLoss));
 			amx_Push((*i), iBodyPart);
-			amx_Push((*i), iWeapon);
+			amx_Push((*i), byteWeaponId);
 			amx_Push((*i), wDamagerId);
-			amx_Push((*i), iGameId);
+			amx_Push((*i), wPlayerId);
 			// Execute the callback
 			amx_Exec((*i), &cReturn, iIndex);
 			if (!cReturn) {
@@ -150,7 +150,7 @@ int CCallbackManager::OnTakeDamage(int iGameId, WORD wDamagerId, int iWeapon, in
 	return cReturn;
 }
 
-int CCallbackManager::OnVehicleTakeDamage(int iGameId, WORD wDamagerId, WORD wVehicleId, BYTE byteWeaponId, CVector vecHit)
+int CCallbackManager::OnVehicleTakeDamage(WORD wPlayerId, WORD wDamagerId, WORD wVehicleId, BYTE byteWeaponId, CVector vecHit)
 {
 	cell cReturn = 1;
 	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {
@@ -164,7 +164,7 @@ int CCallbackManager::OnVehicleTakeDamage(int iGameId, WORD wDamagerId, WORD wVe
 			amx_Push((*i), byteWeaponId);
 			amx_Push((*i), wVehicleId);
 			amx_Push((*i), wDamagerId);
-			amx_Push((*i), iGameId);
+			amx_Push((*i), wPlayerId);
 			// Execute the callback
 			amx_Exec((*i), &cReturn, iIndex);
 			if (!cReturn) {
@@ -175,21 +175,21 @@ int CCallbackManager::OnVehicleTakeDamage(int iGameId, WORD wDamagerId, WORD wVe
 	return cReturn;
 }
 
-void CCallbackManager::OnFinishPlayback(int iGameId)
+void CCallbackManager::OnFinishPlayback(WORD wPlayerId)
 {
 	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {
 		// Get the function index
 		int iIndex;
 		if (!amx_FindPublic((*i), "FCNPC_OnFinishPlayback", &iIndex)) {
 			// Push the parameters
-			amx_Push((*i), iGameId);
+			amx_Push((*i), wPlayerId);
 			// Execute the callback
 			amx_Exec((*i), NULL, iIndex);
 		}
 	}
 }
 
-int CCallbackManager::OnChangeNode(int iGameId, int iNodeId)
+int CCallbackManager::OnChangeNode(WORD wPlayerId, int iNodeId)
 {
 	cell cReturn = 1;
 	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {
@@ -198,7 +198,7 @@ int CCallbackManager::OnChangeNode(int iGameId, int iNodeId)
 		if (!amx_FindPublic((*i), "FCNPC_OnChangeNode", &iIndex)) {
 			// Push the parameters
 			amx_Push((*i), iNodeId);
-			amx_Push((*i), iGameId);
+			amx_Push((*i), wPlayerId);
 			// Execute the callback
 			amx_Exec((*i), &cReturn, iIndex);
 			if (!cReturn) {
@@ -209,7 +209,7 @@ int CCallbackManager::OnChangeNode(int iGameId, int iNodeId)
 	return cReturn;
 }
 
-int CCallbackManager::OnFinishNodePoint(int iGameId, int iNodePoint)
+int CCallbackManager::OnFinishNodePoint(WORD wPlayerId, int iNodePoint)
 {
 	cell cReturn = 1;
 	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {
@@ -218,7 +218,7 @@ int CCallbackManager::OnFinishNodePoint(int iGameId, int iNodePoint)
 		if (!amx_FindPublic((*i), "FCNPC_OnFinishNodePoint", &iIndex)) {
 			// Push the parameters
 			amx_Push((*i), iNodePoint);
-			amx_Push((*i), iGameId);
+			amx_Push((*i), wPlayerId);
 			// Execute the callback
 			amx_Exec((*i), &cReturn, iIndex);
 			if (!cReturn) {
@@ -229,21 +229,21 @@ int CCallbackManager::OnFinishNodePoint(int iGameId, int iNodePoint)
 	return cReturn;
 }
 
-void CCallbackManager::OnFinishNode(int iGameId)
+void CCallbackManager::OnFinishNode(WORD wPlayerId)
 {
 	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {
 		// Get the function index
 		int iIndex;
 		if (!amx_FindPublic((*i), "FCNPC_OnFinishNode", &iIndex)) {
 			// Push the parameters
-			amx_Push((*i), iGameId);
+			amx_Push((*i), wPlayerId);
 			// Execute the callback
 			amx_Exec((*i), NULL, iIndex);
 		}
 	}
 }
 
-void CCallbackManager::OnStreamIn(int iNPCId, WORD wForPlayerId)
+void CCallbackManager::OnStreamIn(WORD wPlayerId, WORD wForPlayerId)
 {
 	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {
 		// Get the function index
@@ -251,14 +251,14 @@ void CCallbackManager::OnStreamIn(int iNPCId, WORD wForPlayerId)
 		if (!amx_FindPublic((*i), "FCNPC_OnStreamIn", &iIndex)) {
 			// Push the parameters
 			amx_Push((*i), wForPlayerId);
-			amx_Push((*i), iNPCId);
+			amx_Push((*i), wPlayerId);
 			// Execute the callback
 			amx_Exec((*i), NULL, iIndex);
 		}
 	}
 }
 
-void CCallbackManager::OnStreamOut(int iNPCId, WORD wForPlayerId)
+void CCallbackManager::OnStreamOut(WORD wPlayerId, WORD wForPlayerId)
 {
 	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {
 		// Get the function index
@@ -266,7 +266,7 @@ void CCallbackManager::OnStreamOut(int iNPCId, WORD wForPlayerId)
 		if (!amx_FindPublic((*i), "FCNPC_OnStreamOut", &iIndex)) {
 			// Push the parameters
 			amx_Push((*i), wForPlayerId);
-			amx_Push((*i), iNPCId);
+			amx_Push((*i), wPlayerId);
 			// Execute the callback
 			amx_Exec((*i), NULL, iIndex);
 		}

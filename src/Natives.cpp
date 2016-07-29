@@ -891,7 +891,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetAnimation(AMX *amx, cell *params)
 	}
 
 	// Get parms
-	int iAnimationId;
+	WORD wAnimationId;
 	float fDelta;
 	bool bLoop;
 	bool bLockX;
@@ -900,11 +900,11 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetAnimation(AMX *amx, cell *params)
 	int iTime;
 
 	// Get the player animation
-	pServer->GetPlayerManager()->GetAt(wNpcId)->GetAnimation(&iAnimationId, &fDelta, &bLoop, &bLockX, &bLockY, &bFreeze, &iTime);
+	pServer->GetPlayerManager()->GetAt(wNpcId)->GetAnimation(&wAnimationId, &fDelta, &bLoop, &bLockX, &bLockY, &bFreeze, &iTime);
 
 	cell *pAddress = NULL;
 	amx_GetAddr(amx, params[2], &pAddress);
-	*pAddress = iAnimationId;
+	*pAddress = wAnimationId;
 
 	amx_GetAddr(amx, params[3], &pAddress);
 	*pAddress = amx_ftoc(fDelta);
@@ -933,21 +933,21 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetFightingStyle(AMX *amx, cell *params)
 
 	// Get params
 	WORD wNpcId = static_cast<WORD>(params[1]);
-	int iStyle = static_cast<int>(params[2]);
+	BYTE byteStyle = static_cast<BYTE>(params[2]);
 
 	// Make sure the player is valid
 	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
 		return 0;
 	}
 
-	switch (iStyle) {
+	switch (byteStyle) {
 		case FIGHT_STYLE_NORMAL:
 		case FIGHT_STYLE_BOXING:
 		case FIGHT_STYLE_KUNGFU:
 		case FIGHT_STYLE_KNEEHEAD:
 		case FIGHT_STYLE_GRABKICK:
 		case FIGHT_STYLE_ELBOW:
-			pServer->GetPlayerManager()->GetAt(wNpcId)->SetFightingStyle(iStyle);
+			pServer->GetPlayerManager()->GetAt(wNpcId)->SetFightingStyle(byteStyle);
 			return 1;
 	}
 

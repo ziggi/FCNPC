@@ -24,10 +24,10 @@ bool bIsPublicFound;
 bool bGiveDamage;
 
 struct t_OnPlayerGiveDamage {
-	int iPlayerId;
-	int iDamagedId;
+	WORD wPlayerId;
+	WORD wDamagedId;
 	float fHealthLoss;
-	int iWeapon;
+	BYTE byteWeaponId;
 	int iBodypart;
 };
 
@@ -37,7 +37,7 @@ t_OnPlayerGiveDamage pGiveDamage;
 bool bWeaponShot;
 
 struct t_OnPlayerWeaponShot {
-	int iPlayerId;
+	WORD wPlayerId;
 	BYTE byteWeaponId;
 	int iHitType;
 	int iHitId;
@@ -48,7 +48,7 @@ t_OnPlayerWeaponShot pWeaponShot;
 
 // stream in/out
 struct t_OnPlayerStream {
-	int iPlayerId;
+	WORD wPlayerId;
 	WORD wForPlayerId;
 };
 
@@ -124,11 +124,11 @@ int amx_Push_Hook(AMX *amx, cell value)
 	if (bGiveDamage) {
 		switch (bytePushCount) {
 			case 4:
-				pGiveDamage.iPlayerId = value;
+				pGiveDamage.wPlayerId = value;
 				break;
 
 			case 3:
-				pGiveDamage.iDamagedId = value;
+				pGiveDamage.wDamagedId = value;
 				break;
 
 			case 2:
@@ -136,7 +136,7 @@ int amx_Push_Hook(AMX *amx, cell value)
 				break;
 
 			case 1:
-				pGiveDamage.iWeapon = value;
+				pGiveDamage.byteWeaponId = value;
 				break;
 
 			case 0:
@@ -148,7 +148,7 @@ int amx_Push_Hook(AMX *amx, cell value)
 	} else if (bWeaponShot) {
 		switch (bytePushCount) {
 			case 6:
-				pWeaponShot.iPlayerId = value;
+				pWeaponShot.wPlayerId = value;
 				break;
 
 			case 5:
@@ -180,7 +180,7 @@ int amx_Push_Hook(AMX *amx, cell value)
 	} else if (bStreamIn) {
 		switch (bytePushCount) {
 			case 1:
-				pStreamIn.iPlayerId = value;
+				pStreamIn.wPlayerId = value;
 				break;
 
 			case 0:
@@ -192,7 +192,7 @@ int amx_Push_Hook(AMX *amx, cell value)
 	} else if (bStreamOut) {
 		switch (bytePushCount) {
 			case 1:
-				pStreamOut.iPlayerId = value;
+				pStreamOut.wPlayerId = value;
 				break;
 
 			case 0:
@@ -218,7 +218,7 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 		bGiveDamage = false;
 
 		// get the player data
-		CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(pGiveDamage.iDamagedId);
+		CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(pGiveDamage.wDamagedId);
 
 		// check on invulnerable
 		if (!pPlayerData || !pPlayerData->IsInvulnerable()) {
@@ -227,7 +227,7 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 
 			// call custom callback
 			if (pPlayerData) {
-				pPlayerData->ProcessDamage(pGiveDamage.iPlayerId, pGiveDamage.fHealthLoss, pGiveDamage.iWeapon, pGiveDamage.iBodypart);
+				pPlayerData->ProcessDamage(pGiveDamage.wPlayerId, pGiveDamage.fHealthLoss, pGiveDamage.byteWeaponId, pGiveDamage.iBodypart);
 			}
 		}
 
@@ -244,7 +244,7 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 
 			if (pServer->GetPlayerManager()->IsNpcConnected(wPlayerId)) {
 				pServer->GetPlayerManager()->GetAt(wPlayerId)->ProcessVehicleDamage(
-					pWeaponShot.iPlayerId, pWeaponShot.iHitId, pWeaponShot.byteWeaponId, pWeaponShot.vecHit);
+					pWeaponShot.wPlayerId, pWeaponShot.iHitId, pWeaponShot.byteWeaponId, pWeaponShot.vecHit);
 			}
 		}
 
@@ -252,9 +252,9 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 	} else if (bStreamIn) {
 		bStreamIn = false;
 
-		if (pServer->GetPlayerManager()->IsNpcConnected(pStreamIn.iPlayerId)) {
+		if (pServer->GetPlayerManager()->IsNpcConnected(pStreamIn.wPlayerId)) {
 			// call custom callback
-			pServer->GetPlayerManager()->GetAt(pStreamIn.iPlayerId)->ProcessStreamIn(pStreamIn.wForPlayerId);
+			pServer->GetPlayerManager()->GetAt(pStreamIn.wPlayerId)->ProcessStreamIn(pStreamIn.wForPlayerId);
 			bFindPublicIsBlocked = true;
 		} else {
 			// call hooked callback
@@ -265,9 +265,9 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 	} else if (bStreamOut) {
 		bStreamOut = false;
 
-		if (pServer->GetPlayerManager()->IsNpcConnected(pStreamIn.iPlayerId)) {
+		if (pServer->GetPlayerManager()->IsNpcConnected(pStreamIn.wPlayerId)) {
 			// call custom callback
-			pServer->GetPlayerManager()->GetAt(pStreamIn.iPlayerId)->ProcessStreamOut(pStreamIn.wForPlayerId);
+			pServer->GetPlayerManager()->GetAt(pStreamIn.wPlayerId)->ProcessStreamOut(pStreamIn.wForPlayerId);
 			bFindPublicIsBlocked = true;
 		} else {
 			// call hooked callback

@@ -71,9 +71,9 @@ CPlayerData::~CPlayerData()
 	SAFE_DELETE(m_pWeaponInfo);
 }
 
-int CPlayerData::GetId()
+WORD CPlayerData::GetId()
 {
-	return (int)m_wPlayerId;
+	return m_wPlayerId;
 }
 
 void CPlayerData::Destroy()
@@ -144,7 +144,7 @@ bool CPlayerData::Spawn(int iSkinId)
 	m_iLastDamager = INVALID_PLAYER_ID;
 	SetVehicle(INVALID_VEHICLE_ID, 0);
 	// Call the NPC spawn callback
-	CCallbackManager::OnSpawn((int)m_wPlayerId);
+	CCallbackManager::OnSpawn(m_wPlayerId);
 	return true;
 }
 
@@ -196,7 +196,7 @@ bool CPlayerData::Respawn()
 	// Reset stats
 	m_iLastDamager = INVALID_PLAYER_ID;
 	// Call the NPC spawn callback
-	CCallbackManager::OnRespawn((int)m_wPlayerId);
+	CCallbackManager::OnRespawn(m_wPlayerId);
 	return true;
 }
 
@@ -271,12 +271,12 @@ void CPlayerData::Update(int iState)
 		// Set the sync weapon index
 		m_pPlayer->syncData.byteWeapon = m_byteWeaponId;
 		// Set the sync health and armour
-		m_pPlayer->syncData.byteHealth = (BYTE)m_pPlayer->fHealth;
-		m_pPlayer->syncData.byteArmour = (BYTE)m_pPlayer->fArmour;
-		// Set the sync keys
+		m_pPlayer->syncData.byteHealth = static_cast<BYTE>(m_pPlayer->fHealth);
+		m_pPlayer->syncData.byteArmour = static_cast<BYTE>(m_pPlayer->fArmour);
+		// Set the sync keys1
 		m_pPlayer->syncData.wUDAnalog = m_pPlayer->wUDAnalog;
 		m_pPlayer->syncData.wLRAnalog = m_pPlayer->wLRAnalog;
-		m_pPlayer->syncData.wKeys = (WORD)m_pPlayer->dwKeys;
+		m_pPlayer->syncData.wKeys = static_cast<WORD>(m_pPlayer->dwKeys);
 		// Update aim data
 		UpdateAim();
 		// Set the new update state
@@ -300,7 +300,7 @@ void CPlayerData::Update(int iState)
 		// Set the player keys
 		m_pPlayer->vehicleSyncData.wUDAnalog = m_pPlayer->wUDAnalog;
 		m_pPlayer->vehicleSyncData.wLRAnalog = m_pPlayer->wLRAnalog;
-		m_pPlayer->vehicleSyncData.wKeys = (WORD)m_pPlayer->dwKeys;
+		m_pPlayer->vehicleSyncData.wKeys = static_cast<WORD>(m_pPlayer->dwKeys);
 		// Set the vehicle occupied data
 		if (pVehicle->bOccupied) {
 			m_pPlayer->vehicleSyncData.fHealth = pVehicle->fHealth;
@@ -321,8 +321,8 @@ void CPlayerData::Update(int iState)
 			}
 		}
 		// Set the player health and armour
-		m_pPlayer->vehicleSyncData.bytePlayerHealth = (BYTE)m_pPlayer->fHealth;
-		m_pPlayer->vehicleSyncData.bytePlayerArmour = (BYTE)m_pPlayer->fArmour;
+		m_pPlayer->vehicleSyncData.bytePlayerHealth = static_cast<BYTE>(m_pPlayer->fHealth);
+		m_pPlayer->vehicleSyncData.bytePlayerArmour = static_cast<BYTE>(m_pPlayer->fArmour);
 		// Set the player weapon
 		m_pPlayer->vehicleSyncData.bytePlayerWeapon = m_byteWeaponId;
 		// Set the player hydra thrust angle
@@ -352,10 +352,10 @@ void CPlayerData::Update(int iState)
 		// Set the player keys
 		m_pPlayer->passengerSyncData.wUDAnalog = m_pPlayer->wUDAnalog;
 		m_pPlayer->passengerSyncData.wLRAnalog = m_pPlayer->wLRAnalog;
-		m_pPlayer->passengerSyncData.wKeys = (WORD)m_pPlayer->dwKeys;
+		m_pPlayer->passengerSyncData.wKeys = static_cast<WORD>(m_pPlayer->dwKeys);
 		// Set the player health and armour
-		m_pPlayer->passengerSyncData.bytePlayerHealth = (BYTE)m_pPlayer->fHealth;
-		m_pPlayer->passengerSyncData.bytePlayerArmour = (BYTE)m_pPlayer->fArmour;
+		m_pPlayer->passengerSyncData.bytePlayerHealth = static_cast<BYTE>(m_pPlayer->fHealth);
+		m_pPlayer->passengerSyncData.bytePlayerArmour = static_cast<BYTE>(m_pPlayer->fArmour);
 		// Set the player weapon
 		m_pPlayer->passengerSyncData.bytePlayerWeapon = m_byteWeaponId;
 		// Set the new update state
@@ -518,7 +518,7 @@ void CPlayerData::Kill(WORD wKillerId, BYTE byteReason)
 	// Set the NPC state
 	SetState(PLAYER_STATE_WASTED);
 	// Call the NPC death callback
-	CCallbackManager::OnDeath((int)m_wPlayerId, wKillerId, byteReason);
+	CCallbackManager::OnDeath(m_wPlayerId, wKillerId, byteReason);
 }
 
 void CPlayerData::Process()
@@ -626,7 +626,7 @@ void CPlayerData::Process()
 				// Get the time spent since the last update
 				DWORD dwTime = (dwThisTick - m_dwMoveTickCount);
 				// Set the new position
-				CVector vecNewPosition = vecPosition + (vecVelocity * (float)dwTime);
+				CVector vecNewPosition = vecPosition + (vecVelocity * static_cast<float>(dwTime));
 				// Set the Z ground (is using MapAndreas)
 				if (m_bUseMapAndreas && pServer->IsMapAndreasInited()) {
 					vecNewPosition.fZ = pServer->GetMapAndreas()->FindZ_For2DCoord(vecNewPosition.fX, vecNewPosition.fY) + 0.5f;
@@ -641,7 +641,7 @@ void CPlayerData::Process()
 				DWORD dwTime = (dwThisTick - m_dwMoveTickCount);
 				dwTime -= (dwThisTick - m_dwMoveStartTime) - m_dwMoveTime;
 				// Set the new position
-				CVector vecNewPosition = vecPosition + (vecVelocity * (float)dwTime);
+				CVector vecNewPosition = vecPosition + (vecVelocity * static_cast<float>(dwTime));
 				// Set the Z ground (is using MapAndreas)
 				if (m_bUseMapAndreas && pServer->IsMapAndreasInited()) {
 					vecNewPosition.fZ = pServer->GetMapAndreas()->FindZ_For2DCoord(vecNewPosition.fX, vecNewPosition.fY) + 0.5f;
@@ -657,17 +657,17 @@ void CPlayerData::Process()
 					m_dwEnterExitTickCount = dwThisTick;
 					m_bEntering = true;
 					// Check whether the player is jacking the vehicle or not
-					if (pServer->IsVehicleSeatOccupied((int)m_wPlayerId, (int)m_wVehicleToEnter, (int)m_byteSeatToEnter)) {
+					if (pServer->IsVehicleSeatOccupied(m_wPlayerId, m_wVehicleToEnter, m_byteSeatToEnter)) {
 						m_bJacking = true;
 					}
 
 					// Call the SAMP enter vehicle function
-					CFunctions::PlayerEnterVehicle(m_pPlayer, (int)m_wVehicleToEnter, (int)m_byteSeatToEnter);
+					CFunctions::PlayerEnterVehicle(m_pPlayer, m_wVehicleToEnter, m_byteSeatToEnter);
 				} else {
 					// Are we playing a node ?
 					if (m_bPlayingNode) {
 						// Check the return value of the point finish callback
-						if (CCallbackManager::OnFinishNodePoint((int)m_wPlayerId, m_iNodePoint)) {
+						if (CCallbackManager::OnFinishNodePoint(m_wPlayerId, m_iNodePoint)) {
 							// Process the next position
 							int iNewPoint = m_pNode->Process(this, m_iNodePoint, m_iNodeLastPoint, m_iNodeType, m_vecNodeVelocity);
 							// Update the points
@@ -678,7 +678,7 @@ void CPlayerData::Process()
 						}
 					} else {
 						// Call the reach destination callback
-						CCallbackManager::OnReachDestination((int)m_wPlayerId);
+						CCallbackManager::OnReachDestination(m_wPlayerId);
 					}
 				}
 			}
@@ -687,14 +687,14 @@ void CPlayerData::Process()
 		if (m_bEntering) {
 			// Get the time spent since the last update
 			DWORD dwTime = (dwThisTick - m_dwEnterExitTickCount);
-			if (dwTime > (DWORD)(m_bJacking ? 5800 : 2500)) {
+			if (dwTime > static_cast<DWORD>(m_bJacking ? 5800 : 2500)) {
 				// Change the player state
 				SetState(m_byteSeatToEnter == 0 ? PLAYER_STATE_DRIVER : PLAYER_STATE_PASSENGER);
 				// Reset entering variables
 				m_bEntering = false;
 				m_bJacking = false;
 				// Call the vehicle entry complete callback
-				CCallbackManager::OnVehicleEntryComplete((int)m_wPlayerId, (int)m_wVehicleToEnter, (int)m_byteSeatToEnter);
+				CCallbackManager::OnVehicleEntryComplete(m_wPlayerId, m_wVehicleToEnter, m_byteSeatToEnter);
 				// Set the player vehicle and seat
 				SetVehicle(m_wVehicleToEnter, m_byteSeatToEnter);
 				// Set the angle
@@ -728,7 +728,7 @@ void CPlayerData::Process()
 			// Get the reload time
 			int iReloadTime = GetWeaponReloadTime(m_byteWeaponId);
 			// Have we finished reloading ?
-			if (iReloadTime != -1 && (dwThisTick - m_dwReloadTickCount) >= (DWORD)iReloadTime) {
+			if (iReloadTime != -1 && (dwThisTick - m_dwReloadTickCount) >= static_cast<DWORD>(iReloadTime)) {
 				// Reset the reloading flag
 				m_bReloading = false;
 				// Update the shoot tick
@@ -767,7 +767,7 @@ void CPlayerData::Process()
 				}
 
 				// shoot time
-				if (iShootTime != -1 && (dwThisTick - m_dwShootTickCount) >= (DWORD)iShootTime) {
+				if (iShootTime != -1 && (dwThisTick - m_dwShootTickCount) >= static_cast<DWORD>(iShootTime)) {
 					m_wAmmo--;
 
 					// Check for reload
@@ -780,7 +780,7 @@ void CPlayerData::Process()
 
 					// Send bullet
 					if (GetWeaponType(m_byteWeaponId) == WEAPON_TYPE_SHOOT) {
-						CFunctions::PlayerShoot((int)m_wPlayerId, m_wHitId, m_byteHitType, m_byteWeaponId, m_vecAimAt);
+						CFunctions::PlayerShoot(m_wPlayerId, m_wHitId, m_byteHitType, m_byteWeaponId, m_vecAimAt);
 					}
 
 					SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM | KEY_FIRE);
@@ -828,7 +828,7 @@ void CPlayerData::Process()
 				// Get the time spent since the last update
 				DWORD dwTime = (dwThisTick - m_dwMoveTickCount);
 				// Set the new position
-				CVector vecNewPosition = vecPosition + (vecVelocity * (float)dwTime);
+				CVector vecNewPosition = vecPosition + (vecVelocity * static_cast<float>(dwTime));
 				// Set the Z ground (is using MapAndreas)
 				if (m_bUseMapAndreas && pServer->IsMapAndreasInited()) {
 					vecNewPosition.fZ = pServer->GetMapAndreas()->FindZ_For2DCoord(vecNewPosition.fX, vecNewPosition.fY) + 0.5f;
@@ -843,7 +843,7 @@ void CPlayerData::Process()
 				DWORD dwTime = (dwThisTick - m_dwMoveTickCount);
 				dwTime -= (dwThisTick - m_dwMoveStartTime) - m_dwMoveTime;
 				// Set the new position
-				CVector vecNewPosition = vecPosition + (vecVelocity * (float)dwTime);
+				CVector vecNewPosition = vecPosition + (vecVelocity * static_cast<float>(dwTime));
 				// Set the Z ground (is using MapAndreas)
 				if (m_bUseMapAndreas && pServer->IsMapAndreasInited()) {
 					vecNewPosition.fZ = pServer->GetMapAndreas()->FindZ_For2DCoord(vecNewPosition.fX, vecNewPosition.fY) + 0.5f;
@@ -856,7 +856,7 @@ void CPlayerData::Process()
 				// Are we playing a node ?
 				if (m_bPlayingNode) {
 					// Check the return value of the point finish callback
-					if (CCallbackManager::OnFinishNodePoint((int)m_wPlayerId, m_iNodePoint)) {
+					if (CCallbackManager::OnFinishNodePoint(m_wPlayerId, m_iNodePoint)) {
 						// Process the next position
 						int iNewPoint = m_pNode->Process(this, m_iNodePoint, m_iNodeLastPoint, m_iNodeType, m_vecNodeVelocity);
 						// Update the points
@@ -867,7 +867,7 @@ void CPlayerData::Process()
 					}
 				} else {
 					// Call the reach destination callback
-					CCallbackManager::OnReachDestination((int)m_wPlayerId);
+					CCallbackManager::OnReachDestination(m_wPlayerId);
 				}
 			}
 		}
@@ -884,7 +884,7 @@ void CPlayerData::Process()
 		if ((dwThisTick - m_dwEnterExitTickCount) > 1500) {
 			RemoveFromVehicle();
 			// Call the vehicle exit complete callback
-			CCallbackManager::OnVehicleExitComplete((int)m_wPlayerId);
+			CCallbackManager::OnVehicleExitComplete(m_wPlayerId);
 		}
 	}
 }
@@ -1017,14 +1017,14 @@ void CPlayerData::SetSkin(int iSkin)
 	}
 
 	// Validate the skin
-	if (iSkin > 311 || iSkin < 0) {
+	if (iSkin > 311 || iSkin < 0 || iSkin == 74) {
 		return;
 	}
 
 	// Send RPC
 	if (m_pPlayer->bReadyToSpawn) {
 		RakNet::BitStream bsData;
-		bsData.Write((int)m_pPlayer->wPlayerId);
+		bsData.Write(static_cast<DWORD>(m_pPlayer->wPlayerId));
 		bsData.Write(iSkin);
 		CFunctions::AddedPlayersRPC(&RPC_SetPlayerSkin, &bsData, m_wPlayerId);
 	}
@@ -1189,44 +1189,44 @@ void CPlayerData::SetSpecialAction(BYTE byteActionId)
 	m_pPlayer->syncData.byteSpecialAction = byteActionId;
 }
 
-int CPlayerData::GetSpecialAction()
+BYTE CPlayerData::GetSpecialAction()
 {
 	return m_pPlayer->syncData.byteSpecialAction;
 }
 
-void CPlayerData::SetFightingStyle(int iStyle)
+void CPlayerData::SetFightingStyle(BYTE byteStyle)
 {
-	m_pPlayer->byteFightingStyle = iStyle;
+	m_pPlayer->byteFightingStyle = byteStyle;
 
 	RakNet::BitStream bsData;
 	bsData.Write(m_wPlayerId);
-	bsData.Write(iStyle);
+	bsData.Write(byteStyle);
 
 	CFunctions::AddedPlayersRPC(&RPC_SetFightingStyle, &bsData, m_wPlayerId);
 	CFunctions::PlayerRPC(&RPC_SetFightingStyle, &bsData, m_wPlayerId);
 }
 
-int CPlayerData::GetFightingStyle()
+BYTE CPlayerData::GetFightingStyle()
 {
 	return m_pPlayer->byteFightingStyle;
 }
 
-void CPlayerData::SetAnimation(int iAnimationId, float fDelta, bool bLoop, bool bLockX, bool bLockY, bool bFreeze, int iTime)
+void CPlayerData::SetAnimation(WORD wAnimationId, float fDelta, bool bLoop, bool bLockX, bool bLockY, bool bFreeze, int iTime)
 {
-	m_pPlayer->syncData.wAnimIndex = (WORD)iAnimationId;
+	m_pPlayer->syncData.wAnimIndex = wAnimationId;
 
-	if (iAnimationId == 0) {
+	if (wAnimationId == 0) {
 		m_pPlayer->syncData.wAnimFlags = 0;
 	} else {
 		// TODO: convert fDelta to minifloat (8-bit float) format
-		m_pPlayer->syncData.wAnimFlags = ((BYTE)fDelta & 0xFF) | (bLoop << 8) | (bLockX << 9) | (bLockY << 10) | (bFreeze << 11) | (iTime << 12);
+		m_pPlayer->syncData.wAnimFlags = (static_cast<BYTE>(fDelta) & 0xFF) | (bLoop << 8) | (bLockX << 9) | (bLockY << 10) | (bFreeze << 11) | (iTime << 12);
 	}
 }
 
 void CPlayerData::SetAnimationByName(char *szName, float fDelta, bool bLoop, bool bLockX, bool bLockY, bool bFreeze, int iTime)
 {
-	int index = CAnimationInfo::GetIndexByName(szName);
-	SetAnimation(index, fDelta, bLoop, bLockX, bLockY, bFreeze, iTime);
+	WORD wAnimationId = CAnimationInfo::GetIndexByName(szName);
+	SetAnimation(wAnimationId, fDelta, bLoop, bLockX, bLockY, bFreeze, iTime);
 }
 
 void CPlayerData::ResetAnimation()
@@ -1235,9 +1235,9 @@ void CPlayerData::ResetAnimation()
 	m_pPlayer->syncData.wAnimFlags = 0;
 }
 
-void CPlayerData::GetAnimation(int *iAnimationId, float *fDelta, bool *bLoop, bool *bLockX, bool *bLockY, bool *bFreeze, int *iTime)
+void CPlayerData::GetAnimation(WORD *wAnimationId, float *fDelta, bool *bLoop, bool *bLockX, bool *bLockY, bool *bFreeze, int *iTime)
 {
-	*iAnimationId = m_pPlayer->syncData.wAnimIndex;
+	*wAnimationId = m_pPlayer->syncData.wAnimIndex;
 	*fDelta = m_pPlayer->syncData.wAnimFlags & 0xFF;
 	*bLoop = (m_pPlayer->syncData.wAnimFlags >> 8 & 0x1) != 0;
 	*bLockX = (m_pPlayer->syncData.wAnimFlags >> 9 & 0x1) != 0;
@@ -1251,10 +1251,10 @@ void CPlayerData::ApplyAnimation(char *szAnimationLib, char *szAnimationName, fl
 	RakNet::BitStream bsData;
 
 	bsData.Write(m_wPlayerId);
-	bsData.Write((BYTE)strlen(szAnimationLib));
-	bsData.Write((char*)szAnimationLib, strlen(szAnimationLib));
-	bsData.Write((BYTE)strlen(szAnimationName));
-	bsData.Write((char*)szAnimationName, strlen(szAnimationName));
+	bsData.Write(static_cast<BYTE>(strlen(szAnimationLib)));
+	bsData.Write(reinterpret_cast<char *>(szAnimationLib), strlen(szAnimationLib));
+	bsData.Write(static_cast<BYTE>(strlen(szAnimationName)));
+	bsData.Write(reinterpret_cast<char *>(szAnimationName), strlen(szAnimationName));
 	bsData.Write(fDelta);
 	bsData.Write(bLoop);
 	bsData.Write(bLockX);
@@ -1579,7 +1579,7 @@ bool CPlayerData::MeleeAttack(int iTime, bool bUseFightstyle)
 	if (iTime == -1) {
 		m_dwMeleeDelay = GetWeaponShootTime(m_byteWeaponId);
 	} else {
-		m_dwMeleeDelay = (DWORD)iTime;
+		m_dwMeleeDelay = static_cast<DWORD>(iTime);
 	}
 
 	if (m_dwMeleeDelay <= pServer->GetUpdateRate()) {
@@ -1639,7 +1639,7 @@ bool CPlayerData::IsReloading()
 void CPlayerData::ProcessDamage(WORD wDamagerId, float fHealthLoss, BYTE byteWeaponId, int iBodypart)
 {
 	// Call the on take damage callback
-	int iReturn = CCallbackManager::OnTakeDamage((int)m_wPlayerId, wDamagerId, byteWeaponId, iBodypart, fHealthLoss);
+	int iReturn = CCallbackManager::OnTakeDamage(m_wPlayerId, wDamagerId, byteWeaponId, iBodypart, fHealthLoss);
 	// Check the returned value
 	if (iReturn) {
 		// Check the armour
@@ -1662,7 +1662,7 @@ void CPlayerData::ProcessDamage(WORD wDamagerId, float fHealthLoss, BYTE byteWea
 
 void CPlayerData::ProcessVehicleDamage(WORD wDamagerId, WORD wVehicleId, BYTE byteWeaponId, CVector vecHit)
 {
-	int iReturn = CCallbackManager::OnVehicleTakeDamage((int)m_wPlayerId, wDamagerId, wVehicleId, byteWeaponId, vecHit);
+	int iReturn = CCallbackManager::OnVehicleTakeDamage(m_wPlayerId, wDamagerId, wVehicleId, byteWeaponId, vecHit);
 
 	if (iReturn) {
 		float fHealth = GetVehicleHealth();
@@ -1687,7 +1687,7 @@ void CPlayerData::ProcessVehicleDamage(WORD wDamagerId, WORD wVehicleId, BYTE by
 
 void CPlayerData::ProcessStreamIn(WORD wForPlayerId)
 {
-	CCallbackManager::OnStreamIn((int)m_wPlayerId, wForPlayerId);
+	CCallbackManager::OnStreamIn(m_wPlayerId, wForPlayerId);
 
 	if (GetState() == PLAYER_STATE_WASTED) {
 		RakNet::BitStream bsData;
@@ -1698,7 +1698,7 @@ void CPlayerData::ProcessStreamIn(WORD wForPlayerId)
 
 void CPlayerData::ProcessStreamOut(WORD wForPlayerId)
 {
-	CCallbackManager::OnStreamOut((int)m_wPlayerId, wForPlayerId);
+	CCallbackManager::OnStreamOut(m_wPlayerId, wForPlayerId);
 }
 
 bool CPlayerData::EnterVehicle(WORD wVehicleId, BYTE byteSeatId, int iType)
@@ -1734,8 +1734,8 @@ bool CPlayerData::EnterVehicle(WORD wVehicleId, BYTE byteSeatId, int iType)
 	}
 
 	// Save the entering stats
-	m_wVehicleToEnter = (WORD)wVehicleId;
-	m_byteSeatToEnter = (BYTE)byteSeatId;
+	m_wVehicleToEnter = wVehicleId;
+	m_byteSeatToEnter = byteSeatId;
 
 	// Check distance
 	if (fDistance < 0.5f) {
@@ -1744,12 +1744,12 @@ bool CPlayerData::EnterVehicle(WORD wVehicleId, BYTE byteSeatId, int iType)
 		m_bEntering = true;
 
 		// Check whether the player is jacking the vehicle or not
-		if (pServer->IsVehicleSeatOccupied((int)m_wPlayerId, (int)m_wVehicleToEnter, (int)m_byteSeatToEnter)) {
+		if (pServer->IsVehicleSeatOccupied(m_wPlayerId, m_wVehicleToEnter, m_byteSeatToEnter)) {
 			m_bJacking = true;
 		}
 
 		// Call the SAMP enter vehicle function
-		CFunctions::PlayerEnterVehicle(m_pPlayer, (int)m_wVehicleToEnter, (int)m_byteSeatToEnter);
+		CFunctions::PlayerEnterVehicle(m_pPlayer, m_wVehicleToEnter, m_byteSeatToEnter);
 	} else {
 		// Go to the vehicle
 		GoTo(vecDestination, iType, true);
@@ -1799,7 +1799,7 @@ bool CPlayerData::PutInVehicle(WORD wVehicleId, BYTE byteSeatId)
 	}
 
 	// Set the player params
-	SetVehicle((WORD)wVehicleId, (BYTE)byteSeatId);
+	SetVehicle(wVehicleId, byteSeatId);
 	SetPosition(pServer->GetVehiclePos(pVehicle));
 	SetState(byteSeatId == 0 ? PLAYER_STATE_DRIVER : PLAYER_STATE_PASSENGER);
 	SetAngle(pServer->GetVehicleAngle(pVehicle));
@@ -2042,7 +2042,7 @@ void CPlayerData::StopPlayingPlayback()
 	// Reset the Playing flag
 	m_bPlaying = false;
 	// Call the playback finish callback
-	CCallbackManager::OnFinishPlayback((int)m_wPlayerId);
+	CCallbackManager::OnFinishPlayback(m_wPlayerId);
 }
 
 void CPlayerData::PausePlayingPlayback()
@@ -2126,7 +2126,7 @@ void CPlayerData::StopPlayingNode()
 	m_iNodeLastPoint = 0;
 	m_iNodeType = 0;
 	// Call the node finish callback
-	CCallbackManager::OnFinishNode((int)m_wPlayerId);
+	CCallbackManager::OnFinishNode(m_wPlayerId);
 }
 
 int CPlayerData::ChangeNode(int iNodeId, unsigned short usLinkId)

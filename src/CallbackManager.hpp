@@ -21,21 +21,21 @@ public:
 	static void	RegisterAMX(AMX *pAMX);
 	static void	UnregisterAMX(AMX *pAMX);
 	// Callbacks
-	static void	OnCreate(int iGameId);
-	static void	OnSpawn(int iGameId);
-	static void	OnRespawn(int iGameId);
-	static void OnDeath(int iGameId, int iKillerId, int iWeapon);
-	static void	OnReachDestination(int iGameId);
-	static void	OnVehicleEntryComplete(int iGameId, WORD wVehicleId, int iSeat);
-	static void	OnVehicleExitComplete(int iGameId);
-	static int	OnTakeDamage(int iGameId, WORD wDamagerId, int iWeapon, int iBodyPart, float fHealthLoss);
-	static int	OnVehicleTakeDamage(int iGameId, WORD wDamagerId, WORD wVehicleId, BYTE byteWeaponId, CVector vecHit);
-	static void	OnFinishPlayback(int iGameId);
-	static int	OnChangeNode(int iGameId, int iNodeId);
-	static int	OnFinishNodePoint(int iGameId, int iNodePoint);
-	static void	OnFinishNode(int iGameId);
-	static void	OnStreamIn(int iNPCId, WORD wForPlayerId);
-	static void	OnStreamOut(int iNPCId, WORD wForPlayerId);
+	static void	OnCreate(WORD wPlayerId);
+	static void	OnSpawn(WORD wPlayerId);
+	static void	OnRespawn(WORD wPlayerId);
+	static void OnDeath(WORD wPlayerId, WORD wKillerId, BYTE byteWeaponId);
+	static void	OnReachDestination(WORD wPlayerId);
+	static void	OnVehicleEntryComplete(WORD wPlayerId, WORD wVehicleId, int iSeat);
+	static void	OnVehicleExitComplete(WORD wPlayerId);
+	static int	OnTakeDamage(WORD wPlayerId, WORD wDamagerId, BYTE byteWeaponId, int iBodyPart, float fHealthLoss);
+	static int	OnVehicleTakeDamage(WORD wPlayerId, WORD wDamagerId, WORD wVehicleId, BYTE byteWeaponId, CVector vecHit);
+	static void	OnFinishPlayback(WORD wPlayerId);
+	static int	OnChangeNode(WORD wPlayerId, int iNodeId);
+	static int	OnFinishNodePoint(WORD wPlayerId, int iNodePoint);
+	static void	OnFinishNode(WORD wPlayerId);
+	static void	OnStreamIn(WORD wPlayerId, WORD wForPlayerId);
+	static void	OnStreamOut(WORD wPlayerId, WORD wForPlayerId);
 
 	static std::list<AMX *>		m_listAMX;
 

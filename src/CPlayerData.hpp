@@ -31,7 +31,7 @@ public:
 	CPlayerData(WORD playerId, char *szName);
 	~CPlayerData();
 
-	int GetId();
+	WORD GetId();
 
 	void Destroy();
 	bool Setup();
@@ -102,15 +102,15 @@ public:
 	void GetKeys(WORD *pwUDAnalog, WORD *pwLRAnalog, DWORD *pdwKeys);
 
 	void SetSpecialAction(BYTE byteActionId);
-	int GetSpecialAction();
+	BYTE GetSpecialAction();
 
-	void SetFightingStyle(int iStyle);
-	int GetFightingStyle();
+	void SetFightingStyle(BYTE byteStyle);
+	BYTE GetFightingStyle();
 
-	void SetAnimation(int iAnimationId, float fDelta, bool bLoop, bool bLockX, bool bLockY, bool bFreeze, int iTime);
+	void SetAnimation(WORD wAnimationId, float fDelta, bool bLoop, bool bLockX, bool bLockY, bool bFreeze, int iTime);
 	void SetAnimationByName(char *szName, float fDelta, bool bLoop, bool bLockX, bool bLockY, bool bFreeze, int iTime);
 	void ResetAnimation();
-	void GetAnimation(int *iAnimationId, float *fDelta, bool *bLoop, bool *bLockX, bool *bLockY, bool *bFreeze, int *iTime);
+	void GetAnimation(WORD *wAnimationId, float *fDelta, bool *bLoop, bool *bLockX, bool *bLockY, bool *bFreeze, int *iTime);
 	void ApplyAnimation(char *szAnimationLib, char *szAnimationName, float fDelta, bool bLoop, bool bLockX, bool bLockY, bool bFreeze, int iTime);
 	void ClearAnimations();
 

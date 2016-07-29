@@ -64,7 +64,7 @@ public:
 	CMapAndreas *GetMapAndreas();
 	bool IsMapAndreasInited();
 
-	bool IsVehicleSeatOccupied(int iPlayerId, WORD wVehicleId, BYTE byteSeatId);
+	bool IsVehicleSeatOccupied(WORD wPlayerId, WORD wVehicleId, BYTE byteSeatId);
 	WORD GetVehicleSeatPlayerId(WORD wVehicleId, BYTE byteSeatId);
 	float GetVehicleAngle(CVehicle *pVehicle);
 	CVector GetVehiclePos(CVehicle *pVehicle);

@@ -17,8 +17,8 @@
 class CAnimationInfo
 {
 public:
-	static char *GetNameByIndex(int index);
-	static int GetIndexByName(char *name);
+	static char *GetNameByIndex(WORD wIndex);
+	static WORD GetIndexByName(char *szName);
 
 private:
 	static char m_cAnimationsName[MAX_ANIMATIONS][36];
