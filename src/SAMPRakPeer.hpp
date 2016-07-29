@@ -27,18 +27,18 @@ class CSAMPRakPeer
 {
 	// +0xA = wMaxPlayers
 public:
-	CSAMPRemoteSystem *GetRemoteSystem(unsigned short usIndex)
+	CSAMPRemoteSystem *GetRemoteSystem(WORD wPlayerId)
 	{
 		// Get the remote system manager
 		CSAMPRemoteSystemManager *pRemoteSystemManager = *(CSAMPRemoteSystemManager **)(this + CAddress::OFFSET_RemoteSystemManager + SYSTEM_MANAGER_OFFSET);
 		// Get the remote system
-		return (CSAMPRemoteSystem *)(pRemoteSystemManager + CAddress::OFFSET_RemoteSystemSize * usIndex);
+		return (CSAMPRemoteSystem *)(pRemoteSystemManager + CAddress::OFFSET_RemoteSystemSize * wPlayerId);
 	}
 
-	void SetRemoteStatus(int iPlayerId, PlayerID systemAddress, bool bActive, int iConnectMode, BYTE byteUnknown1, BYTE byteUnknown2)
+	void SetRemoteStatus(WORD wPlayerId, PlayerID systemAddress, bool bActive, int iConnectMode, BYTE byteUnknown1, BYTE byteUnknown2)
 	{
 		// Get the remote system
-		CSAMPRemoteSystem *pRemoteSystem = GetRemoteSystem((unsigned short)iPlayerId);
+		CSAMPRemoteSystem *pRemoteSystem = GetRemoteSystem(wPlayerId);
 		// Mark the player as active
 		*(bool *)(pRemoteSystem) = bActive;
 		// Set his sytem address
@@ -49,14 +49,14 @@ public:
 		*(BYTE *)(pRemoteSystem + CAddress::OFFSET_RemoteSystem__Unknown + 1) = byteUnknown2;
 	}
 
-	void SetConnectedPlayer(PlayerID systemAddress, int iPlayerId)
+	void SetConnectedPlayer(PlayerID systemAddress, WORD wPlayerId)
 	{
-		SetRemoteStatus(iPlayerId, systemAddress, true, 8, 2, 2);
+		SetRemoteStatus(wPlayerId, systemAddress, true, 8, 2, 2);
 	};
 
-	void SetDisonnectedPlayer(int iPlayerId)
+	void SetDisonnectedPlayer(WORD wPlayerId)
 	{
-		SetRemoteStatus(iPlayerId, UNASSIGNED_PLAYER_ID, false, 0, 0, 0);
+		SetRemoteStatus(wPlayerId, UNASSIGNED_PLAYER_ID, false, 0, 0, 0);
 	};
 
 };
