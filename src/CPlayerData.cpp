@@ -127,7 +127,7 @@ bool CPlayerData::Spawn(int iSkinId)
 
 	// Mark spawned
 	m_bSpawned = true;
-	m_pPlayer->bReadyToSpawn = TRUE;
+	m_pPlayer->bReadyToSpawn = true;
 	// Set the player skin
 	m_pPlayer->spawn.iSkin = iSkinId;
 	// Call the SAMP spawn functions
@@ -168,7 +168,7 @@ bool CPlayerData::Respawn()
 	BYTE byteSeat = m_pPlayer->byteSeatId;
 	BYTE byteSpecialAction = m_pPlayer->syncData.byteSpecialAction;
 	// Call the SAMP spawn functions
-	m_pPlayer->bReadyToSpawn = TRUE;
+	m_pPlayer->bReadyToSpawn = true;
 	CFunctions::SpawnPlayer(m_pPlayer);
 	// Set the player state onfoot
 	SetState(PLAYER_STATE_ONFOOT);
@@ -467,7 +467,7 @@ void CPlayerData::UpdateAim()
 		m_pPlayer->aimSyncData.vecFront = vecTarget - m_pPlayer->aimSyncData.vecPosition;
 	}
 	// Set the aim sync flag
-	m_pPlayer->bHasAimSync = TRUE;
+	m_pPlayer->bHasAimSync = true;
 }
 
 bool CPlayerData::IsSpawned()
@@ -566,8 +566,9 @@ void CPlayerData::Process()
 		}
 	}
 
-	// Is the player moving at player
+	// Update the player depending on his state
 	if (byteState == PLAYER_STATE_ONFOOT || byteState == PLAYER_STATE_DRIVER) {
+		// Is the player moving at player
 		if (m_wMoveId >= 0 && m_wMoveId < MAX_PLAYERS && IsMovingAtPlayer(m_wMoveId)) {
 			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[m_wMoveId];
 			if (pPlayer) {
@@ -579,8 +580,56 @@ void CPlayerData::Process()
 				StopMoving();
 			}
 		}
+
+		// Is player moving
+		if (m_bMoving) {
+			if (byteState == PLAYER_STATE_DRIVER && m_pPlayer->wVehicleId == INVALID_VEHICLE_ID) {
+				return;
+			}
+
+			CVector vecNewPosition;
+			CVector vecVelocity;
+
+			GetPosition(&vecNewPosition);
+			GetVelocity(&vecVelocity);
+
+			vecNewPosition += vecVelocity * static_cast<float>(dwThisTick - m_dwMoveTickCount);
+
+			if (m_bUseMapAndreas && pServer->IsMapAndreasInited()) {
+				vecNewPosition.fZ = pServer->GetMapAndreas()->FindZ_For2DCoord(vecNewPosition.fX, vecNewPosition.fY) + 0.5f;
+			}
+			SetPosition(vecNewPosition);
+
+			if ((dwThisTick - m_dwMoveStartTime) < m_dwMoveTime) {
+				m_dwMoveTickCount = dwThisTick;
+			} else {
+				StopMoving();
+
+				if (m_wVehicleToEnter != INVALID_VEHICLE_ID) {
+					m_dwEnterExitTickCount = dwThisTick;
+					m_bEntering = true;
+
+					if (pServer->IsVehicleSeatOccupied(m_wPlayerId, m_wVehicleToEnter, m_byteSeatToEnter)) {
+						m_bJacking = true;
+					}
+
+					CFunctions::PlayerEnterVehicle(m_pPlayer, m_wVehicleToEnter, m_byteSeatToEnter);
+				} else {
+					if (m_bPlayingNode) {
+						if (CCallbackManager::OnFinishNodePoint(m_wPlayerId, m_iNodePoint)) {
+							int iNewPoint = m_pNode->Process(this, m_iNodePoint, m_iNodeLastPoint, m_iNodeType, m_vecNodeVelocity);
+							m_iNodeLastPoint = m_iNodePoint;
+							m_iNodePoint = iNewPoint;
+						} else {
+							StopPlayingNode();
+						}
+					} else {
+						CCallbackManager::OnReachDestination(m_wPlayerId);
+					}
+				}
+			}
+		}
 	}
-	// Update the player depending on his state
 	if (byteState == PLAYER_STATE_ONFOOT) {
 		// Process the player surfing
 		if (m_wSurfingInfo != 0) {
@@ -613,106 +662,30 @@ void CPlayerData::Process()
 				}
 			}
 		}
-		// Process the player mouvement
-		if (m_bMoving) {
-			// Get the player position
-			CVector vecPosition;
-			GetPosition(&vecPosition);
-			// Get the player velocity
-			CVector vecVelocity;
-			GetVelocity(&vecVelocity);
-			// Make sure we still need to move
-			if ((dwThisTick - m_dwMoveStartTime) < m_dwMoveTime) {
-				// Get the time spent since the last update
-				DWORD dwTime = (dwThisTick - m_dwMoveTickCount);
-				// Set the new position
-				CVector vecNewPosition = vecPosition + (vecVelocity * static_cast<float>(dwTime));
-				// Set the Z ground (is using MapAndreas)
-				if (m_bUseMapAndreas && pServer->IsMapAndreasInited()) {
-					vecNewPosition.fZ = pServer->GetMapAndreas()->FindZ_For2DCoord(vecNewPosition.fX, vecNewPosition.fY) + 0.5f;
-				}
-
-				// Set the position
-				SetPosition(vecNewPosition);
-				// Update the tick count
-				m_dwMoveTickCount = dwThisTick;
-			} else {
-				// Get the time spent since the last update
-				DWORD dwTime = (dwThisTick - m_dwMoveTickCount);
-				dwTime -= (dwThisTick - m_dwMoveStartTime) - m_dwMoveTime;
-				// Set the new position
-				CVector vecNewPosition = vecPosition + (vecVelocity * static_cast<float>(dwTime));
-				// Set the Z ground (is using MapAndreas)
-				if (m_bUseMapAndreas && pServer->IsMapAndreasInited()) {
-					vecNewPosition.fZ = pServer->GetMapAndreas()->FindZ_For2DCoord(vecNewPosition.fX, vecNewPosition.fY) + 0.5f;
-				}
-
-				// Set the position
-				SetPosition(vecNewPosition);
-				// Stop the player
-				StopMoving();
-				// Are we entering a vehicle ?
-				if (m_wVehicleToEnter != INVALID_VEHICLE_ID) {
-					// Wait until the entry animation is finished
-					m_dwEnterExitTickCount = dwThisTick;
-					m_bEntering = true;
-					// Check whether the player is jacking the vehicle or not
-					if (pServer->IsVehicleSeatOccupied(m_wPlayerId, m_wVehicleToEnter, m_byteSeatToEnter)) {
-						m_bJacking = true;
-					}
-
-					// Call the SAMP enter vehicle function
-					CFunctions::PlayerEnterVehicle(m_pPlayer, m_wVehicleToEnter, m_byteSeatToEnter);
-				} else {
-					// Are we playing a node ?
-					if (m_bPlayingNode) {
-						// Check the return value of the point finish callback
-						if (CCallbackManager::OnFinishNodePoint(m_wPlayerId, m_iNodePoint)) {
-							// Process the next position
-							int iNewPoint = m_pNode->Process(this, m_iNodePoint, m_iNodeLastPoint, m_iNodeType, m_vecNodeVelocity);
-							// Update the points
-							m_iNodeLastPoint = m_iNodePoint;
-							m_iNodePoint = iNewPoint;
-						} else {
-							StopPlayingNode();
-						}
-					} else {
-						// Call the reach destination callback
-						CCallbackManager::OnReachDestination(m_wPlayerId);
-					}
-				}
-			}
-		}
 		// Are we performing the entry animation ?
 		if (m_bEntering) {
-			// Get the time spent since the last update
-			DWORD dwTime = (dwThisTick - m_dwEnterExitTickCount);
-			if (dwTime > static_cast<DWORD>(m_bJacking ? 5800 : 2500)) {
-				// Change the player state
+			if ((dwThisTick - m_dwEnterExitTickCount) > (m_bJacking ? 5800 : 2500)) {
 				SetState(m_byteSeatToEnter == 0 ? PLAYER_STATE_DRIVER : PLAYER_STATE_PASSENGER);
-				// Reset entering variables
+				CCallbackManager::OnVehicleEntryComplete(m_wPlayerId, m_wVehicleToEnter, m_byteSeatToEnter);
+
+				SetVehicle(m_wVehicleToEnter, m_byteSeatToEnter);
+				SetAngle(pServer->GetVehicleAngle(GetVehicle()));
+
 				m_bEntering = false;
 				m_bJacking = false;
-				// Call the vehicle entry complete callback
-				CCallbackManager::OnVehicleEntryComplete(m_wPlayerId, m_wVehicleToEnter, m_byteSeatToEnter);
-				// Set the player vehicle and seat
-				SetVehicle(m_wVehicleToEnter, m_byteSeatToEnter);
-				// Set the angle
-				SetAngle(pServer->GetVehicleAngle(GetVehicle()));
-				// Reset entering values
 				m_wVehicleToEnter = INVALID_VEHICLE_ID;
 				m_byteSeatToEnter = 0;
 			}
 		}
-		// Process player aiming
+
 		if (m_bAiming) {
-			// Is NPC is surfing
-			if (m_wSurfingInfo != 0) {
+			bool bIsSurfing = m_wSurfingInfo != 0;
+			if (bIsSurfing) {
 				UpdateAimingData(m_vecAimAt, m_bAimSetAngle);
 			}
 
-			// Update vector pos
-			if (m_wHitId >= 0 && m_wHitId < MAX_PLAYERS && IsAimingAtPlayer(m_wHitId)) {
+			bool bIsAimAtPlayer = m_wHitId >= 0 && m_wHitId < MAX_PLAYERS && IsAimingAtPlayer(m_wHitId);
+			if (bIsAimAtPlayer) {
 				CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[m_wHitId];
 				if (pPlayer) {
 					if (m_vecAimAt != pPlayer->vecPosition) {
@@ -723,33 +696,24 @@ void CPlayerData::Process()
 				}
 			}
 		}
-		// Process player reloading
+
 		if (m_bReloading) {
-			// Get the reload time
 			int iReloadTime = GetWeaponReloadTime(m_byteWeaponId);
-			// Have we finished reloading ?
-			if (iReloadTime != -1 && (dwThisTick - m_dwReloadTickCount) >= static_cast<DWORD>(iReloadTime)) {
-				// Reset the reloading flag
-				m_bReloading = false;
-				// Update the shoot tick
+			bool bIsReloadFinished = iReloadTime != -1 && (dwThisTick - m_dwReloadTickCount) >= static_cast<DWORD>(iReloadTime);
+
+			if (bIsReloadFinished) {
 				m_dwShootTickCount = dwThisTick;
-				// Start shooting again
+				m_bReloading = false;
 				m_bShooting = true;
 			} else {
 				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM);
 			}
-		}
-		// Process player shooting
-		else if (m_bShooting) {
-			// Do we still have ammo ?
+		} else if (m_bShooting) {
 			if (m_wAmmo == 0) {
-				// Check for infinite ammo flag
 				if (!m_bHasInfiniteAmmo) {
-					// Stop shooting and aim only
 					m_bShooting = false;
 					SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM);
 				} else {
-					// This is done so the NPC would keep reloading even if the infinite ammo flag is set
 					m_wAmmo = 500;
 				}
 			}
@@ -762,17 +726,25 @@ void CPlayerData::Process()
 					m_iShootDelay = iShootTime - pServer->GetUpdateRate();
 				}
 
-				if ((dwThisTick - m_dwShootTickCount) >= m_iShootDelay) {
+				DWORD dwLastShootTime = dwThisTick - m_dwShootTickCount;
+
+				if (dwLastShootTime >= m_iShootDelay) {
 					SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM);
 				}
 
 				// shoot time
-				if (iShootTime != -1 && (dwThisTick - m_dwShootTickCount) >= static_cast<DWORD>(iShootTime)) {
+				if (iShootTime != -1 && dwLastShootTime >= static_cast<DWORD>(iShootTime)) {
 					m_wAmmo--;
 
 					// Check for reload
 					DWORD dwClip = GetWeaponClipSize(m_byteWeaponId);
-					if (dwClip > 1 && m_wAmmo % dwClip == 0 && m_wAmmo != 0 && dwClip != m_wAmmo && m_bHasReload) {
+					bool bIsNeedToReload = m_bHasReload
+					                       && dwClip > 1
+					                       && m_wAmmo != 0
+					                       && m_wAmmo != dwClip
+					                       && m_wAmmo % dwClip == 0;
+
+					if (bIsNeedToReload) {
 						m_dwReloadTickCount = dwThisTick;
 						m_bReloading = true;
 						m_bShooting = false;
@@ -789,101 +761,23 @@ void CPlayerData::Process()
 					m_dwShootTickCount = dwThisTick;
 				}
 			}
-		}
-		// Process melee attack
-		else if (m_bMeleeAttack) {
-			// Get the time spent since last melee and compare it with the melee delay
+		} else if (m_bMeleeAttack) {
 			if ((dwThisTick - m_dwShootTickCount) >= m_dwMeleeDelay) {
-				// Set the melee keys
 				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_bMeleeFightstyle ? KEY_AIM | KEY_SECONDARY_ATTACK : KEY_FIRE);
-				// Update the tick count
 				m_dwShootTickCount = dwThisTick;
 			} else {
-				// Reset keys
 				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_bMeleeFightstyle ? KEY_AIM : KEY_NONE);
 			}
 		}
-		// Update the player
+
 		Update(UPDATE_STATE_ONFOOT);
-	}
-	// Process driver state
-	else if (byteState == PLAYER_STATE_DRIVER) {
-		// Process driving
-		if (m_bMoving) {
-			// Validate the player vehicle
-			if (m_pPlayer->wVehicleId == INVALID_VEHICLE_ID) {
-				return;
-			}
-
-			// Get the player vehicle interface
-			CVehicle *pVehicle = GetVehicle();
-			// Get the vehicle position
-			CVector vecPosition;
-			GetPosition(&vecPosition);
-			// Get the vehicle velocity
-			CVector vecVelocity;
-			GetVelocity(&vecVelocity);
-			// Make sure we still need to move
-			if ((dwThisTick - m_dwMoveStartTime) < m_dwMoveTime) {
-				// Get the time spent since the last update
-				DWORD dwTime = (dwThisTick - m_dwMoveTickCount);
-				// Set the new position
-				CVector vecNewPosition = vecPosition + (vecVelocity * static_cast<float>(dwTime));
-				// Set the Z ground (is using MapAndreas)
-				if (m_bUseMapAndreas && pServer->IsMapAndreasInited()) {
-					vecNewPosition.fZ = pServer->GetMapAndreas()->FindZ_For2DCoord(vecNewPosition.fX, vecNewPosition.fY) + 0.5f;
-				}
-
-				// Set the vehicle position
-				SetPosition(vecNewPosition);
-				// Update the tick count
-				m_dwMoveTickCount = dwThisTick;
-			} else {
-				// Get the time spent since the last update
-				DWORD dwTime = (dwThisTick - m_dwMoveTickCount);
-				dwTime -= (dwThisTick - m_dwMoveStartTime) - m_dwMoveTime;
-				// Set the new position
-				CVector vecNewPosition = vecPosition + (vecVelocity * static_cast<float>(dwTime));
-				// Set the Z ground (is using MapAndreas)
-				if (m_bUseMapAndreas && pServer->IsMapAndreasInited()) {
-					vecNewPosition.fZ = pServer->GetMapAndreas()->FindZ_For2DCoord(vecNewPosition.fX, vecNewPosition.fY) + 0.5f;
-				}
-
-				// Set the position
-				SetPosition(vecNewPosition);
-				// Stop the player
-				StopMoving();
-				// Are we playing a node ?
-				if (m_bPlayingNode) {
-					// Check the return value of the point finish callback
-					if (CCallbackManager::OnFinishNodePoint(m_wPlayerId, m_iNodePoint)) {
-						// Process the next position
-						int iNewPoint = m_pNode->Process(this, m_iNodePoint, m_iNodeLastPoint, m_iNodeType, m_vecNodeVelocity);
-						// Update the points
-						m_iNodeLastPoint = m_iNodePoint;
-						m_iNodePoint = iNewPoint;
-					} else {
-						StopPlayingNode();
-					}
-				} else {
-					// Call the reach destination callback
-					CCallbackManager::OnReachDestination(m_wPlayerId);
-				}
-			}
-		}
-		// Update the player
+	} else if (byteState == PLAYER_STATE_DRIVER) {
 		Update(UPDATE_STATE_DRIVER);
-	}
-	// Process passenger state
-	else if (byteState == PLAYER_STATE_PASSENGER) {
-		// Update the player
+	} else if (byteState == PLAYER_STATE_PASSENGER) {
 		Update(UPDATE_STATE_PASSENGER);
-	}
-	// Process vehicle exiting
-	else if (byteState == PLAYER_STATE_EXIT_VEHICLE) {
+	} else if (byteState == PLAYER_STATE_EXIT_VEHICLE) {
 		if ((dwThisTick - m_dwEnterExitTickCount) > 1500) {
 			RemoveFromVehicle();
-			// Call the vehicle exit complete callback
 			CCallbackManager::OnVehicleExitComplete(m_wPlayerId);
 		}
 	}
