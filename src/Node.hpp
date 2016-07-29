@@ -12,7 +12,7 @@
 #define NODE_H
 
 #include "Structs.h"
-#include "SANode.hpp"
+#include "CNode.hpp"
 
 class CPlayerData;
 
@@ -23,41 +23,33 @@ public:
 	~CNode();
 
 	bool Initialize();
-	int  Process(CPlayerData *pPlayerData, int iPointId, int iLastPoint, int iType, CVector vecVelocity);
-	int  ProcessNodeChange(CPlayerData *pPlayerData, unsigned short usLinkId, int iType, CVector vecVelocity);
+	int Process(CPlayerData *pPlayerData, int iPointId, int iLastPoint, int iType, CVector vecVelocity);
+	int ProcessNodeChange(CPlayerData *pPlayerData, WORD wLinkId, int iType, CVector vecVelocity);
 
-	void SetPaused(bool bPaused)
-	{
-		m_bPaused = bPaused;
-	};
+	void SetPaused(bool bPaused);
+	void GetPosition(CVector *pVecPosition);
+	int GetNodesNumber();
+	void GetHeaderInfo(DWORD *dwVehicleNodes, DWORD *dwPedNodes, DWORD *dwNaviNodes);
 
-	void				GetPosition(CVector *pVecPosition);
+	WORD GetLinkId();
+	WORD GetAreaId();
+	WORD GetPointId();
+	WORD GetLinkCount();
+	BYTE GetPathWidth();
+	BYTE GetNodeType();
 
-	int					GetNodesNumber()
-	{
-		return m_nodeHeader.ulNodesNumber;
-	};
-	void				GetHeaderInfo(unsigned long *pulVehicleNodes, unsigned long *pulPedNodes, unsigned long *pulNaviNodes);
+	WORD GetLinkPoint();
 
-	unsigned short		GetLinkId();
-	unsigned short		GetAreaId();
-	unsigned short		GetPointId();
-	unsigned short		GetLinkCount();
-	unsigned char		GetPathWidth();
-	unsigned char		GetNodeType();
-
-	unsigned short		GetLinkPoint();
-
-	void				SetLink(unsigned short usLinkId);
-	void				SetPoint(unsigned short usPointId);
+	void SetLink(WORD wLinkId);
+	void SetPoint(WORD usPointId);
 
 private:
-	int					m_iNodeId;
-	FILE				*m_pFile;
-	bool				m_bPaused;
-	CSANodeHeader		m_nodeHeader;
-	CSAPathNode			m_nodePath;
-	CSALinkNode			m_nodeLink;
+	int m_iNodeId;
+	FILE *m_pFile;
+	bool m_bPaused;
+	CNodeHeader m_nodeHeader;
+	CPathNode m_nodePath;
+	CLinkNode m_nodeLink;
 };
 
 #endif

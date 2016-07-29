@@ -176,7 +176,7 @@ public:
 
 	bool PlayNode(int iNodeId, int iType);
 	void StopPlayingNode();
-	int ChangeNode(int iNodeId, unsigned short usLinkId);
+	int ChangeNode(int iNodeId, unsigned short wLinkId);
 
 private:
 	WORD m_wPlayerId;

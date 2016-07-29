@@ -2032,7 +2032,7 @@ void CPlayerData::StopPlayingNode()
 	CCallbackManager::OnFinishNode(m_wPlayerId);
 }
 
-int CPlayerData::ChangeNode(int iNodeId, unsigned short usLinkId)
+int CPlayerData::ChangeNode(int iNodeId, unsigned short wLinkId)
 {
 	// Make sure the player is playing a node
 	if (!m_bPlayingNode) {
@@ -2042,5 +2042,5 @@ int CPlayerData::ChangeNode(int iNodeId, unsigned short usLinkId)
 	// Get the node instance
 	m_pNode = pServer->GetNodeManager()->GetAt(iNodeId);
 	// Process the node change
-	return m_pNode->ProcessNodeChange(this, usLinkId, m_iNodeType, m_vecNodeVelocity);
+	return m_pNode->ProcessNodeChange(this, wLinkId, m_iNodeType, m_vecNodeVelocity);
 }

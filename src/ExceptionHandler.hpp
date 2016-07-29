@@ -36,7 +36,6 @@ public:
 #elif defined(LINUX)
 	static void ExceptionHandlerCallback(int param, siginfo_t * info, void * ucontext);
 #endif
-
 };
 
 #endif

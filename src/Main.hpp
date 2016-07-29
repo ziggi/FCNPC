@@ -70,7 +70,7 @@
 #include "Structs.h"
 #include "RPCs.h"
 // SA includes
-#include "SANode.hpp"
+#include "CNode.hpp"
 #include "Maths.hpp"
 
 // Managers includes

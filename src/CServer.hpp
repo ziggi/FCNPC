@@ -36,29 +36,13 @@ public:
 	void SetTickRate(int rate) { m_iTickRate = rate; }
 	int GetTickRate(void) { return m_iTickRate; }
 
-	CPlayerManager *GetPlayerManager()
-	{
-		return m_pPlayerDataManager;
-	};
-	CNodeManager *GetNodeManager()
-	{
-		return m_pNodeManager;
-	};
+	CPlayerManager *GetPlayerManager();
+	CNodeManager *GetNodeManager();
 
 	bool DoesNameExist(char *szName);
 
-	bool SetUpdateRate(DWORD dwRate)
-	{
-		if (dwRate < 0) {
-			return false;
-		}
-		m_dwUpdateRate = dwRate;
-		return true;
-	};
-	DWORD GetUpdateRate()
-	{
-		return m_dwUpdateRate;
-	};
+	bool SetUpdateRate(DWORD dwRate);
+	DWORD GetUpdateRate();
 
 	void SetMapAndreas(CMapAndreas *pMapAndreas);
 	CMapAndreas *GetMapAndreas();
@@ -70,17 +54,14 @@ public:
 	CVector GetVehiclePos(CVehicle *pVehicle);
 	CVector GetVehicleSeatPos(CVehicle *pVehicle, BYTE byteSeatId);
 
-	eSAMPVersion GetVersion()
-	{
-		return m_Version;
-	}
+	eSAMPVersion GetVersion();
 
 private:
-	eSAMPVersion   m_Version;
+	eSAMPVersion m_Version;
 	CPlayerManager *m_pPlayerDataManager;
-	CNodeManager   *m_pNodeManager;
-	CMapAndreas    *m_pMapAndreas;
-	DWORD          m_dwUpdateRate;
+	CNodeManager *m_pNodeManager;
+	CMapAndreas *m_pMapAndreas;
+	DWORD m_dwUpdateRate;
 
 	int m_iTicks;
 	int m_iTickRate;

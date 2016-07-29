@@ -32,6 +32,20 @@ CNodeManager::~CNodeManager()
 	}
 }
 
+bool CNodeManager::IsNodeOpen(int iNodeId)
+{
+	if (iNodeId >= MAX_NODES || iNodeId < 0) {
+		return false;
+	} else {
+		return m_bOpened[iNodeId];
+	}
+}
+
+CNode *CNodeManager::GetAt(int iNodeId)
+{
+	return m_pNode[iNodeId];
+}
+
 bool CNodeManager::OpenNode(int iNodeId)
 {
 	// Validate the node

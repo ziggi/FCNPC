@@ -55,18 +55,28 @@ bool CNode::Initialize()
 		return false;
 	}
 	// Read the node header
-	fread(&m_nodeHeader, sizeof(CSANodeHeader), 1, m_pFile);
+	fread(&m_nodeHeader, sizeof(CNodeHeader), 1, m_pFile);
 	// Read the first path node
-	fread(&m_nodePath, sizeof(CSAPathNode), 1, m_pFile);
+	fread(&m_nodePath, sizeof(CPathNode), 1, m_pFile);
 
 	return true;
 }
 
-void CNode::GetHeaderInfo(unsigned long *pulVehicleNodes, unsigned long *pulPedNodes, unsigned long *pulNaviNodes)
+void CNode::SetPaused(bool bPaused)
 {
-	*pulVehicleNodes = m_nodeHeader.ulVehicleNodesNumber;
-	*pulPedNodes = m_nodeHeader.ulPedNodesNumber;
-	*pulNaviNodes = m_nodeHeader.ulNaviNodesNumber;
+	m_bPaused = bPaused;
+}
+
+int CNode::GetNodesNumber()
+{
+	return m_nodeHeader.dwNodesNumber;
+}
+
+void CNode::GetHeaderInfo(DWORD *dwVehicleNodes, DWORD *dwPedNodes, DWORD *dwNaviNodes)
+{
+	*dwVehicleNodes = m_nodeHeader.dwVehicleNodesNumber;
+	*dwPedNodes = m_nodeHeader.dwPedNodesNumber;
+	*dwNaviNodes = m_nodeHeader.dwNaviNodesNumber;
 }
 
 int CNode::Process(CPlayerData *pPlayerData, int iPointId, int iLastPoint, int iType, CVector vecVelocity)
@@ -75,17 +85,17 @@ int CNode::Process(CPlayerData *pPlayerData, int iPointId, int iLastPoint, int i
 	// Set the node to the player point
 	SetPoint(iPointId);
 	// Set it to the next link
-	unsigned short usStartLink = GetLinkId();
-	unsigned short usLinkCount = GetLinkCount();
+	WORD usStartLink = GetLinkId();
+	WORD usLinkCount = GetLinkCount();
 	BYTE byteCount = 0;
 	// Do we need to change the node ?
 	while(!iChangeNode) {
 		// Generate a random link id
-		unsigned short usLinkId = usStartLink + (rand() % usLinkCount);
+		WORD wLinkId = usStartLink + (rand() % usLinkCount);
 		// Set the node to the next random link
-		SetLink(usLinkId);
+		SetLink(wLinkId);
 		// Keep looping until we get a differente link point
-		while(m_nodeLink.usNodeId == iLastPoint && usLinkCount > 1) {
+		while(m_nodeLink.wNodeId == iLastPoint && usLinkCount > 1) {
 			// Increase the attempts count
 			byteCount++;
 			if (byteCount > 10) {
@@ -93,22 +103,22 @@ int CNode::Process(CPlayerData *pPlayerData, int iPointId, int iLastPoint, int i
 			}
 
 			// Generate a random link id
-			unsigned short usLinkId = usStartLink + (rand() % usLinkCount);
+			WORD wLinkId = usStartLink + (rand() % usLinkCount);
 			// Set the node to the next random link
-			SetLink(usLinkId);
+			SetLink(wLinkId);
 		}
 		// Check if we need to change the node id
-		if (m_nodeLink.usAreaId != m_iNodeId) {
-			if (m_nodeLink.usAreaId != 65535) {
-				if ((iChangeNode = CCallbackManager::OnChangeNode(pPlayerData->GetId(), (int)m_nodeLink.usAreaId))) {
-					return pPlayerData->ChangeNode(m_nodeLink.usAreaId, usLinkId);
+		if (m_nodeLink.wAreaId != m_iNodeId) {
+			if (m_nodeLink.wAreaId != 65535) {
+				if ((iChangeNode = CCallbackManager::OnChangeNode(pPlayerData->GetId(), (int)m_nodeLink.wAreaId))) {
+					return pPlayerData->ChangeNode(m_nodeLink.wAreaId, wLinkId);
 				}
 			} else {
 				return 0;
 			}
 		} else {
 			// Set the next point
-			SetPoint(m_nodeLink.usNodeId);
+			SetPoint(m_nodeLink.wNodeId);
 			// Get the point position
 			CVector vecPosition;
 			GetPosition(&vecPosition);
@@ -117,18 +127,18 @@ int CNode::Process(CPlayerData *pPlayerData, int iPointId, int iLastPoint, int i
 			// Move the player to it
 			pPlayerData->GoTo(vecPosition, iType == NODE_TYPE_PED ? MOVE_TYPE_WALK : MOVE_TYPE_DRIVE, true);
 
-			return m_nodeLink.usNodeId;
+			return m_nodeLink.wNodeId;
 		}
 	}
 	return 0;
 }
 
-int CNode::ProcessNodeChange(CPlayerData *pPlayerData, unsigned short usLinkId, int iType, CVector vecVelocity)
+int CNode::ProcessNodeChange(CPlayerData *pPlayerData, WORD wLinkId, int iType, CVector vecVelocity)
 {
 	// Set the node link
-	SetLink(usLinkId);
+	SetLink(wLinkId);
 	// Set the next point
-	SetPoint(m_nodeLink.usNodeId);
+	SetPoint(m_nodeLink.wNodeId);
 	// Get the point position
 	CVector vecPosition;
 	GetPosition(&vecPosition);
@@ -137,76 +147,80 @@ int CNode::ProcessNodeChange(CPlayerData *pPlayerData, unsigned short usLinkId, 
 	// Move the player to it
 	pPlayerData->GoTo(vecPosition, iType == NODE_TYPE_PED ? MOVE_TYPE_WALK : MOVE_TYPE_DRIVE, false);
 
-	return m_nodeLink.usNodeId;
+	return m_nodeLink.wNodeId;
 }
 
 void CNode::GetPosition(CVector *pVecPosition)
 {
 	// Get the node position
-	*pVecPosition = CVector((float)(m_nodePath.sPositionX / 8),
-	                        (float)(m_nodePath.sPositionY / 8), (float)(m_nodePath.sPositionZ / 8) + 0.7f);
+	*pVecPosition = CVector(static_cast<float>(m_nodePath.wPositionX / 8),
+	                        static_cast<float>(m_nodePath.wPositionY / 8),
+	                        static_cast<float>(m_nodePath.wPositionZ / 8) + 0.7f);
 }
 
-unsigned short CNode::GetLinkId()
+WORD CNode::GetLinkId()
 {
-	return m_nodePath.usLinkId;
+	return m_nodePath.wLinkId;
 }
 
-unsigned short CNode::GetAreaId()
+WORD CNode::GetAreaId()
 {
-	return m_nodePath.usAreaId;
+	return m_nodePath.wAreaId;
 }
 
-unsigned short CNode::GetPointId()
+WORD CNode::GetPointId()
 {
-	return m_nodePath.usNodeId;
+	return m_nodePath.wNodeId;
 }
 
-unsigned short CNode::GetLinkPoint()
+WORD CNode::GetLinkPoint()
 {
-	return m_nodeLink.usNodeId;
+	return m_nodeLink.wNodeId;
 }
 
-unsigned char CNode::GetPathWidth()
+BYTE CNode::GetPathWidth()
 {
-	return m_nodePath.ucPathWidth;
+	return m_nodePath.bytePathWidth;
 }
 
-unsigned short CNode::GetLinkCount()
+WORD CNode::GetLinkCount()
 {
-	return (unsigned short)(m_nodePath.ulFlags & 0xF);
+	return (WORD)(m_nodePath.dwFlags & 0xF);
 }
 
-unsigned char CNode::GetNodeType()
+BYTE CNode::GetNodeType()
 {
-	if (m_nodeHeader.ulVehicleNodesNumber != 0 && m_nodeHeader.ulPedNodesNumber == 0) {
-		return m_nodePath.ucNodeType;
-	} else if (m_nodeHeader.ulVehicleNodesNumber == 0 && m_nodeHeader.ulPedNodesNumber != 0) {
+	if (m_nodeHeader.dwVehicleNodesNumber != 0 && m_nodeHeader.dwPedNodesNumber == 0) {
+		return m_nodePath.byteNodeType;
+	} else if (m_nodeHeader.dwVehicleNodesNumber == 0 && m_nodeHeader.dwPedNodesNumber != 0) {
 		return NODE_TYPE_PED;
 	} else {
-		return m_nodePath.ucNodeType;
+		return m_nodePath.byteNodeType;
 	}
 }
 
-void CNode::SetLink(unsigned short usLinkId)
+void CNode::SetLink(WORD wLinkId)
 {
 	// Set the file pointer to the link position
-	fseek(m_pFile, sizeof(CSANodeHeader) + ((m_nodeHeader.ulPedNodesNumber + m_nodeHeader.ulVehicleNodesNumber)
-	                                        * sizeof(CSAPathNode)) + (m_nodeHeader.ulNaviNodesNumber * sizeof(CSANaviNode)) + (usLinkId * sizeof(CSALinkNode)), SEEK_SET);
+	fseek(m_pFile, sizeof(CNodeHeader)
+	               + (m_nodeHeader.dwPedNodesNumber + m_nodeHeader.dwVehicleNodesNumber) * sizeof(CPathNode)
+	               + (m_nodeHeader.dwNaviNodesNumber * sizeof(CNaviNode))
+	               + (wLinkId * sizeof(CLinkNode))
+	             , SEEK_SET);
 
 	// Read the node link
-	fread(&m_nodeLink, sizeof(CSALinkNode), 1, m_pFile);
+	fread(&m_nodeLink, sizeof(CLinkNode), 1, m_pFile);
 }
 
-void CNode::SetPoint(unsigned short usPointId)
+void CNode::SetPoint(WORD usPointId)
 {
 	// Validate the point
-	if (usPointId > m_nodeHeader.ulNodesNumber) {
+	if (usPointId > m_nodeHeader.dwNodesNumber) {
 		return;
 	}
 
 	// Set the file pointer to the point position
-	fseek(m_pFile, sizeof(CSANodeHeader) + (usPointId * sizeof(CSAPathNode)), SEEK_SET);
+	fseek(m_pFile, sizeof(CNodeHeader) + (usPointId * sizeof(CPathNode)), SEEK_SET);
 	// Read the node link
-	fread(&m_nodePath, sizeof(CSAPathNode), 1, m_pFile);
+	fread(&m_nodePath, sizeof(CPathNode), 1, m_pFile);
 }

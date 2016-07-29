@@ -67,6 +67,21 @@ void CFunctions::PreInitialize()
 	pfn__RakNet__Receive = reinterpret_cast<RakNet__Receive_t>(pRakServer_VTBL[RAKNET_RECEIVE_OFFSET]);
 }
 
+int CFunctions::GetNetGame()
+{
+	return pfn__GetNetGame();
+}
+
+int CFunctions::GetConsole()
+{
+	return pfn__GetConsole();
+}
+
+int CFunctions::GetRakServer()
+{
+	return pfn__GetRakServer();
+}
+
 int CFunctions::GetFreePlayerSlot()
 {
 	// Loop through all the players

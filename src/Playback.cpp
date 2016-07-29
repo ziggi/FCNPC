@@ -179,3 +179,8 @@ bool CPlayback::Process(CPlayerData *pPlayerData)
 	}
 	return true;
 }
+
+void CPlayback::SetPaused(bool bPaused)
+{
+	m_bPaused = bPaused;
+}

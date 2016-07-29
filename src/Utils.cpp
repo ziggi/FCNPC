@@ -74,15 +74,6 @@ void CUtils::UnProtect(DWORD dwAddress, size_t sSize)
 #endif
 }
 
-void CUtils::FCNPCSleep(DWORD dwMs)
-{
-	// Sleep
-#if defined(WIN32)
-	Sleep(dwMs);
-#elif defined(LINUX)
-	usleep((dwMs) * 1000);
-#endif
-}
 // Thanks to kurta999 - YSF project
 DWORD CUtils::FindPattern(const char *szPattern, const char *szMask)
 {

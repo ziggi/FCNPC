@@ -19,7 +19,6 @@ public:
 	static void InstallNopPatch(DWORD dwAddress, int iSize);
 
 	static void InstallPatches();
-
 };
 
 #endif

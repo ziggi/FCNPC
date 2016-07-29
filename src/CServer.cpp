@@ -120,6 +120,16 @@ void CServer::Process()
 	}
 }
 
+CPlayerManager *CServer::GetPlayerManager()
+{
+	return m_pPlayerDataManager;
+}
+
+CNodeManager *CServer::GetNodeManager()
+{
+	return m_pNodeManager;
+}
+
 bool CServer::DoesNameExist(char *szName)
 {
 	// Loop through all the players
@@ -135,6 +145,20 @@ bool CServer::DoesNameExist(char *szName)
 		}
 	}
 	return false;
+}
+
+bool CServer::SetUpdateRate(DWORD dwRate)
+{
+	if (dwRate < 0) {
+		return false;
+	}
+	m_dwUpdateRate = dwRate;
+	return true;
+}
+
+DWORD CServer::GetUpdateRate()
+{
+	return m_dwUpdateRate;
 }
 
 void CServer::SetMapAndreas(CMapAndreas *pMapAndreas)
@@ -243,4 +267,9 @@ CVector CServer::GetVehicleSeatPos(CVehicle *pVehicle, BYTE byteSeatId)
 	                        vecSeat.fZ);
 
 	return vecSeatPosition + pServer->GetVehiclePos(pVehicle);
+}
+
+eSAMPVersion CServer::GetVersion()
+{
+	return m_Version;
 }

@@ -11,34 +11,29 @@
 #ifndef SAMPRAKPEER_H
 #define SAMPRAKPEER_H
 
-class CSAMPSystemAddress;
-
 #if defined(WIN32)
 	#define SYSTEM_MANAGER_OFFSET 8
 #elif defined(LINUX)
 	#define SYSTEM_MANAGER_OFFSET 4
 #endif
 
-class CSAMPRemoteSystem {};
-class CSAMPRemoteSystemManager {};
-
 #pragma pack(push, 1)
 class CSAMPRakPeer
 {
 	// +0xA = wMaxPlayers
 public:
-	CSAMPRemoteSystem *GetRemoteSystem(WORD wPlayerId)
+	void *GetRemoteSystem(WORD wPlayerId)
 	{
 		// Get the remote system manager
-		CSAMPRemoteSystemManager *pRemoteSystemManager = *(CSAMPRemoteSystemManager **)(this + CAddress::OFFSET_RemoteSystemManager + SYSTEM_MANAGER_OFFSET);
+		void *pRemoteSystemManager = *(void **)(this + CAddress::OFFSET_RemoteSystemManager + SYSTEM_MANAGER_OFFSET);
 		// Get the remote system
-		return (CSAMPRemoteSystem *)(pRemoteSystemManager + CAddress::OFFSET_RemoteSystemSize * wPlayerId);
+		return (void *)(pRemoteSystemManager + CAddress::OFFSET_RemoteSystemSize * wPlayerId);
 	}
 
 	void SetRemoteStatus(WORD wPlayerId, PlayerID systemAddress, bool bActive, int iConnectMode, BYTE byteUnknown1, BYTE byteUnknown2)
 	{
 		// Get the remote system
-		CSAMPRemoteSystem *pRemoteSystem = GetRemoteSystem(wPlayerId);
+		void *pRemoteSystem = GetRemoteSystem(wPlayerId);
 		// Mark the player as active
 		*(bool *)(pRemoteSystem) = bActive;
 		// Set his sytem address
