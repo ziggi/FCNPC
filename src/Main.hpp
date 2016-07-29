@@ -31,13 +31,11 @@
 #endif
 
 // Standard includes
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <math.h>
-#include <string.h>
-#include <vector>
-#include <algorithm>
+#include <cstdio>
+#include <cstdlib>
+#include <cstdarg>
+#include <cmath>
+#include <cstring>
 #include "subhook/subhook.h"
 #include "strlcpy/strlcpy.h"
 #if defined(WIN32)
