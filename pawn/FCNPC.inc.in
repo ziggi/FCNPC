@@ -26,6 +26,11 @@ public FCNPC_IncludeVersion = FCNPC_INCLUDE_VERSION;
 #define MOVE_TYPE_SPRINT    (2)
 #define MOVE_TYPE_DRIVE     (3)
 
+#define MOVE_SPEED_AUTO     (-1.0)
+#define MOVE_SPEED_WALK     (0.1552086)
+#define MOVE_SPEED_RUN      (0.56444)
+#define MOVE_SPEED_SPRINT   (0.926784)
+
 #define MAX_NODES           (64)
 
 #define NODE_TYPE_NONE      (-1)
@@ -135,8 +140,8 @@ native FCNPC_GetFightingStyle(npcid);
 native FCNPC_ToggleReloading(npcid, bool:toggle);
 native FCNPC_ToggleInfiniteAmmo(npcid, bool:toggle);
 
-native FCNPC_GoTo(npcid, Float:x, Float:y, Float:z, type = MOVE_TYPE_AUTO, Float:speed = -1.0, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true);
-native FCNPC_GoToPlayer(npcid, playerid, type = MOVE_TYPE_AUTO, Float:speed = -1.0, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true);
+native FCNPC_GoTo(npcid, Float:x, Float:y, Float:z, type = MOVE_TYPE_AUTO, Float:speed = MOVE_SPEED_AUTO, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true);
+native FCNPC_GoToPlayer(npcid, playerid, type = MOVE_TYPE_AUTO, Float:speed = MOVE_SPEED_AUTO, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true);
 native FCNPC_Stop(npcid);
 native FCNPC_IsMoving(npcid);
 native FCNPC_IsMovingAtPlayer(npcid, playerid);
