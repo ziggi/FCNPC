@@ -1210,12 +1210,12 @@ void CPlayerData::GetKeys(WORD *pwUDAnalog, WORD *pwLRAnalog, DWORD *pdwKeys)
 
 bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float fRadius, bool bSetAngle, float fSpeed)
 {
-	// Validate the movement type
-	if (iType == MOVE_TYPE_AUTO) {
-		iType = GetState() == PLAYER_STATE_DRIVER ? MOVE_TYPE_DRIVE : MOVE_TYPE_RUN;
+	// Validate the movement 
+	if (iType == MOVE_TYPE_AUTO && GetState() == PLAYER_STATE_DRIVER) {
+		iType = MOVE_TYPE_DRIVE;
 	}
 
-	if (iType != MOVE_TYPE_WALK && iType != MOVE_TYPE_RUN && iType != MOVE_TYPE_SPRINT && iType != MOVE_TYPE_DRIVE) {
+	if (iType != MOVE_TYPE_AUTO && iType != MOVE_TYPE_WALK && iType != MOVE_TYPE_RUN && iType != MOVE_TYPE_SPRINT && iType != MOVE_TYPE_DRIVE) {
 		return false;
 	}
 
@@ -1224,36 +1224,45 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float f
 	WORD wLRKey = m_pPlayer->wLRAnalog;
 	DWORD dwMoveKey = m_pPlayer->dwKeys;
 
-	if (iType == MOVE_TYPE_WALK || iType == MOVE_TYPE_RUN || iType == MOVE_TYPE_SPRINT) {
+	if (iType == MOVE_TYPE_AUTO || iType == MOVE_TYPE_WALK || iType == MOVE_TYPE_RUN || iType == MOVE_TYPE_SPRINT) {
 		wUDKey = KEY_UP;
 
-		if (fSpeed == -1.0f) {
+		if (iType == MOVE_TYPE_AUTO && fSpeed == MOVE_SPEED_AUTO) {
+			iType = MOVE_TYPE_RUN;
+		}
+
+		if (fSpeed == MOVE_SPEED_AUTO) {
 			if (iType == MOVE_TYPE_RUN) {
 				fSpeed = MOVE_SPEED_RUN;
-				dwMoveKey = KEY_NONE;
 			} else if (iType == MOVE_TYPE_WALK) {
 				fSpeed = MOVE_SPEED_WALK;
-				dwMoveKey = KEY_WALK;
 			} else if (iType == MOVE_TYPE_SPRINT) {
 				fSpeed = MOVE_SPEED_SPRINT;
-				dwMoveKey = KEY_SPRINT;
 			}
 		} else {
-			if (fSpeed >= MOVE_SPEED_SPRINT) {
+			std::vector<float> fVectorSpeeds{MOVE_SPEED_WALK, MOVE_SPEED_RUN, MOVE_SPEED_SPRINT};
+			float fNearestSpeed = CUtils::GetNearestValue(fSpeed, fVectorSpeeds);
+
+			if (fNearestSpeed == MOVE_SPEED_SPRINT) {
 				iType = MOVE_TYPE_SPRINT;
-				dwMoveKey = KEY_SPRINT;
-			} else if (fSpeed >= MOVE_SPEED_RUN) {
+			} else if (fNearestSpeed == MOVE_SPEED_RUN) {
 				iType = MOVE_TYPE_RUN;
-				dwMoveKey = KEY_NONE;
-			} else if (fSpeed >= MOVE_SPEED_WALK) {
+			} else if (fNearestSpeed == MOVE_SPEED_WALK) {
 				iType = MOVE_TYPE_WALK;
-				dwMoveKey = KEY_WALK;
 			}
+		}
+
+		if (iType == MOVE_TYPE_RUN) {
+			dwMoveKey = KEY_NONE;
+		} else if (iType == MOVE_TYPE_WALK) {
+			dwMoveKey = KEY_WALK;
+		} else if (iType == MOVE_TYPE_SPRINT) {
+			dwMoveKey = KEY_SPRINT;
 		}
 	} else if (iType == MOVE_TYPE_DRIVE) {
 		dwMoveKey = KEY_SPRINT;
 
-		if (fSpeed == -1.0f) {
+		if (fSpeed == MOVE_SPEED_AUTO) {
 			fSpeed = 1.0f;
 		}
 	}

@@ -19,6 +19,15 @@ public:
 	static void  FCNPCSleep(DWORD dwMs);
 	static DWORD FindPattern(const char *szPattern, const char *szMask);
 	static float RandomFloat(float min, float max);
+
+	template <typename T>
+	static T GetNearestValue(T value, std::vector<T> list)
+	{
+		auto i = std::min_element(begin(list), end(list), [=](T x, T y) {
+			return abs(x - value) < abs(y - value);
+		});
+		return *i;
+	}
 };
 
 #if defined(LINUX)

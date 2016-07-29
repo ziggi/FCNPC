@@ -36,6 +36,8 @@
 #include <stdarg.h>
 #include <math.h>
 #include <string.h>
+#include <vector>
+#include <algorithm>
 #include "subhook/subhook.h"
 #include "strlcpy/strlcpy.h"
 #if defined(WIN32)
