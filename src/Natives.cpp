@@ -1004,7 +1004,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GoToPlayer(AMX *amx, cell *params)
 	WORD wPlayerId = static_cast<WORD>(params[2]);
 	int iType = static_cast<int>(params[3]);
 	float fSpeed = amx_ctof(params[4]);
-	int bZMap = static_cast<bool>(params[5]);
+	bool bZMap = static_cast<bool>(params[5]);
 	float fRadius = amx_ctof(params[6]);
 	bool bSetAngle = static_cast<bool>(params[7]);
 
