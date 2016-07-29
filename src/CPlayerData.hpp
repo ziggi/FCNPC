@@ -116,7 +116,7 @@ public:
 
 	bool GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f);
 	bool GoToPlayer(WORD wPlayerId, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f);
-	void UpdateMovingData(CVector vecDestination, bool bSetAngle, float fSpeed);
+	void UpdateMovingData(CVector vecDestination, float fRadius, bool bSetAngle, float fSpeed);
 	void StopMoving();
 	bool IsMoving();
 	bool IsMovingAtPlayer(WORD wPlayerId);
@@ -235,6 +235,7 @@ private:
 	float m_fMoveRadius;
 	bool m_bMoveSetAngle;
 	float m_fMoveSpeed;
+	CVector m_vecMovePlayerPosition;
 	WORD m_wHydraThrustAngle[2];
 	BYTE m_byteGearState;
 };
