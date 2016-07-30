@@ -1568,6 +1568,12 @@ void CPlayerData::ProcessVehicleDamage(WORD wDamagerId, WORD wVehicleId, BYTE by
 	int iReturn = CCallbackManager::OnVehicleTakeDamage(m_wPlayerId, wDamagerId, wVehicleId, byteWeaponId, vecHit);
 
 	if (iReturn) {
+		CVehicle *pVehicle = GetVehicle();
+
+		if (!pVehicle) {
+			return;
+		}
+
 		float fHealth = GetVehicleHealth();
 		SWeaponInfo sWeaponInfo = CWeaponInfo::GetDefaultInfo(byteWeaponId);
 
@@ -1582,7 +1588,6 @@ void CPlayerData::ProcessVehicleDamage(WORD wDamagerId, WORD wVehicleId, BYTE by
 		SetVehicleHealth(fHealth);
 
 		if (fHealth < 250.0f) {
-			CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[wVehicleId];
 			pVehicle->wKillerID = wDamagerId;
 		}
 	}
@@ -1811,7 +1816,7 @@ void CPlayerData::SetVehicleHealth(float fHealth)
 	}
 
 	m_pPlayer->vehicleSyncData.fHealth = fHealth;
-	pNetGame->pVehiclePool->pVehicle[ m_pPlayer->vehicleSyncData.wVehicleId ]->fHealth = fHealth;
+	pNetGame->pVehiclePool->pVehicle[m_pPlayer->wVehicleId]->fHealth = fHealth;
 }
 
 float CPlayerData::GetVehicleHealth()
