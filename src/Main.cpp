@@ -52,11 +52,12 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	logprintf("");
 	logprintf("-------------------------------------------------");
 	logprintf("     FCNPC - Fully Controllable NPC v" PLUGIN_VERSION "");
+	logprintf("           " SYSTEM_NAME " %s", szSampVersion);
+	logprintf("          " __DATE__" at " __TIME__);
 	logprintf("");
-	logprintf("- Author: OrMisicL");
-	logprintf("- Contributors: ziggi, Neutralneu");
-	logprintf("- Server version: %s", szSampVersion);
-	logprintf("- Build: " __DATE__" at " __TIME__ "");
+	logprintf("  Author:       OrMisicL (2013 - 2015)");
+	logprintf("  Continued by: ziggi (2016 - present)");
+	logprintf("  Contributors: kurta999, Neutralneu");
 	logprintf("-------------------------------------------------");
 	logprintf("");
 	logprintf("Loading...");
