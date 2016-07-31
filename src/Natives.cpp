@@ -2436,19 +2436,19 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetNodeInfo(AMX *amx, cell *params)
 	}
 
 	// Get the node header informations
-	unsigned long ulVehNodes, ulPedNodes, ulNaviNodes;
-	pServer->GetNodeManager()->GetAt(iNodeId)->GetHeaderInfo(&ulVehNodes, &ulPedNodes, &ulNaviNodes);
+	DWORD dwVehNodes, dwPedNodes, dwNaviNodes;
+	pServer->GetNodeManager()->GetAt(iNodeId)->GetHeaderInfo(&dwVehNodes, &dwPedNodes, &dwNaviNodes);
 
 	// Get the argument pointers and set its value
 	cell *pAddress = NULL;
 	amx_GetAddr(amx, params[2], &pAddress);
-	*pAddress = ulVehNodes;
+	*pAddress = dwVehNodes;
 
 	amx_GetAddr(amx, params[3], &pAddress);
-	*pAddress = ulPedNodes;
+	*pAddress = dwPedNodes;
 
 	amx_GetAddr(amx, params[4], &pAddress);
-	*pAddress = ulNaviNodes;
+	*pAddress = dwNaviNodes;
 
 	return 1;
 }

@@ -19,10 +19,10 @@
 	#include "unistd.h"
 	#include <sys/mman.h>
 
-	#define BOOL    int
-	#define DWORD   unsigned long
-	#define BYTE    unsigned char
-	#define WORD    unsigned short
+	#define BOOL    int8_t
+	#define DWORD   uint32_t
+	#define BYTE    uint8_t
+	#define WORD    uint16_t
 	#define TRUE    (1)
 	#define FALSE   (0)
 	#define STDCALL
