@@ -289,15 +289,10 @@ void CPlayerData::Update(int iState)
 			return;
 		}
 
-		// Get the player vehicle interface
 		CVehicle *pVehicle = GetVehicle();
-		// Set the player sync vehicle id
 		m_pPlayer->vehicleSyncData.wVehicleId = m_pPlayer->wVehicleId;
-		// Set the player sync position
 		m_pPlayer->vehicleSyncData.vecPosition = pVehicle->vecPosition;
-		// Set the player velocity
 		m_pPlayer->vehicleSyncData.vecVelocity = m_pPlayer->vecVelocity;
-		// Set the player keys
 		m_pPlayer->vehicleSyncData.wUDAnalog = m_pPlayer->wUDAnalog;
 		m_pPlayer->vehicleSyncData.wLRAnalog = m_pPlayer->wLRAnalog;
 		m_pPlayer->vehicleSyncData.wKeys = static_cast<WORD>(m_pPlayer->dwKeys);
@@ -320,16 +315,16 @@ void CPlayerData::Update(int iState)
 				}
 			}
 		}
-		// Set the player health and armour
+
 		m_pPlayer->vehicleSyncData.bytePlayerHealth = static_cast<BYTE>(m_pPlayer->fHealth);
 		m_pPlayer->vehicleSyncData.bytePlayerArmour = static_cast<BYTE>(m_pPlayer->fArmour);
-		// Set the player weapon
 		m_pPlayer->vehicleSyncData.bytePlayerWeapon = m_byteWeaponId;
-		// Set the player hydra thrust angle
-		m_pPlayer->vehicleSyncData.wHydraReactorAngle[0] = m_wHydraThrustAngle[0];
-		m_pPlayer->vehicleSyncData.wHydraReactorAngle[1] = m_wHydraThrustAngle[1];
-		// Set the player gear state
 		m_pPlayer->vehicleSyncData.byteGearState = m_byteGearState;
+		// if vehicle is hydra
+		if (m_pPlayer->wVehicleId == 520) {
+			m_pPlayer->vehicleSyncData.wHydraReactorAngle[0] = m_wHydraThrustAngle[0];
+			m_pPlayer->vehicleSyncData.wHydraReactorAngle[1] = m_wHydraThrustAngle[1];
+		}
 		// Set the new update state
 		m_pPlayer->iUpdateState = iState;
 	}
