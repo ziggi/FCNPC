@@ -124,22 +124,22 @@ struct CAimSyncData
 
 struct CVehicleSyncData
 {
-	WORD			wVehicleId;				// 0x001F - 0x0021
-	WORD			wLRAnalog;				// 0x0021 - 0x0023
-	WORD			wUDAnalog;				// 0x0023 - 0x0025
-	WORD			wKeys;					// 0x0025 - 0x0027
-	float			fQuaternion[4];			// 0x002B - 0x0037
-	CVector			vecPosition;			// 0x0037 - 0x0043
-	CVector			vecVelocity;			// 0x0043 - 0x004F
-	float			fHealth;				// 0x004F - 0x0053
-	BYTE			bytePlayerHealth;		// 0x0053 - 0x0054
-	BYTE			bytePlayerArmour;		// 0x0054 - 0x0055
-	BYTE			bytePlayerWeapon : 6;	// 0x0055 - 0x0056
-	BYTE			unk_2 : 2;				// 0x0055 - 0x0056
-	BYTE			byteSirenState;			// 0x0056 - 0x0057
-	BYTE			byteGearState;			// 0x0057 -	0x0058
-	WORD			wTrailerID;				// 0x0058 - 0x005A
-	union
+	WORD			wVehicleId;				// 39 - 41 | 0 - 2
+	WORD			wLRAnalog;				// 41 - 43 | 2 - 4
+	WORD			wUDAnalog;				// 43 - 45 | 4 - 6
+	WORD			wKeys;					// 45 - 47 | 6 - 8
+	float			fQuaternion[4];			// 47 - 63 | 8 - 24
+	CVector			vecPosition;			// 63 - 75 | 24 - 36
+	CVector			vecVelocity;			// 75 - 87 | 36 - 48
+	float			fHealth;				// 87 - 91 | 48 - 52
+	BYTE			bytePlayerHealth;		// 91 - 92 | 52 - 53
+	BYTE			bytePlayerArmour;		// 92 - 93 | 53 - 54
+	BYTE			bytePlayerWeapon : 6;	// 93 - 94 | 54 - 55
+	BYTE			unk_2 : 2;				// 93 - 94 |
+	BYTE			byteSirenState;			// 94 - 95 | 55 - 56
+	BYTE			byteGearState;			// 95 - 96 | 56 - 57
+	WORD			wTrailerID;				// 96 - 98 | 57 - 59
+	union                                   // 98 - 104 | 59 - 63
 	{
 		WORD			wHydraReactorAngle[2];
 		float           fTrainSpeed;
