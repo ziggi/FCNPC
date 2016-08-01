@@ -63,6 +63,7 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_vecMovePlayerPosition = CVector();
 	m_wHydraThrustAngle[0] =
 		m_wHydraThrustAngle[1] = 5000;
+	m_fTrainSpeed = 0.0f;
 	m_byteGearState = 0;
 }
 
@@ -320,11 +321,14 @@ void CPlayerData::Update(int iState)
 		m_pPlayer->vehicleSyncData.bytePlayerArmour = static_cast<BYTE>(m_pPlayer->fArmour);
 		m_pPlayer->vehicleSyncData.bytePlayerWeapon = m_byteWeaponId;
 		m_pPlayer->vehicleSyncData.byteGearState = m_byteGearState;
-		// if vehicle is hydra
-		if (m_pPlayer->wVehicleId == 520) {
+
+		if (CVehicleInfo::IsAHydra(pVehicle->customSpawn.iModelID)) {
 			m_pPlayer->vehicleSyncData.wHydraReactorAngle[0] = m_wHydraThrustAngle[0];
 			m_pPlayer->vehicleSyncData.wHydraReactorAngle[1] = m_wHydraThrustAngle[1];
+		} else if (CVehicleInfo::IsATrainPart(pVehicle->customSpawn.iModelID)) {
+			m_pPlayer->vehicleSyncData.fTrainSpeed = m_fTrainSpeed;
 		}
+
 		// Set the new update state
 		m_pPlayer->iUpdateState = iState;
 	}
@@ -1830,6 +1834,16 @@ WORD CPlayerData::GetVehicleHydraThrusters()
 	return m_wHydraThrustAngle[0];
 }
 
+void CPlayerData::SetTrainSpeed(float fTrainSpeed)
+{
+	m_fTrainSpeed = fTrainSpeed;
+}
+
+float CPlayerData::GetTrainSpeed()
+{
+	return m_fTrainSpeed;
+}
+
 void CPlayerData::SetVehicleGearState(BYTE byteGearState)
 {
 	m_byteGearState = byteGearState;
@@ -1942,6 +1956,7 @@ void CPlayerData::StopPlayingPlayback()
 	// Reset the player data
 	SetVelocity(CVector(0.0f, 0.0f, 0.0f));
 	SetKeys(KEY_NONE, KEY_NONE, KEY_NONE);
+	SetTrainSpeed(0.0f);
 	// Reset the Playing flag
 	m_bPlaying = false;
 	// Call the playback finish callback

@@ -156,6 +156,8 @@ public:
 	float GetVehicleHealth();
 	void SetVehicleHydraThrusters(WORD wDirection);
 	WORD GetVehicleHydraThrusters();
+	void SetTrainSpeed(float fTrainSpeed);
+	float GetTrainSpeed();
 	void SetVehicleGearState(BYTE byteGearState);
 	BYTE GetVehicleGearState();
 
@@ -237,6 +239,7 @@ private:
 	float m_fMoveSpeed;
 	CVector m_vecMovePlayerPosition;
 	WORD m_wHydraThrustAngle[2];
+	float m_fTrainSpeed;
 	BYTE m_byteGearState;
 };
 

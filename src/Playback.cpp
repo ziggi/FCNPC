@@ -123,7 +123,8 @@ bool CPlayback::Process(CPlayerData *pPlayerData)
 			}
 
 			// Get the vehicle interface
-			if (pPlayerData->GetVehicleId() == INVALID_VEHICLE_ID) {
+			CVehicle *pVehicle = pPlayerData->GetVehicle();
+			if (!pVehicle) {
 				return false;
 			}
 
@@ -138,6 +139,13 @@ bool CPlayback::Process(CPlayerData *pPlayerData)
 			pPlayerData->SetArmour(vehicleSyncData.bytePlayerArmour);
 			pPlayerData->SetWeapon(vehicleSyncData.bytePlayerWeapon);
 			pPlayerData->SetVehicleSiren(vehicleSyncData.byteSirenState);
+
+			if (CVehicleInfo::IsAHydra(pVehicle->customSpawn.iModelID)) {
+				pPlayerData->SetVehicleHydraThrusters(vehicleSyncData.wHydraReactorAngle[0]);
+			} else if (CVehicleInfo::IsATrainPart(pVehicle->customSpawn.iModelID)) {
+				pPlayerData->SetTrainSpeed(vehicleSyncData.fTrainSpeed);
+			}
+
 			pPlayerData->SetVehicleSync(&vehicleSyncData);
 
 			// Save the last onfoot sync

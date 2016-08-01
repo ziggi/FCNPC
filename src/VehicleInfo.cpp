@@ -28,13 +28,13 @@ static const BYTE wMaxPassengers[212] = {
 	3, 1, 255, 255, 255, 3, 255, 255
 };                          // 605->611
 
-bool CVehicleInfo::IsValidPassengerSeat(BYTE byteSeatId, WORD iModelId)
+bool CVehicleInfo::IsValidPassengerSeat(BYTE byteSeatId, WORD wModelId)
 {
-	if (!IsValidModel(iModelId)) {
+	if (!IsValidModel(wModelId)) {
 		return false;
 	}
 
-	WORD maxPassengers = GetMaxPassengers(iModelId);
+	WORD maxPassengers = GetMaxPassengers(wModelId);
 
 	if (byteSeatId < 0 || byteSeatId > maxPassengers || maxPassengers == 0xFF) {
 		return false;
@@ -43,16 +43,31 @@ bool CVehicleInfo::IsValidPassengerSeat(BYTE byteSeatId, WORD iModelId)
 	return true;
 }
 
-WORD CVehicleInfo::GetMaxPassengers(WORD iModelId)
+WORD CVehicleInfo::GetMaxPassengers(WORD wModelId)
 {
-	if (IsValidModel(iModelId)) {
-		return wMaxPassengers[iModelId - 400];
+	if (IsValidModel(wModelId)) {
+		return wMaxPassengers[wModelId - 400];
 	}
 
 	return 0xFF;
 }
 
-bool CVehicleInfo::IsValidModel(WORD iModelId)
+bool CVehicleInfo::IsValidModel(WORD wModelId)
 {
-	return iModelId >= 400 && iModelId <= 611;
+	return wModelId >= 400 && wModelId <= 611;
+}
+
+bool CVehicleInfo::IsATrainLoco(WORD wModelId)
+{
+	return wModelId == 537 || wModelId == 538;
+}
+
+bool CVehicleInfo::IsATrainPart(WORD wModelId)
+{
+	return IsATrainLoco(wModelId) || wModelId == 570 || wModelId == 569 || wModelId == 449;
+}
+
+bool CVehicleInfo::IsAHydra(WORD wModelId)
+{
+	return wModelId == 520;
 }
