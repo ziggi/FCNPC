@@ -581,9 +581,9 @@ void CPlayerData::Process()
 
 		// Is player moving
 		if (m_bMoving && byteState == PLAYER_STATE_DRIVER && !GetVehicle()) {
+			StopMoving();
 			SetState(PLAYER_STATE_ONFOOT);
 			SetVehicle(INVALID_VEHICLE_ID, 0);
-			StopMoving();
 		} else if (m_bMoving) {
 			CVector vecNewPosition;
 			CVector vecVelocity;
