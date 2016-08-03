@@ -667,11 +667,14 @@ void CPlayerData::Process()
 		// Are we performing the entry animation ?
 		if (m_bEntering) {
 			if ((dwThisTick - m_dwEnterExitTickCount) > (m_bJacking ? 5800 : 2500)) {
-				SetState(m_byteSeatToEnter == 0 ? PLAYER_STATE_DRIVER : PLAYER_STATE_PASSENGER);
-				CCallbackManager::OnVehicleEntryComplete(m_wPlayerId, m_wVehicleToEnter, m_byteSeatToEnter);
+				CVehicle *pVehicle = GetVehicle();
+				if (pVehicle) {
+					SetState(m_byteSeatToEnter == 0 ? PLAYER_STATE_DRIVER : PLAYER_STATE_PASSENGER);
+					CCallbackManager::OnVehicleEntryComplete(m_wPlayerId, m_wVehicleToEnter, m_byteSeatToEnter);
 
-				SetVehicle(m_wVehicleToEnter, m_byteSeatToEnter);
-				SetAngle(pServer->GetVehicleAngle(GetVehicle()));
+					SetVehicle(m_wVehicleToEnter, m_byteSeatToEnter);
+					SetAngle(pServer->GetVehicleAngle(pVehicle));
+				}
 
 				m_bEntering = false;
 				m_bJacking = false;
