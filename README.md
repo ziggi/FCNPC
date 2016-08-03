@@ -28,7 +28,7 @@ cmake ../ -G "Visual Studio 12"
 cd FCNPC
 mkdir build
 cd build
-cmake ../ .
+cmake ../
 make
 ```
 
