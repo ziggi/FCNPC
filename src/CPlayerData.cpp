@@ -582,7 +582,10 @@ void CPlayerData::Process()
 
 		// Is player moving
 		if (m_bMoving) {
-			if (byteState == PLAYER_STATE_DRIVER && m_pPlayer->wVehicleId == INVALID_VEHICLE_ID) {
+			if (byteState == PLAYER_STATE_DRIVER && !GetVehicle()) {
+				SetState(PLAYER_STATE_ONFOOT);
+				SetVehicle(INVALID_VEHICLE_ID, 0);
+				StopMoving();
 				return;
 			}
 
