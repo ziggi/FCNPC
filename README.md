@@ -1,9 +1,9 @@
 # FCNPC - Fully Controllable NPC
-[![GitHub version](https://badge.fury.io/gh/Open-GTO%2FFCNPC.svg)](https://badge.fury.io/gh/Open-GTO%2FFCNPC) [![Build Status](https://travis-ci.org/Open-GTO/FCNPC.svg?branch=master)](https://travis-ci.org/Open-GTO/FCNPC)
+[![GitHub version](https://badge.fury.io/gh/ziggi%2FFCNPC.svg)](https://badge.fury.io/gh/ziggi%2FFCNPC) [![Build Status](https://travis-ci.org/ziggi/FCNPC.svg?branch=master)](https://travis-ci.org/ziggi/FCNPC)
 
 This is a fork of [original repository](https://github.com/OrMisicL/FCNPC) by [OrMisicL](https://github.com/OrMisicL/).
 
-If you found a bug or get crash, create issue in [issues section](https://github.com/Open-GTO/FCNPC/issues) with your **crashlog** and your **Pawn script**.
+If you found a bug or get crash, create issue in [issues section](https://github.com/ziggi/FCNPC/issues) with your **crashlog** and your **Pawn script**.
 
 Discussion in [forum thread](http://forum.sa-mp.com/showthread.php?t=428066). Or in [Russian forum thread](http://forum.sa-mp.com/showthread.php?t=602965).
 
