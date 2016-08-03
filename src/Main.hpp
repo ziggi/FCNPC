@@ -19,7 +19,7 @@
 	#include "unistd.h"
 	#include <sys/mman.h>
 
-	#define BOOL    int8_t
+	#define BOOL    int32_t
 	#define DWORD   uint32_t
 	#define BYTE    uint8_t
 	#define WORD    uint16_t
