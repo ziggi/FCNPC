@@ -286,11 +286,11 @@ void CPlayerData::Update(int iState)
 	// Update driver state
 	else if (iState == UPDATE_STATE_DRIVER && byteState == PLAYER_STATE_DRIVER) {
 		// Dont process if we dont have any vehicle
-		if (m_pPlayer->wVehicleId == INVALID_VEHICLE_ID) {
+		CVehicle *pVehicle = GetVehicle();
+		if (!pVehicle) {
 			return;
 		}
 
-		CVehicle *pVehicle = GetVehicle();
 		m_pPlayer->vehicleSyncData.wVehicleId = m_pPlayer->wVehicleId;
 		m_pPlayer->vehicleSyncData.vecPosition = pVehicle->vecPosition;
 		m_pPlayer->vehicleSyncData.vecVelocity = m_pPlayer->vecVelocity;
@@ -335,12 +335,11 @@ void CPlayerData::Update(int iState)
 	// Update passenger state
 	else if (iState == UPDATE_STATE_PASSENGER && byteState == PLAYER_STATE_PASSENGER) {
 		// Dont process if we dont have any vehicle
-		if (m_pPlayer->wVehicleId == INVALID_VEHICLE_ID) {
+		CVehicle *pVehicle = GetVehicle();
+		if (!pVehicle) {
 			return;
 		}
 
-		// Get the player vehicle interface
-		CVehicle *pVehicle = GetVehicle();
 		// Set the player position to the vehicle position
 		SetPosition(pVehicle->vecPosition);
 		// Set the player sync vehicle and seat id
@@ -1170,24 +1169,17 @@ void CPlayerData::ClearAnimations()
 
 void CPlayerData::SetVelocity(CVector vecVelocity)
 {
-	// Check the player state
-	if (GetState() == PLAYER_STATE_DRIVER && m_pPlayer->wVehicleId != INVALID_VEHICLE_ID) {
-		// Get the player vehicle interface
-		CVehicle *pVehicle = GetVehicle();
-		// Set the player vehicle velocity
+	CVehicle *pVehicle = GetVehicle();
+	if (pVehicle) {
 		pVehicle->vecVelocity = vecVelocity;
 	}
-	// Set the player velocity
 	m_pPlayer->vecVelocity = vecVelocity;
 }
 
 void CPlayerData::GetVelocity(CVector *pvecVelocity)
 {
-	// Check the player state
-	if ((GetState() == PLAYER_STATE_DRIVER || GetState() == PLAYER_STATE_PASSENGER) && m_pPlayer->wVehicleId != INVALID_VEHICLE_ID) {
-		// Get the player vehicle interface
-		CVehicle *pVehicle = GetVehicle();
-		// Get the player vehicle position
+	CVehicle *pVehicle = GetVehicle();
+	if (pVehicle) {
 		*pvecVelocity = pVehicle->vecVelocity;
 	} else {
 		*pvecVelocity = m_pPlayer->vecVelocity;
@@ -1333,7 +1325,9 @@ void CPlayerData::StopMoving()
 	// Reset moving flag
 	m_bMoving = false;
 	m_wMoveId = INVALID_PLAYER_ID;
-	// Reset changed keys
+	// Reset the player data
+	SetVelocity(CVector(0.0f, 0.0f, 0.0f));
+	SetTrainSpeed(0.0f);
 	if (GetState() == PLAYER_STATE_DRIVER) {
 		SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_NONE);
 	} else {
@@ -1625,7 +1619,6 @@ bool CPlayerData::EnterVehicle(WORD wVehicleId, BYTE byteSeatId, int iType)
 
 	// Validate the vehicle
 	CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[wVehicleId];
-
 	if (!pVehicle) {
 		return false;
 	}
@@ -1698,7 +1691,6 @@ bool CPlayerData::PutInVehicle(WORD wVehicleId, BYTE byteSeatId)
 
 	// Validate the vehicle
 	CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[wVehicleId];
-
 	if (!pVehicle) {
 		return false;
 	}
@@ -1765,13 +1757,7 @@ void CPlayerData::SetVehicle(WORD wVehicleId, BYTE byteSeatId)
 		pVehicle->vehActive = false;
 	}
 
-	// validate vehicle
-	if (wVehicleId < 1 || wVehicleId >= MAX_VEHICLES) {
-		return;
-	}
-
 	CVehicle *pVehicle = GetVehicle();
-
 	if (!pVehicle) {
 		return;
 	}
@@ -1790,7 +1776,6 @@ CVehicle *CPlayerData::GetVehicle()
 	}
 
 	CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[m_pPlayer->wVehicleId];
-
 	if (!pVehicle) {
 		return NULL;
 	}
@@ -1817,8 +1802,12 @@ void CPlayerData::SetVehicleHealth(float fHealth)
 		fHealth = 1000.0f;
 	}
 
+	CVehicle *pVehicle = GetVehicle();
+	if (pVehicle) {
+		pVehicle->fHealth = fHealth;
+	}
+
 	m_pPlayer->vehicleSyncData.fHealth = fHealth;
-	pNetGame->pVehiclePool->pVehicle[m_pPlayer->wVehicleId]->fHealth = fHealth;
 }
 
 float CPlayerData::GetVehicleHealth()
@@ -2038,8 +2027,9 @@ void CPlayerData::StopPlayingNode()
 	// Reset the node instance
 	m_pNode = NULL;
 	// Reset the player data
-	SetKeys(KEY_NONE, KEY_NONE, KEY_NONE);
 	SetVelocity(CVector(0.0f, 0.0f, 0.0f));
+	SetKeys(KEY_NONE, KEY_NONE, KEY_NONE);
+	SetTrainSpeed(0.0f);
 	m_vecNodeVelocity = CVector();
 	// Reset the node flag
 	m_bPlayingNode = false;
