@@ -17,12 +17,18 @@ If you want to see that your scripts will work correctly, you need to declare th
 # Building (Windows)
 You can use Visual Studio for build. Just use CMake for generate VS project:
 ```bash
-cmake -G "Visual Studio 12"
+cd FCNPC
+mkdir build
+cd build
+cmake ../ -G "Visual Studio 12"
 ```
 
 # Building (Linux)
 ```bash
-cmake .
+cd FCNPC
+mkdir build
+cd build
+cmake ../ .
 make
 ```
 
