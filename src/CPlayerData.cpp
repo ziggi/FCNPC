@@ -478,6 +478,32 @@ bool CPlayerData::IsStreamedIn(WORD wForPlayerId)
 	return pNetGame->pPlayerPool->pPlayer[wForPlayerId]->byteStreamedIn[m_wPlayerId] != 0;
 }
 
+void CPlayerData::ShowForPlayer(WORD wPlayerId)
+{
+	RakNet::BitStream bStream;
+	bStream.Write(m_wPlayerId);
+	bStream.Write(m_pPlayer->spawn.byteTeam);
+	bStream.Write(m_pPlayer->spawn.iSkin);
+	bStream.Write(m_pPlayer->vecPosition);
+	bStream.Write(m_pPlayer->fAngle);
+	bStream.Write(m_pPlayer->dwNickNameColor);
+	bStream.Write(m_pPlayer->byteFightingStyle);
+	bStream.Write((char*)m_pPlayer->wSkillLevel, sizeof(WORD) * 11);
+	// does not update player objects, because for NPC this is not needed
+	CFunctions::PlayerRPC(&RPC_ShowPlayerForPlayer, &bStream, 0);
+}
+
+void CPlayerData::ShowForStreamedPlayers()
+{
+	for (WORD i = 0; i < pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
+		if (!pServer->GetPlayerManager()->IsPlayerConnected(i) || !IsStreamedIn(i)) {
+			continue;
+		}
+
+		ShowForPlayer(i);
+	}
+}
+
 bool CPlayerData::SetState(BYTE byteState)
 {
 	// Make sure the state is valid
@@ -1686,7 +1712,7 @@ bool CPlayerData::PutInVehicle(WORD wVehicleId, BYTE byteSeatId)
 {
 	// Validate the player state
 	if (GetState() != PLAYER_STATE_ONFOOT) {
-		return false;
+		ShowForStreamedPlayers();
 	}
 
 	// Validate the vehicle

@@ -45,6 +45,8 @@ public:
 	void UpdateAim();
 	bool IsSpawned();
 	bool IsStreamedIn(WORD wForPlayerId);
+	void ShowForPlayer(WORD wPlayerId);
+	void ShowForStreamedPlayers();
 
 	void SetOnFootSync(CSyncData *syncData);
 	void SetVehicleSync(CVehicleSyncData *syncData);
