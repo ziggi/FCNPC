@@ -193,11 +193,14 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	// find player in vecPoint
 	if (bulletSyncData.byteHitType == BULLET_HIT_TYPE_NONE) {
 		for (WORD i = 0; i < pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
-			if (!pServer->GetPlayerManager()->IsPlayerConnected(wPlayerId) || wPlayerId == i) {
+			if (!pServer->GetPlayerManager()->IsPlayerConnected(i) || wPlayerId == i) {
 				continue;
 			}
 
 			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[i];
+			if (!pPlayer) {
+				continue;
+			}
 
 			bool bIsPlayerOnRay = CMath::GetDistanceFromRayToPoint(vecPosition, vecPoint, pPlayer->vecPosition) < SHOOTING_ACCURACY;
 			bool bIsPlayerInDamageRange = bIsPlayerOnRay && CMath::GetDistanceBetween3DPoints(vecPosition, pPlayer->vecPosition) < MAX_DAMAGE_DISTANCE;
