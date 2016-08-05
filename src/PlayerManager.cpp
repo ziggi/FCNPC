@@ -96,7 +96,7 @@ bool CPlayerManager::DeletePlayer(WORD wPlayerId)
 void CPlayerManager::Process()
 {
 	// Process all the players
-	for (WORD i = (CFunctions::GetMaxPlayers() - 1); i != 0; i--) {
+	for (WORD i = pNetGame->pPlayerPool->dwPlayerPoolSize; i != -1; i--) {
 		if (m_bConnected[i]) {
 			m_pPlayerData[i]->Process();
 		}
@@ -128,7 +128,7 @@ CPlayerData *CPlayerManager::GetAt(WORD wPlayerId)
 bool CPlayerManager::SetupPlayer(WORD wPlayerId)
 {
 	// Setup the NPC
-	return GetAt(wPlayerId)->Setup();
+	return m_pPlayerData[wPlayerId]->Setup();
 }
 
 bool CPlayerManager::IsNPC(WORD wPlayerId)

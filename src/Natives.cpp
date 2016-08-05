@@ -38,7 +38,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_Destroy(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
@@ -56,14 +57,15 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_Spawn(AMX *amx, cell *params)
 	CVector vecPoint(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Set the spawn position
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetSpawnPosition(vecPoint);
+	pPlayerData->SetSpawnPosition(vecPoint);
 	// Spawn the player
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->Spawn(iSkin);
+	return pPlayerData->Spawn(iSkin);
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_Respawn(AMX *amx, cell *params)
@@ -72,12 +74,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_Respawn(AMX *amx, cell *params)
 	// Get the NPC id
 	WORD wNpcId = static_cast<WORD>(params[1]);
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Respawn the player
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->Respawn();
+	return pPlayerData->Respawn();
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsSpawned(AMX *amx, cell *params)
@@ -86,12 +89,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsSpawned(AMX *amx, cell *params)
 	// Get the NPC id
 	WORD wNpcId = static_cast<WORD>(params[1]);
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Respawn the player
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->IsSpawned();
+	return pPlayerData->IsSpawned();
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_Kill(AMX *amx, cell *params)
@@ -100,12 +104,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_Kill(AMX *amx, cell *params)
 	// Get the NPC id
 	WORD wNpcId = static_cast<WORD>(params[1]);
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Kill the player
-	pServer->GetPlayerManager()->GetAt(wNpcId)->Kill(INVALID_PLAYER_ID, 255);
+	pPlayerData->Kill(INVALID_PLAYER_ID, 255);
 	return 1;
 }
 
@@ -115,12 +120,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsDead(AMX *amx, cell *params)
 	// Get the NPC id
 	WORD wNpcId = static_cast<WORD>(params[1]);
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Return the player dead state
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetState() == PLAYER_STATE_WASTED;
+	return pPlayerData->GetState() == PLAYER_STATE_WASTED;
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsValid(AMX *amx, cell *params)
@@ -141,7 +147,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsStreamedIn(AMX *amx, cell *params)
 	WORD wForPlayerId = static_cast<WORD>(params[2]);
 
 	// Make sure the npc is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
@@ -151,7 +158,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsStreamedIn(AMX *amx, cell *params)
 	}
 
 	// Return the player is streamed
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->IsStreamedIn(wForPlayerId);
+	return pPlayerData->IsStreamedIn(wForPlayerId);
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsStreamedForAnyone(AMX *amx, cell *params)
@@ -162,7 +169,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsStreamedForAnyone(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the npc is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
@@ -172,7 +180,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsStreamedForAnyone(AMX *amx, cell *params)
 			continue;
 		}
 
-		if (pServer->GetPlayerManager()->GetAt(wNpcId)->IsStreamedIn(i)) {
+		if (pPlayerData->IsStreamedIn(i)) {
 			return 1;
 		}
 	}
@@ -190,12 +198,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetPosition(AMX *amx, cell *params)
 	CVector vecPoint(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Set the player position
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetPosition(vecPoint);
+	pPlayerData->SetPosition(vecPoint);
 	return 1;
 }
 
@@ -207,7 +216,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetPosition(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		// Get the argument pointers and set its value
 		cell *pAddress = NULL;
 		float fPos = 0.0f;
@@ -224,7 +234,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetPosition(AMX *amx, cell *params)
 
 	// Get the player position
 	CVector vecPosition;
-	pServer->GetPlayerManager()->GetAt(wNpcId)->GetPosition(&vecPosition);
+	pPlayerData->GetPosition(&vecPosition);
 
 	// Get the argument pointers and set its value
 	cell *pAddress = NULL;
@@ -249,12 +259,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetAngle(AMX *amx, cell *params)
 	float fAngle = amx_ctof(params[2]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Set the player angle
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetAngle(fAngle);
+	pPlayerData->SetAngle(fAngle);
 	return 1;
 }
 
@@ -268,16 +279,17 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetAngleToPos(AMX *amx, cell *params)
 	CVector vecPoint(amx_ctof(params[2]), amx_ctof(params[3]), 0.0f);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Set the player angle
 	CVector vecPos;
-	pServer->GetPlayerManager()->GetAt(wNpcId)->GetPosition(&vecPos);
+	pPlayerData->GetPosition(&vecPos);
 
 	CVector vecFront = vecPoint - vecPos;
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetAngle(CMath::RadiansToDegree(atan2(vecFront.fY, vecFront.fX)));
+	pPlayerData->SetAngle(CMath::RadiansToDegree(atan2(vecFront.fY, vecFront.fX)));
 	return 1;
 }
 
@@ -291,7 +303,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetAngleToPlayer(AMX *amx, cell *params)
 	WORD wPlayerId = static_cast<WORD>(params[2]);
 
 	// Make sure the npc is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
@@ -304,10 +317,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetAngleToPlayer(AMX *amx, cell *params)
 	CVector vecPlayerPos = pNetGame->pPlayerPool->pPlayer[wPlayerId]->vecPosition;
 
 	CVector vecPos;
-	pServer->GetPlayerManager()->GetAt(wNpcId)->GetPosition(&vecPos);
+	pPlayerData->GetPosition(&vecPos);
 
 	CVector vecFront = vecPlayerPos - vecPos;
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetAngle(CMath::RadiansToDegree(atan2(vecFront.fY, vecFront.fX)));
+	pPlayerData->SetAngle(CMath::RadiansToDegree(atan2(vecFront.fY, vecFront.fX)));
 	return 1;
 }
 
@@ -320,12 +333,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetAngle(AMX *amx, cell *params)
 	float fAngle = 0.0f;
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return amx_ftoc(fAngle);
 	}
 
 	// Get the player angle
-	fAngle = pServer->GetPlayerManager()->GetAt(wNpcId)->GetAngle();
+	fAngle = pPlayerData->GetAngle();
 	return amx_ftoc(fAngle);
 }
 
@@ -338,12 +352,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetInterior(AMX *amx, cell *params)
 	int iInterior = static_cast<int>(params[2]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Set the player interior
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetInterior(iInterior);
+	pPlayerData->SetInterior(iInterior);
 	return 1;
 }
 
@@ -355,12 +370,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetInterior(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Get the player interior
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetInterior();
+	return pPlayerData->GetInterior();
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetVirtualWorld(AMX *amx, cell *params)
@@ -372,12 +388,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVirtualWorld(AMX *amx, cell *params)
 	int iVirtualWorld = static_cast<int>(params[2]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Set the player virtual world
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetVirtualWorld(iVirtualWorld);
+	pPlayerData->SetVirtualWorld(iVirtualWorld);
 	return 1;
 }
 
@@ -389,12 +406,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVirtualWorld(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Get the player virtual world
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetVirtualWorld();
+	return pPlayerData->GetVirtualWorld();
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetQuaternion(AMX *amx, cell *params)
@@ -410,12 +428,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetQuaternion(AMX *amx, cell *params)
 	fQuaternion[3] = amx_ctof(params[5]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Set the player quaternion
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetQuaternion(fQuaternion);
+	pPlayerData->SetQuaternion(fQuaternion);
 	SAFE_DELETE(fQuaternion);
 	return 1;
 }
@@ -428,7 +447,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetQuaternion(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		// Get the argument pointers and set its value
 		cell *pAddress = NULL;
 		float fPos = 0.0f;
@@ -448,7 +468,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetQuaternion(AMX *amx, cell *params)
 
 	// Get the player quaternion
 	float *fQuaternion = new float [4];
-	pServer->GetPlayerManager()->GetAt(wNpcId)->GetQuaternion(fQuaternion);
+	pPlayerData->GetQuaternion(fQuaternion);
 
 	// Get the argument pointers and set its value
 	cell *pAddress = NULL;
@@ -477,12 +497,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVelocity(AMX *amx, cell *params)
 	CVector vecVelocity(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Set the player velocity
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetVelocity(vecVelocity);
+	pPlayerData->SetVelocity(vecVelocity);
 	return 1;
 }
 
@@ -494,7 +515,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVelocity(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		// Get the argument pointers and set its value
 		cell *pAddress = NULL;
 		float fPos = 0.0f;
@@ -511,7 +533,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVelocity(AMX *amx, cell *params)
 
 	// Get the player velocity
 	CVector vecVelocity;
-	pServer->GetPlayerManager()->GetAt(wNpcId)->GetVelocity(&vecVelocity);
+	pPlayerData->GetVelocity(&vecVelocity);
 
 	// Get the argument pointers and set its value
 	cell *pAddress = NULL;
@@ -535,12 +557,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetHealth(AMX *amx, cell *params)
 	float fHealth = amx_ctof(params[2]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Set the player health
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetHealth(fHealth);
+	pPlayerData->SetHealth(fHealth);
 	return 1;
 }
 
@@ -553,12 +576,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetHealth(AMX *amx, cell *params)
 	float fHealth = 0.0f;
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return amx_ftoc(fHealth);
 	}
 
 	// Get the player health
-	fHealth = pServer->GetPlayerManager()->GetAt(wNpcId)->GetHealth();
+	fHealth = pPlayerData->GetHealth();
 	return amx_ftoc(fHealth);
 }
 
@@ -571,12 +595,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetArmour(AMX *amx, cell *params)
 	float fArmour = amx_ctof(params[2]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Set the player armour
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetArmour(fArmour);
+	pPlayerData->SetArmour(fArmour);
 	return 1;
 }
 
@@ -589,12 +614,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetArmour(AMX *amx, cell *params)
 	float fArmour = 0.0f;
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return amx_ftoc(fArmour);
 	}
 
 	// Get the player armour
-	fArmour = pServer->GetPlayerManager()->GetAt(wNpcId)->GetArmour();
+	fArmour = pPlayerData->GetArmour();
 	return amx_ftoc(fArmour);
 }
 
@@ -608,12 +634,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetInvulnerable(AMX *amx, cell *params)
 	bool bInvulnerable = static_cast<bool>(params[2]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Set the player invulnerable
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetInvulnerable(bInvulnerable);
+	pPlayerData->SetInvulnerable(bInvulnerable);
 	return 1;
 }
 
@@ -626,12 +653,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsInvulnerable(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Get the player invulnerable
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->IsInvulnerable();
+	return pPlayerData->IsInvulnerable();
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetSkin(AMX *amx, cell *params)
@@ -643,12 +671,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetSkin(AMX *amx, cell *params)
 	int iSkin = static_cast<int>(params[2]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Set the player skin
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetSkin(iSkin);
+	pPlayerData->SetSkin(iSkin);
 	return 1;
 }
 
@@ -660,12 +689,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetSkin(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Get the player skin
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetSkin();
+	return pPlayerData->GetSkin();
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetKeys(AMX *amx, cell *params)
@@ -679,12 +709,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetKeys(AMX *amx, cell *params)
 	DWORD dwKeys = static_cast<DWORD>(params[4]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Set the player keys
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetKeys(wUDAnalog, wLRAnalog, dwKeys);
+	pPlayerData->SetKeys(wUDAnalog, wLRAnalog, dwKeys);
 	return 1;
 }
 
@@ -696,7 +727,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetKeys(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		// Get the argument pointers and set its value
 		cell *pAddress = NULL;
 		float fPos = 0.0f;
@@ -714,7 +746,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetKeys(AMX *amx, cell *params)
 	// Get the player keys
 	WORD wUDAnalog = 0, wLRAnalog = 0;
 	DWORD dwKeys = 0;
-	pServer->GetPlayerManager()->GetAt(wNpcId)->GetKeys(&wUDAnalog, &wLRAnalog, &dwKeys);
+	pPlayerData->GetKeys(&wUDAnalog, &wLRAnalog, &dwKeys);
 
 	// Get the argument pointers and set its value
 	cell *pAddress = NULL;
@@ -738,12 +770,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetSpecialAction(AMX *amx, cell *params)
 	BYTE byteActionId = static_cast<BYTE>(params[2]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Set the player special action
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetSpecialAction(byteActionId);
+	pPlayerData->SetSpecialAction(byteActionId);
 	return 1;
 }
 
@@ -755,12 +788,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetSpecialAction(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Get the player special action
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetSpecialAction();
+	return pPlayerData->GetSpecialAction();
 }
 
 // native FCNPC_SetAnimation(npcid, animationid, Float:fDelta = 4.1, loop = 0, lockx = 1, locky = 1, freeze = 0, time = 1);
@@ -779,12 +813,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetAnimation(AMX *amx, cell *params)
 	int iTime = static_cast<int>(params[8]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Set the player animation
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetAnimation(iAnimationId, fDelta, bLoop, bLockX, bLockY, bFreeze, iTime);
+	pPlayerData->SetAnimation(iAnimationId, fDelta, bLoop, bLockX, bLockY, bFreeze, iTime);
 	return 1;
 }
 
@@ -805,12 +840,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetAnimationByName(AMX *amx, cell *params)
 	int iTime = static_cast<int>(params[9]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Set the player animation
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetAnimationByName(szName, fDelta, bLoop, bLockX, bLockY, bFreeze, iTime);
+	pPlayerData->SetAnimationByName(szName, fDelta, bLoop, bLockX, bLockY, bFreeze, iTime);
 	return 1;
 }
 
@@ -823,12 +859,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ResetAnimation(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Set the player animation
-	pServer->GetPlayerManager()->GetAt(wNpcId)->ResetAnimation();
+	pPlayerData->ResetAnimation();
 	return 1;
 }
 
@@ -850,12 +887,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ApplyAnimation(AMX *amx, cell *params)
 	int iTime = static_cast<int>(params[9]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Set the player animation
-	pServer->GetPlayerManager()->GetAt(wNpcId)->ApplyAnimation(szAnimLib, szAnimName, fDelta, bLoop, bLockX, bLockY, bFreeze, iTime);
+	pPlayerData->ApplyAnimation(szAnimLib, szAnimName, fDelta, bLoop, bLockX, bLockY, bFreeze, iTime);
 	return 1;
 }
 
@@ -868,12 +906,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ClearAnimations(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Set the player animation
-	pServer->GetPlayerManager()->GetAt(wNpcId)->ClearAnimations();
+	pPlayerData->ClearAnimations();
 	return 1;
 }
 
@@ -886,7 +925,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetAnimation(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
@@ -900,7 +940,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetAnimation(AMX *amx, cell *params)
 	int iTime;
 
 	// Get the player animation
-	pServer->GetPlayerManager()->GetAt(wNpcId)->GetAnimation(&wAnimationId, &fDelta, &bLoop, &bLockX, &bLockY, &bFreeze, &iTime);
+	pPlayerData->GetAnimation(&wAnimationId, &fDelta, &bLoop, &bLockX, &bLockY, &bFreeze, &iTime);
 
 	cell *pAddress = NULL;
 	amx_GetAddr(amx, params[2], &pAddress);
@@ -936,7 +976,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetFightingStyle(AMX *amx, cell *params)
 	BYTE byteStyle = static_cast<BYTE>(params[2]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
@@ -947,7 +988,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetFightingStyle(AMX *amx, cell *params)
 		case FIGHT_STYLE_KNEEHEAD:
 		case FIGHT_STYLE_GRABKICK:
 		case FIGHT_STYLE_ELBOW:
-			pServer->GetPlayerManager()->GetAt(wNpcId)->SetFightingStyle(byteStyle);
+			pPlayerData->SetFightingStyle(byteStyle);
 			return 1;
 	}
 
@@ -963,12 +1004,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetFightingStyle(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Get the player special action
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetFightingStyle();
+	return pPlayerData->GetFightingStyle();
 }
 
 // native FCNPC_GoTo(npcid, Float:X, Float:Y, Float:Z, type = MOVE_TYPE_AUTO, Float:speed = -1.0, bool:UseZMap = false, Float:radius = 0.0, bool:setangle = true);
@@ -986,12 +1028,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GoTo(AMX *amx, cell *params)
 	bool bSetAngle = static_cast<bool>(params[9]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Move the player
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->GoTo(vecPoint, iType, bZMap, fRadius, bSetAngle, fSpeed);
+	return pPlayerData->GoTo(vecPoint, iType, bZMap, fRadius, bSetAngle, fSpeed);
 }
 
 // native FCNPC_GoToPlayer(npcid, playereid, type, Float:speed, bool:UseZMap = false, Float:radius = 0.0, bool:setangle = true);
@@ -1009,7 +1052,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GoToPlayer(AMX *amx, cell *params)
 	bool bSetAngle = static_cast<bool>(params[7]);
 
 	// validation
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
@@ -1018,7 +1062,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GoToPlayer(AMX *amx, cell *params)
 	}
 
 	// move the player
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->GoToPlayer(wPlayerId, iType, bZMap, fRadius, bSetAngle, fSpeed);
+	return pPlayerData->GoToPlayer(wPlayerId, iType, bZMap, fRadius, bSetAngle, fSpeed);
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_Stop(AMX *amx, cell *params)
@@ -1029,12 +1073,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_Stop(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Stop the player
-	pServer->GetPlayerManager()->GetAt(wNpcId)->StopMoving();
+	pPlayerData->StopMoving();
 	return 1;
 }
 
@@ -1046,12 +1091,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsMoving(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Get the player moving state
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->IsMoving();
+	return pPlayerData->IsMoving();
 }
 
 // native FCNPC_IsMovingAtPlayer(npcid, playerid);
@@ -1064,7 +1110,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsMovingAtPlayer(AMX *amx, cell *params)
 	WORD wPlayerId = static_cast<WORD>(params[2]);
 
 	// validation
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
@@ -1073,7 +1120,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsMovingAtPlayer(AMX *amx, cell *params)
 	}
 
 	// Get the player moving state
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->IsMovingAtPlayer(wPlayerId);
+	return pPlayerData->IsMovingAtPlayer(wPlayerId);
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeapon(AMX *amx, cell *params)
@@ -1085,12 +1132,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeapon(AMX *amx, cell *params)
 	BYTE byteWeapon = static_cast<BYTE>(params[2]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Set the player weapon
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetWeapon(byteWeapon);
+	pPlayerData->SetWeapon(byteWeapon);
 	return 1;
 }
 
@@ -1102,12 +1150,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeapon(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Get the player weapon
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetWeapon();
+	return pPlayerData->GetWeapon();
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetAmmo(AMX *amx, cell *params)
@@ -1119,12 +1168,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetAmmo(AMX *amx, cell *params)
 	WORD wAmmo = static_cast<WORD>(params[2]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Set the player ammo
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetAmmo(wAmmo);
+	pPlayerData->SetAmmo(wAmmo);
 	return 1;
 }
 
@@ -1136,12 +1186,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetAmmo(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Get the player ammo
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetAmmo();
+	return pPlayerData->GetAmmo();
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponSkillLevel(AMX *amx, cell *params)
@@ -1154,7 +1205,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponSkillLevel(AMX *amx, cell *params)
 	WORD wLevel = static_cast<WORD>(params[3]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
@@ -1163,7 +1215,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponSkillLevel(AMX *amx, cell *params)
 	}
 
 	// Set the player weapon skill level
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetWeaponSkill(dwSkill, wLevel);
+	pPlayerData->SetWeaponSkill(dwSkill, wLevel);
 	return 1;
 }
 
@@ -1176,12 +1228,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponSkillLevel(AMX *amx, cell *params)
 	DWORD dwSkill = static_cast<DWORD>(params[2]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Get the player weapon skill level
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetWeaponSkill(dwSkill);
+	return pPlayerData->GetWeaponSkill(dwSkill);
 }
 
 // native FCNPC_SetWeaponState(npcid, weaponstate);
@@ -1194,7 +1247,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponState(AMX *amx, cell *params)
 	int iState = static_cast<int>(params[2]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
@@ -1203,7 +1257,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponState(AMX *amx, cell *params)
 		case WEAPONSTATE_LAST_BULLET:
 		case WEAPONSTATE_MORE_BULLETS:
 		case WEAPONSTATE_RELOADING:
-			pServer->GetPlayerManager()->GetAt(wNpcId)->SetWeaponState(iState);
+			pPlayerData->SetWeaponState(iState);
 			return 1;
 	}
 
@@ -1219,12 +1273,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponState(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Get the player weapon state
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetWeaponState();
+	return pPlayerData->GetWeaponState();
 }
 
 // native FCNPC_SetWeaponReloadTime(npcid, weaponid, time);
@@ -1238,12 +1293,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponReloadTime(AMX *amx, cell *params)
 	int iReloadTime = static_cast<int>(params[3]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Set the player weapon reload time
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->SetWeaponReloadTime(byteWeaponId, iReloadTime);
+	return pPlayerData->SetWeaponReloadTime(byteWeaponId, iReloadTime);
 }
 
 // native FCNPC_GetWeaponReloadTime(npcid, weaponid);
@@ -1256,12 +1312,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponReloadTime(AMX *amx, cell *params)
 	BYTE byteWeaponId = static_cast<BYTE>(params[2]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Get the player weapon reload time
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetWeaponReloadTime(byteWeaponId);
+	return pPlayerData->GetWeaponReloadTime(byteWeaponId);
 }
 
 // native FCNPC_SetWeaponShootTime(npcid, weaponid, time);
@@ -1275,12 +1332,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponShootTime(AMX *amx, cell *params)
 	int iShootTime = static_cast<int>(params[3]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Set the player weapon shoot time
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->SetWeaponShootTime(byteWeaponId, iShootTime);
+	return pPlayerData->SetWeaponShootTime(byteWeaponId, iShootTime);
 }
 
 // native FCNPC_GetWeaponShootTime(npcid, weaponid);
@@ -1293,12 +1351,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponShootTime(AMX *amx, cell *params)
 	BYTE byteWeaponId = static_cast<BYTE>(params[2]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Get the player weapon shoot time
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetWeaponShootTime(byteWeaponId);
+	return pPlayerData->GetWeaponShootTime(byteWeaponId);
 }
 
 // native FCNPC_SetWeaponClipSize(npcid, weaponid, size);
@@ -1312,12 +1371,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponClipSize(AMX *amx, cell *params)
 	int iClipSize = static_cast<int>(params[3]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Set the player weapon clip size
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->SetWeaponClipSize(byteWeaponId, iClipSize);
+	return pPlayerData->SetWeaponClipSize(byteWeaponId, iClipSize);
 }
 
 // native FCNPC_GetWeaponClipSize(npcid, weaponid);
@@ -1330,12 +1390,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponClipSize(AMX *amx, cell *params)
 	BYTE byteWeaponId = static_cast<BYTE>(params[2]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Get the player weapon clip size
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetWeaponClipSize(byteWeaponId);
+	return pPlayerData->GetWeaponClipSize(byteWeaponId);
 }
 
 // native FCNPC_SetWeaponInfo(npcid, weaponid, reload_time = -1, shoot_time = -1, clip_size = -1);
@@ -1351,12 +1412,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponInfo(AMX *amx, cell *params)
 	int iClipSize = static_cast<int>(params[5]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Set the player weapon info
-	SWeaponInfo sWeaponInfo = pServer->GetPlayerManager()->GetAt(wNpcId)->GetWeaponInfo(byteWeaponId);
+	SWeaponInfo sWeaponInfo = pPlayerData->GetWeaponInfo(byteWeaponId);
 
 	if (iClipSize != -1) {
 		sWeaponInfo.iClipSize = iClipSize;
@@ -1370,7 +1432,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponInfo(AMX *amx, cell *params)
 		sWeaponInfo.iShootTime = iShootTime;
 	}
 
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->SetWeaponInfo(byteWeaponId, sWeaponInfo);
+	return pPlayerData->SetWeaponInfo(byteWeaponId, sWeaponInfo);
 }
 
 // native FCNPC_GetWeaponInfo(npcid, weaponid, &reload_time = -1, &shoot_time = -1, &clip_size = -1);
@@ -1382,13 +1444,19 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponInfo(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 	BYTE byteWeaponId = static_cast<BYTE>(params[2]);
 
+	// valid npc
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
 	// valid weapon
 	if (!CWeaponInfo::IsValid(byteWeaponId)) {
 		return 0;
 	}
 
 	// get weapon info
-	SWeaponInfo sWeaponInfo = pServer->GetPlayerManager()->GetAt(wNpcId)->GetWeaponInfo(byteWeaponId);
+	SWeaponInfo sWeaponInfo = pPlayerData->GetWeaponInfo(byteWeaponId);
 
 	// write data to amx
 	cell *pAddress = NULL;
@@ -1476,11 +1544,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAt(AMX *amx, cell *params)
 	bool bSetAngle = static_cast<bool>(params[7]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
-
-	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 
 	int iWeaponType = pPlayerData->GetWeaponType(pPlayerData->GetWeapon());
 	switch (iWeaponType) {
@@ -1509,7 +1576,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAtPlayer(AMX *amx, cell *params)
 	bool bSetAngle = static_cast<bool>(params[5]);
 
 	// Make sure the npc is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
@@ -1519,8 +1587,6 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAtPlayer(AMX *amx, cell *params)
 	}
 
 	// Set the player aiming
-	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
-
 	int iWeaponType = pPlayerData->GetWeaponType(pPlayerData->GetWeapon());
 	switch (iWeaponType) {
 		case WEAPON_TYPE_MELEE:
@@ -1544,12 +1610,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StopAim(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Stop the player aim
-	pServer->GetPlayerManager()->GetAt(wNpcId)->StopAim();
+	pPlayerData->StopAim();
 	return 1;
 }
 
@@ -1564,12 +1631,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_MeleeAttack(AMX *amx, cell *params)
 	bool bUseFightstyle = static_cast<bool>(params[3]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Set the player melee attack
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->MeleeAttack(iTime, bUseFightstyle);
+	return pPlayerData->MeleeAttack(iTime, bUseFightstyle);
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_StopAttack(AMX *amx, cell *params)
@@ -1580,12 +1648,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StopAttack(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Stop the player attack
-	pServer->GetPlayerManager()->GetAt(wNpcId)->StopAttack();
+	pPlayerData->StopAttack();
 	return 1;
 }
 
@@ -1598,12 +1667,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsAttacking(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Get the player attacking state
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->IsAttacking();
+	return pPlayerData->IsAttacking();
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsAiming(AMX *amx, cell *params)
@@ -1614,12 +1684,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsAiming(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Get the player aiming state
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->IsAiming();
+	return pPlayerData->IsAiming();
 }
 
 // native FCNPC_IsAimingAtPlayer(npcid, playerid);
@@ -1632,7 +1703,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsAimingAtPlayer(AMX *amx, cell *params)
 	WORD wPlayerId = static_cast<WORD>(params[2]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
@@ -1641,7 +1713,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsAimingAtPlayer(AMX *amx, cell *params)
 	}
 
 	// Get the player aiming state
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->IsAimingAtPlayer(wPlayerId);
+	return pPlayerData->IsAimingAtPlayer(wPlayerId);
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsShooting(AMX *amx, cell *params)
@@ -1652,12 +1724,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsShooting(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Get the player shooting state
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->IsShooting();
+	return pPlayerData->IsShooting();
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsReloading(AMX *amx, cell *params)
@@ -1668,12 +1741,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsReloading(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Get the player shooting state
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->IsReloading();
+	return pPlayerData->IsReloading();
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_EnterVehicle(AMX *amx, cell *params)
@@ -1687,7 +1761,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_EnterVehicle(AMX *amx, cell *params)
 	int iType = static_cast<int>(params[4]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
@@ -1697,7 +1772,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_EnterVehicle(AMX *amx, cell *params)
 	}
 
 	// Make the player enter the vehicle
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->EnterVehicle(wVehicleId, byteSeatId, iType);
+	return pPlayerData->EnterVehicle(wVehicleId, byteSeatId, iType);
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_ExitVehicle(AMX *amx, cell *params)
@@ -1708,12 +1783,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ExitVehicle(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Make the player exit the vehicle
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->ExitVehicle();
+	return pPlayerData->ExitVehicle();
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_PutInVehicle(AMX *amx, cell *params)
@@ -1726,7 +1802,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_PutInVehicle(AMX *amx, cell *params)
 	BYTE byteSeatId = static_cast<BYTE>(params[3]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
@@ -1736,7 +1813,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_PutInVehicle(AMX *amx, cell *params)
 	}
 
 	// Make the player enter the vehicle
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->PutInVehicle(wVehicleId, byteSeatId);
+	return pPlayerData->PutInVehicle(wVehicleId, byteSeatId);
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_RemoveFromVehicle(AMX *amx, cell *params)
@@ -1747,12 +1824,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_RemoveFromVehicle(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
-
-	// Get the player data pointer
-	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 
 	// Validate the player state
 	int iState = pPlayerData->GetState();
@@ -1772,12 +1847,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleID(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return INVALID_VEHICLE_ID;
 	}
 
 	// Make the player exit the vehicle
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetVehicleId();
+	return pPlayerData->GetVehicleId();
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleSeat(AMX *amx, cell *params)
@@ -1788,12 +1864,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleSeat(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
-
-	// Get the player data pointer
-	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 
 	// Make the player exit the vehicle
 	if (pPlayerData->GetVehicleId() == INVALID_VEHICLE_ID) {
@@ -1813,12 +1887,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVehicleSiren(AMX *amx, cell *params)
 	bool bSiren = static_cast<bool>(params[2]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
-
-	// Get the player data pointer
-	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 
 	// Make sure the player is in vehicle
 	if (pPlayerData->GetVehicleId() == INVALID_VEHICLE_ID) {
@@ -1839,12 +1911,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsVehicleSiren(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
-
-	// Get the player data pointer
-	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 
 	// Make sure the player is in vehicle
 	if (pPlayerData->GetVehicleId() == INVALID_VEHICLE_ID) {
@@ -1865,12 +1935,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVehicleHealth(AMX *amx, cell *params)
 	float fHealth = amx_ctof(params[2]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
-
-	// Get the player data pointer
-	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 
 	// Make sure the player is in vehicle
 	if (pPlayerData->GetVehicleId() == INVALID_VEHICLE_ID) {
@@ -1892,17 +1960,18 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleHealth(AMX *amx, cell *params)
 	float fHealth = 0.0f;
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return amx_ftoc(fHealth);
 	}
 
 	// Make sure the player is in vehicle
-	if (pServer->GetPlayerManager()->GetAt(wNpcId)->GetVehicleId() == INVALID_VEHICLE_ID) {
+	if (pPlayerData->GetVehicleId() == INVALID_VEHICLE_ID) {
 		return amx_ftoc(fHealth);
 	}
 
 	// Get the vehicle health
-	fHealth = pServer->GetPlayerManager()->GetAt(wNpcId)->GetVehicleHealth();
+	fHealth = pPlayerData->GetVehicleHealth();
 	return amx_ftoc(fHealth);
 }
 
@@ -1916,12 +1985,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVehicleHydraThrusters(AMX *amx, cell *pa
 	WORD wDirection = static_cast<WORD>(params[2]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Change vehicle hydra thrusters
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetVehicleHydraThrusters(wDirection);
+	pPlayerData->SetVehicleHydraThrusters(wDirection);
 	return 1;
 }
 
@@ -1934,12 +2004,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleHydraThrusters(AMX *amx, cell *pa
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Get the vehicle hydra thrusters
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetVehicleHydraThrusters();
+	return pPlayerData->GetVehicleHydraThrusters();
 }
 
 // native FCNPC_SetVehicleGearState(npcid, gear_state);
@@ -1952,12 +2023,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVehicleGearState(AMX *amx, cell *params)
 	BYTE byteState = static_cast<BYTE>(params[2]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Change vehicle hydra thrusters
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetVehicleGearState(byteState);
+	pPlayerData->SetVehicleGearState(byteState);
 	return 1;
 }
 
@@ -1970,12 +2042,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleGearState(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Get the vehicle hydra thrusters
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetVehicleGearState();
+	return pPlayerData->GetVehicleGearState();
 }
 
 // native FCNPC_SetSurfingOffsets(npcid, Float:fX, Float:fY, Float:fZ);
@@ -1988,12 +2061,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetSurfingOffsets(AMX *amx, cell *params)
 	CVector vecPoint(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Change vehicle health
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetSurfingOffsets(vecPoint);
+	pPlayerData->SetSurfingOffsets(vecPoint);
 	return 1;
 }
 
@@ -2006,12 +2080,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetSurfingOffsets(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	CVector vecOffsets;
-	pServer->GetPlayerManager()->GetAt(wNpcId)->GetSurfingOffsets(&vecOffsets);
+	pPlayerData->GetSurfingOffsets(&vecOffsets);
 
 	cell *pAddress = NULL;
 	amx_GetAddr(amx, params[2], &pAddress);
@@ -2036,7 +2111,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetSurfingVehicle(AMX *amx, cell *params)
 	WORD wVehicleId = static_cast<WORD>(params[2]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
@@ -2046,7 +2122,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetSurfingVehicle(AMX *amx, cell *params)
 	}
 
 	// Set the surfing vehicle
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetSurfingVehicle(wVehicleId);
+	pPlayerData->SetSurfingVehicle(wVehicleId);
 	return 1;
 }
 
@@ -2059,12 +2135,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetSurfingVehicle(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return INVALID_VEHICLE_ID;
 	}
 
 	// Get the surfing vehicle
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetSurfingVehicle();
+	return pPlayerData->GetSurfingVehicle();
 }
 
 // native FCNPC_SetSurfingObject(npcid, objectid);
@@ -2077,7 +2154,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetSurfingObject(AMX *amx, cell *params)
 	WORD wObjectId = static_cast<WORD>(params[2]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
@@ -2087,7 +2165,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetSurfingObject(AMX *amx, cell *params)
 	}
 
 	// Set the surfing object
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetSurfingObject(wObjectId);
+	pPlayerData->SetSurfingObject(wObjectId);
 	return 1;
 }
 
@@ -2100,12 +2178,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetSurfingObject(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return INVALID_OBJECT_ID;
 	}
 
 	// Get the surfing object
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetSurfingObject();
+	return pPlayerData->GetSurfingObject();
 }
 
 // native FCNPC_SetSurfingPlayerObject(npcid, objectid);
@@ -2118,7 +2197,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetSurfingPlayerObject(AMX *amx, cell *para
 	WORD wObjectId = static_cast<WORD>(params[2]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
@@ -2128,7 +2208,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetSurfingPlayerObject(AMX *amx, cell *para
 	}
 
 	// Set the surfing object
-	pServer->GetPlayerManager()->GetAt(wNpcId)->SetSurfingPlayerObject(wObjectId);
+	pPlayerData->SetSurfingPlayerObject(wObjectId);
 	return 1;
 }
 
@@ -2141,12 +2221,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetSurfingPlayerObject(AMX *amx, cell *para
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return INVALID_OBJECT_ID;
 	}
 
 	// Get the surfing object
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->GetSurfingPlayerObject();
+	return pPlayerData->GetSurfingPlayerObject();
 }
 
 // native FCNPC_StopSurfing(npcid);
@@ -2158,12 +2239,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StopSurfing(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Get the surfing object
-	pServer->GetPlayerManager()->GetAt(wNpcId)->StopSurfing();
+	pPlayerData->StopSurfing();
 	return 1;
 }
 
@@ -2176,12 +2258,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleReloading(AMX *amx, cell *params)
 	bool bReload = static_cast<bool>(params[2]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Toggle it
-	pServer->GetPlayerManager()->GetAt(wNpcId)->ToggleReloading(bReload);
+	pPlayerData->ToggleReloading(bReload);
 	return 1;
 }
 
@@ -2194,12 +2277,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleInfiniteAmmo(AMX *amx, cell *params)
 	bool bToggle = static_cast<bool>(params[2]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Toggle it
-	pServer->GetPlayerManager()->GetAt(wNpcId)->ToggleInfiniteAmmo(bToggle);
+	pPlayerData->ToggleInfiniteAmmo(bToggle);
 	return 1;
 }
 
@@ -2218,12 +2302,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StartPlayingPlayback(AMX *amx, cell *params
 	}
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Start Playing the player playback
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->StartPlayingPlayback(szFile);
+	return pPlayerData->StartPlayingPlayback(szFile);
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_StopPlayingPlayback(AMX *amx, cell *params)
@@ -2234,12 +2319,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StopPlayingPlayback(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Stop Playing the player playback
-	pServer->GetPlayerManager()->GetAt(wNpcId)->StopPlayingPlayback();
+	pPlayerData->StopPlayingPlayback();
 	return 1;
 }
 
@@ -2251,12 +2337,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_PausePlayingPlayback(AMX *amx, cell *params
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Pause Playing the player playback
-	pServer->GetPlayerManager()->GetAt(wNpcId)->PausePlayingPlayback();
+	pPlayerData->PausePlayingPlayback();
 	return 1;
 }
 
@@ -2268,12 +2355,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ResumePlayingPlayback(AMX *amx, cell *param
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Resume Playing the player playback
-	pServer->GetPlayerManager()->GetAt(wNpcId)->ResumePlayingPlayback();
+	pPlayerData->ResumePlayingPlayback();
 	return 1;
 }
 
@@ -2463,7 +2551,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_PlayNode(AMX *amx, cell *params)
 	int iType = static_cast<int>(params[3]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
@@ -2473,7 +2562,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_PlayNode(AMX *amx, cell *params)
 	}
 
 	// Play the node
-	return pServer->GetPlayerManager()->GetAt(wNpcId)->PlayNode(iNodeId, iType);
+	return pPlayerData->PlayNode(iNodeId, iType);
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_StopPlayingNode(AMX *amx, cell *params)
@@ -2484,12 +2573,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StopPlayingNode(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 
 	// Make sure the player is valid
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
 		return 0;
 	}
 
 	// Stop playing the node
-	pServer->GetPlayerManager()->GetAt(wNpcId)->StopPlayingNode();
+	pPlayerData->StopPlayingNode();
 	return 1;
 }
 
