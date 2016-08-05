@@ -119,6 +119,9 @@ bool CPlayerManager::IsPlayerConnected(WORD wPlayerId)
 
 CPlayerData *CPlayerManager::GetAt(WORD wPlayerId)
 {
+	if (!IsNpcConnected(wPlayerId)) {
+		return NULL;
+	}
 	return m_pPlayerData[wPlayerId];
 }
 

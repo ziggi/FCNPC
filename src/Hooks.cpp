@@ -20,23 +20,26 @@ bool bHookIsExec;
 bool bFindPublicIsBlocked;
 bool bIsPublicFound;
 
-// give damage
-bool bGiveDamage;
-
-struct t_OnPlayerGiveDamage {
+// damage
+struct t_OnPlayerDamage
+{
 	WORD wPlayerId;
-	WORD wDamagedId;
+	WORD wSecondPlayerId;
 	float fHealthLoss;
 	BYTE byteWeaponId;
 	int iBodypart;
 };
 
-t_OnPlayerGiveDamage pGiveDamage;
+bool bTakeDamage;
+bool bGiveDamage;
+
+t_OnPlayerDamage pDamage;
 
 // weapon shoot
 bool bWeaponShot;
 
-struct t_OnPlayerWeaponShot {
+struct t_OnPlayerWeaponShot
+{
 	WORD wPlayerId;
 	BYTE byteWeaponId;
 	int iHitType;
@@ -47,13 +50,13 @@ struct t_OnPlayerWeaponShot {
 t_OnPlayerWeaponShot pWeaponShot;
 
 // stream in/out
-struct t_OnPlayerStream {
+struct t_OnPlayerStream
+{
 	WORD wPlayerId;
 	WORD wForPlayerId;
 };
 
-t_OnPlayerStream pStreamIn;
-t_OnPlayerStream pStreamOut;
+t_OnPlayerStream pStream;
 
 bool bStreamIn;
 bool bStreamOut;
@@ -64,7 +67,7 @@ subhook_t hookPush;
 subhook_t hookExec;
 
 // amx_FindPublic function definition
-typedef int (* amx_FindPublic_t)(AMX *amx, const char *funcname, int *index);
+typedef int(*amx_FindPublic_t)(AMX *amx, const char *funcname, int *index);
 amx_FindPublic_t pfn_amx_FindPublic = NULL;
 
 // amx_Push function definition
@@ -99,6 +102,9 @@ int amx_FindPublic_Hook(AMX *amx, const char *funcname, int *index)
 		if (!strcmp(funcname, "OnPlayerGiveDamage")) {
 			bIsPublicFound = true;
 			bGiveDamage = true;
+		} else if (!strcmp(funcname, "OnPlayerTakeDamage")) {
+			bIsPublicFound = true;
+			bTakeDamage = true;
 		} else if (!strcmp(funcname, "OnPlayerWeaponShot")) {
 			bIsPublicFound = true;
 			bWeaponShot = true;
@@ -121,26 +127,26 @@ int amx_FindPublic_Hook(AMX *amx, const char *funcname, int *index)
 int amx_Push_Hook(AMX *amx, cell value)
 {
 	// Are we retrieving parameters ?
-	if (bGiveDamage) {
+	if (bGiveDamage || bTakeDamage) {
 		switch (bytePushCount) {
 			case 4:
-				pGiveDamage.wPlayerId = value;
+				pDamage.wPlayerId = value;
 				break;
 
 			case 3:
-				pGiveDamage.wDamagedId = value;
+				pDamage.wSecondPlayerId = value;
 				break;
 
 			case 2:
-				pGiveDamage.fHealthLoss = amx_ctof(value);
+				pDamage.fHealthLoss = amx_ctof(value);
 				break;
 
 			case 1:
-				pGiveDamage.byteWeaponId = value;
+				pDamage.byteWeaponId = value;
 				break;
 
 			case 0:
-				pGiveDamage.iBodypart = value;
+				pDamage.iBodypart = value;
 				break;
 		}
 		// Increase the parameters count
@@ -180,11 +186,11 @@ int amx_Push_Hook(AMX *amx, cell value)
 	} else if (bStreamIn) {
 		switch (bytePushCount) {
 			case 1:
-				pStreamIn.wPlayerId = value;
+				pStream.wPlayerId = value;
 				break;
 
 			case 0:
-				pStreamIn.wForPlayerId = value;
+				pStream.wForPlayerId = value;
 				break;
 		}
 		// Increase the parameters count
@@ -192,11 +198,11 @@ int amx_Push_Hook(AMX *amx, cell value)
 	} else if (bStreamOut) {
 		switch (bytePushCount) {
 			case 1:
-				pStreamOut.wPlayerId = value;
+				pStream.wPlayerId = value;
 				break;
 
 			case 0:
-				pStreamOut.wForPlayerId = value;
+				pStream.wForPlayerId = value;
 				break;
 		}
 		// Increase the parameters count
@@ -217,8 +223,8 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 	if (bGiveDamage) {
 		bGiveDamage = false;
 
-		// get the player data
-		CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(pGiveDamage.wDamagedId);
+		// get the npc data
+		CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(pDamage.wSecondPlayerId);
 
 		// check on invulnerable
 		if (!pPlayerData || !pPlayerData->IsInvulnerable()) {
@@ -227,8 +233,23 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 
 			// call custom callback
 			if (pPlayerData) {
-				pPlayerData->ProcessDamage(pGiveDamage.wPlayerId, pGiveDamage.fHealthLoss, pGiveDamage.byteWeaponId, pGiveDamage.iBodypart);
+				pPlayerData->ProcessDamage(pDamage.wPlayerId, pDamage.fHealthLoss, pDamage.byteWeaponId, pDamage.iBodypart);
 			}
+		}
+
+		bHookIsExec = true;
+	} else if (bTakeDamage) {
+		bTakeDamage = false;
+
+		// call hooked callback
+		ret = pfn_amx_Exec(amx, retval, index);
+
+		// get the player data
+		CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(pDamage.wSecondPlayerId);
+
+		// call custom callback
+		if (pPlayerData) {
+			CCallbackManager::OnGiveDamage(pDamage.wPlayerId, pDamage.wSecondPlayerId, pDamage.byteWeaponId, pDamage.iBodypart, pDamage.fHealthLoss);
 		}
 
 		bHookIsExec = true;
@@ -242,9 +263,9 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 		if (pWeaponShot.iHitType == BULLET_HIT_TYPE_VEHICLE) {
 			WORD wPlayerId = pServer->GetVehicleSeatPlayerId(pWeaponShot.iHitId, 0);
 
-			if (pServer->GetPlayerManager()->IsNpcConnected(wPlayerId)) {
-				pServer->GetPlayerManager()->GetAt(wPlayerId)->ProcessVehicleDamage(
-					pWeaponShot.wPlayerId, pWeaponShot.iHitId, pWeaponShot.byteWeaponId, pWeaponShot.vecHit);
+			CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wPlayerId);
+			if (pPlayerData) {
+				pPlayerData->ProcessVehicleDamage(pWeaponShot.wPlayerId, pWeaponShot.iHitId, pWeaponShot.byteWeaponId, pWeaponShot.vecHit);
 			}
 		}
 
@@ -252,9 +273,9 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 	} else if (bStreamIn) {
 		bStreamIn = false;
 
-		if (pServer->GetPlayerManager()->IsNpcConnected(pStreamIn.wPlayerId)) {
-			// call custom callback
-			pServer->GetPlayerManager()->GetAt(pStreamIn.wPlayerId)->ProcessStreamIn(pStreamIn.wForPlayerId);
+		CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(pStream.wPlayerId);
+		if (pPlayerData) {
+			pPlayerData->ProcessStreamIn(pStream.wForPlayerId);
 			bFindPublicIsBlocked = true;
 		} else {
 			// call hooked callback
@@ -265,9 +286,10 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 	} else if (bStreamOut) {
 		bStreamOut = false;
 
-		if (pServer->GetPlayerManager()->IsNpcConnected(pStreamIn.wPlayerId)) {
+		CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(pStream.wPlayerId);
+		if (pPlayerData) {
 			// call custom callback
-			pServer->GetPlayerManager()->GetAt(pStreamIn.wPlayerId)->ProcessStreamOut(pStreamIn.wForPlayerId);
+			pPlayerData->ProcessStreamOut(pStream.wForPlayerId);
 			bFindPublicIsBlocked = true;
 		} else {
 			// call hooked callback
@@ -289,6 +311,7 @@ void CHooks::InstallHooks()
 	bFindPublicIsBlocked = false;
 	bIsPublicFound = false;
 	bGiveDamage = false;
+	bTakeDamage = false;
 	bWeaponShot = false;
 	bStreamIn = false;
 	bStreamOut = false;

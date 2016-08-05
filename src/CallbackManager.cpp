@@ -150,6 +150,24 @@ int CCallbackManager::OnTakeDamage(WORD wPlayerId, WORD wDamagerId, BYTE byteWea
 	return cReturn;
 }
 
+void CCallbackManager::OnGiveDamage(WORD wPlayerId, WORD wIssuerId, BYTE byteWeaponId, int iBodyPart, float fHealthLoss)
+{
+	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {
+		// Get the function index
+		int iIndex;
+		if (!amx_FindPublic((*i), "FCNPC_OnGiveDamage", &iIndex)) {
+			// Push the parameters
+			amx_Push((*i), amx_ftoc(fHealthLoss));
+			amx_Push((*i), iBodyPart);
+			amx_Push((*i), byteWeaponId);
+			amx_Push((*i), wIssuerId);
+			amx_Push((*i), wPlayerId);
+			// Execute the callback
+			amx_Exec((*i), NULL, iIndex);
+		}
+	}
+}
+
 int CCallbackManager::OnVehicleTakeDamage(WORD wPlayerId, WORD wDamagerId, WORD wVehicleId, BYTE byteWeaponId, CVector vecHit)
 {
 	cell cReturn = 1;

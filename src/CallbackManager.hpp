@@ -29,6 +29,7 @@ public:
 	static void OnVehicleEntryComplete(WORD wPlayerId, WORD wVehicleId, int iSeat);
 	static void OnVehicleExitComplete(WORD wPlayerId);
 	static int  OnTakeDamage(WORD wPlayerId, WORD wDamagerId, BYTE byteWeaponId, int iBodyPart, float fHealthLoss);
+	static void OnGiveDamage(WORD wPlayerId, WORD wIssuerId, BYTE byteWeaponId, int iBodyPart, float fHealthLoss);
 	static int  OnVehicleTakeDamage(WORD wPlayerId, WORD wDamagerId, WORD wVehicleId, BYTE byteWeaponId, CVector vecHit);
 	static void OnFinishPlayback(WORD wPlayerId);
 	static int  OnChangeNode(WORD wPlayerId, int iNodeId);

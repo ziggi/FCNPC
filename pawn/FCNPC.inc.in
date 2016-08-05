@@ -51,6 +51,7 @@ forward FCNPC_OnReachDestination(npcid);
 forward FCNPC_OnFinishPlayback(npcid);
 
 forward FCNPC_OnTakeDamage(npcid, damagerid, weaponid, bodypart, Float:health_loss);
+forward FCNPC_OnGiveDamage(npcid, issuerid, weaponid, bodypart, Float:health_loss);
 forward FCNPC_OnVehicleTakeDamage(npcid, damagerid, vehicleid, weaponid, Float:x, Float:y, Float:z);
 
 forward FCNPC_OnFinishNodePoint(npcid, point);
