@@ -96,7 +96,7 @@ bool CPlayerManager::DeletePlayer(WORD wPlayerId)
 void CPlayerManager::Process()
 {
 	// Process all the players
-	for (WORD i = pNetGame->pPlayerPool->dwPlayerPoolSize; i != -1; i--) {
+	for (WORD i = pNetGame->pPlayerPool->dwPlayerPoolSize; i != 0; i--) {
 		if (m_bConnected[i]) {
 			m_pPlayerData[i]->Process();
 		}
