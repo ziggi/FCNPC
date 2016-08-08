@@ -597,7 +597,7 @@ void CPlayerData::Process()
 		if (m_wMoveId >= 0 && m_wMoveId < MAX_PLAYERS && IsMovingAtPlayer(m_wMoveId)) {
 			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[m_wMoveId];
 			if (pPlayer) {
-				bool bIsNeedToUpdate = CMath::GetDistanceBetween3DPoints(m_vecMovePlayerPosition, pPlayer->vecPosition) > 3.0;
+				bool bIsNeedToUpdate = CMath::GetDistanceBetween3DPoints(m_vecMovePlayerPosition, pPlayer->vecPosition) > 3.0 + m_fMoveRadius;
 				if (bIsNeedToUpdate) {
 					m_vecMovePlayerPosition = pPlayer->vecPosition;
 					UpdateMovingData(pPlayer->vecPosition, m_fMoveRadius, m_bMoveSetAngle, m_fMoveSpeed);
@@ -691,7 +691,7 @@ void CPlayerData::Process()
 		// Are we performing the entry animation ?
 		if (m_bEntering) {
 			if (dwThisTick - m_dwEnterExitTickCount > static_cast<DWORD>(m_bJacking ? 5800 : 2500)) {
-				CVehicle *pVehicle = GetVehicle();
+				CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[m_wVehicleToEnter];;
 				if (pVehicle) {
 					SetState(m_byteSeatToEnter == 0 ? PLAYER_STATE_DRIVER : PLAYER_STATE_PASSENGER);
 					CCallbackManager::OnVehicleEntryComplete(m_wPlayerId, m_wVehicleToEnter, m_byteSeatToEnter);
