@@ -567,6 +567,7 @@ void CPlayerData::Process()
 	}
 
 	DWORD dwThisTick = GetTickCount();
+	DWORD dwUpdateRate = pServer->GetUpdateRate();
 	BYTE byteState = GetState();
 
 	// Process death
@@ -584,7 +585,7 @@ void CPlayerData::Process()
 		}
 
 		// Kill the player
-		if (dwThisTick - m_dwKillVehicleTickCount >= pServer->GetUpdateRate()) {
+		if (dwThisTick - m_dwKillVehicleTickCount >= dwUpdateRate) {
 			m_dwKillVehicleTickCount = 0;
 			Kill(m_iLastDamager, byteWeapon);
 		}
@@ -749,13 +750,13 @@ void CPlayerData::Process()
 				int iShootTime = GetWeaponShootTime(m_byteWeaponId);
 
 				// shoot delay
-				if (iShootTime != -1 && iShootTime < m_iShootDelay) {
-					m_iShootDelay = iShootTime - pServer->GetUpdateRate();
+				if (iShootTime != -1 && iShootTime < m_dwShootDelay) {
+					iShootTime = m_dwShootDelay;
 				}
 
 				DWORD dwLastShootTime = dwThisTick - m_dwShootTickCount;
 
-				if (dwLastShootTime >= m_iShootDelay) {
+				if (dwLastShootTime >= m_dwShootDelay) {
 					SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM);
 				}
 
@@ -764,12 +765,12 @@ void CPlayerData::Process()
 					m_wAmmo--;
 
 					// Check for reload
-					DWORD dwClip = GetWeaponClipSize(m_byteWeaponId);
+					int iClip = GetWeaponClipSize(m_byteWeaponId);
 					bool bIsNeedToReload = m_bHasReload
-					                       && dwClip > 1
+					                       && iClip > 1
 					                       && m_wAmmo != 0
-					                       && m_wAmmo != dwClip
-					                       && m_wAmmo % dwClip == 0;
+					                       && m_wAmmo != iClip
+					                       && m_wAmmo % iClip == 0;
 
 					if (bIsNeedToReload) {
 						m_dwReloadTickCount = dwThisTick;
@@ -1406,11 +1407,10 @@ void CPlayerData::AimAt(CVector vecPoint, bool bShoot, int iShootDelay, bool bSe
 	}
 
 	// set the shoot delay
-	if (iShootDelay <= pServer->GetUpdateRate()) {
-		iShootDelay = pServer->GetUpdateRate() + 5;
+	DWORD dwUpdateRate = pServer->GetUpdateRate();
+	if (iShootDelay <= static_cast<int>(dwUpdateRate)) {
+		m_dwShootDelay = dwUpdateRate + 5;
 	}
-
-	m_iShootDelay = iShootDelay;
 
 	// set the shooting flag
 	m_bShooting = bShoot;

@@ -205,7 +205,7 @@ private:
 	DWORD m_dwMoveTickCount;
 	DWORD m_dwReloadTickCount;
 	DWORD m_dwShootTickCount;
-	int m_iShootDelay;
+	DWORD m_dwShootDelay;
 	DWORD m_dwEnterExitTickCount;
 	DWORD m_dwMoveStartTime;
 	DWORD m_dwMoveTime;
