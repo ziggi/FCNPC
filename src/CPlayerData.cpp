@@ -495,7 +495,7 @@ void CPlayerData::ShowForPlayer(WORD wPlayerId)
 
 void CPlayerData::ShowForStreamedPlayers()
 {
-	for (WORD i = 0; i < pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
+	for (WORD i = 0; i <= pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
 		if (!pServer->GetPlayerManager()->IsPlayerConnected(i) || !IsStreamedIn(i)) {
 			continue;
 		}
@@ -1797,7 +1797,7 @@ void CPlayerData::SetVehicle(WORD wVehicleId, BYTE byteSeatId)
 
 CVehicle *CPlayerData::GetVehicle()
 {
-	if (m_pPlayer->wVehicleId < 1 || m_pPlayer->wVehicleId >= MAX_VEHICLES) {
+	if (m_pPlayer->wVehicleId < 1 || m_pPlayer->wVehicleId > MAX_VEHICLES) {
 		return NULL;
 	}
 

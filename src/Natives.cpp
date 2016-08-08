@@ -174,7 +174,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsStreamedForAnyone(AMX *amx, cell *params)
 		return 0;
 	}
 
-	for (WORD i = 0; i < pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
+	for (WORD i = 0; i <= pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
 		// Ignore non connected players and the same player
 		if (!pServer->GetPlayerManager()->IsPlayerConnected(i) || wNpcId == i) {
 			continue;
@@ -1767,7 +1767,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_EnterVehicle(AMX *amx, cell *params)
 	}
 
 	// Validate the vehicle
-	if (wVehicleId < 1 || wVehicleId >= MAX_VEHICLES) {
+	if (wVehicleId < 1 || wVehicleId > MAX_VEHICLES) {
 		return 0;
 	}
 
@@ -1808,7 +1808,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_PutInVehicle(AMX *amx, cell *params)
 	}
 
 	// Validate the vehicle
-	if (wVehicleId < 1 || wVehicleId >= MAX_VEHICLES) {
+	if (wVehicleId < 1 || wVehicleId > MAX_VEHICLES) {
 		return 0;
 	}
 
@@ -2117,7 +2117,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetSurfingVehicle(AMX *amx, cell *params)
 	}
 
 	// Validate the vehicle
-	if (wVehicleId < 1 || wVehicleId >= MAX_VEHICLES) {
+	if (wVehicleId < 1 || wVehicleId > MAX_VEHICLES) {
 		return 0;
 	}
 

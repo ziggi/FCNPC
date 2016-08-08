@@ -133,7 +133,7 @@ CNodeManager *CServer::GetNodeManager()
 bool CServer::DoesNameExist(char *szName)
 {
 	// Loop through all the players
-	for (int i = 0; i < pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
+	for (WORD i = 0; i <= pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
 		// Ignore non connected players
 		if (!pNetGame->pPlayerPool->bIsPlayerConnectedEx[i]) {
 			continue;
@@ -189,22 +189,21 @@ bool CServer::IsVehicleSeatOccupied(WORD wPlayerId, WORD wVehicleId, BYTE byteSe
 
 WORD CServer::GetVehicleSeatPlayerId(WORD wVehicleId, BYTE byteSeatId)
 {
-	if (wVehicleId < 1 || wVehicleId >= MAX_VEHICLES) {
+	if (wVehicleId < 1 || wVehicleId > MAX_VEHICLES) {
 		return INVALID_PLAYER_ID;
 	}
 
-	CPlayerPool *pPlayerPool = pNetGame->pPlayerPool;
 	CPlayer *pPlayer;
 
 	// Loop through all the players
-	for (int i = 0; i < pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
-		// Ignore non connected players and the same player
+	for (int i = 0; i <= pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
+		// Ignore non connected players
 		if (!pServer->GetPlayerManager()->IsPlayerConnected(i)) {
 			continue;
 		}
 
 		// Get the player interface
-		pPlayer = pPlayerPool->pPlayer[i];
+		pPlayer = pNetGame->pPlayerPool->pPlayer[i];
 
 		// Check vehicle and seat
 		if (pPlayer->wVehicleId == wVehicleId && pPlayer->byteSeatId == byteSeatId) {
