@@ -76,7 +76,8 @@ int CMapAndreas::Init(int iMode, char* cname, int len)
 		}
 
 		// load the file contents in to our point data buffer
-		FILE *fileInput = fopen(name, "rb");
+		FILE *fileInput;
+		fopen_s(&fileInput, name, "rb");
 		if (NULL == fileInput) {
 			return MAP_ANDREAS_ERROR_DATA_FILES;
 		}
@@ -94,7 +95,8 @@ int CMapAndreas::Init(int iMode, char* cname, int len)
 			return MAP_ANDREAS_ERROR_MEMORY;
 		}
 
-		FILE *fileInput = fopen(name, "rb");
+		FILE *fileInput;
+		fopen_s(&fileInput, name, "rb");
 		if (NULL == fileInput) {
 			return MAP_ANDREAS_ERROR_DATA_FILES;
 		}
@@ -110,7 +112,7 @@ int CMapAndreas::Init(int iMode, char* cname, int len)
 		m_iOperatingMode = MAP_ANDREAS_MODE_NOBUFFER;
 		m_gridSize = MAP_ANDREAS_GRID_FULL;
 		m_pPointData = (unsigned short *)calloc(1, sizeof(unsigned short));
-		mapFile = fopen(name, "rb");
+		fopen_s(&mapFile, name, "rb");
 		if (NULL == mapFile) {
 			return MAP_ANDREAS_ERROR_DATA_FILES;
 		}
@@ -217,7 +219,8 @@ int CMapAndreas::SaveCurrentHMap(char* name)
 			break;
 	}
 
-	FILE *fileInput = fopen(name, "wb");
+	FILE *fileInput;
+	fopen_s(&fileInput, name, "wb");
 	if (NULL == fileInput) {
 		return MAP_ANDREAS_ERROR_DATA_FILES;
 	}

@@ -85,8 +85,7 @@ int CFunctions::GetRakServer()
 WORD CFunctions::GetFreePlayerSlot()
 {
 	// Loop through all the players
-	WORD wMaxPlayers = GetMaxPlayers();
-	for (WORD i = 0; i < wMaxPlayers; i++) {
+	for (WORD i = GetMaxPlayers() - 1; i >= 0; i--) {
 		// Is he not connected ?
 		if (!pNetGame->pPlayerPool->bIsPlayerConnectedEx[i]) {
 			return i;

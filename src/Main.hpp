@@ -13,6 +13,7 @@
 	#include <windows.h>
 
 	#pragma warning(disable : 4201)
+	#pragma warning(disable : 4206)
 	#define STDCALL __stdcall
 	#define THISCALL __thiscall
 #elif defined(LINUX)
