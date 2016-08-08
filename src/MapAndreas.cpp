@@ -11,6 +11,10 @@
 #include <stdlib.h>
 #include <math.h>
 
+#if defined(LINUX)
+	#include "fopen_s/fopen_s.h"
+#endif
+
 #include "MapAndreas.h"
 
 //----------------------------------------------------------
