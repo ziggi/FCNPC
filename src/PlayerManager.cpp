@@ -27,23 +27,23 @@ WORD CPlayerManager::AddPlayer(char *szName)
 {
 	// Make sure the name is valid
 	if (strlen(szName) > MAX_PLAYER_NAME || pServer->DoesNameExist(szName)) {
-		logprintf("[FCNPC] Error: name is invalid.");
+		logprintf("[FCNPC] Error: name '%s' is invalid.", szName);
 		return INVALID_PLAYER_ID;
 	}
 
 	// Create the player in SAMP server
 	WORD wPlayerId = CFunctions::NewPlayer(szName);
 	if (wPlayerId == INVALID_PLAYER_ID) {
-		logprintf("[FCNPC] Error: player is not created.");
+		logprintf("[FCNPC] Error: player '%s' is not created.", szName);
 		return INVALID_PLAYER_ID;
 	}
 
 	// Create the player instance
-	m_NpcMap.insert(std::pair<WORD, CPlayerData*>(wPlayerId, new CPlayerData(wPlayerId, szName)));
+	m_NpcMap.insert(std::make_pair(wPlayerId, new CPlayerData(wPlayerId, szName)));
 	if (!m_NpcMap[wPlayerId]) {
 		CFunctions::DeletePlayer(wPlayerId);
 		m_NpcMap.erase(wPlayerId);
-		logprintf("[FCNPC] Error: player instance is not created.");
+		logprintf("[FCNPC] Error: player instance for '%s' is not created.", szName);
 		return INVALID_PLAYER_ID;
 	}
 
@@ -52,7 +52,7 @@ WORD CPlayerManager::AddPlayer(char *szName)
 		SAFE_DELETE(m_NpcMap[wPlayerId]);
 		m_NpcMap.erase(wPlayerId);
 		CFunctions::DeletePlayer(wPlayerId);
-		logprintf("[FCNPC] Error: player is not setup.");
+		logprintf("[FCNPC] Error: player '%s' is not setup.", szName);
 		return INVALID_PLAYER_ID;
 	}
 
