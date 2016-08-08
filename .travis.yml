@@ -6,9 +6,8 @@ addons:
     packages:
       - gcc-4.9-multilib
       - g++-4.9-multilib
-env:
-  - CC=gcc-4.9
-  - CXX=g++-4.9
+install:
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="gcc-4.9"; fi
 script:
   - cmake .
   - make
