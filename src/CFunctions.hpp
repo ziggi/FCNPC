@@ -26,7 +26,7 @@ typedef void (THISCALL *CPlayer__SpawnForWorld_t)(void *pPlayer);
 typedef void (THISCALL *CPlayer__Kill_t)(void *pPlayer, BYTE byteReason, WORD wKillerId);
 typedef void (THISCALL *CPlayer__EnterVehicle_t)(void *pPlayer, WORD wVehicleId, BYTE byteSeatId);
 typedef void (THISCALL *CPlayer__ExitVehicle_t)(void *pPlayer, WORD wVehicleId);
-typedef int (THISCALL *CConsole__GetIntVariable_t)(void *pConfig, char *szKey);
+typedef int (THISCALL *CConsole__GetIntVariable_t)(void *pConfig, const char *szKey);
 typedef bool (THISCALL *RakNet__Send_t)(void* ppRakServer, RakNet::BitStream* parameters, PacketPriority priority, PacketReliability reliability, unsigned orderingChannel, PlayerID playerId, bool broadcast);
 typedef bool (THISCALL *RakNet__RPC_t)(void* ppRakServer, int* uniqueID, RakNet::BitStream* parameters, PacketPriority priority, PacketReliability reliability, unsigned orderingChannel, PlayerID playerId, bool broadcast, bool shiftTimestamp);
 typedef Packet* (THISCALL *RakNet__Receive_t)(void* ppRakServer);

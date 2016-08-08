@@ -32,7 +32,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 		${CMAKE_CURRENT_SOURCE_DIR}/src/fopen_s/*.h
 	)
 
-	set (FLAGS "-m32 -fPIC -O2 -Wall -fno-stack-protector -fpack-struct=1")
+	set (FLAGS "-m32 -fPIC -O2 -fno-stack-protector -fpack-struct=1 -Wall -Wno-attributes -Wno-strict-aliasing -Wno-sequence-point")
 	set (CMAKE_C_FLAGS ${FLAGS})
 	set (CMAKE_CXX_FLAGS "${FLAGS} -std=c++11")
 	set (CMAKE_SHARED_LINKER_FLAGS "-fshort-wchar -shared")

@@ -103,8 +103,8 @@ DWORD CUtils::FindPattern(const char *szPattern, const char *szMask)
 			return dwBase + i;
 		}
 	}
-	// Return null
-	return NULL;
+	// Return 0
+	return 0;
 }
 
 float CUtils::RandomFloat(float min, float max)

@@ -180,11 +180,11 @@ struct CSyncData
 	union
 	{
 		DWORD		dwAnimationData;		// 0x00B6 - 0x00BA
-		struct AnimationData_s
+		struct
 		{
 			WORD	wAnimIndex;
 			WORD	wAnimFlags;
-		} tAnimationData;
+		};
 	};
 	// Size = 68
 };
@@ -224,7 +224,7 @@ typedef struct CTextdraw
 	union
 	{
 		BYTE byteFlags;			// 25
-		struct TextdrawFlags_s
+		struct
 		{
 			BYTE byteBox : 1;
 			BYTE byteLeft : 1;
@@ -232,7 +232,7 @@ typedef struct CTextdraw
 			BYTE byteCenter : 1;
 			BYTE byteProportional : 1;
 			BYTE bytePadding : 3;
-		} tTextdrawFlags;
+		};
 	};
 	float			fLetterWidth;			// 1
 	float			fLetterHeight;		// 5

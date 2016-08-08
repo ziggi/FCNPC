@@ -49,21 +49,21 @@ int CMapAndreas::Init(int iMode, char* cname, int len)
 	if (this->IsInited()) {
 		return MAP_ANDREAS_ERROR_SUCCESS;
 	};
-	char* name;
+	char* name = NULL;
 	if (len > 1) {
 		name = cname;
 	} else {
 		switch (iMode) {
 			case MAP_ANDREAS_MODE_NOBUFFER: {
-				name = MAP_ANDREAS_HMAP_FILE_FULL;
+				name = (char *)MAP_ANDREAS_HMAP_FILE_FULL;
 				break;
 			}
 			case MAP_ANDREAS_MODE_FULL: {
-				name = MAP_ANDREAS_HMAP_FILE_FULL;
+				name = (char *)MAP_ANDREAS_HMAP_FILE_FULL;
 				break;
 			}
 			case MAP_ANDREAS_MODE_MINIMAL: {
-				name = MAP_ANDREAS_HMAP_FILE_MINIMAL;
+				name = (char *)MAP_ANDREAS_HMAP_FILE_MINIMAL;
 				break;
 			}
 		}

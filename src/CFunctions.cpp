@@ -104,7 +104,8 @@ WORD CFunctions::NewPlayer(char *szName)
 	}
 
 	// Get the SAMP authentication
-	PlayerID systemAddress = { 0x0100007F, 9000 + wPlayerId };
+	WORD wPort = 9000 + wPlayerId;
+	PlayerID systemAddress = { 0x0100007F, wPort };
 	int iVersion = *reinterpret_cast<int *>(CAddress::VAR_ServerAuthentication) ^ CAddress::VAR_NetVersion;
 	BYTE byteMod = 1;
 	BYTE byteNameLen = static_cast<BYTE>(strlen(szName));

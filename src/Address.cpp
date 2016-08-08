@@ -20,27 +20,27 @@
 #endif
 
 // Functions
-DWORD CAddress::FUNC_ClientJoin_RPC = NULL;
-DWORD CAddress::FUNC_CPlayerPool__DeletePlayer = NULL;
+DWORD CAddress::FUNC_ClientJoin_RPC = 0;
+DWORD CAddress::FUNC_CPlayerPool__DeletePlayer = 0;
 
-DWORD CAddress::FUNC_CPlayer__SpawnForWorld = NULL;
-DWORD CAddress::FUNC_CPlayer__Kill = NULL;
-DWORD CAddress::FUNC_CPlayer__EnterVehicle = NULL;
-DWORD CAddress::FUNC_CPlayer__ExitVehicle = NULL;
+DWORD CAddress::FUNC_CPlayer__SpawnForWorld = 0;
+DWORD CAddress::FUNC_CPlayer__Kill = 0;
+DWORD CAddress::FUNC_CPlayer__EnterVehicle = 0;
+DWORD CAddress::FUNC_CPlayer__ExitVehicle = 0;
 
-DWORD CAddress::FUNC_CConsole__GetIntVariable = NULL;
+DWORD CAddress::FUNC_CConsole__GetIntVariable = 0;
 
-DWORD CAddress::FUNC_GetVehicleModelInfo = NULL;
+DWORD CAddress::FUNC_GetVehicleModelInfo = 0;
 
 // Variables
-DWORD CAddress::VAR_ServerAuthentication = NULL;
-DWORD CAddress::VAR_NetVersion = NULL;
+DWORD CAddress::VAR_ServerAuthentication = 0;
+DWORD CAddress::VAR_NetVersion = 0;
 
 // Offsets
-DWORD CAddress::OFFSET_RemoteSystemManager = NULL;
-DWORD CAddress::OFFSET_RemoteSystemSize = NULL;
-DWORD CAddress::OFFSET_RemoteSystem__ConnectMode = NULL;
-DWORD CAddress::OFFSET_RemoteSystem__Unknown = NULL;
+DWORD CAddress::OFFSET_RemoteSystemManager = 0;
+DWORD CAddress::OFFSET_RemoteSystemSize = 0;
+DWORD CAddress::OFFSET_RemoteSystem__ConnectMode = 0;
+DWORD CAddress::OFFSET_RemoteSystem__Unknown = 0;
 
 void CAddress::Initialize(eSAMPVersion sampVersion)
 {

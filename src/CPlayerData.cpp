@@ -756,7 +756,7 @@ void CPlayerData::Process()
 
 				DWORD dwLastShootTime = dwThisTick - m_dwShootTickCount;
 
-				if (dwLastShootTime >= static_cast<int>(m_dwShootDelay)) {
+				if (dwLastShootTime >= m_dwShootDelay) {
 					SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM);
 				}
 
@@ -1103,7 +1103,7 @@ SWeaponInfo CPlayerData::GetWeaponInfo(BYTE byteWeaponId)
 void CPlayerData::SetSpecialAction(BYTE byteActionId)
 {
 	// Validate the action id
-	if (byteActionId < 0 || byteActionId > 13 && byteActionId < 20 || byteActionId > 25 && byteActionId != 68) {
+	if (byteActionId < 0 || (byteActionId > 13 && byteActionId < 20) || (byteActionId > 25 && byteActionId != 68)) {
 		return;
 	}
 
@@ -1135,18 +1135,18 @@ BYTE CPlayerData::GetFightingStyle()
 
 void CPlayerData::SetAnimation(WORD wAnimationId, float fDelta, bool bLoop, bool bLockX, bool bLockY, bool bFreeze, int iTime)
 {
-	m_pPlayer->syncData.tAnimationData.wAnimIndex = wAnimationId;
+	m_pPlayer->syncData.wAnimIndex = wAnimationId;
 
 	if (wAnimationId == 0) {
-		m_pPlayer->syncData.tAnimationData.wAnimFlags = 0;
+		m_pPlayer->syncData.wAnimFlags = 0;
 	} else {
 		// TODO: convert fDelta to minifloat (8-bit float) format
-		m_pPlayer->syncData.tAnimationData.wAnimFlags =   (static_cast<BYTE>(fDelta)& 0xFF)
-		                                                | (bLoop << 8)
-		                                                | (bLockX << 9)
-		                                                | (bLockY << 10)
-		                                                | (bFreeze << 11)
-		                                                | (static_cast<BYTE>(iTime) << 12);
+		m_pPlayer->syncData.wAnimFlags =   (static_cast<BYTE>(fDelta)& 0xFF)
+		                                 | (bLoop << 8)
+		                                 | (bLockX << 9)
+		                                 | (bLockY << 10)
+		                                 | (bFreeze << 11)
+		                                 | (static_cast<BYTE>(iTime) << 12);
 	}
 }
 
@@ -1158,19 +1158,19 @@ void CPlayerData::SetAnimationByName(char *szName, float fDelta, bool bLoop, boo
 
 void CPlayerData::ResetAnimation()
 {
-	m_pPlayer->syncData.tAnimationData.wAnimIndex = 0;
-	m_pPlayer->syncData.tAnimationData.wAnimFlags = 0;
+	m_pPlayer->syncData.wAnimIndex = 0;
+	m_pPlayer->syncData.wAnimFlags = 0;
 }
 
 void CPlayerData::GetAnimation(WORD *wAnimationId, float *fDelta, bool *bLoop, bool *bLockX, bool *bLockY, bool *bFreeze, int *iTime)
 {
-	*wAnimationId = m_pPlayer->syncData.tAnimationData.wAnimIndex;
-	*fDelta = static_cast<float>(m_pPlayer->syncData.tAnimationData.wAnimFlags & 0xFF);
-	*bLoop = (m_pPlayer->syncData.tAnimationData.wAnimFlags >> 8 & 0x1) != 0;
-	*bLockX = (m_pPlayer->syncData.tAnimationData.wAnimFlags >> 9 & 0x1) != 0;
-	*bLockY = (m_pPlayer->syncData.tAnimationData.wAnimFlags >> 10 & 0x1) != 0;
-	*bFreeze = (m_pPlayer->syncData.tAnimationData.wAnimFlags >> 11 & 0x1) != 0;
-	*iTime = (m_pPlayer->syncData.tAnimationData.wAnimFlags >> 12 & 0xF);
+	*wAnimationId = m_pPlayer->syncData.wAnimIndex;
+	*fDelta = static_cast<float>(m_pPlayer->syncData.wAnimFlags & 0xFF);
+	*bLoop = (m_pPlayer->syncData.wAnimFlags >> 8 & 0x1) != 0;
+	*bLockX = (m_pPlayer->syncData.wAnimFlags >> 9 & 0x1) != 0;
+	*bLockY = (m_pPlayer->syncData.wAnimFlags >> 10 & 0x1) != 0;
+	*bFreeze = (m_pPlayer->syncData.wAnimFlags >> 11 & 0x1) != 0;
+	*iTime = (m_pPlayer->syncData.wAnimFlags >> 12 & 0xF);
 }
 
 void CPlayerData::ApplyAnimation(char *szAnimationLib, char *szAnimationName, float fDelta, bool bLoop, bool bLockX, bool bLockY, bool bFreeze, int iTime)

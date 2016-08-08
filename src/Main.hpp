@@ -27,6 +27,7 @@
 	#define FALSE   (0)
 	#define STDCALL
 	#define THISCALL
+	#define MAX_PATH 260
 #endif
 
 // Standard includes
