@@ -59,7 +59,7 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_iMoveType = MOVE_TYPE_AUTO;
 	m_fMoveRadius = 0.0f;
 	m_bMoveSetAngle = false;
-	m_fMoveSpeed = -1.0;
+	m_fMoveSpeed = MOVE_SPEED_AUTO;
 	m_vecMovePlayerPosition = CVector();
 	m_wHydraThrustAngle[0] =
 		m_wHydraThrustAngle[1] = 5000;
@@ -597,8 +597,7 @@ void CPlayerData::Process()
 		if (m_wMoveId >= 0 && m_wMoveId < MAX_PLAYERS && IsMovingAtPlayer(m_wMoveId)) {
 			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[m_wMoveId];
 			if (pPlayer) {
-				bool bIsNeedToUpdate = CMath::GetDistanceBetween3DPoints(m_vecMovePlayerPosition, pPlayer->vecPosition) > 3.0 + m_fMoveRadius;
-				if (bIsNeedToUpdate) {
+				if (CMath::GetDistanceBetween3DPoints(m_vecMovePlayerPosition, pPlayer->vecPosition) > 1.5) {
 					m_vecMovePlayerPosition = pPlayer->vecPosition;
 					UpdateMovingData(pPlayer->vecPosition, m_fMoveRadius, m_bMoveSetAngle, m_fMoveSpeed);
 				}
@@ -619,7 +618,10 @@ void CPlayerData::Process()
 			GetPosition(&vecNewPosition);
 			GetVelocity(&vecVelocity);
 
-			vecNewPosition += vecVelocity * static_cast<float>(dwThisTick - m_dwMoveTickCount);
+			int iTickDiff = dwThisTick - m_dwMoveTickCount;
+			if (iTickDiff > 0) {
+				vecNewPosition += vecVelocity * static_cast<float>(iTickDiff);
+			}
 
 			if (m_bUseMapAndreas && pServer->IsMapAndreasInited()) {
 				vecNewPosition.fZ = pServer->GetMapAndreas()->FindZ_For2DCoord(vecNewPosition.fX, vecNewPosition.fY) + 0.5f;
@@ -1524,7 +1526,7 @@ bool CPlayerData::MeleeAttack(int iTime, bool bUseFightstyle)
 	// Set the melee use fightstyle flag
 	m_bMeleeFightstyle = bUseFightstyle;
 	// Set the melee keys
-	SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_FIRE);
+	SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_bMeleeFightstyle ? KEY_AIM | KEY_SECONDARY_ATTACK : KEY_FIRE);
 	return true;
 }
 
