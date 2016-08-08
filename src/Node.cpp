@@ -79,11 +79,11 @@ void CNode::GetHeaderInfo(DWORD *dwVehicleNodes, DWORD *dwPedNodes, DWORD *dwNav
 	*dwNaviNodes = m_nodeHeader.dwNaviNodesNumber;
 }
 
-int CNode::Process(CPlayerData *pPlayerData, int iPointId, int iLastPoint, int iType, CVector vecVelocity)
+WORD CNode::Process(CPlayerData *pPlayerData, WORD wPointId, WORD wLastPoint, int iType, CVector vecVelocity)
 {
 	int iChangeNode = 0;
 	// Set the node to the player point
-	SetPoint(iPointId);
+	SetPoint(wPointId);
 	// Set it to the next link
 	WORD usStartLink = GetLinkId();
 	WORD usLinkCount = GetLinkCount();
@@ -95,7 +95,7 @@ int CNode::Process(CPlayerData *pPlayerData, int iPointId, int iLastPoint, int i
 		// Set the node to the next random link
 		SetLink(wLinkId);
 		// Keep looping until we get a differente link point
-		while(m_nodeLink.wNodeId == iLastPoint && usLinkCount > 1) {
+		while (m_nodeLink.wNodeId == wLastPoint && usLinkCount > 1) {
 			// Increase the attempts count
 			byteCount++;
 			if (byteCount > 10) {
@@ -110,7 +110,8 @@ int CNode::Process(CPlayerData *pPlayerData, int iPointId, int iLastPoint, int i
 		// Check if we need to change the node id
 		if (m_nodeLink.wAreaId != m_iNodeId) {
 			if (m_nodeLink.wAreaId != 65535) {
-				if ((iChangeNode = CCallbackManager::OnChangeNode(pPlayerData->GetId(), (int)m_nodeLink.wAreaId))) {
+				iChangeNode = CCallbackManager::OnChangeNode(pPlayerData->GetId(), m_nodeLink.wAreaId);
+				if (iChangeNode) {
 					return pPlayerData->ChangeNode(m_nodeLink.wAreaId, wLinkId);
 				}
 			} else {
@@ -133,7 +134,7 @@ int CNode::Process(CPlayerData *pPlayerData, int iPointId, int iLastPoint, int i
 	return 0;
 }
 
-int CNode::ProcessNodeChange(CPlayerData *pPlayerData, WORD wLinkId, int iType, CVector vecVelocity)
+WORD CNode::ProcessNodeChange(CPlayerData *pPlayerData, WORD wLinkId, int iType, CVector vecVelocity)
 {
 	// Set the node link
 	SetLink(wLinkId);
@@ -212,15 +213,15 @@ void CNode::SetLink(WORD wLinkId)
 	fread(&m_nodeLink, sizeof(CLinkNode), 1, m_pFile);
 }
 
-void CNode::SetPoint(WORD usPointId)
+void CNode::SetPoint(WORD wPointId)
 {
 	// Validate the point
-	if (usPointId > m_nodeHeader.dwNodesNumber) {
+	if (wPointId > m_nodeHeader.dwNodesNumber) {
 		return;
 	}
 
 	// Set the file pointer to the point position
-	fseek(m_pFile, sizeof(CNodeHeader) + (usPointId * sizeof(CPathNode)), SEEK_SET);
+	fseek(m_pFile, sizeof(CNodeHeader) + (wPointId * sizeof(CPathNode)), SEEK_SET);
 	// Read the node link
 	fread(&m_nodePath, sizeof(CPathNode), 1, m_pFile);
 }

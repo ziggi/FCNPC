@@ -180,11 +180,11 @@ struct CSyncData
 	union
 	{
 		DWORD		dwAnimationData;		// 0x00B6 - 0x00BA
-		struct
+		struct AnimationData_s
 		{
 			WORD	wAnimIndex;
 			WORD	wAnimFlags;
-		};
+		} tAnimationData;
 	};
 	// Size = 68
 };
@@ -224,7 +224,7 @@ typedef struct CTextdraw
 	union
 	{
 		BYTE byteFlags;			// 25
-		struct
+		struct TextdrawFlags_s
 		{
 			BYTE byteBox : 1;
 			BYTE byteLeft : 1;
@@ -232,7 +232,7 @@ typedef struct CTextdraw
 			BYTE byteCenter : 1;
 			BYTE byteProportional : 1;
 			BYTE bytePadding : 3;
-		};
+		} tTextdrawFlags;
 	};
 	float			fLetterWidth;			// 1
 	float			fLetterHeight;		// 5
@@ -444,13 +444,13 @@ struct CPlayerPool // sizeof = 99520
 
 struct CVehicleSpawn // size 36
 {
-	int				iModelID;
+	DWORD			dwModelID;
     CVector			vecPos;
     float			fRot;
-    int				iColor1;
-    int				iColor2;
-    int				iRespawnTime;
-    int				iInterior;
+	DWORD			dwColor1;
+	DWORD			dwColor2;
+	DWORD			dwRespawnTime;
+	DWORD			dwInterior;
 };
 
 struct CVehicleModInfo // sizeof = 26

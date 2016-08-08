@@ -32,8 +32,8 @@ public:
 	static void OnGiveDamage(WORD wPlayerId, WORD wIssuerId, BYTE byteWeaponId, int iBodyPart, float fHealthLoss);
 	static int  OnVehicleTakeDamage(WORD wPlayerId, WORD wDamagerId, WORD wVehicleId, BYTE byteWeaponId, CVector vecHit);
 	static void OnFinishPlayback(WORD wPlayerId);
-	static int  OnChangeNode(WORD wPlayerId, int iNodeId);
-	static int  OnFinishNodePoint(WORD wPlayerId, int iNodePoint);
+	static int  OnChangeNode(WORD wPlayerId, WORD wNodeId);
+	static int  OnFinishNodePoint(WORD wPlayerId, WORD wNodePoint);
 	static void OnFinishNode(WORD wPlayerId);
 	static void OnStreamIn(WORD wPlayerId, WORD wForPlayerId);
 	static void OnStreamOut(WORD wPlayerId, WORD wForPlayerId);

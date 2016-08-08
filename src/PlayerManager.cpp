@@ -93,7 +93,7 @@ bool CPlayerManager::IsPlayerConnected(WORD wPlayerId)
 	if (wPlayerId >= MAX_PLAYERS || wPlayerId < 0) {
 		return false;
 	} else {
-		return pNetGame->pPlayerPool->bIsPlayerConnectedEx[wPlayerId];
+		return pNetGame->pPlayerPool->bIsPlayerConnectedEx[wPlayerId] != 0;
 	}
 }
 

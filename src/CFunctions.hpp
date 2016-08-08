@@ -31,7 +31,7 @@ typedef bool (THISCALL *RakNet__Send_t)(void* ppRakServer, RakNet::BitStream* pa
 typedef bool (THISCALL *RakNet__RPC_t)(void* ppRakServer, int* uniqueID, RakNet::BitStream* parameters, PacketPriority priority, PacketReliability reliability, unsigned orderingChannel, PlayerID playerId, bool broadcast, bool shiftTimestamp);
 typedef Packet* (THISCALL *RakNet__Receive_t)(void* ppRakServer);
 
-typedef CVector *( *GetVehicleModelInfo_t)(int iModelId, int iInfoType);
+typedef CVector *( *GetVehicleModelInfo_t)(DWORD dwModelID, int iInfoType);
 
 class CFunctions
 {
@@ -43,16 +43,16 @@ public:
 	static int GetConsole();
 	static int GetRakServer();
 
-	static int GetFreePlayerSlot();
-	static int NewPlayer(char *szName);
+	static WORD GetFreePlayerSlot();
+	static WORD NewPlayer(char *szName);
 	static void DeletePlayer(WORD wPlayerId);
 	static void SpawnPlayer(CPlayer *pPlayer);
 	static void KillPlayer(CPlayer *pPlayer, BYTE byteReason, WORD wKillerId);
 	static void PlayerEnterVehicle(CPlayer *pPlayer, WORD wVehicleId, BYTE byteSeatId);
 	static void PlayerExitVehicle(CPlayer *pPlayer, WORD wVehicleId);
-	static CVector *GetVehicleModelInfoEx(int iModelId, int iInfoType);
-	static int GetMaxPlayers();
-	static int GetMaxNPC();
+	static CVector *GetVehicleModelInfoEx(DWORD dwModelID, int iInfoType);
+	static WORD GetMaxPlayers();
+	static WORD GetMaxNPC();
 	static void PlayerShoot(WORD wPlayerId, WORD iHitId, BYTE iHitType, BYTE byteWeaponId, CVector vecPoint);
 
 	static void GlobalRPC(int* szUniqueID, RakNet::BitStream* bsParams, WORD wExcludePlayerId = INVALID_PLAYER_ID, char PacketStream = 2);

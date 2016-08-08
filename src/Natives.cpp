@@ -631,7 +631,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetInvulnerable(AMX *amx, cell *params)
 
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);
-	bool bInvulnerable = static_cast<bool>(params[2]);
+	bool bInvulnerable = static_cast<int>(params[2]) != 0;
 
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
@@ -731,7 +731,6 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetKeys(AMX *amx, cell *params)
 	if (!pPlayerData) {
 		// Get the argument pointers and set its value
 		cell *pAddress = NULL;
-		float fPos = 0.0f;
 		amx_GetAddr(amx, params[2], &pAddress);
 		*pAddress = 0;
 
@@ -804,12 +803,12 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetAnimation(AMX *amx, cell *params)
 
 	// Get params
 	WORD wNpcId = static_cast<WORD>(params[1]);
-	int iAnimationId = static_cast<int>(params[2]);
+	WORD wAnimationId = static_cast<WORD>(params[2]);
 	float fDelta = amx_ctof(params[3]);
-	bool bLoop = static_cast<bool>(params[4]);
-	bool bLockX = static_cast<bool>(params[5]);
-	bool bLockY = static_cast<bool>(params[6]);
-	bool bFreeze = static_cast<bool>(params[7]);
+	bool bLoop = static_cast<int>(params[4]) != 0;
+	bool bLockX = static_cast<int>(params[5]) != 0;
+	bool bLockY = static_cast<int>(params[6]) != 0;
+	bool bFreeze = static_cast<int>(params[7]) != 0;
 	int iTime = static_cast<int>(params[8]);
 
 	// Make sure the player is valid
@@ -819,7 +818,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetAnimation(AMX *amx, cell *params)
 	}
 
 	// Set the player animation
-	pPlayerData->SetAnimation(iAnimationId, fDelta, bLoop, bLockX, bLockY, bFreeze, iTime);
+	pPlayerData->SetAnimation(wAnimationId, fDelta, bLoop, bLockX, bLockY, bFreeze, iTime);
 	return 1;
 }
 
@@ -833,10 +832,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetAnimationByName(AMX *amx, cell *params)
 	char *szName;
 	amx_StrParam(amx, params[2], szName);
 	float fDelta = amx_ctof(params[4]);
-	bool bLoop = static_cast<bool>(params[5]);
-	bool bLockX = static_cast<bool>(params[6]);
-	bool bLockY = static_cast<bool>(params[7]);
-	bool bFreeze = static_cast<bool>(params[8]);
+	bool bLoop = static_cast<int>(params[5]) != 0;
+	bool bLockX = static_cast<int>(params[6]) != 0;
+	bool bLockY = static_cast<int>(params[7]) != 0;
+	bool bFreeze = static_cast<int>(params[8]) != 0;
 	int iTime = static_cast<int>(params[9]);
 
 	// Make sure the player is valid
@@ -880,10 +879,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ApplyAnimation(AMX *amx, cell *params)
 	amx_StrParam(amx, params[2], szAnimLib);
 	amx_StrParam(amx, params[3], szAnimName);
 	float fDelta = amx_ctof(params[4]);
-	bool bLoop = static_cast<bool>(params[5]);
-	bool bLockX = static_cast<bool>(params[6]);
-	bool bLockY = static_cast<bool>(params[7]);
-	bool bFreeze = static_cast<bool>(params[8]);
+	bool bLoop = static_cast<int>(params[5]) != 0;
+	bool bLockX = static_cast<int>(params[6]) != 0;
+	bool bLockY = static_cast<int>(params[7]) != 0;
+	bool bFreeze = static_cast<int>(params[8]) != 0;
 	int iTime = static_cast<int>(params[9]);
 
 	// Make sure the player is valid
@@ -1023,9 +1022,9 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GoTo(AMX *amx, cell *params)
 	CVector vecPoint(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
 	int iType = static_cast<int>(params[5]);
 	float fSpeed = amx_ctof(params[6]);
-	bool bZMap = static_cast<bool>(params[7]);
+	bool bZMap = static_cast<int>(params[7]) != 0;
 	float fRadius = amx_ctof(params[8]);
-	bool bSetAngle = static_cast<bool>(params[9]);
+	bool bSetAngle = static_cast<int>(params[9]) != 0;
 
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
@@ -1047,9 +1046,9 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GoToPlayer(AMX *amx, cell *params)
 	WORD wPlayerId = static_cast<WORD>(params[2]);
 	int iType = static_cast<int>(params[3]);
 	float fSpeed = amx_ctof(params[4]);
-	bool bZMap = static_cast<bool>(params[5]);
+	bool bZMap = static_cast<int>(params[5]) != 0;
 	float fRadius = amx_ctof(params[6]);
-	bool bSetAngle = static_cast<bool>(params[7]);
+	bool bSetAngle = static_cast<int>(params[7]) != 0;
 
 	// validation
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
@@ -1539,9 +1538,9 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAt(AMX *amx, cell *params)
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);
 	CVector vecPoint(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
-	bool bShoot = static_cast<bool>(params[5]);
+	bool bShoot = static_cast<int>(params[5]) != 0;
 	int iShootDelay = static_cast<int>(params[6]);
-	bool bSetAngle = static_cast<bool>(params[7]);
+	bool bSetAngle = static_cast<int>(params[7]) != 0;
 
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
@@ -1571,9 +1570,9 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAtPlayer(AMX *amx, cell *params)
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);
 	WORD wPlayerId = static_cast<WORD>(params[2]);
-	bool bShoot = static_cast<bool>(params[3]);
+	bool bShoot = static_cast<int>(params[3]) != 0;
 	int iShootDelay = static_cast<int>(params[4]);
-	bool bSetAngle = static_cast<bool>(params[5]);
+	bool bSetAngle = static_cast<int>(params[5]) != 0;
 
 	// Make sure the npc is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
@@ -1628,7 +1627,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_MeleeAttack(AMX *amx, cell *params)
 	// Get parms
 	WORD wNpcId = static_cast<WORD>(params[1]);
 	int iTime = static_cast<int>(params[2]);
-	bool bUseFightstyle = static_cast<bool>(params[3]);
+	bool bUseFightstyle = static_cast<int>(params[3]) != 0;
 
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
@@ -1884,7 +1883,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVehicleSiren(AMX *amx, cell *params)
 
 	// Get params
 	WORD wNpcId = static_cast<WORD>(params[1]);
-	bool bSiren = static_cast<bool>(params[2]);
+	bool bSiren = static_cast<int>(params[2]) != 0;
 
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
@@ -2255,7 +2254,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleReloading(AMX *amx, cell *params)
 
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);
-	bool bReload = static_cast<bool>(params[2]);
+	bool bReload = static_cast<int>(params[2]) != 0;
 
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
@@ -2274,7 +2273,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleInfiniteAmmo(AMX *amx, cell *params)
 
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);
-	bool bToggle = static_cast<bool>(params[2]);
+	bool bToggle = static_cast<int>(params[2]) != 0;
 
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
@@ -2489,7 +2488,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetNodePoint(AMX *amx, cell *params)
 
 	// Get the params
 	int iNodeId = static_cast<int>(params[1]);
-	int iPoint = static_cast<int>(params[2]);
+	WORD wPoint = static_cast<WORD>(params[2]);
 
 	// Make sure the node is valid
 	if (!pServer->GetNodeManager()->IsNodeOpen(iNodeId)) {
@@ -2497,7 +2496,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetNodePoint(AMX *amx, cell *params)
 	}
 
 	// Set the node type
-	pServer->GetNodeManager()->GetAt(iNodeId)->SetPoint(iPoint);
+	pServer->GetNodeManager()->GetAt(iNodeId)->SetPoint(wPoint);
 	return 1;
 }
 

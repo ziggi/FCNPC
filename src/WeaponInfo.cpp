@@ -62,14 +62,14 @@ static SWeaponInfo g_sDefaultWeaponInfo[MAX_WEAPONS] = {
 
 CWeaponInfo::CWeaponInfo()
 {
-	for (unsigned int i = 0; i < (sizeof(m_pWeaponInfo) / sizeof(m_pWeaponInfo[0])); i++) {
+	for (BYTE i = 0; i < (sizeof(m_pWeaponInfo) / sizeof(m_pWeaponInfo[0])); i++) {
 		m_pWeaponInfo[i] = new SWeaponInfo(GetDefaultInfo(i));
 	}
 }
 
 CWeaponInfo::~CWeaponInfo()
 {
-	for (unsigned int i = 0; i < (sizeof(m_pWeaponInfo) / sizeof(m_pWeaponInfo[0])); i++) {
+	for (BYTE i = 0; i < (sizeof(m_pWeaponInfo) / sizeof(m_pWeaponInfo[0])); i++) {
 		SAFE_DELETE(m_pWeaponInfo[i]);
 	}
 }

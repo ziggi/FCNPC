@@ -25,7 +25,7 @@ public:
 
 	static void GetQuaternionFromMatrix(MATRIX4X4 matrix, float *fQuaternion);
 	static void GetMatrixFromQuaternion(float *fQuaternion, MATRIX4X4 *matrix);
-	static void QuaternionRotateZ(MATRIX4X4 *m, double angle);
+	static void QuaternionRotateZ(MATRIX4X4 *m, float angle);
 
 	static float AngleToQuaternion(float fAngle);
 	static float RadiansToDegree(float fRadian);

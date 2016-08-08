@@ -207,7 +207,7 @@ void CCallbackManager::OnFinishPlayback(WORD wPlayerId)
 	}
 }
 
-int CCallbackManager::OnChangeNode(WORD wPlayerId, int iNodeId)
+int CCallbackManager::OnChangeNode(WORD wPlayerId, WORD wNodeId)
 {
 	cell cReturn = 1;
 	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {
@@ -215,7 +215,7 @@ int CCallbackManager::OnChangeNode(WORD wPlayerId, int iNodeId)
 		int iIndex;
 		if (!amx_FindPublic((*i), "FCNPC_OnChangeNode", &iIndex)) {
 			// Push the parameters
-			amx_Push((*i), iNodeId);
+			amx_Push((*i), wNodeId);
 			amx_Push((*i), wPlayerId);
 			// Execute the callback
 			amx_Exec((*i), &cReturn, iIndex);
@@ -227,7 +227,7 @@ int CCallbackManager::OnChangeNode(WORD wPlayerId, int iNodeId)
 	return cReturn;
 }
 
-int CCallbackManager::OnFinishNodePoint(WORD wPlayerId, int iNodePoint)
+int CCallbackManager::OnFinishNodePoint(WORD wPlayerId, WORD wNodePoint)
 {
 	cell cReturn = 1;
 	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {
@@ -235,7 +235,7 @@ int CCallbackManager::OnFinishNodePoint(WORD wPlayerId, int iNodePoint)
 		int iIndex;
 		if (!amx_FindPublic((*i), "FCNPC_OnFinishNodePoint", &iIndex)) {
 			// Push the parameters
-			amx_Push((*i), iNodePoint);
+			amx_Push((*i), wNodePoint);
 			amx_Push((*i), wPlayerId);
 			// Execute the callback
 			amx_Exec((*i), &cReturn, iIndex);

@@ -45,9 +45,9 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_bIsInvulnerable = false;
 	m_byteWeaponId = 0;
 	m_wAmmo = 0;
-	m_iNodePoint = 0;
-	m_iNodeLastPoint = 0;
-	m_iLastDamager = INVALID_PLAYER_ID;
+	m_wNodePoint = 0;
+	m_wNodeLastPoint = 0;
+	m_wLastDamagerId = INVALID_PLAYER_ID;
 	m_wVehicleToEnter = INVALID_VEHICLE_ID;
 	m_byteSeatToEnter = 0;
 	m_wHitId = INVALID_PLAYER_ID;
@@ -142,7 +142,7 @@ bool CPlayerData::Spawn(int iSkinId)
 	// Set the player state onfoot
 	SetState(PLAYER_STATE_ONFOOT);
 	// Reset stats
-	m_iLastDamager = INVALID_PLAYER_ID;
+	m_wLastDamagerId = INVALID_PLAYER_ID;
 	SetVehicle(INVALID_VEHICLE_ID, 0);
 	// Call the NPC spawn callback
 	CCallbackManager::OnSpawn(m_wPlayerId);
@@ -195,7 +195,7 @@ bool CPlayerData::Respawn()
 	}
 
 	// Reset stats
-	m_iLastDamager = INVALID_PLAYER_ID;
+	m_wLastDamagerId = INVALID_PLAYER_ID;
 	// Call the NPC spawn callback
 	CCallbackManager::OnRespawn(m_wPlayerId);
 	return true;
@@ -322,10 +322,10 @@ void CPlayerData::Update(int iState)
 		m_pPlayer->vehicleSyncData.bytePlayerWeapon = m_byteWeaponId;
 		m_pPlayer->vehicleSyncData.byteGearState = m_byteGearState;
 
-		if (CVehicleInfo::IsAHydra(pVehicle->customSpawn.iModelID)) {
+		if (CVehicleInfo::IsAHydra(static_cast<WORD>(pVehicle->customSpawn.dwModelID))) {
 			m_pPlayer->vehicleSyncData.wHydraReactorAngle[0] = m_wHydraThrustAngle[0];
 			m_pPlayer->vehicleSyncData.wHydraReactorAngle[1] = m_wHydraThrustAngle[1];
-		} else if (CVehicleInfo::IsATrainPart(pVehicle->customSpawn.iModelID)) {
+		} else if (CVehicleInfo::IsATrainPart(static_cast<WORD>(pVehicle->customSpawn.dwModelID))) {
 			m_pPlayer->vehicleSyncData.fTrainSpeed = m_fTrainSpeed;
 		}
 
@@ -573,9 +573,9 @@ void CPlayerData::Process()
 	// Process death
 	if (GetHealth() <= 0.0f && byteState != PLAYER_STATE_WASTED && byteState != PLAYER_STATE_SPAWNED) {
 		// Get the last damager weapon
-		BYTE byteWeapon = -1;
-		if (m_iLastDamager != INVALID_PLAYER_ID) {
-			byteWeapon = pNetGame->pPlayerPool->pPlayer[m_iLastDamager]->syncData.byteWeapon;
+		BYTE byteWeapon = 255;
+		if (m_wLastDamagerId != INVALID_PLAYER_ID) {
+			byteWeapon = pNetGame->pPlayerPool->pPlayer[m_wLastDamagerId]->syncData.byteWeapon;
 		}
 
 		// check on vehicle
@@ -587,7 +587,7 @@ void CPlayerData::Process()
 		// Kill the player
 		if (dwThisTick - m_dwKillVehicleTickCount >= dwUpdateRate) {
 			m_dwKillVehicleTickCount = 0;
-			Kill(m_iLastDamager, byteWeapon);
+			Kill(m_wLastDamagerId, byteWeapon);
 		}
 	}
 
@@ -641,10 +641,10 @@ void CPlayerData::Process()
 					CFunctions::PlayerEnterVehicle(m_pPlayer, m_wVehicleToEnter, m_byteSeatToEnter);
 				} else {
 					if (m_bPlayingNode) {
-						if (CCallbackManager::OnFinishNodePoint(m_wPlayerId, m_iNodePoint)) {
-							int iNewPoint = m_pNode->Process(this, m_iNodePoint, m_iNodeLastPoint, m_iNodeType, m_vecNodeVelocity);
-							m_iNodeLastPoint = m_iNodePoint;
-							m_iNodePoint = iNewPoint;
+						if (CCallbackManager::OnFinishNodePoint(m_wPlayerId, m_wNodePoint)) {
+							WORD wNewPoint = m_pNode->Process(this, m_wNodePoint, m_wNodeLastPoint, m_iNodeType, m_vecNodeVelocity);
+							m_wNodeLastPoint = m_wNodePoint;
+							m_wNodePoint = wNewPoint;
 						} else {
 							StopPlayingNode();
 						}
@@ -664,7 +664,7 @@ void CPlayerData::Process()
 			} else {
 				WORD wObjectId = m_wSurfingInfo - MAX_VEHICLES;
 				if (wObjectId > 0 && wObjectId < MAX_OBJECTS) {
-					CObject *pObject;
+					CObject *pObject = NULL;
 					CVector vecPos;
 
 					if (pNetGame->pObjectPool->bObjectSlotState[wObjectId]) {
@@ -689,7 +689,7 @@ void CPlayerData::Process()
 		}
 		// Are we performing the entry animation ?
 		if (m_bEntering) {
-			if ((dwThisTick - m_dwEnterExitTickCount) > (m_bJacking ? 5800 : 2500)) {
+			if (dwThisTick - m_dwEnterExitTickCount > static_cast<DWORD>(m_bJacking ? 5800 : 2500)) {
 				CVehicle *pVehicle = GetVehicle();
 				if (pVehicle) {
 					SetState(m_byteSeatToEnter == 0 ? PLAYER_STATE_DRIVER : PLAYER_STATE_PASSENGER);
@@ -750,13 +750,13 @@ void CPlayerData::Process()
 				int iShootTime = GetWeaponShootTime(m_byteWeaponId);
 
 				// shoot delay
-				if (iShootTime != -1 && iShootTime < m_dwShootDelay) {
-					iShootTime = m_dwShootDelay;
+				if (iShootTime != -1 && iShootTime < static_cast<int>(m_dwShootDelay)) {
+					iShootTime = static_cast<int>(m_dwShootDelay);
 				}
 
 				DWORD dwLastShootTime = dwThisTick - m_dwShootTickCount;
 
-				if (dwLastShootTime >= m_dwShootDelay) {
+				if (dwLastShootTime >= static_cast<int>(m_dwShootDelay)) {
 					SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM);
 				}
 
@@ -1040,7 +1040,7 @@ void CPlayerData::SetWeaponState(int iState)
 	m_pPlayer->aimSyncData.byteWeaponState = iState;
 }
 
-WORD CPlayerData::GetWeaponState()
+int CPlayerData::GetWeaponState()
 {
 	if (GetState() == PLAYER_STATE_ONFOOT) {
 		return m_pPlayer->aimSyncData.byteWeaponState;
@@ -1135,13 +1135,18 @@ BYTE CPlayerData::GetFightingStyle()
 
 void CPlayerData::SetAnimation(WORD wAnimationId, float fDelta, bool bLoop, bool bLockX, bool bLockY, bool bFreeze, int iTime)
 {
-	m_pPlayer->syncData.wAnimIndex = wAnimationId;
+	m_pPlayer->syncData.tAnimationData.wAnimIndex = wAnimationId;
 
 	if (wAnimationId == 0) {
-		m_pPlayer->syncData.wAnimFlags = 0;
+		m_pPlayer->syncData.tAnimationData.wAnimFlags = 0;
 	} else {
 		// TODO: convert fDelta to minifloat (8-bit float) format
-		m_pPlayer->syncData.wAnimFlags = (static_cast<BYTE>(fDelta) & 0xFF) | (bLoop << 8) | (bLockX << 9) | (bLockY << 10) | (bFreeze << 11) | (iTime << 12);
+		m_pPlayer->syncData.tAnimationData.wAnimFlags =   (static_cast<BYTE>(fDelta)& 0xFF)
+		                                                | (bLoop << 8)
+		                                                | (bLockX << 9)
+		                                                | (bLockY << 10)
+		                                                | (bFreeze << 11)
+		                                                | (static_cast<BYTE>(iTime) << 12);
 	}
 }
 
@@ -1153,19 +1158,19 @@ void CPlayerData::SetAnimationByName(char *szName, float fDelta, bool bLoop, boo
 
 void CPlayerData::ResetAnimation()
 {
-	m_pPlayer->syncData.wAnimIndex = 0;
-	m_pPlayer->syncData.wAnimFlags = 0;
+	m_pPlayer->syncData.tAnimationData.wAnimIndex = 0;
+	m_pPlayer->syncData.tAnimationData.wAnimFlags = 0;
 }
 
 void CPlayerData::GetAnimation(WORD *wAnimationId, float *fDelta, bool *bLoop, bool *bLockX, bool *bLockY, bool *bFreeze, int *iTime)
 {
-	*wAnimationId = m_pPlayer->syncData.wAnimIndex;
-	*fDelta = m_pPlayer->syncData.wAnimFlags & 0xFF;
-	*bLoop = (m_pPlayer->syncData.wAnimFlags >> 8 & 0x1) != 0;
-	*bLockX = (m_pPlayer->syncData.wAnimFlags >> 9 & 0x1) != 0;
-	*bLockY = (m_pPlayer->syncData.wAnimFlags >> 10 & 0x1) != 0;
-	*bFreeze = (m_pPlayer->syncData.wAnimFlags >> 11 & 0x1) != 0;
-	*iTime = (m_pPlayer->syncData.wAnimFlags >> 12 & 0xF);
+	*wAnimationId = m_pPlayer->syncData.tAnimationData.wAnimIndex;
+	*fDelta = static_cast<float>(m_pPlayer->syncData.tAnimationData.wAnimFlags & 0xFF);
+	*bLoop = (m_pPlayer->syncData.tAnimationData.wAnimFlags >> 8 & 0x1) != 0;
+	*bLockX = (m_pPlayer->syncData.tAnimationData.wAnimFlags >> 9 & 0x1) != 0;
+	*bLockY = (m_pPlayer->syncData.tAnimationData.wAnimFlags >> 10 & 0x1) != 0;
+	*bFreeze = (m_pPlayer->syncData.tAnimationData.wAnimFlags >> 11 & 0x1) != 0;
+	*iTime = (m_pPlayer->syncData.tAnimationData.wAnimFlags >> 12 & 0xF);
 }
 
 void CPlayerData::ApplyAnimation(char *szAnimationLib, char *szAnimationName, float fDelta, bool bLoop, bool bLockX, bool bLockY, bool bFreeze, int iTime)
@@ -1246,7 +1251,7 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float f
 	DWORD dwMoveKey = m_pPlayer->dwKeys;
 
 	if (iType == MOVE_TYPE_AUTO || iType == MOVE_TYPE_WALK || iType == MOVE_TYPE_RUN || iType == MOVE_TYPE_SPRINT) {
-		wUDKey = KEY_UP;
+		wUDKey = static_cast<WORD>(KEY_UP);
 
 		if (iType == MOVE_TYPE_AUTO && fSpeed == MOVE_SPEED_AUTO) {
 			iType = MOVE_TYPE_RUN;
@@ -1582,7 +1587,7 @@ void CPlayerData::ProcessDamage(WORD wDamagerId, float fHealthLoss, BYTE byteWea
 		}
 	}
 	// Save the last damager
-	m_iLastDamager = wDamagerId;
+	m_wLastDamagerId = wDamagerId;
 }
 
 void CPlayerData::ProcessVehicleDamage(WORD wDamagerId, WORD wVehicleId, BYTE byteWeaponId, CVector vecHit)
@@ -1650,7 +1655,7 @@ bool CPlayerData::EnterVehicle(WORD wVehicleId, BYTE byteSeatId, int iType)
 	}
 
 	// Validate the seat id
-	if (!CVehicleInfo::IsValidPassengerSeat(byteSeatId, pVehicle->customSpawn.iModelID)) {
+	if (!CVehicleInfo::IsValidPassengerSeat(byteSeatId, static_cast<WORD>(pVehicle->customSpawn.dwModelID))) {
 		return false;
 	}
 
@@ -1722,7 +1727,7 @@ bool CPlayerData::PutInVehicle(WORD wVehicleId, BYTE byteSeatId)
 	}
 
 	// Validate the seat id
-	if (!CVehicleInfo::IsValidPassengerSeat(byteSeatId, pVehicle->customSpawn.iModelID)) {
+	if (!CVehicleInfo::IsValidPassengerSeat(byteSeatId, static_cast<WORD>(pVehicle->customSpawn.dwModelID))) {
 		return false;
 	}
 
@@ -2018,7 +2023,7 @@ bool CPlayerData::PlayNode(int iNodeId, int iType)
 	// Get the node instance
 	m_pNode = pServer->GetNodeManager()->GetAt(iNodeId);
 	// Save the last point
-	m_iNodeLastPoint = m_pNode->GetPointId();
+	m_wNodeLastPoint = m_pNode->GetPointId();
 	// Save the node type
 	m_iNodeType = iType;
 	// Get the starting point
@@ -2032,7 +2037,7 @@ bool CPlayerData::PlayNode(int iNodeId, int iType)
 	m_pNode->SetLink(m_pNode->GetLinkId());
 	m_pNode->SetPoint(m_pNode->GetLinkPoint());
 	// Save the current point
-	m_iNodePoint = m_pNode->GetLinkPoint();
+	m_wNodePoint = m_pNode->GetLinkPoint();
 	// Get the destination point
 	CVector vecDestination;
 	m_pNode->GetPosition(&vecDestination);
@@ -2059,14 +2064,14 @@ void CPlayerData::StopPlayingNode()
 	m_vecNodeVelocity = CVector();
 	// Reset the node flag
 	m_bPlayingNode = false;
-	m_iNodePoint = 0;
-	m_iNodeLastPoint = 0;
+	m_wNodePoint = 0;
+	m_wNodeLastPoint = 0;
 	m_iNodeType = 0;
 	// Call the node finish callback
 	CCallbackManager::OnFinishNode(m_wPlayerId);
 }
 
-int CPlayerData::ChangeNode(int iNodeId, unsigned short wLinkId)
+WORD CPlayerData::ChangeNode(int iNodeId, unsigned short wLinkId)
 {
 	// Make sure the player is playing a node
 	if (!m_bPlayingNode) {

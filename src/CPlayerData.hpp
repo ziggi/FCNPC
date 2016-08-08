@@ -81,7 +81,7 @@ public:
 	void SetWeaponSkill(DWORD dwSkill, WORD wLevel);
 	WORD GetWeaponSkill(DWORD dwSkill);
 	void SetWeaponState(int iState);
-	WORD GetWeaponState();
+	int GetWeaponState();
 
 	int GetWeaponType(BYTE byteWeaponId);
 	bool SetWeaponReloadTime(BYTE byteWeaponId, int iTime);
@@ -180,7 +180,7 @@ public:
 
 	bool PlayNode(int iNodeId, int iType);
 	void StopPlayingNode();
-	int ChangeNode(int iNodeId, unsigned short wLinkId);
+	WORD ChangeNode(int iNodeId, unsigned short wLinkId);
 
 private:
 	WORD m_wPlayerId;
@@ -220,9 +220,9 @@ private:
 	BYTE m_byteHitType;
 	WORD m_wVehicleToEnter;
 	BYTE m_byteSeatToEnter;
-	int m_iLastDamager;
-	int m_iNodePoint;
-	int m_iNodeLastPoint;
+	WORD m_wLastDamagerId;
+	WORD m_wNodePoint;
+	WORD m_wNodeLastPoint;
 	int m_iNodeType;
 	bool m_bHasReload;
 	bool m_bHasInfiniteAmmo;

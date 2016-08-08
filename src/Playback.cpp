@@ -138,11 +138,11 @@ bool CPlayback::Process(CPlayerData *pPlayerData)
 			pPlayerData->SetHealth(vehicleSyncData.bytePlayerHealth);
 			pPlayerData->SetArmour(vehicleSyncData.bytePlayerArmour);
 			pPlayerData->SetWeapon(vehicleSyncData.bytePlayerWeapon);
-			pPlayerData->SetVehicleSiren(vehicleSyncData.byteSirenState);
+			pPlayerData->SetVehicleSiren(vehicleSyncData.byteSirenState != 0);
 
-			if (CVehicleInfo::IsAHydra(pVehicle->customSpawn.iModelID)) {
+			if (CVehicleInfo::IsAHydra(static_cast<WORD>(pVehicle->customSpawn.dwModelID))) {
 				pPlayerData->SetVehicleHydraThrusters(vehicleSyncData.wHydraReactorAngle[0]);
-			} else if (CVehicleInfo::IsATrainPart(pVehicle->customSpawn.iModelID)) {
+			} else if (CVehicleInfo::IsATrainPart(static_cast<WORD>(pVehicle->customSpawn.dwModelID))) {
 				pPlayerData->SetTrainSpeed(vehicleSyncData.fTrainSpeed);
 			}
 

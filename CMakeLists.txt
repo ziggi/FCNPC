@@ -21,8 +21,8 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 		${CMAKE_CURRENT_SOURCE_DIR}/src/snprintf/*.h
 	)
 
-	set (CMAKE_C_FLAGS "/Zp1")
-	set (CMAKE_CXX_FLAGS "/Zp1 /EHsc")
+	set (CMAKE_C_FLAGS "/Zp1 /W4")
+	set (CMAKE_CXX_FLAGS "/Zp1 /W4 /EHsc")
 	set (CMAKE_SHARED_LINKER_FLAGS "/NOLOGO /MACHINE:X86")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	add_definitions (-DLINUX -DSYSTEM_NAME="GNU/Linux")
@@ -32,7 +32,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 		${CMAKE_CURRENT_SOURCE_DIR}/src/fopen_s/*.h
 	)
 
-	set (FLAGS "-m32 -fPIC -O2 -w -fno-stack-protector -fpack-struct=1")
+	set (FLAGS "-m32 -fPIC -O2 -wAll -std=c++11 -fno-stack-protector -fpack-struct=1")
 	set (CMAKE_C_FLAGS ${FLAGS})
 	set (CMAKE_CXX_FLAGS ${FLAGS})
 	set (CMAKE_SHARED_LINKER_FLAGS "-fshort-wchar -shared")

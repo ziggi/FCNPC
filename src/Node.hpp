@@ -23,8 +23,8 @@ public:
 	~CNode();
 
 	bool Initialize();
-	int Process(CPlayerData *pPlayerData, int iPointId, int iLastPoint, int iType, CVector vecVelocity);
-	int ProcessNodeChange(CPlayerData *pPlayerData, WORD wLinkId, int iType, CVector vecVelocity);
+	WORD Process(CPlayerData *pPlayerData, WORD wPointId, WORD wLastPoint, int iType, CVector vecVelocity);
+	WORD ProcessNodeChange(CPlayerData *pPlayerData, WORD wLinkId, int iType, CVector vecVelocity);
 
 	void SetPaused(bool bPaused);
 	void GetPosition(CVector *pVecPosition);
@@ -41,7 +41,7 @@ public:
 	WORD GetLinkPoint();
 
 	void SetLink(WORD wLinkId);
-	void SetPoint(WORD usPointId);
+	void SetPoint(WORD wPointId);
 
 private:
 	int m_iNodeId;

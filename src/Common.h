@@ -30,13 +30,11 @@ extern logprintf_t          logprintf;
 #define SAFE_RELEASE(ptr)   if (ptr) { ptr->Release(); ptr = NULL; }
 #define PAD(a, b)           char a[b]
 #ifndef CHECK_PARAMS
-#define CHECK_PARAMS(m,n)                                                                                           \
-		do {                                                                                                           \
-			if (params[0] != (m * 4)) {                                                                                 \
-				logprintf("[FCNPC] Error: Incorrect parameter count for \"%s\", %d != %d\n", n, m, ((int)params[0]) / 4); \
-				return 0;                                                                                               \
-			}                                                                                                           \
-		} while (0)
+#define CHECK_PARAMS(m,n) \
+	if (params[0] != (m * 4)) { \
+		logprintf("[FCNPC] Error: Incorrect parameter count for \"%s\", %d != %d\n", n, m, (static_cast<int>(params[0])) / 4); \
+		return 0; \
+	}
 #endif
 // Plugin exports
 #define PLUGIN_DATA_NETGAME        225

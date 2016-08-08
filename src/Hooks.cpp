@@ -43,7 +43,7 @@ struct t_OnPlayerWeaponShot
 	WORD wPlayerId;
 	BYTE byteWeaponId;
 	int iHitType;
-	int iHitId;
+	WORD wHitId;
 	CVector vecHit;
 };
 
@@ -130,11 +130,11 @@ int amx_Push_Hook(AMX *amx, cell value)
 	if (bGiveDamage || bTakeDamage) {
 		switch (bytePushCount) {
 			case 4:
-				pDamage.wPlayerId = value;
+				pDamage.wPlayerId = static_cast<WORD>(value);
 				break;
 
 			case 3:
-				pDamage.wSecondPlayerId = value;
+				pDamage.wSecondPlayerId = static_cast<WORD>(value);
 				break;
 
 			case 2:
@@ -142,11 +142,11 @@ int amx_Push_Hook(AMX *amx, cell value)
 				break;
 
 			case 1:
-				pDamage.byteWeaponId = value;
+				pDamage.byteWeaponId = static_cast<BYTE>(value);
 				break;
 
 			case 0:
-				pDamage.iBodypart = value;
+				pDamage.iBodypart = static_cast<int>(value);
 				break;
 		}
 		// Increase the parameters count
@@ -154,19 +154,19 @@ int amx_Push_Hook(AMX *amx, cell value)
 	} else if (bWeaponShot) {
 		switch (bytePushCount) {
 			case 6:
-				pWeaponShot.wPlayerId = value;
+				pWeaponShot.wPlayerId = static_cast<WORD>(value);
 				break;
 
 			case 5:
-				pWeaponShot.byteWeaponId = value;
+				pWeaponShot.byteWeaponId = static_cast<BYTE>(value);
 				break;
 
 			case 4:
-				pWeaponShot.iHitType = value;
+				pWeaponShot.iHitType = static_cast<int>(value);
 				break;
 
 			case 3:
-				pWeaponShot.iHitId = value;
+				pWeaponShot.wHitId = static_cast<WORD>(value);
 				break;
 
 			case 2:
@@ -186,11 +186,11 @@ int amx_Push_Hook(AMX *amx, cell value)
 	} else if (bStreamIn) {
 		switch (bytePushCount) {
 			case 1:
-				pStream.wPlayerId = value;
+				pStream.wPlayerId = static_cast<WORD>(value);
 				break;
 
 			case 0:
-				pStream.wForPlayerId = value;
+				pStream.wForPlayerId = static_cast<WORD>(value);
 				break;
 		}
 		// Increase the parameters count
@@ -198,11 +198,11 @@ int amx_Push_Hook(AMX *amx, cell value)
 	} else if (bStreamOut) {
 		switch (bytePushCount) {
 			case 1:
-				pStream.wPlayerId = value;
+				pStream.wPlayerId = static_cast<WORD>(value);
 				break;
 
 			case 0:
-				pStream.wForPlayerId = value;
+				pStream.wForPlayerId = static_cast<WORD>(value);
 				break;
 		}
 		// Increase the parameters count
@@ -261,11 +261,11 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 
 		// call custom callback
 		if (pWeaponShot.iHitType == BULLET_HIT_TYPE_VEHICLE) {
-			WORD wPlayerId = pServer->GetVehicleSeatPlayerId(pWeaponShot.iHitId, 0);
+			WORD wPlayerId = pServer->GetVehicleSeatPlayerId(pWeaponShot.wHitId, 0);
 
 			CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wPlayerId);
 			if (pPlayerData) {
-				pPlayerData->ProcessVehicleDamage(pWeaponShot.wPlayerId, pWeaponShot.iHitId, pWeaponShot.byteWeaponId, pWeaponShot.vecHit);
+				pPlayerData->ProcessVehicleDamage(pWeaponShot.wPlayerId, pWeaponShot.wHitId, pWeaponShot.byteWeaponId, pWeaponShot.vecHit);
 			}
 		}
 

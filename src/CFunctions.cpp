@@ -82,10 +82,11 @@ int CFunctions::GetRakServer()
 	return pfn__GetRakServer();
 }
 
-int CFunctions::GetFreePlayerSlot()
+WORD CFunctions::GetFreePlayerSlot()
 {
 	// Loop through all the players
-	for (int i = (GetMaxPlayers() - 1); i != -1; i--) {
+	WORD wMaxPlayers = GetMaxPlayers();
+	for (WORD i = 0; i < wMaxPlayers; i++) {
 		// Is he not connected ?
 		if (!pNetGame->pPlayerPool->bIsPlayerConnectedEx[i]) {
 			return i;
@@ -94,11 +95,11 @@ int CFunctions::GetFreePlayerSlot()
 	return INVALID_PLAYER_ID;
 }
 
-int CFunctions::NewPlayer(char *szName)
+WORD CFunctions::NewPlayer(char *szName)
 {
 	// Get a free player slot
-	WORD wPlayerId;
-	if ((wPlayerId = GetFreePlayerSlot()) == INVALID_PLAYER_ID) {
+	WORD wPlayerId = GetFreePlayerSlot();
+	if (wPlayerId == INVALID_PLAYER_ID) {
 		return INVALID_PLAYER_ID;
 	}
 
@@ -155,19 +156,19 @@ void CFunctions::PlayerExitVehicle(CPlayer *pPlayer, WORD wVehicleId)
 	pfn__CPlayer__ExitVehicle(pPlayer, wVehicleId);
 }
 
-CVector *CFunctions::GetVehicleModelInfoEx(int iModelId, int iInfoType)
+CVector *CFunctions::GetVehicleModelInfoEx(DWORD dwModelID, int iInfoType)
 {
-	return pfn__GetVehicleModelInfo(iModelId, iInfoType);
+	return pfn__GetVehicleModelInfo(dwModelID, iInfoType);
 }
 
-int CFunctions::GetMaxPlayers()
+WORD CFunctions::GetMaxPlayers()
 {
-	return pfn__CConsole__GetIntVariable(pConsole, "maxplayers");
+	return static_cast<WORD>(pfn__CConsole__GetIntVariable(pConsole, "maxplayers"));
 }
 
-int CFunctions::GetMaxNPC()
+WORD CFunctions::GetMaxNPC()
 {
-	return pfn__CConsole__GetIntVariable(pConsole, "maxnpc");
+	return static_cast<WORD>(pfn__CConsole__GetIntVariable(pConsole, "maxnpc"));
 }
 
 void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE byteWeaponId, CVector vecPoint)
