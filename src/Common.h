@@ -11,8 +11,6 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#include <math.h>
-
 // logprintf function defintion
 typedef void (* logprintf_t)(const char *szFormat, ...);
 extern logprintf_t          logprintf;

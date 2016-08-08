@@ -90,11 +90,6 @@ BYTE CServer::Initialize(AMX *pAMX)
 		return 3;
 	}
 
-	/*	// Create threads
-		m_pDamageThread = new CThread(CThreadFunctions::DamageThread);
-		if (!m_pDamageThread || !m_pDamageThread->Start())
-			return 4;*/
-
 	// Check the maxnpc from the config
 	if (CFunctions::GetMaxNPC() == 0) {
 		logprintf("Warning: the maxnpc limit is 0 (you will not be able to create NPCs unless you change it)");
