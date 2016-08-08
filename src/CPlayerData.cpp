@@ -597,7 +597,8 @@ void CPlayerData::Process()
 		if (m_wMoveId >= 0 && m_wMoveId < MAX_PLAYERS && IsMovingAtPlayer(m_wMoveId)) {
 			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[m_wMoveId];
 			if (pPlayer) {
-				if (m_vecMovePlayerPosition != pPlayer->vecPosition) {
+				bool bIsNeedToUpdate = CMath::GetDistanceBetween3DPoints(m_vecMovePlayerPosition, pPlayer->vecPosition) > 3.0;
+				if (bIsNeedToUpdate) {
 					m_vecMovePlayerPosition = pPlayer->vecPosition;
 					UpdateMovingData(pPlayer->vecPosition, m_fMoveRadius, m_bMoveSetAngle, m_fMoveSpeed);
 				}
