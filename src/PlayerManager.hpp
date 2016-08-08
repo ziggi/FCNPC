@@ -12,6 +12,8 @@
 #define PLAYERMANAGER_H
 
 #include "CPlayerData.hpp"
+#include <map>
+#include <list>
 
 class CPlayerManager
 {
@@ -32,9 +34,7 @@ public:
 	bool IsNPC(WORD wPlayerId);
 
 private:
-	WORD m_players;
-	bool m_bConnected[MAX_PLAYERS];
-	CPlayerData *m_pPlayerData[MAX_PLAYERS];
+	std::map<WORD, CPlayerData*> m_NpcMap;
 };
 
 #endif
