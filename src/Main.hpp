@@ -12,6 +12,7 @@
 #if defined(WIN32)
 	#include <windows.h>
 
+	#pragma warning(disable : 4201)
 	#define STDCALL __stdcall
 	#define THISCALL __thiscall
 #elif defined(LINUX)
