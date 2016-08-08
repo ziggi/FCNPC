@@ -20,7 +20,7 @@ You can use Visual Studio for build. Just use CMake for generate VS project:
 cd FCNPC
 mkdir build
 cd build
-cmake ../ -G "Visual Studio 12"
+cmake .. -G "Visual Studio 12"
 ```
 
 # Building (Linux)
@@ -28,7 +28,7 @@ cmake ../ -G "Visual Studio 12"
 cd FCNPC
 mkdir build
 cd build
-cmake ../
+cmake ..
 make
 ```
 
