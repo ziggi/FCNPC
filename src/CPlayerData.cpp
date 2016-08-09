@@ -764,7 +764,7 @@ void CPlayerData::Process()
 				}
 
 				// shoot time
-				if (iShootTime != -1 && dwLastShootTime >= static_cast<DWORD>(iShootTime)) {
+				if (iShootTime != -1 && iShootTime <= static_cast<int>(dwLastShootTime)) {
 					m_wAmmo--;
 
 					// Check for reload
