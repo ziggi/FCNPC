@@ -1418,6 +1418,8 @@ void CPlayerData::AimAt(CVector vecPoint, bool bShoot, int iShootDelay, bool bSe
 	DWORD dwUpdateRate = pServer->GetUpdateRate();
 	if (iShootDelay <= static_cast<int>(dwUpdateRate)) {
 		m_dwShootDelay = dwUpdateRate + 5;
+	} else {
+		m_dwShootDelay = static_cast<DWORD>(iShootDelay);
 	}
 
 	// set the shooting flag
