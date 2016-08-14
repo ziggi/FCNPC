@@ -269,6 +269,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetAngle(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_GiveAngle(npcid, Float:angle);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GiveAngle(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_GiveAngle");
@@ -523,6 +524,28 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVelocity(AMX *amx, cell *params)
 
 	// Set the player velocity
 	pPlayerData->SetVelocity(vecVelocity);
+	return 1;
+}
+
+// native FCNPC_GiveVelocity(npcid, Float:x, Float:y, Float:z);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GiveVelocity(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(4, "FCNPC_GiveVelocity");
+
+	// Get the params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+	CVector vecVelocity(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// Set the player velocity
+	CVector vecOldVelocity;
+	pPlayerData->GetVelocity(&vecOldVelocity);
+	pPlayerData->SetVelocity(vecOldVelocity + vecVelocity);
 	return 1;
 }
 

@@ -104,6 +104,7 @@ native Float:FCNPC_GetAngle(npcid);
 native FCNPC_SetQuaternion(npcid, Float:w, Float:x, Float:y, Float:z);
 native FCNPC_GetQuaternion(npcid, &Float:w, &Float:x, &Float:y, &Float:z);
 native FCNPC_SetVelocity(npcid, Float:x, Float:y, Float:z);
+native FCNPC_GiveVelocity(npcid, Float:x, Float:y, Float:z);
 native FCNPC_GetVelocity(npcid, &Float:x, &Float:y, &Float:z);
 native FCNPC_SetInterior(npcid, interiorid);
 native FCNPC_GetInterior(npcid);

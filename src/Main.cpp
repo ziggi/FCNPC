@@ -111,6 +111,7 @@ AMX_NATIVE_INFO PluginNatives[ ] = {
 	{"FCNPC_SetAngleToPlayer", CNatives::FCNPC_SetAngleToPlayer},
 	{"FCNPC_GetAngle", CNatives::FCNPC_GetAngle},
 	{"FCNPC_SetVelocity", CNatives::FCNPC_SetVelocity},
+	{"FCNPC_GiveVelocity", CNatives::FCNPC_GiveVelocity},
 	{"FCNPC_GetVelocity", CNatives::FCNPC_GetVelocity},
 	{"FCNPC_SetInterior", CNatives::FCNPC_SetInterior},
 	{"FCNPC_GetInterior", CNatives::FCNPC_GetInterior},
