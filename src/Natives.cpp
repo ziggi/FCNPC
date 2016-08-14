@@ -1261,6 +1261,27 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetAmmo(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_GiveAmmo(npcid, ammo);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GiveAmmo(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_GiveAmmo");
+
+	// Get the params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+	WORD wAmmo = static_cast<WORD>(params[2]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// Set the player ammo
+	WORD wNewAmmo = pPlayerData->GetAmmo() + wAmmo;
+	pPlayerData->SetAmmo(wNewAmmo);
+	return wNewAmmo;
+}
+
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetAmmo(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_GetAmmo");

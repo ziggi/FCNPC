@@ -127,6 +127,7 @@ native FCNPC_GetSkin(npcid);
 native FCNPC_SetWeapon(npcid, weaponid);
 native FCNPC_GetWeapon(npcid);
 native FCNPC_SetAmmo(npcid, ammo);
+native FCNPC_GiveAmmo(npcid, ammo);
 native FCNPC_GetAmmo(npcid);
 native FCNPC_SetWeaponSkillLevel(npcid, skill, level);
 native FCNPC_GetWeaponSkillLevel(npcid, skill);
