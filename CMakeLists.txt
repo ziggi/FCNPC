@@ -19,6 +19,8 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 		${CMAKE_CURRENT_SOURCE_DIR}/src/Exports.def
 		${CMAKE_CURRENT_SOURCE_DIR}/src/snprintf/*.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/snprintf/*.h
+		${CMAKE_CURRENT_SOURCE_DIR}/src/mapandreas/*.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/mapandreas/*.h
 	)
 
 	set (CMAKE_C_FLAGS "/Zp1 /W4")
@@ -30,6 +32,8 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	set (FCNPC_SRC
 		${CMAKE_CURRENT_SOURCE_DIR}/src/fopen_s/*.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/fopen_s/*.h
+		${CMAKE_CURRENT_SOURCE_DIR}/src/mapandreas/*.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/mapandreas/*.h
 	)
 
 	set (FLAGS "-m32 -fPIC -O2 -fno-stack-protector -fpack-struct=1 -Wall -Wno-attributes -Wno-strict-aliasing -Wno-sequence-point")
