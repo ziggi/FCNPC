@@ -285,8 +285,9 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GiveAngle(AMX *amx, cell *params)
 	}
 
 	// Set the player angle
-	pPlayerData->SetAngle(pPlayerData->GetAngle() + fAngle);
-	return 1;
+	float fNewAngle = pPlayerData->GetAngle() + fAngle;
+	pPlayerData->SetAngle(fNewAngle);
+	return amx_ftoc(fNewAngle);
 }
 
 // native FCNPC_SetAngleToPos(npcid, Float:X, Float:Y);

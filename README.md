@@ -97,7 +97,7 @@ native FCNPC_IsStreamedForAnyone(npcid);
 native FCNPC_SetPosition(npcid, Float:x, Float:y, Float:z);
 native FCNPC_GetPosition(npcid, &Float:x, &Float:y, &Float:z);
 native FCNPC_SetAngle(npcid, Float:angle);
-native FCNPC_GiveAngle(npcid, Float:angle);
+native Float:FCNPC_GiveAngle(npcid, Float:angle);
 native FCNPC_SetAngleToPos(npcid, Float:x, Float:y);
 native FCNPC_SetAngleToPlayer(npcid, playerid);
 native Float:FCNPC_GetAngle(npcid);
