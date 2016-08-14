@@ -42,7 +42,7 @@
 #include <cmath>
 #include <cstring>
 // Library includes
-#include <samp-plugin-sdk/plugin.h>
+#include <sdk/plugin.h>
 #include <raknet/BitStream.h>
 #include <mapandreas/MapAndreas.h>
 #include <subhook/subhook.h>
