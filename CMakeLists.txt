@@ -17,10 +17,8 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 
 	set (FCNPC_SRC
 		${CMAKE_CURRENT_SOURCE_DIR}/src/Exports.def
-		${CMAKE_CURRENT_SOURCE_DIR}/src/snprintf/*.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/snprintf/*.h
-		${CMAKE_CURRENT_SOURCE_DIR}/src/mapandreas/*.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/mapandreas/*.h
+		${CMAKE_CURRENT_SOURCE_DIR}/lib/snprintf/*.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/lib/snprintf/*.h
 	)
 
 	set (CMAKE_C_FLAGS "/Zp1 /W4")
@@ -30,10 +28,8 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	add_definitions (-DLINUX -DSYSTEM_NAME="GNU/Linux")
 
 	set (FCNPC_SRC
-		${CMAKE_CURRENT_SOURCE_DIR}/src/fopen_s/*.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/fopen_s/*.h
-		${CMAKE_CURRENT_SOURCE_DIR}/src/mapandreas/*.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/mapandreas/*.h
+		${CMAKE_CURRENT_SOURCE_DIR}/lib/fopen_s/*.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/lib/fopen_s/*.h
 	)
 
 	set (FLAGS "-m32 -fPIC -O2 -fno-stack-protector -fpack-struct=1 -Wall -Wno-attributes -Wno-strict-aliasing -Wno-sequence-point")
@@ -44,14 +40,13 @@ endif ()
 
 include_directories (
 	${CMAKE_CURRENT_SOURCE_DIR}/src
-	${CMAKE_CURRENT_SOURCE_DIR}/src/sdk
-	${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/amx
+	${CMAKE_CURRENT_SOURCE_DIR}/lib
 )
 
 set (SUBHOOK_STATIC true)
 set (SUBHOOK_NO_TESTS true)
 add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/src/subhook
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/subhook
 )
 
 file (GLOB FCNPC_SRC
@@ -59,14 +54,16 @@ file (GLOB FCNPC_SRC
 	${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/amx/*.c
-	${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/amx/*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/src/strlcpy/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/strlcpy/*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/src/raknet/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/raknet/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/samp-plugin-sdk/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/samp-plugin-sdk/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/samp-plugin-sdk/sdk/amx/*.c
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/samp-plugin-sdk/sdk/amx/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/strlcpy/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/strlcpy/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/raknet/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/raknet/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/mapandreas/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/mapandreas/*.h
 )
 
 add_library (${PROJECT_NAME} SHARED ${FCNPC_SRC})

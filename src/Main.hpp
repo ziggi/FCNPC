@@ -11,17 +11,18 @@
 // OS includes
 #if defined(WIN32)
 	#include <windows.h>
-	#include "snprintf/snprintf.h"
+	#include <snprintf/snprintf.h>
 
 	#pragma warning(disable : 4201)
 	#pragma warning(disable : 4206)
+	#pragma warning(disable : 4127)
 	#define STDCALL __stdcall
 	#define THISCALL __thiscall
 #elif defined(LINUX)
-	#include "pthread.h"
-	#include "unistd.h"
+	#include <pthread.h>
+	#include <unistd.h>
 	#include <sys/mman.h>
-	#include "fopen_s/fopen_s.h"
+	#include <fopen_s/fopen_s.h>
 
 	#define BOOL    int32_t
 	#define DWORD   uint32_t
@@ -40,14 +41,14 @@
 #include <cstdarg>
 #include <cmath>
 #include <cstring>
-#include "subhook/subhook.h"
-#include "strlcpy/strlcpy.h"
+// Library includes
+#include <samp-plugin-sdk/plugin.h>
+#include <raknet/BitStream.h>
+#include <mapandreas/MapAndreas.h>
+#include <subhook/subhook.h>
+#include <strlcpy/strlcpy.h>
 // ExceptionHandler includes
 #include "CExceptionHandler.hpp"
-// Library includes
-#include <sdk/plugin.h>
-#include "raknet/BitStream.h"
-#include "mapandreas/MapAndreas.h"
 // Utils includes
 #include "CUtils.hpp"
 #include "Common.h"
