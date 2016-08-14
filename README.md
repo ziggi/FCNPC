@@ -199,6 +199,7 @@ native FCNPC_SetVehicleGearState(npcid, gear_state);
 native FCNPC_GetVehicleGearState(npcid);
 
 native FCNPC_SetSurfingOffsets(npcid, Float:x, Float:y, Float:z);
+native FCNPC_GiveSurfingOffsets(npcid, Float:x, Float:y, Float:z);
 native FCNPC_GetSurfingOffsets(npcid, &Float:x, &Float:y, &Float:z);
 native FCNPC_SetSurfingVehicle(npcid, vehicleid);
 native FCNPC_GetSurfingVehicle(npcid);

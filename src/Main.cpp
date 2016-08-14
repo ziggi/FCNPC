@@ -206,6 +206,7 @@ AMX_NATIVE_INFO PluginNatives[ ] = {
 	{"FCNPC_GetVehicleGearState", CNatives::FCNPC_GetVehicleGearState},
 
 	{"FCNPC_SetSurfingOffsets", CNatives::FCNPC_SetSurfingOffsets},
+	{"FCNPC_GiveSurfingOffsets", CNatives::FCNPC_GiveSurfingOffsets},
 	{"FCNPC_GetSurfingOffsets", CNatives::FCNPC_GetSurfingOffsets},
 	{"FCNPC_SetSurfingVehicle", CNatives::FCNPC_SetSurfingVehicle},
 	{"FCNPC_GetSurfingVehicle", CNatives::FCNPC_GetSurfingVehicle},

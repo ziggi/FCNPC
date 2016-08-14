@@ -133,6 +133,7 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_GetVehicleGearState(AMX *amx, cell *params);
 
 	static cell AMX_NATIVE_CALL FCNPC_SetSurfingOffsets(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_GiveSurfingOffsets(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetSurfingOffsets(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetSurfingVehicle(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetSurfingVehicle(AMX *amx, cell *params);

@@ -2201,6 +2201,28 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetSurfingOffsets(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_GiveSurfingOffsets(npcid, Float:fX, Float:fY, Float:fZ);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GiveSurfingOffsets(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(4, "FCNPC_GiveSurfingOffsets");
+
+	// Get params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+	CVector vecPoint(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// Change vehicle health
+	CVector vecOldPoint;
+	pPlayerData->GetSurfingOffsets(&vecOldPoint);
+	pPlayerData->SetSurfingOffsets(vecOldPoint + vecPoint);
+	return 1;
+}
+
 // native FCNPC_GetSurfingOffsets(npcid, &Float:fX, &Float:fY, &Float:fZ);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetSurfingOffsets(AMX *amx, cell *params)
 {
