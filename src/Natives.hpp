@@ -29,6 +29,7 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_IsStreamedForAnyone(AMX *amx, cell *params);
 
 	static cell AMX_NATIVE_CALL FCNPC_SetPosition(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_GivePosition(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetPosition(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetQuaternion(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GiveQuaternion(AMX *amx, cell *params);

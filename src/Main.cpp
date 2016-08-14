@@ -102,6 +102,7 @@ AMX_NATIVE_INFO PluginNatives[ ] = {
 	{"FCNPC_IsStreamedForAnyone", CNatives::FCNPC_IsStreamedForAnyone},
 
 	{"FCNPC_SetPosition", CNatives::FCNPC_SetPosition},
+	{"FCNPC_GivePosition", CNatives::FCNPC_GivePosition},
 	{"FCNPC_GetPosition", CNatives::FCNPC_GetPosition},
 	{"FCNPC_SetQuaternion", CNatives::FCNPC_SetQuaternion},
 	{"FCNPC_GiveQuaternion", CNatives::FCNPC_GiveQuaternion},

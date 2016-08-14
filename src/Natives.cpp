@@ -208,6 +208,27 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetPosition(AMX *amx, cell *params)
 	return 1;
 }
 
+cell AMX_NATIVE_CALL CNatives::FCNPC_GivePosition(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(4, "FCNPC_GivePosition");
+
+	// Get the params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+	CVector vecPoint(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// Set the player position
+	CVector vecOldPoint;
+	pPlayerData->GetPosition(&vecOldPoint);
+	pPlayerData->SetPosition(vecOldPoint + vecPoint);
+	return 1;
+}
+
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetPosition(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(4, "FCNPC_GetPosition");
