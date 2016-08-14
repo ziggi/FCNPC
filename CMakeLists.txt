@@ -41,7 +41,7 @@ endif ()
 include_directories (
 	${CMAKE_CURRENT_SOURCE_DIR}/src
 	${CMAKE_CURRENT_SOURCE_DIR}/lib
-	${CMAKE_CURRENT_SOURCE_DIR}/lib/sdk/amx
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/samp-plugin-sdk/amx
 )
 
 set (SUBHOOK_STATIC true)
@@ -57,8 +57,8 @@ file (GLOB FCNPC_SRC
 	${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/samp-plugin-sdk/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/samp-plugin-sdk/*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/lib/samp-plugin-sdk/sdk/amx/*.c
-	${CMAKE_CURRENT_SOURCE_DIR}/lib/samp-plugin-sdk/sdk/amx/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/samp-plugin-sdk/amx/*.c
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/samp-plugin-sdk/amx/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/strlcpy/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/strlcpy/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/raknet/*.cpp
