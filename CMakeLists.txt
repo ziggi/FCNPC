@@ -41,6 +41,7 @@ endif ()
 include_directories (
 	${CMAKE_CURRENT_SOURCE_DIR}/src
 	${CMAKE_CURRENT_SOURCE_DIR}/lib
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/sdk/amx
 )
 
 set (SUBHOOK_STATIC true)
