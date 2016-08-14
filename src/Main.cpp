@@ -137,6 +137,7 @@ AMX_NATIVE_INFO PluginNatives[ ] = {
 	{"FCNPC_GiveAmmo", CNatives::FCNPC_SetAmmo},
 	{"FCNPC_GetAmmo", CNatives::FCNPC_GetAmmo},
 	{"FCNPC_SetWeaponSkillLevel", CNatives::FCNPC_SetWeaponSkillLevel},
+	{"FCNPC_GiveWeaponSkillLevel", CNatives::FCNPC_GiveWeaponSkillLevel},
 	{"FCNPC_GetWeaponSkillLevel", CNatives::FCNPC_GetWeaponSkillLevel},
 	{"FCNPC_SetWeaponState", CNatives::FCNPC_SetWeaponState},
 	{"FCNPC_GetWeaponState", CNatives::FCNPC_GetWeaponState},

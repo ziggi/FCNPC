@@ -1324,6 +1324,31 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponSkillLevel(AMX *amx, cell *params)
 	return 1;
 }
 
+cell AMX_NATIVE_CALL CNatives::FCNPC_GiveWeaponSkillLevel(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(3, "FCNPC_GiveWeaponSkillLevel");
+
+	// Get the params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+	DWORD dwSkill = static_cast<DWORD>(params[2]);
+	WORD wLevel = static_cast<WORD>(params[3]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	if (dwSkill < 0 || dwSkill > 10) {
+		return 0;
+	}
+
+	// Set the player weapon skill level
+	WORD wNewLevel = pPlayerData->GetWeaponSkill(dwSkill) + wLevel;
+	pPlayerData->SetWeaponSkill(dwSkill, wNewLevel);
+	return wNewLevel;
+}
+
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponSkillLevel(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_GetWeaponSkillLevel");
