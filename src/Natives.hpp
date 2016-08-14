@@ -31,6 +31,7 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_SetPosition(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetPosition(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetQuaternion(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_GiveQuaternion(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetQuaternion(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetAngle(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GiveAngle(AMX *amx, cell *params);

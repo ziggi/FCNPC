@@ -102,6 +102,7 @@ native FCNPC_SetAngleToPos(npcid, Float:x, Float:y);
 native FCNPC_SetAngleToPlayer(npcid, playerid);
 native Float:FCNPC_GetAngle(npcid);
 native FCNPC_SetQuaternion(npcid, Float:w, Float:x, Float:y, Float:z);
+native FCNPC_GiveQuaternion(npcid, Float:w, Float:x, Float:y, Float:z);
 native FCNPC_GetQuaternion(npcid, &Float:w, &Float:x, &Float:y, &Float:z);
 native FCNPC_SetVelocity(npcid, Float:x, Float:y, Float:z);
 native FCNPC_GiveVelocity(npcid, Float:x, Float:y, Float:z);

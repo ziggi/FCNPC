@@ -460,6 +460,41 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetQuaternion(AMX *amx, cell *params)
 	return 1;
 }
 
+cell AMX_NATIVE_CALL CNatives::FCNPC_GiveQuaternion(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(5, "FCNPC_GiveQuaternion");
+
+	// Get the params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+	float *fQuaternion = new float[4];
+	fQuaternion[0] = amx_ctof(params[2]);
+	fQuaternion[1] = amx_ctof(params[3]);
+	fQuaternion[2] = amx_ctof(params[4]);
+	fQuaternion[3] = amx_ctof(params[5]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// Set the player quaternion
+	float *fOldQuaternion = new float[4];
+	pPlayerData->GetQuaternion(fOldQuaternion);
+	
+	float *fNewQuaternion = new float[4];
+	fNewQuaternion[0] = fOldQuaternion[0] + fQuaternion[0];
+	fNewQuaternion[1] = fOldQuaternion[1] + fQuaternion[1];
+	fNewQuaternion[2] = fOldQuaternion[2] + fQuaternion[2];
+	fNewQuaternion[3] = fOldQuaternion[3] + fQuaternion[3];
+	
+	pPlayerData->SetQuaternion(fNewQuaternion);
+	SAFE_DELETE(fQuaternion);
+	SAFE_DELETE(fOldQuaternion);
+	SAFE_DELETE(fNewQuaternion);
+	return 1;
+}
+
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetQuaternion(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(5, "FCNPC_GetQuaternion");
