@@ -115,6 +115,7 @@ native FCNPC_SetHealth(npcid, Float:health);
 native Float:FCNPC_GiveHealth(npcid, Float:health);
 native Float:FCNPC_GetHealth(npcid);
 native FCNPC_SetArmour(npcid, Float:armour);
+native FCNPC_GiveArmour(npcid, Float:armour);
 native Float:FCNPC_GetArmour(npcid);
 
 native FCNPC_SetInvulnerable(npcid, bool:invulnerable = true);

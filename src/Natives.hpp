@@ -45,6 +45,7 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_GiveHealth(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetHealth(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetArmour(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_GiveArmour(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetArmour(AMX *amx, cell *params);
 
 	static cell AMX_NATIVE_CALL FCNPC_SetInvulnerable(AMX *amx, cell *params);

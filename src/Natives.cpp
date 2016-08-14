@@ -668,6 +668,27 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetArmour(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_GiveArmour(npcid, Float:armour);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GiveArmour(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_GiveArmour");
+
+	// Get the params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+	float fArmour = amx_ctof(params[2]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// Set the player armour
+	float fNewArmour = pPlayerData->GetArmour() + fArmour;
+	pPlayerData->SetArmour(fNewArmour);
+	return amx_ftoc(fNewArmour);
+}
+
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetArmour(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_GetArmour");

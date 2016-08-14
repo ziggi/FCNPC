@@ -122,6 +122,7 @@ AMX_NATIVE_INFO PluginNatives[ ] = {
 	{"FCNPC_GiveHealth", CNatives::FCNPC_GiveHealth},
 	{"FCNPC_GetHealth", CNatives::FCNPC_GetHealth},
 	{"FCNPC_SetArmour", CNatives::FCNPC_SetArmour},
+	{"FCNPC_GiveArmour", CNatives::FCNPC_GiveArmour},
 	{"FCNPC_GetArmour", CNatives::FCNPC_GetArmour},
 
 	{"FCNPC_SetInvulnerable", CNatives::FCNPC_SetInvulnerable},
