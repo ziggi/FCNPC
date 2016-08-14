@@ -269,6 +269,25 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetAngle(AMX *amx, cell *params)
 	return 1;
 }
 
+cell AMX_NATIVE_CALL CNatives::FCNPC_GiveAngle(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_GiveAngle");
+
+	// Get the params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+	float fAngle = amx_ctof(params[2]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// Set the player angle
+	pPlayerData->SetAngle(pPlayerData->GetAngle() + fAngle);
+	return 1;
+}
+
 // native FCNPC_SetAngleToPos(npcid, Float:X, Float:Y);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetAngleToPos(AMX *amx, cell *params)
 {

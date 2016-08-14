@@ -33,6 +33,7 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_SetQuaternion(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetQuaternion(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetAngle(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_GiveAngle(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetAngleToPos(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetAngleToPlayer(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetAngle(AMX *amx, cell *params);

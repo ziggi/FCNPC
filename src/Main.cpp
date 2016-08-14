@@ -106,6 +106,7 @@ AMX_NATIVE_INFO PluginNatives[ ] = {
 	{"FCNPC_SetQuaternion", CNatives::FCNPC_SetQuaternion},
 	{"FCNPC_GetQuaternion", CNatives::FCNPC_GetQuaternion},
 	{"FCNPC_SetAngle", CNatives::FCNPC_SetAngle},
+	{"FCNPC_GiveAngle", CNatives::FCNPC_GiveAngle},
 	{"FCNPC_SetAngleToPos", CNatives::FCNPC_SetAngleToPos},
 	{"FCNPC_SetAngleToPlayer", CNatives::FCNPC_SetAngleToPlayer},
 	{"FCNPC_GetAngle", CNatives::FCNPC_GetAngle},
