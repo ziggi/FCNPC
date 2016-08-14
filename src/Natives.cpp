@@ -298,15 +298,16 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GiveAngle(AMX *amx, cell *params)
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);
 	float fAngle = amx_ctof(params[2]);
+	float fNewAngle = 0.0f;
 
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return amx_ftoc(fNewAngle);
 	}
 
 	// Set the player angle
-	float fNewAngle = pPlayerData->GetAngle() + fAngle;
+	fNewAngle = pPlayerData->GetAngle() + fAngle;
 	pPlayerData->SetAngle(fNewAngle);
 	return amx_ftoc(fNewAngle);
 }
@@ -674,15 +675,16 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GiveHealth(AMX *amx, cell *params)
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);
 	float fHealth = amx_ctof(params[2]);
+	float fNewHealth = 0.0f;
 
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return amx_ftoc(fNewHealth);
 	}
 
 	// Set the player health
-	float fNewHealth = pPlayerData->GetHealth() + fHealth;
+	fNewHealth = pPlayerData->GetHealth() + fHealth;
 	pPlayerData->SetHealth(fNewHealth);
 	return amx_ftoc(fNewHealth);
 }
@@ -733,15 +735,16 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GiveArmour(AMX *amx, cell *params)
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);
 	float fArmour = amx_ctof(params[2]);
+	float fNewArmour = 0.0f;
 
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return amx_ftoc(fNewArmour);
 	}
 
 	// Set the player armour
-	float fNewArmour = pPlayerData->GetArmour() + fArmour;
+	fNewArmour = pPlayerData->GetArmour() + fArmour;
 	pPlayerData->SetArmour(fNewArmour);
 	return amx_ftoc(fNewArmour);
 }
