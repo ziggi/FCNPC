@@ -11,6 +11,7 @@
 // OS includes
 #if defined(WIN32)
 	#include <windows.h>
+	#include "snprintf/snprintf.h"
 
 	#pragma warning(disable : 4201)
 	#pragma warning(disable : 4206)
@@ -20,6 +21,7 @@
 	#include "pthread.h"
 	#include "unistd.h"
 	#include <sys/mman.h>
+	#include "fopen_s/fopen_s.h"
 
 	#define BOOL    int32_t
 	#define DWORD   uint32_t
@@ -40,45 +42,38 @@
 #include <cstring>
 #include "subhook/subhook.h"
 #include "strlcpy/strlcpy.h"
-#if defined(WIN32)
-	#include "snprintf/snprintf.h"
-#elif defined(LINUX)
-	#include "fopen_s/fopen_s.h"
-#endif
 // ExceptionHandler includes
-#include "ExceptionHandler.hpp"
-// SDK includes
+#include "CExceptionHandler.hpp"
+// Library includes
 #include <sdk/plugin.h>
+#include "raknet/BitStream.h"
+#include "mapandreas/MapAndreas.h"
 // Utils includes
-#include "Utils.hpp"
+#include "CUtils.hpp"
 #include "Common.h"
 #include "CVector.h"
-#include "raknet/BitStream.h"
 // Nodes includes
-#include "Playback.hpp"
-#include "MapAndreas.h"
-#include "Node.hpp"
+#include "CPlayback.hpp"
+#include "CNode.hpp"
 // Server includes
-#include "Address.hpp"
+#include "CAddress.hpp"
 #include "CServer.hpp"
-#include "Patches.hpp"
-#include "Hooks.hpp"
-#include "VehicleInfo.hpp"
-#include "WeaponInfo.hpp"
-#include "AnimationInfo.hpp"
+#include "CHooks.hpp"
+#include "CVehicleInfo.hpp"
+#include "CWeaponInfo.hpp"
+#include "CAnimationInfo.hpp"
 // SAMP includes
-#include "SAMPRakPeer.hpp"
+#include "CSAMPRakPeer.hpp"
 #include "CFunctions.hpp"
 #include "Structs.h"
 #include "RPCs.h"
 // SA includes
-#include "CNode.hpp"
-#include "Maths.hpp"
+#include "CMaths.hpp"
 
 // Managers includes
-#include "PlayerManager.hpp"
-#include "NodeManager.hpp"
-#include "CallbackManager.hpp"
+#include "CPlayerManager.hpp"
+#include "CNodeManager.hpp"
+#include "CCallbackManager.hpp"
 // Entity includes
 #include "CPlayerData.hpp"
 // Scripting includes

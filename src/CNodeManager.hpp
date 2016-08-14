@@ -11,7 +11,7 @@
 #ifndef	NODEMANAGER_H
 #define NODEMANAGER_H
 
-#include "Node.hpp"
+#include "CNode.hpp"
 
 class CNodeManager
 {

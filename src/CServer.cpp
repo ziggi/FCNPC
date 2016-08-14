@@ -76,8 +76,6 @@ BYTE CServer::Initialize(AMX *pAMX)
 	CFunctions::Initialize();
 	// Install hooks
 	CHooks::InstallHooks();
-	// Install patches
-	CPatches::InstallPatches();
 	// Create the player manager instance
 	m_pPlayerDataManager = new CPlayerManager();
 	if (!m_pPlayerDataManager) {

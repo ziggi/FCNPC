@@ -14,9 +14,9 @@
 
 #include "CVector.h"
 #include "Structs.h"
-#include "Playback.hpp"
-#include "Node.hpp"
-#include "WeaponInfo.hpp"
+#include "CPlayback.hpp"
+#include "CNode.hpp"
+#include "CWeaponInfo.hpp"
 #include <stdio.h>
 
 class CPlayback;

@@ -17,9 +17,9 @@ struct Packet;
 struct CVehicleSpawn;
 class CGangZonePool;
 
-#include "Address.hpp"
-#include "PlayerManager.hpp"
-#include "NodeManager.hpp"
+#include "CAddress.hpp"
+#include "CPlayerManager.hpp"
+#include "CNodeManager.hpp"
 #include <list>
 
 class CMapAndreas;
