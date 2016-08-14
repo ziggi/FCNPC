@@ -609,6 +609,27 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetHealth(AMX *amx, cell *params)
 	return 1;
 }
 
+// native Float:FCNPC_GiveHealth(npcid, Float:health);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GiveHealth(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_GiveHealth");
+
+	// Get the params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+	float fHealth = amx_ctof(params[2]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// Set the player health
+	float fNewHealth = pPlayerData->GetHealth() + fHealth;
+	pPlayerData->SetHealth(fNewHealth);
+	return amx_ftoc(fNewHealth);
+}
+
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetHealth(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_GetHealth");

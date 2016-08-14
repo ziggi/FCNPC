@@ -42,6 +42,7 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_GetVelocity(AMX *amx, cell *params);
 
 	static cell AMX_NATIVE_CALL FCNPC_SetHealth(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_GiveHealth(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetHealth(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetArmour(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetArmour(AMX *amx, cell *params);

@@ -119,6 +119,7 @@ AMX_NATIVE_INFO PluginNatives[ ] = {
 	{"FCNPC_GetVirtualWorld", CNatives::FCNPC_GetVirtualWorld},
 
 	{"FCNPC_SetHealth", CNatives::FCNPC_SetHealth},
+	{"FCNPC_GiveHealth", CNatives::FCNPC_GiveHealth},
 	{"FCNPC_GetHealth", CNatives::FCNPC_GetHealth},
 	{"FCNPC_SetArmour", CNatives::FCNPC_SetArmour},
 	{"FCNPC_GetArmour", CNatives::FCNPC_GetArmour},

@@ -94,6 +94,7 @@ native FCNPC_SetVirtualWorld(npcid, worldid);
 native FCNPC_GetVirtualWorld(npcid);
 
 native FCNPC_SetHealth(npcid, Float:health);
+native Float:FCNPC_GiveHealth(npcid, Float:health);
 native Float:FCNPC_GetHealth(npcid);
 native FCNPC_SetArmour(npcid, Float:armour);
 native Float:FCNPC_GetArmour(npcid);
