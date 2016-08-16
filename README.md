@@ -14,6 +14,12 @@ If you want to see that your scripts will work correctly, you need to declare th
 - OnPlayerStreamIn
 - OnPlayerStreamOut
 
+# How to clone
+Git clone with submodules:
+```bash
+git clone --recursive git@github.com:ziggi/FCNPC.git
+```
+
 # Building (Windows)
 You can use Visual Studio for build. Just use CMake for generate VS project:
 ```bash
