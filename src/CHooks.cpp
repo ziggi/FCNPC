@@ -322,14 +322,14 @@ void CHooks::InstallHooks()
 	BYTE *pExec = *(BYTE **)((DWORD)pAMXFunctions + PLUGIN_AMX_EXPORT_Exec * 4);
 
 	// Hook for amx_FindPublic
-	hookFindPublic = subhook_new(pFindPublic, (BYTE *)&amx_FindPublic_Hook, subhook_options_t(0));
+	hookFindPublic = subhook_new(pFindPublic, (BYTE *)&amx_FindPublic_Hook);
 	subhook_install(hookFindPublic);
 
 	// Hook for amx_Push
-	hookPush = subhook_new(pPush, (BYTE *)&amx_Push_Hook, subhook_options_t(0));
+	hookPush = subhook_new(pPush, (BYTE *)&amx_Push_Hook);
 	subhook_install(hookPush);
 
 	// Hook for amx_Exec
-	hookExec = subhook_new(pExec, (BYTE *)&amx_Exec_Hook, subhook_options_t(0));
+	hookExec = subhook_new(pExec, (BYTE *)&amx_Exec_Hook);
 	subhook_install(hookExec);
 }
