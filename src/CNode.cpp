@@ -154,9 +154,9 @@ WORD CNode::ProcessNodeChange(CPlayerData *pPlayerData, WORD wLinkId, int iType,
 void CNode::GetPosition(CVector *pVecPosition)
 {
 	// Get the node position
-	*pVecPosition = CVector(static_cast<float>(m_nodePath.wPositionX / 8),
-	                        static_cast<float>(m_nodePath.wPositionY / 8),
-	                        static_cast<float>(m_nodePath.wPositionZ / 8) + 0.7f);
+	*pVecPosition = CVector(static_cast<float>(m_nodePath.sPositionX / 8),
+	                        static_cast<float>(m_nodePath.sPositionY / 8),
+	                        static_cast<float>(m_nodePath.sPositionZ / 8) + 0.7f);
 }
 
 WORD CNode::GetLinkId()

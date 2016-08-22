@@ -30,9 +30,9 @@ struct CPathNode
 {
 	DWORD dwMemAddress; // 0x0000 - 0x0004
 	DWORD dwUnknown1;   // 0x0004 - 0x0008
-	WORD wPositionX;    // 0x0008 - 0x000A
-	WORD wPositionY;    // 0x000A - 0x000C
-	WORD wPositionZ;    // 0x000C - 0x000E
+	short sPositionX;   // 0x0008 - 0x000A
+	short sPositionY;   // 0x000A - 0x000C
+	short sPositionZ;   // 0x000C - 0x000E
 	WORD wUnknown2;     // 0x000E - 0x0010
 	WORD wLinkId;       // 0x0010 - 0x0012
 	WORD wAreaId;       // 0x0012 - 0x0014
@@ -46,8 +46,8 @@ struct CPathNode
 // Navi Node
 struct CNaviNode
 {
-	WORD wPositionX;     // 0x0000 - 0x0002
-	WORD wPositionY;     // 0x0002 - 0x0004
+	short sPositionX;    // 0x0000 - 0x0002
+	short sPositionY;    // 0x0002 - 0x0004
 	WORD wAreaId;        // 0x0004 - 0x0006
 	WORD wNodeId;        // 0x0006 - 0x0008
 	BYTE byteDirectionX; // 0x0008 - 0x0009
