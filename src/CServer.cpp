@@ -25,6 +25,8 @@ CServer::CServer(eSAMPVersion version)
 	m_pMapAndreas = NULL;
 	// Initialize the update rate
 	m_dwUpdateRate = DEFAULT_UPDATE_RATE;
+	// Initialize random seed
+	srand(time(NULL));
 }
 
 CServer::~CServer()

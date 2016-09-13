@@ -784,7 +784,7 @@ void CPlayerData::Process()
 					}
 
 					// check for hit
-					bool bIsHit = rand() < GetWeaponAccuracy(m_byteWeaponId);
+					bool bIsHit = rand() % 100 < static_cast<int>(GetWeaponAccuracy(m_byteWeaponId) * 100.0f);
 
 					// Send bullet
 					if (bIsHit && GetWeaponType(m_byteWeaponId) == WEAPON_TYPE_SHOOT) {
