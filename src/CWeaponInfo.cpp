@@ -11,53 +11,53 @@
 #include "Main.hpp"
 
 static SWeaponInfo g_sDefaultWeaponInfo[MAX_WEAPONS] = {
-	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0}, // fists (0)
-	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0}, // WEAPON_BRASSKNUCKLE (1)
-	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0}, // WEAPON_GOLFCLUB (2)
-	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0}, // WEAPON_NITESTICK (3)
-	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0}, // WEAPON_KNIFE (4)
-	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0}, // WEAPON_BAT (5)
-	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0}, // WEAPON_SHOVEL (6)
-	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0}, // WEAPON_POOLSTICK (7)
-	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0}, // WEAPON_KATANA (8)
-	{WEAPON_TYPE_MELEE,   5.0f,  0,   30,   0}, // WEAPON_CHAINSAW (9)
-	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0}, // WEAPON_DILDO (10)
-	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0}, // WEAPON_DILDO2 (11)
-	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0}, // WEAPON_VIBRATOR (12)
-	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0}, // WEAPON_VIBRATOR2 (13)
-	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0}, // WEAPON_FLOWER (14)
-	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0}, // WEAPON_CANE (15)
-	{WEAPON_TYPE_THROW,   5.0f,  1,   500,  0}, // WEAPON_GRENADE (16)
-	{WEAPON_TYPE_THROW,   5.0f,  1,   500,  0}, // WEAPON_TEARGAS (17)
-	{WEAPON_TYPE_THROW,   5.0f,  1,   500,  0}, // WEAPON_MOLTOV (18)
-	{WEAPON_TYPE_NONE,    0.0f,  0,   0,    0}, // nothing (19)
-	{WEAPON_TYPE_NONE,    0.0f,  0,   0,    0}, // nothing (20)
-	{WEAPON_TYPE_NONE,    0.0f,  0,   0,    0}, // nothing (21)
-	{WEAPON_TYPE_SHOOT,   8.25f, 17,  160,  1500}, // WEAPON_COLT45 (22)
-	{WEAPON_TYPE_SHOOT,   13.2f, 17,  120,  1500}, // WEAPON_SILENCED (23)
-	{WEAPON_TYPE_SHOOT,   46.2f, 7,   1200, 1000}, // WEAPON_DEAGLE (24)
-	{WEAPON_TYPE_SHOOT,   30.0f, 1,   800,  0}, // WEAPON_SHOTGUN (25)
-	{WEAPON_TYPE_SHOOT,   30.0f, 2,   120,  1500}, // WEAPON_SAWEDOFF (26)
-	{WEAPON_TYPE_SHOOT,   30.0f, 7,   120,  1500}, // WEAPON_SHOTGSPA (27)
-	{WEAPON_TYPE_SHOOT,   6.6f,  50,  50,   1500}, // WEAPON_UZI (28)
-	{WEAPON_TYPE_SHOOT,   8.25f, 30,  90,   1500}, // WEAPON_MP5 (29)
-	{WEAPON_TYPE_SHOOT,   9.9f,  30,  90,   1700}, // WEAPON_AK47 (30)
-	{WEAPON_TYPE_SHOOT,   9.9f,  50,  90,   1700}, // WEAPON_M4 (31)
-	{WEAPON_TYPE_SHOOT,   6.6f,  50,  70,   1500}, // WEAPON_TEC9 (32)
-	{WEAPON_TYPE_SHOOT,   24.8f, 1,   1500, 0}, // WEAPON_RIFLE (33)
-	{WEAPON_TYPE_SHOOT,   41.3f, 1,   1500, 0}, // WEAPON_SNIPER (34)
-	{WEAPON_TYPE_ROCKET,  5.0f,  1,   1500, 0}, // WEAPON_ROCKETLAUNCHER (35)
-	{WEAPON_TYPE_ROCKET,  5.0f,  1,   1500, 0}, // WEAPON_HEATSEEKER (36)
-	{WEAPON_TYPE_SPRAY,   5.0f,  500, 500,  1000}, // WEAPON_FLAMETHROWER (37)
-	{WEAPON_TYPE_SHOOT,   46.2f, 500, 20,   1000}, // WEAPON_MINIGUN (38)
-	{WEAPON_TYPE_SPECIAL, 5.0f,  1,   500,  0}, // WEAPON_SATCHEL (39)
-	{WEAPON_TYPE_SPECIAL, 5.0f,  1,   500,  0}, // WEAPON_BOMB (40)
-	{WEAPON_TYPE_SPRAY,   5.0f,  500, 10,   1000}, // WEAPON_SPRAYCAN (41)
-	{WEAPON_TYPE_SPRAY,   5.0f,  500, 10,   1000}, // WEAPON_FIREEXTINGUISHER (42)
-	{WEAPON_TYPE_SPECIAL, 0.0f,  1,   500,  0}, // WEAPON_CAMERA (43)
-	{WEAPON_TYPE_SPECIAL, 0.0f,  0,   500,  0}, // WEAPON_NIGHTVISION (44)
-	{WEAPON_TYPE_SPECIAL, 0.0f,  0,   500,  0}, // WEAPON_INFRARED (45)
-	{WEAPON_TYPE_SPECIAL, 0.0f,  1,   500,  0} // WEAPON_PARACHUTE (46)
+	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0,    1.0f}, // fists (0)
+	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0,    1.0f}, // WEAPON_BRASSKNUCKLE (1)
+	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0,    1.0f}, // WEAPON_GOLFCLUB (2)
+	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0,    1.0f}, // WEAPON_NITESTICK (3)
+	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0,    1.0f}, // WEAPON_KNIFE (4)
+	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0,    1.0f}, // WEAPON_BAT (5)
+	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0,    1.0f}, // WEAPON_SHOVEL (6)
+	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0,    1.0f}, // WEAPON_POOLSTICK (7)
+	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0,    1.0f}, // WEAPON_KATANA (8)
+	{WEAPON_TYPE_MELEE,   5.0f,  0,   30,   0,    1.0f}, // WEAPON_CHAINSAW (9)
+	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0,    1.0f}, // WEAPON_DILDO (10)
+	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0,    1.0f}, // WEAPON_DILDO2 (11)
+	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0,    1.0f}, // WEAPON_VIBRATOR (12)
+	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0,    1.0f}, // WEAPON_VIBRATOR2 (13)
+	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0,    1.0f}, // WEAPON_FLOWER (14)
+	{WEAPON_TYPE_MELEE,   5.0f,  0,   250,  0,    1.0f}, // WEAPON_CANE (15)
+	{WEAPON_TYPE_THROW,   5.0f,  1,   500,  0,    1.0f}, // WEAPON_GRENADE (16)
+	{WEAPON_TYPE_THROW,   5.0f,  1,   500,  0,    1.0f}, // WEAPON_TEARGAS (17)
+	{WEAPON_TYPE_THROW,   5.0f,  1,   500,  0,    1.0f}, // WEAPON_MOLTOV (18)
+	{WEAPON_TYPE_NONE,    0.0f,  0,   0,    0,    1.0f}, // nothing (19)
+	{WEAPON_TYPE_NONE,    0.0f,  0,   0,    0,    1.0f}, // nothing (20)
+	{WEAPON_TYPE_NONE,    0.0f,  0,   0,    0,    1.0f}, // nothing (21)
+	{WEAPON_TYPE_SHOOT,   8.25f, 17,  160,  1500, 1.0f}, // WEAPON_COLT45 (22)
+	{WEAPON_TYPE_SHOOT,   13.2f, 17,  120,  1500, 1.0f}, // WEAPON_SILENCED (23)
+	{WEAPON_TYPE_SHOOT,   46.2f, 7,   1200, 1000, 1.0f}, // WEAPON_DEAGLE (24)
+	{WEAPON_TYPE_SHOOT,   30.0f, 1,   800,  0,    1.0f}, // WEAPON_SHOTGUN (25)
+	{WEAPON_TYPE_SHOOT,   30.0f, 2,   120,  1500, 1.0f}, // WEAPON_SAWEDOFF (26)
+	{WEAPON_TYPE_SHOOT,   30.0f, 7,   120,  1500, 1.0f}, // WEAPON_SHOTGSPA (27)
+	{WEAPON_TYPE_SHOOT,   6.6f,  50,  50,   1500, 1.0f}, // WEAPON_UZI (28)
+	{WEAPON_TYPE_SHOOT,   8.25f, 30,  90,   1500, 1.0f}, // WEAPON_MP5 (29)
+	{WEAPON_TYPE_SHOOT,   9.9f,  30,  90,   1700, 1.0f}, // WEAPON_AK47 (30)
+	{WEAPON_TYPE_SHOOT,   9.9f,  50,  90,   1700, 1.0f}, // WEAPON_M4 (31)
+	{WEAPON_TYPE_SHOOT,   6.6f,  50,  70,   1500, 1.0f}, // WEAPON_TEC9 (32)
+	{WEAPON_TYPE_SHOOT,   24.8f, 1,   1500, 0,    1.0f}, // WEAPON_RIFLE (33)
+	{WEAPON_TYPE_SHOOT,   41.3f, 1,   1500, 0,    1.0f}, // WEAPON_SNIPER (34)
+	{WEAPON_TYPE_ROCKET,  5.0f,  1,   1500, 0,    1.0f}, // WEAPON_ROCKETLAUNCHER (35)
+	{WEAPON_TYPE_ROCKET,  5.0f,  1,   1500, 0,    1.0f}, // WEAPON_HEATSEEKER (36)
+	{WEAPON_TYPE_SPRAY,   5.0f,  500, 500,  1000, 1.0f}, // WEAPON_FLAMETHROWER (37)
+	{WEAPON_TYPE_SHOOT,   46.2f, 500, 20,   1000, 1.0f}, // WEAPON_MINIGUN (38)
+	{WEAPON_TYPE_SPECIAL, 5.0f,  1,   500,  0,    1.0f}, // WEAPON_SATCHEL (39)
+	{WEAPON_TYPE_SPECIAL, 5.0f,  1,   500,  0,    1.0f}, // WEAPON_BOMB (40)
+	{WEAPON_TYPE_SPRAY,   5.0f,  500, 10,   1000, 1.0f}, // WEAPON_SPRAYCAN (41)
+	{WEAPON_TYPE_SPRAY,   5.0f,  500, 10,   1000, 1.0f}, // WEAPON_FIREEXTINGUISHER (42)
+	{WEAPON_TYPE_SPECIAL, 0.0f,  1,   500,  0,    1.0f}, // WEAPON_CAMERA (43)
+	{WEAPON_TYPE_SPECIAL, 0.0f,  0,   500,  0,    1.0f}, // WEAPON_NIGHTVISION (44)
+	{WEAPON_TYPE_SPECIAL, 0.0f,  0,   500,  0,    1.0f}, // WEAPON_INFRARED (45)
+	{WEAPON_TYPE_SPECIAL, 0.0f,  1,   500,  0,    1.0f} // WEAPON_PARACHUTE (46)
 };
 
 CWeaponInfo::CWeaponInfo()
@@ -205,6 +205,25 @@ bool CWeaponInfo::SetReloadTime(BYTE byteWeaponId, int iReloadTime)
 	}
 
 	m_pWeaponInfo[byteWeaponId]->iReloadTime = iReloadTime;
+	return true;
+}
+
+float CWeaponInfo::GetAccuracy(BYTE byteWeaponId)
+{
+	if (!IsValid(byteWeaponId)) {
+		return 0.0f;
+	}
+
+	return m_pWeaponInfo[byteWeaponId]->fAccuracy;
+}
+
+bool CWeaponInfo::SetAccuracy(BYTE byteWeaponId, float fAccuracy)
+{
+	if (!IsValid(byteWeaponId)) {
+		return false;
+	}
+
+	m_pWeaponInfo[byteWeaponId]->fAccuracy = fAccuracy;
 	return true;
 }
 

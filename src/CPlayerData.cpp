@@ -783,8 +783,11 @@ void CPlayerData::Process()
 						m_bShooting = false;
 					}
 
+					// check for hit
+					bool bIsHit = rand() < GetWeaponAccuracy(m_byteWeaponId);
+
 					// Send bullet
-					if (GetWeaponType(m_byteWeaponId) == WEAPON_TYPE_SHOOT) {
+					if (bIsHit && GetWeaponType(m_byteWeaponId) == WEAPON_TYPE_SHOOT) {
 						CFunctions::PlayerShoot(m_wPlayerId, m_wHitId, m_byteHitType, m_byteWeaponId, m_vecAimAt);
 					}
 
@@ -1093,6 +1096,16 @@ int CPlayerData::GetWeaponClipSize(BYTE byteWeaponId)
 	}
 
 	return iSize;
+}
+
+bool CPlayerData::SetWeaponAccuracy(BYTE byteWeaponId, float fAccuracy)
+{
+	return m_pWeaponInfo->SetAccuracy(byteWeaponId, fAccuracy);
+}
+
+float CPlayerData::GetWeaponAccuracy(BYTE byteWeaponId)
+{
+	return m_pWeaponInfo->GetAccuracy(byteWeaponId);
 }
 
 bool CPlayerData::SetWeaponInfo(BYTE byteWeaponId, SWeaponInfo sWeaponInfo)

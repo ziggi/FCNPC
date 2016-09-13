@@ -503,13 +503,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GiveQuaternion(AMX *amx, cell *params)
 	// Set the player quaternion
 	float *fOldQuaternion = new float[4];
 	pPlayerData->GetQuaternion(fOldQuaternion);
-	
+
 	float *fNewQuaternion = new float[4];
 	fNewQuaternion[0] = fOldQuaternion[0] + fQuaternion[0];
 	fNewQuaternion[1] = fOldQuaternion[1] + fQuaternion[1];
 	fNewQuaternion[2] = fOldQuaternion[2] + fQuaternion[2];
 	fNewQuaternion[3] = fOldQuaternion[3] + fQuaternion[3];
-	
+
 	pPlayerData->SetQuaternion(fNewQuaternion);
 	SAFE_DELETE(fQuaternion);
 	SAFE_DELETE(fOldQuaternion);
@@ -1588,10 +1588,50 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponClipSize(AMX *amx, cell *params)
 	return pPlayerData->GetWeaponClipSize(byteWeaponId);
 }
 
-// native FCNPC_SetWeaponInfo(npcid, weaponid, reload_time = -1, shoot_time = -1, clip_size = -1);
+// native FCNPC_SetWeaponAccuracy(npcid, weaponid, Float:accuracy);
+cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponAccuracy(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(3, "FCNPC_SetWeaponAccuracy");
+
+	// Get params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+	BYTE byteWeaponId = static_cast<BYTE>(params[2]);
+	float fAccuracy = static_cast<float>(params[3]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// Set the player weapon accuracy
+	return pPlayerData->SetWeaponAccuracy(byteWeaponId, fAccuracy);
+}
+
+// native Float:FCNPC_GetWeaponAccuracy(npcid, weaponid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponAccuracy(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_GetWeaponAccuracy");
+
+	// Get params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+	BYTE byteWeaponId = static_cast<BYTE>(params[2]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// Get the player weapon accuracy
+	float fAccuracy = pPlayerData->GetWeaponAccuracy(byteWeaponId);
+	return amx_ftoc(fAccuracy);
+}
+
+// native FCNPC_SetWeaponInfo(npcid, weaponid, reload_time = -1, shoot_time = -1, clip_size = -1, Float:accuracy = 1.0);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponInfo(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(5, "FCNPC_SetWeaponInfo");
+	CHECK_PARAMS(6, "FCNPC_SetWeaponInfo");
 
 	// Get params
 	WORD wNpcId = static_cast<WORD>(params[1]);
@@ -1599,6 +1639,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponInfo(AMX *amx, cell *params)
 	int iReloadTime = static_cast<int>(params[3]);
 	int iShootTime = static_cast<int>(params[4]);
 	int iClipSize = static_cast<int>(params[5]);
+	int fAccuracy = static_cast<float>(params[6]);
 
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
@@ -1621,13 +1662,17 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponInfo(AMX *amx, cell *params)
 		sWeaponInfo.iShootTime = iShootTime;
 	}
 
+	if (fAccuracy != 1.0f) {
+		sWeaponInfo.fAccuracy = fAccuracy;
+	}
+
 	return pPlayerData->SetWeaponInfo(byteWeaponId, sWeaponInfo);
 }
 
-// native FCNPC_GetWeaponInfo(npcid, weaponid, &reload_time = -1, &shoot_time = -1, &clip_size = -1);
+// native FCNPC_GetWeaponInfo(npcid, weaponid, &reload_time = -1, &shoot_time = -1, &clip_size = -1, &Float:accuracy = 1.0);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponInfo(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(5, "FCNPC_GetWeaponInfo");
+	CHECK_PARAMS(6, "FCNPC_GetWeaponInfo");
 
 	// get params
 	WORD wNpcId = static_cast<WORD>(params[1]);
@@ -1649,28 +1694,32 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponInfo(AMX *amx, cell *params)
 
 	// write data to amx
 	cell *pAddress = NULL;
-	amx_GetAddr(amx, params[2], &pAddress);
+	amx_GetAddr(amx, params[3], &pAddress);
 	*pAddress = sWeaponInfo.iReloadTime;
 
-	amx_GetAddr(amx, params[3], &pAddress);
+	amx_GetAddr(amx, params[4], &pAddress);
 	*pAddress = sWeaponInfo.iShootTime;
 
-	amx_GetAddr(amx, params[4], &pAddress);
+	amx_GetAddr(amx, params[5], &pAddress);
 	*pAddress = sWeaponInfo.iClipSize;
+
+	amx_GetAddr(amx, params[6], &pAddress);
+	*pAddress = sWeaponInfo.fAccuracy;
 
 	return 1;
 }
 
-// native FCNPC_SetWeaponDefaultInfo(weaponid, reload_time = -1, shoot_time = -1, clip_size = -1);
+// native FCNPC_SetWeaponDefaultInfo(weaponid, reload_time = -1, shoot_time = -1, clip_size = -1, Float:accuracy = 1.0);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponDefaultInfo(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(4, "FCNPC_SetWeaponDefaultInfo");
+	CHECK_PARAMS(5, "FCNPC_SetWeaponDefaultInfo");
 
 	// Get params
 	BYTE byteWeaponId = static_cast<BYTE>(params[1]);
 	int iReloadTime = static_cast<int>(params[2]);
 	int iShootTime = static_cast<int>(params[3]);
 	int iClipSize = static_cast<int>(params[4]);
+	int fAccuracy = static_cast<float>(params[5]);
 
 	// Set default weapon info
 	SWeaponInfo sWeaponInfo = CWeaponInfo::GetDefaultInfo(byteWeaponId);
@@ -1687,13 +1736,17 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponDefaultInfo(AMX *amx, cell *params
 		sWeaponInfo.iShootTime = iShootTime;
 	}
 
+	if (fAccuracy != 1.0f) {
+		sWeaponInfo.fAccuracy = fAccuracy;
+	}
+
 	return CWeaponInfo::SetDefaultInfo(byteWeaponId, sWeaponInfo);
 }
 
-// native FCNPC_GetWeaponDefaultInfo(weaponid, &reload_time = -1, &shoot_time = -1, &clip_size = -1);
+// native FCNPC_GetWeaponDefaultInfo(weaponid, &reload_time = -1, &shoot_time = -1, &clip_size = -1, &Float:accuracy = 1.0);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponDefaultInfo(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(4, "FCNPC_GetWeaponDefaultInfo");
+	CHECK_PARAMS(5, "FCNPC_GetWeaponDefaultInfo");
 
 	// get params
 	BYTE byteWeaponId = static_cast<BYTE>(params[1]);
@@ -1717,6 +1770,9 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponDefaultInfo(AMX *amx, cell *params
 
 	amx_GetAddr(amx, params[4], &pAddress);
 	*pAddress = sWeaponInfo.iClipSize;
+
+	amx_GetAddr(amx, params[5], &pAddress);
+	*pAddress = sWeaponInfo.fAccuracy;
 
 	return 1;
 }

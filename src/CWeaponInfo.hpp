@@ -30,6 +30,7 @@ struct SWeaponInfo
 	int iClipSize;
 	int iShootTime;
 	int iReloadTime;
+	float fAccuracy;
 };
 
 class CWeaponInfo
@@ -58,6 +59,9 @@ public:
 
 	int GetReloadTime(BYTE byteWeaponId);
 	bool SetReloadTime(BYTE byteWeaponId, int iTime);
+
+	float GetAccuracy(BYTE byteWeaponId);
+	bool SetAccuracy(BYTE byteWeaponId, float fAccuracy);
 
 	static bool IsValid(BYTE byteWeaponId);
 	bool IsDoubleHanded(BYTE byteWeaponId);

@@ -77,6 +77,8 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_GetWeaponShootTime(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetWeaponClipSize(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetWeaponClipSize(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_SetWeaponAccuracy(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_GetWeaponAccuracy(AMX *amx, cell *params);
 
 	static cell AMX_NATIVE_CALL FCNPC_SetWeaponInfo(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetWeaponInfo(AMX *amx, cell *params);

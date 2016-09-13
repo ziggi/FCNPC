@@ -90,6 +90,8 @@ public:
 	int GetWeaponShootTime(BYTE byteWeaponId);
 	bool SetWeaponClipSize(BYTE byteWeaponId, int iSize);
 	int GetWeaponClipSize(BYTE byteWeaponId);
+	bool SetWeaponAccuracy(BYTE byteWeaponId, float fAccuracy);
+	float GetWeaponAccuracy(BYTE byteWeaponId);
 	bool SetWeaponInfo(BYTE byteWeaponId, SWeaponInfo sWeaponInfo);
 	SWeaponInfo GetWeaponInfo(BYTE byteWeaponId);
 
