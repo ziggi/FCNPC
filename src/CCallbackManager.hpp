@@ -37,6 +37,7 @@ public:
 	static void OnFinishNode(WORD wPlayerId);
 	static void OnStreamIn(WORD wPlayerId, WORD wForPlayerId);
 	static void OnStreamOut(WORD wPlayerId, WORD wForPlayerId);
+	static void OnUpdate(WORD wPlayerId);
 
 	static std::list<AMX *> m_listAMX;
 };

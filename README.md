@@ -82,6 +82,8 @@ forward FCNPC_OnFinishNode(npcid);
 
 forward FCNPC_OnStreamIn(npcid, forplayerid);
 forward FCNPC_OnStreamOut(npcid, forplayerid);
+
+forward FCNPC_OnUpdate(npcid);
 ```
 
 # Natives

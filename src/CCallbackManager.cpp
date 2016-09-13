@@ -290,3 +290,17 @@ void CCallbackManager::OnStreamOut(WORD wPlayerId, WORD wForPlayerId)
 		}
 	}
 }
+
+void CCallbackManager::OnUpdate(WORD wPlayerId)
+{
+	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {
+		// Get the function index
+		int iIndex;
+		if (!amx_FindPublic((*i), "FCNPC_OnUpdate", &iIndex)) {
+			// Push the parameters
+			amx_Push((*i), wPlayerId);
+			// Execute the callback
+			amx_Exec((*i), NULL, iIndex);
+		}
+	}
+}

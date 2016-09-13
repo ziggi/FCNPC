@@ -361,6 +361,8 @@ void CPlayerData::Update(int iState)
 	}
 	// Update the tick count
 	m_dwUpdateTick = dwThisTick;
+	// Call update callback
+	CCallbackManager::OnUpdate(m_wPlayerId);
 }
 
 void CPlayerData::UpdateAim()
@@ -693,7 +695,7 @@ void CPlayerData::Process()
 		// Are we performing the entry animation ?
 		if (m_bEntering) {
 			if (dwThisTick - m_dwEnterExitTickCount > static_cast<DWORD>(m_bJacking ? 5800 : 2500)) {
-				CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[m_wVehicleToEnter];;
+				CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[m_wVehicleToEnter];
 				if (pVehicle) {
 					SetState(m_byteSeatToEnter == 0 ? PLAYER_STATE_DRIVER : PLAYER_STATE_PASSENGER);
 					CCallbackManager::OnVehicleEntryComplete(m_wPlayerId, m_wVehicleToEnter, m_byteSeatToEnter);
