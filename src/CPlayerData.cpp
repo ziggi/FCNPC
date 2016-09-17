@@ -576,7 +576,7 @@ void CPlayerData::Process()
 	if (GetHealth() <= 0.0f && byteState != PLAYER_STATE_WASTED && byteState != PLAYER_STATE_SPAWNED) {
 		// Get the last damager weapon
 		BYTE byteWeapon = 255;
-		if (m_wLastDamagerId != INVALID_PLAYER_ID) {
+		if (pServer->GetPlayerManager()->IsPlayerConnected(m_wLastDamagerId)) {
 			byteWeapon = pNetGame->pPlayerPool->pPlayer[m_wLastDamagerId]->syncData.byteWeapon;
 		}
 
@@ -596,7 +596,7 @@ void CPlayerData::Process()
 	// Update the player depending on his state
 	if (byteState == PLAYER_STATE_ONFOOT || byteState == PLAYER_STATE_DRIVER) {
 		// Is the player moving at player
-		if (m_wMoveId >= 0 && m_wMoveId < MAX_PLAYERS && IsMovingAtPlayer(m_wMoveId)) {
+		if (pServer->GetPlayerManager()->IsPlayerConnected(m_wMoveId) && IsMovingAtPlayer(m_wMoveId)) {
 			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[m_wMoveId];
 			if (pPlayer) {
 				if (CMath::GetDistanceBetween3DPoints(m_vecMovePlayerPosition, pPlayer->vecPosition) > 1.5) {
@@ -717,8 +717,7 @@ void CPlayerData::Process()
 				UpdateAimingData(m_vecAimAt, m_bAimSetAngle);
 			}
 
-			bool bIsAimAtPlayer = m_wHitId >= 0 && m_wHitId < MAX_PLAYERS && IsAimingAtPlayer(m_wHitId);
-			if (bIsAimAtPlayer) {
+			if (pServer->GetPlayerManager()->IsPlayerConnected(m_wMoveId) && IsAimingAtPlayer(m_wHitId)) {
 				CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[m_wHitId];
 				if (pPlayer) {
 					if (m_vecAimAt != pPlayer->vecPosition) {
