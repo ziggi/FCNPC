@@ -41,6 +41,7 @@
 #include <cstdarg>
 #include <cmath>
 #include <cstring>
+#include <ctime>
 // Library includes
 #include <sdk/plugin.h>
 #include <raknet/BitStream.h>

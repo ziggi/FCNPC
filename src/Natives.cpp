@@ -1639,7 +1639,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponInfo(AMX *amx, cell *params)
 	int iReloadTime = static_cast<int>(params[3]);
 	int iShootTime = static_cast<int>(params[4]);
 	int iClipSize = static_cast<int>(params[5]);
-	int fAccuracy = static_cast<float>(params[6]);
+	float fAccuracy = static_cast<float>(params[6]);
 
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
@@ -1704,7 +1704,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponInfo(AMX *amx, cell *params)
 	*pAddress = sWeaponInfo.iClipSize;
 
 	amx_GetAddr(amx, params[6], &pAddress);
-	*pAddress = sWeaponInfo.fAccuracy;
+	*pAddress = amx_ftoc(sWeaponInfo.fAccuracy);
 
 	return 1;
 }
@@ -1719,7 +1719,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponDefaultInfo(AMX *amx, cell *params
 	int iReloadTime = static_cast<int>(params[2]);
 	int iShootTime = static_cast<int>(params[3]);
 	int iClipSize = static_cast<int>(params[4]);
-	int fAccuracy = static_cast<float>(params[5]);
+	float fAccuracy = static_cast<float>(params[5]);
 
 	// Set default weapon info
 	SWeaponInfo sWeaponInfo = CWeaponInfo::GetDefaultInfo(byteWeaponId);
@@ -1772,7 +1772,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponDefaultInfo(AMX *amx, cell *params
 	*pAddress = sWeaponInfo.iClipSize;
 
 	amx_GetAddr(amx, params[5], &pAddress);
-	*pAddress = sWeaponInfo.fAccuracy;
+	*pAddress = amx_ftoc(sWeaponInfo.fAccuracy);
 
 	return 1;
 }
