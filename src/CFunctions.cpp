@@ -171,7 +171,7 @@ WORD CFunctions::GetMaxNPC()
 	return static_cast<WORD>(pfn__CConsole__GetIntVariable(pConsole, "maxnpc"));
 }
 
-void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE byteWeaponId, CVector vecPoint)
+void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE byteWeaponId, CVector vecPoint, bool bIsHit)
 {
 	// Validate the player
 	if (!pServer->GetPlayerManager()->IsNpcConnected(wPlayerId)) {
@@ -184,15 +184,20 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 
 	// Create the SendBullet structure
 	CBulletSyncData bulletSyncData;
-	bulletSyncData.wHitID = wHitId;
-	bulletSyncData.byteHitType = byteHitType;
+	if (bIsHit) {
+		bulletSyncData.wHitID = wHitId;
+		bulletSyncData.byteHitType = byteHitType;
+	} else {
+		bulletSyncData.wHitID = INVALID_PLAYER_ID;
+		bulletSyncData.byteHitType = BULLET_HIT_TYPE_NONE;
+	}
 	bulletSyncData.byteWeaponID = byteWeaponId;
 	bulletSyncData.vecCenterOfHit = CVector(0.1f, 0.1f, 0.1f);
 	bulletSyncData.vecHitOrigin = vecPosition;
 	bulletSyncData.vecHitTarget = vecPoint;
 
 	// find player in vecPoint
-	if (bulletSyncData.byteHitType == BULLET_HIT_TYPE_NONE) {
+	if (bIsHit && bulletSyncData.byteHitType == BULLET_HIT_TYPE_NONE) {
 		for (WORD i = 0; i <= pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
 			if (!pServer->GetPlayerManager()->IsPlayerConnected(i) || wPlayerId == i) {
 				continue;
@@ -215,7 +220,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	}
 
 	// if it is a NPC
-	if (bulletSyncData.byteHitType == BULLET_HIT_TYPE_PLAYER && pServer->GetPlayerManager()->IsNpcConnected(bulletSyncData.wHitID)) {
+	if (bIsHit && bulletSyncData.byteHitType == BULLET_HIT_TYPE_PLAYER && pServer->GetPlayerManager()->IsNpcConnected(bulletSyncData.wHitID)) {
 		CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(bulletSyncData.wHitID);
 
 		if (pPlayerData && !pPlayerData->IsInvulnerable()) {

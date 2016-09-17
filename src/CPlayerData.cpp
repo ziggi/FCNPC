@@ -783,12 +783,11 @@ void CPlayerData::Process()
 						m_bShooting = false;
 					}
 
-					// check for hit
-					bool bIsHit = rand() % 100 < static_cast<int>(GetWeaponAccuracy(m_byteWeaponId) * 100.0f);
-
 					// Send bullet
-					if (bIsHit && GetWeaponType(m_byteWeaponId) == WEAPON_TYPE_SHOOT) {
-						CFunctions::PlayerShoot(m_wPlayerId, m_wHitId, m_byteHitType, m_byteWeaponId, m_vecAimAt);
+					if (GetWeaponType(m_byteWeaponId) == WEAPON_TYPE_SHOOT) {
+						bool bIsHit = rand() % 100 < static_cast<int>(GetWeaponAccuracy(m_byteWeaponId) * 100.0f);
+
+						CFunctions::PlayerShoot(m_wPlayerId, m_wHitId, m_byteHitType, m_byteWeaponId, m_vecAimAt, bIsHit);
 					}
 
 					SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM | KEY_FIRE);
