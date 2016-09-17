@@ -717,7 +717,7 @@ void CPlayerData::Process()
 				UpdateAimingData(m_vecAimAt, m_bAimSetAngle);
 			}
 
-			if (pServer->GetPlayerManager()->IsPlayerConnected(m_wMoveId) && IsAimingAtPlayer(m_wHitId)) {
+			if (pServer->GetPlayerManager()->IsPlayerConnected(m_wHitId) && IsAimingAtPlayer(m_wHitId)) {
 				CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[m_wHitId];
 				if (pPlayer) {
 					if (m_vecAimAt != pPlayer->vecPosition) {
