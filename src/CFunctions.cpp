@@ -178,9 +178,18 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		return;
 	}
 
-	// Get the player position
-	CVector vecPosition;
-	pServer->GetPlayerManager()->GetAt(wPlayerId)->GetPosition(&vecPosition);
+	// Get the player
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wPlayerId);
+
+	// Get the origin hit vector position
+	CVector vecOrigin;
+	pPlayerData->GetPosition(&vecOrigin);
+
+	if (pPlayerData->GetSpecialAction() == SPECIAL_ACTION_DUCK) {
+		vecOrigin += CVector(0.0f, 0.0f, 0.3f);
+	} else {
+		vecOrigin += CVector(0.0f, 0.0f, 0.7f);
+	}
 
 	// Create the SendBullet structure
 	CBulletSyncData bulletSyncData;
@@ -193,7 +202,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	}
 	bulletSyncData.byteWeaponID = byteWeaponId;
 	bulletSyncData.vecCenterOfHit = CVector(0.1f, 0.1f, 0.1f);
-	bulletSyncData.vecHitOrigin = vecPosition;
+	bulletSyncData.vecHitOrigin = vecOrigin;
 	bulletSyncData.vecHitTarget = vecPoint;
 
 	// find player in vecPoint
@@ -208,8 +217,8 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 				continue;
 			}
 
-			bool bIsPlayerOnRay = CMath::GetDistanceFromRayToPoint(vecPosition, vecPoint, pPlayer->vecPosition) < SHOOTING_ACCURACY;
-			bool bIsPlayerInDamageRange = bIsPlayerOnRay && CMath::GetDistanceBetween3DPoints(vecPosition, pPlayer->vecPosition) < MAX_DAMAGE_DISTANCE;
+			bool bIsPlayerOnRay = CMath::GetDistanceFromRayToPoint(vecOrigin, vecPoint, pPlayer->vecPosition) < SHOOTING_ACCURACY;
+			bool bIsPlayerInDamageRange = bIsPlayerOnRay && CMath::GetDistanceBetween3DPoints(vecOrigin, pPlayer->vecPosition) < MAX_DAMAGE_DISTANCE;
 
 			if (bIsPlayerOnRay && bIsPlayerInDamageRange) {
 				bulletSyncData.byteHitType = BULLET_HIT_TYPE_PLAYER;
