@@ -17,6 +17,7 @@ extern void         *pAMXFunctions;
 BYTE bytePushCount;
 char szPreviousFuncName[32];
 bool bHookIsExec;
+bool bHookIsPush;
 bool bFindPublicIsBlocked;
 bool bIsPublicFound;
 
@@ -83,8 +84,8 @@ int amx_FindPublic_Hook(AMX *amx, const char *funcname, int *index)
 	pfn_amx_FindPublic = (amx_FindPublic_t)(subhook_get_trampoline(hookFindPublic));
 	bytePushCount = 0;
 
-	if (bHookIsExec) {
-		if (!strcmp(funcname, szPreviousFuncName)) {
+	if (bHookIsExec || !bHookIsPush) {
+		if (bHookIsExec && !strcmp(funcname, szPreviousFuncName)) {
 			if (bFindPublicIsBlocked) {
 				return 1;
 			} else {
@@ -93,12 +94,18 @@ int amx_FindPublic_Hook(AMX *amx, const char *funcname, int *index)
 		} else {
 			bFindPublicIsBlocked = false;
 			bHookIsExec = false;
+			bHookIsPush = false;
 			bIsPublicFound = false;
 			szPreviousFuncName[0] = '\0';
+			bGiveDamage = false;
+			bTakeDamage = false;
+			bWeaponShot = false;
+			bStreamIn = false;
+			bStreamOut = false;
 		}
 	}
 
-	if (!bHookIsExec && !bIsPublicFound) {
+	if (!bHookIsExec && !bHookIsPush && !bIsPublicFound) {
 		if (!strcmp(funcname, "OnPlayerGiveDamage")) {
 			bIsPublicFound = true;
 			bGiveDamage = true;
@@ -128,6 +135,7 @@ int amx_Push_Hook(AMX *amx, cell value)
 {
 	// Are we retrieving parameters ?
 	if (bGiveDamage || bTakeDamage) {
+		bHookIsPush = true;
 		switch (bytePushCount) {
 			case 4:
 				pDamage.wPlayerId = static_cast<WORD>(value);
@@ -152,6 +160,7 @@ int amx_Push_Hook(AMX *amx, cell value)
 		// Increase the parameters count
 		bytePushCount++;
 	} else if (bWeaponShot) {
+		bHookIsPush = true;
 		switch (bytePushCount) {
 			case 6:
 				pWeaponShot.wPlayerId = static_cast<WORD>(value);
@@ -184,6 +193,7 @@ int amx_Push_Hook(AMX *amx, cell value)
 		// Increase the parameters count
 		bytePushCount++;
 	} else if (bStreamIn) {
+		bHookIsPush = true;
 		switch (bytePushCount) {
 			case 1:
 				pStream.wPlayerId = static_cast<WORD>(value);
@@ -196,6 +206,7 @@ int amx_Push_Hook(AMX *amx, cell value)
 		// Increase the parameters count
 		bytePushCount++;
 	} else if (bStreamOut) {
+		bHookIsPush = true;
 		switch (bytePushCount) {
 			case 1:
 				pStream.wPlayerId = static_cast<WORD>(value);
@@ -308,6 +319,7 @@ void CHooks::InstallHooks()
 {
 	// Reset public flag
 	bHookIsExec = false;
+	bHookIsPush = false;
 	bFindPublicIsBlocked = false;
 	bIsPublicFound = false;
 	bGiveDamage = false;

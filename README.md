@@ -10,6 +10,7 @@ Discussion in [forum thread](http://forum.sa-mp.com/showthread.php?t=428066). Or
 # Usage notes
 If you want to see that your scripts will work correctly, you need to declare this callback functions at least in one of your scripts:
 - OnPlayerGiveDamage
+- OnPlayerTakeDamage
 - OnPlayerWeaponShot
 - OnPlayerStreamIn
 - OnPlayerStreamOut
