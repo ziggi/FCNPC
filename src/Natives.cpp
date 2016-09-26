@@ -568,11 +568,12 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetQuaternion(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetVelocity(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(4, "FCNPC_SetVelocity");
+	CHECK_PARAMS(5, "FCNPC_SetVelocity");
 
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);
 	CVector vecVelocity(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
+	bool bUpdatePos = static_cast<int>(params[5]) != 0;
 
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
@@ -581,18 +582,19 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVelocity(AMX *amx, cell *params)
 	}
 
 	// Set the player velocity
-	pPlayerData->SetVelocity(vecVelocity);
+	pPlayerData->SetVelocity(vecVelocity, bUpdatePos);
 	return 1;
 }
 
 // native FCNPC_GiveVelocity(npcid, Float:x, Float:y, Float:z);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GiveVelocity(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(4, "FCNPC_GiveVelocity");
+	CHECK_PARAMS(5, "FCNPC_GiveVelocity");
 
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);
 	CVector vecVelocity(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
+	bool bUpdatePos = static_cast<int>(params[5]) != 0;
 
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
@@ -603,7 +605,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GiveVelocity(AMX *amx, cell *params)
 	// Set the player velocity
 	CVector vecOldVelocity;
 	pPlayerData->GetVelocity(&vecOldVelocity);
-	pPlayerData->SetVelocity(vecOldVelocity + vecVelocity);
+	pPlayerData->SetVelocity(vecOldVelocity + vecVelocity, bUpdatePos);
 	return 1;
 }
 

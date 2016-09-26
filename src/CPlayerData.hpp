@@ -63,7 +63,7 @@ public:
 	void GetQuaternion(float *fQuaternion);
 	void SetAngle(float fAngle);
 	float GetAngle();
-	void SetVelocity(CVector vecVelocity);
+	void SetVelocity(CVector vecVelocity, bool bUpdatePos = false);
 	void GetVelocity(CVector *pvecVelocity);
 
 	void SetHealth(float fHealth);
@@ -245,6 +245,7 @@ private:
 	WORD m_wHydraThrustAngle[2];
 	float m_fTrainSpeed;
 	BYTE m_byteGearState;
+	bool m_bVelocityUpdatePos;
 };
 
 #endif

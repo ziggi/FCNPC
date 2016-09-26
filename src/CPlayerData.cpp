@@ -65,6 +65,7 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 		m_wHydraThrustAngle[1] = 5000;
 	m_fTrainSpeed = 0.0f;
 	m_byteGearState = 0;
+	m_bVelocityUpdatePos = false;
 }
 
 CPlayerData::~CPlayerData()
@@ -659,6 +660,22 @@ void CPlayerData::Process()
 				}
 			}
 		}
+
+		// Is velocity updates position
+		if (m_bVelocityUpdatePos) {
+			CVector vecPosition;
+			CVector vecVelocity;
+
+			GetPosition(&vecPosition);
+			GetVelocity(&vecVelocity);
+
+			vecPosition += vecVelocity;
+
+			if (m_bUseMapAndreas && pServer->IsMapAndreasInited()) {
+				vecPosition.fZ = pServer->GetMapAndreas()->FindZ_For2DCoord(vecPosition.fX, vecPosition.fY) + 0.5f;
+			}
+			SetPosition(vecPosition);
+		}
 	}
 	if (byteState == PLAYER_STATE_ONFOOT) {
 		// Process the player surfing
@@ -1215,13 +1232,14 @@ void CPlayerData::ClearAnimations()
 	CFunctions::AddedPlayersRPC(&RPC_ClearAnimations, &bsData, m_wPlayerId);
 }
 
-void CPlayerData::SetVelocity(CVector vecVelocity)
+void CPlayerData::SetVelocity(CVector vecVelocity, bool bUpdatePos)
 {
 	CVehicle *pVehicle = GetVehicle();
 	if (pVehicle) {
 		pVehicle->vecVelocity = vecVelocity;
 	}
 	m_pPlayer->vecVelocity = vecVelocity;
+	m_bVelocityUpdatePos = bUpdatePos;
 }
 
 void CPlayerData::GetVelocity(CVector *pvecVelocity)
