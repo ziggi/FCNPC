@@ -83,6 +83,11 @@ public OnPlayerDisconnect(playerid, reason)
 	return 1;
 }
 
+public OnPlayerGiveDamage(playerid, damagedid, Float:amount, weaponid, bodypart)
+{
+	return 0;
+}
+
 public FCNPC_OnReachDestination(npcid)
 {
 	BG_SetFollowTimer(npcid);
@@ -91,7 +96,7 @@ public FCNPC_OnReachDestination(npcid)
 public FCNPC_OnTakeDamage(npcid, damagerid, weaponid, bodypart, Float:health_loss)
 {
 	if (!IsPlayerConnected(damagerid) || !BG_IsValid(npcid)) {
-		return 0;
+		return 1;
 	}
 
 #if defined DEBUG
