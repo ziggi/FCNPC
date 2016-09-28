@@ -2866,3 +2866,164 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_InitMapAndreas(AMX *amx, cell *params)
 	}
 	return 0;
 }
+
+// native FCNPC_CreateMovePath();
+cell AMX_NATIVE_CALL CNatives::FCNPC_CreateMovePath(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(0, "FCNPC_CreateMovePath");
+
+	return pServer->GetMovePath()->Create();
+}
+
+// native FCNPC_DestroyMovePath(pathid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_DestroyMovePath(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_DestroyMovePath");
+
+	// get params
+	int iPathId = static_cast<int>(params[1]);
+
+	return pServer->GetMovePath()->Destroy(iPathId);
+}
+
+// native FCNPC_IsValidMovePath(pathid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_IsValidMovePath(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_IsValidMovePath");
+
+	// get params
+	int iPathId = static_cast<int>(params[1]);
+
+	return pServer->GetMovePath()->IsPathValid(iPathId);
+}
+
+// native FCNPC_AddPointToPath(pathid, Float:x, Float:y, Float:z);
+cell AMX_NATIVE_CALL CNatives::FCNPC_AddPointToPath(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(4, "FCNPC_AddPointToPath");
+
+	// get params
+	int iPathId = static_cast<int>(params[1]);
+	CVector vecPoint(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
+
+	return pServer->GetMovePath()->AddPoint(iPathId, vecPoint);
+}
+
+// native FCNPC_AddPointsToPath(pathid, Float:points[][3], const size = sizeof(points));
+cell AMX_NATIVE_CALL CNatives::FCNPC_AddPointsToPath(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(3, "FCNPC_AddPointsToPath");
+
+	// get params
+	int iPathId = static_cast<int>(params[1]);
+	int iSize = static_cast<int>(params[3]);
+
+	// validation
+	if (!pServer->GetMovePath()->IsPathValid(iPathId)) {
+		return 0;
+	}
+
+	// get and add points
+	CVector vecPoint;
+	cell *pAddress = NULL;
+	amx_GetAddr(amx, params[2], &pAddress);
+	pAddress += 2;
+
+	for (int i = 0; i < iSize; i++) {
+		pAddress += i * 3;
+
+		vecPoint.fX = amx_ctof(*(pAddress));
+		vecPoint.fY = amx_ctof(*(pAddress + 1));
+		vecPoint.fZ = amx_ctof(*(pAddress + 2));
+
+		pServer->GetMovePath()->AddPoint(iPathId, vecPoint);
+	}
+	return 1;
+}
+
+// native FCNPC_RemovePointFromPath(pathid, pointid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_RemovePointFromPath(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_RemovePointFromPath");
+
+	// get params
+	int iPathId = static_cast<int>(params[1]);
+	int iPointId = static_cast<int>(params[2]);
+
+	return pServer->GetMovePath()->RemovePoint(iPathId, iPointId);
+}
+
+// native FCNPC_IsValidMovePoint(pathid, pointid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_IsValidMovePoint(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_IsValidMovePoint");
+
+	// get params
+	int iPathId = static_cast<int>(params[1]);
+	int iPointId = static_cast<int>(params[2]);
+
+	return pServer->GetMovePath()->IsPointValid(iPathId, iPointId);
+}
+
+// native FCNPC_GetMovePoint(pathid, pointid, &Float:x, &Float:y, &Float:z);
+cell AMX_NATIVE_CALL FCNPC_GetMovePoint(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(5, "FCNPC_GetMovePoint");
+
+	// get params
+	int iPathId = static_cast<int>(params[1]);
+	int iPointId = static_cast<int>(params[2]);
+
+	// valid
+	CVector *vecPoint = pServer->GetMovePath()->GetPoint(iPathId, iPointId);
+	if (!vecPoint) {
+		return 0;
+	}
+
+	// return point data
+	cell *pAddress = NULL;
+	amx_GetAddr(amx, params[3], &pAddress);
+	*pAddress = amx_ftoc(vecPoint->fX);
+
+	amx_GetAddr(amx, params[4], &pAddress);
+	*pAddress = amx_ftoc(vecPoint->fY);
+
+	amx_GetAddr(amx, params[5], &pAddress);
+	*pAddress = amx_ftoc(vecPoint->fZ);
+	return 1;
+}
+
+// native FCNPC_GetNumberMovePoint(pathid);
+cell AMX_NATIVE_CALL FCNPC_GetNumberMovePoint(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_GetNumberMovePoint");
+
+	// get params
+	int iPathId = static_cast<int>(params[1]);
+
+	return pServer->GetMovePath()->GetPoints(iPathId)->size();
+}
+
+// native FCNPC_GoByMovePath(npcid, pathid, type = MOVE_TYPE_AUTO, Float:speed = MOVE_SPEED_AUTO, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GoByMovePath(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(7, "FCNPC_GoByMovePath");
+
+	// get params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+	int iPathId = static_cast<int>(params[2]);
+	int iType = static_cast<int>(params[3]);
+	float fSpeed = amx_ctof(params[4]);
+	bool bZMap = static_cast<int>(params[5]) != 0;
+	float fRadius = amx_ctof(params[6]);
+	bool bSetAngle = static_cast<int>(params[7]) != 0;
+
+	// validation
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// move the player
+	return pPlayerData->GoByMovePath(iPathId, iType, bZMap, fRadius, bSetAngle, fSpeed);
+}

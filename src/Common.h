@@ -46,7 +46,7 @@ extern logprintf_t          logprintf;
 #define UPDATE_STATE_ONFOOT     1
 #define UPDATE_STATE_DRIVER     2
 #define UPDATE_STATE_PASSENGER  3
-// Mouvement type
+// Movement type
 #define MOVE_TYPE_AUTO      -1
 #define MOVE_TYPE_WALK      0
 #define MOVE_TYPE_RUN       1
@@ -57,6 +57,8 @@ extern logprintf_t          logprintf;
 #define MOVE_SPEED_WALK     0.1552086f
 #define MOVE_SPEED_RUN      0.56444f
 #define MOVE_SPEED_SPRINT   0.926784f
+// Move path
+#define INVALID_MOVE_PATH   -1
 // Playback types
 #define PLAYBACK_TYPE_NONE              0
 #define PLAYBACK_TYPE_DRIVER            1

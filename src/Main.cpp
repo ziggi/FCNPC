@@ -236,6 +236,15 @@ AMX_NATIVE_INFO PluginNatives[ ] = {
 	{"FCNPC_PlayNode", CNatives::FCNPC_PlayNode},
 	{"FCNPC_StopPlayingNode", CNatives::FCNPC_StopPlayingNode},
 
+	{"FCNPC_CreateMovePath", CNatives::FCNPC_CreateMovePath},
+	{"FCNPC_DestroyMovePath", CNatives::FCNPC_DestroyMovePath},
+	{"FCNPC_IsValidMovePath", CNatives::FCNPC_IsValidMovePath},
+	{"FCNPC_AddPointToPath", CNatives::FCNPC_AddPointToPath},
+	{"FCNPC_AddPointsToPath", CNatives::FCNPC_AddPointsToPath},
+	{"FCNPC_RemovePointFromPath", CNatives::FCNPC_RemovePointFromPath},
+	{"FCNPC_IsValidMovePoint", CNatives::FCNPC_IsValidMovePoint},
+	{"FCNPC_GoByMovePath", CNatives::FCNPC_GoByMovePath},
+
 	{0, 0}
 };
 

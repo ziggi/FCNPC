@@ -42,6 +42,7 @@
 #include <cmath>
 #include <cstring>
 #include <ctime>
+#include <vector>
 // Library includes
 #include <sdk/plugin.h>
 #include <raknet/BitStream.h>
@@ -64,6 +65,7 @@
 #include "CVehicleInfo.hpp"
 #include "CWeaponInfo.hpp"
 #include "CAnimationInfo.hpp"
+#include "CMovePath.hpp"
 // SAMP includes
 #include "CSAMPRakPeer.hpp"
 #include "CFunctions.hpp"

@@ -56,6 +56,8 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_wSurfingInfo = 0;
 	m_pWeaponInfo = new CWeaponInfo();
 	m_wMoveId = INVALID_PLAYER_ID;
+	m_iMovePath = INVALID_MOVE_PATH;
+	m_iMovePoint = 0;
 	m_iMoveType = MOVE_TYPE_AUTO;
 	m_fMoveRadius = 0.0f;
 	m_bMoveSetAngle = false;
@@ -608,6 +610,15 @@ void CPlayerData::Process()
 				}
 			} else {
 				StopMoving();
+			}
+		}
+
+		// Is the player moving by path
+		if (IsMovingByMovePath(m_iMovePath)) {
+			m_iMovePoint++;
+			CVector *vecPoint = pServer->GetMovePath()->GetPoint(m_iMovePath, m_iMovePoint);
+			if (vecPoint) {
+				UpdateMovingData(*vecPoint, m_fMoveRadius, m_bMoveSetAngle, m_fMoveSpeed);
 			}
 		}
 
@@ -1352,6 +1363,17 @@ bool CPlayerData::GoToPlayer(WORD wPlayerId, int iType, bool bUseMapAndreas, flo
 	return false;
 }
 
+bool CPlayerData::GoByMovePath(int iPathId, int iType, bool bUseMapAndreas, float fRadius, bool bSetAngle, float fSpeed)
+{
+	CVector *vecPos = pServer->GetMovePath()->GetPoint(iPathId, 0);
+	if (GoTo(*vecPos, iType, bUseMapAndreas, fRadius, bSetAngle, fSpeed)) {
+		m_iMovePath = iPathId;
+		m_iMovePoint = 0;
+		return true;
+	}
+	return false;
+}
+
 void CPlayerData::UpdateMovingData(CVector vecDestination, float fRadius, bool bSetAngle, float fSpeed)
 {
 	if (fRadius != 0.0f) {
@@ -1393,6 +1415,8 @@ void CPlayerData::StopMoving()
 	// Reset moving flag
 	m_bMoving = false;
 	m_wMoveId = INVALID_PLAYER_ID;
+	m_iMovePath = INVALID_MOVE_PATH;
+	m_iMovePoint = 0;
 	// Reset the player data
 	SetVelocity(CVector(0.0f, 0.0f, 0.0f));
 	SetTrainSpeed(0.0f);
@@ -1417,6 +1441,11 @@ bool CPlayerData::IsMoving()
 bool CPlayerData::IsMovingAtPlayer(WORD wPlayerId)
 {
 	return m_bMoving && m_wMoveId == wPlayerId;
+}
+
+bool CPlayerData::IsMovingByMovePath(int iMovePath)
+{
+	return m_bMoving && m_iMovePath == iMovePath;
 }
 
 void CPlayerData::ToggleReloading(bool bToggle)

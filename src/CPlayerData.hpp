@@ -120,10 +120,12 @@ public:
 
 	bool GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f);
 	bool GoToPlayer(WORD wPlayerId, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f);
+	bool GoByMovePath(int iPathId, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f);
 	void UpdateMovingData(CVector vecDestination, float fRadius, bool bSetAngle, float fSpeed);
 	void StopMoving();
 	bool IsMoving();
 	bool IsMovingAtPlayer(WORD wPlayerId);
+	bool IsMovingByMovePath(int iMovePath);
 
 	void ToggleReloading(bool bToggle);
 	void ToggleInfiniteAmmo(bool bToggle);
@@ -237,6 +239,8 @@ private:
 	WORD m_wSurfingInfo;
 	CWeaponInfo *m_pWeaponInfo;
 	WORD m_wMoveId;
+	int m_iMovePath;
+	int m_iMovePoint;
 	int m_iMoveType;
 	float m_fMoveRadius;
 	bool m_bMoveSetAngle;

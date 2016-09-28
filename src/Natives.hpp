@@ -162,6 +162,17 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_GetNodeInfo(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_PlayNode(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_StopPlayingNode(AMX *amx, cell *params);
+
+	static cell AMX_NATIVE_CALL FCNPC_CreateMovePath(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_DestroyMovePath(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_IsValidMovePath(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_AddPointToPath(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_AddPointsToPath(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_RemovePointFromPath(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_IsValidMovePoint(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_GetMovePoint(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_GetNumberMovePoint(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_GoByMovePath(AMX *amx, cell *params);
 };
 
 #endif

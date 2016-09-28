@@ -20,6 +20,7 @@ class CGangZonePool;
 #include "CAddress.hpp"
 #include "CPlayerManager.hpp"
 #include "CNodeManager.hpp"
+#include "CMovePath.hpp"
 #include <list>
 
 class CMapAndreas;
@@ -38,6 +39,7 @@ public:
 
 	CPlayerManager *GetPlayerManager();
 	CNodeManager *GetNodeManager();
+	CMovePath *GetMovePath();
 
 	bool DoesNameExist(char *szName);
 
@@ -60,6 +62,7 @@ private:
 	eSAMPVersion m_Version;
 	CPlayerManager *m_pPlayerDataManager;
 	CNodeManager *m_pNodeManager;
+	CMovePath *m_pMovePath;
 	CMapAndreas *m_pMapAndreas;
 	DWORD m_dwUpdateRate;
 
