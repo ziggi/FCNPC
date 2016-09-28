@@ -21,7 +21,6 @@ class CGangZonePool;
 #include "CPlayerManager.hpp"
 #include "CNodeManager.hpp"
 #include "CMovePath.hpp"
-#include <list>
 
 class CMapAndreas;
 

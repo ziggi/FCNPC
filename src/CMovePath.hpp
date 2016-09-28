@@ -25,7 +25,7 @@ public:
 	CVector *GetPoint(int iPathId, int iPointId);
 
 private:
-	std::vector<std::vector<CVector>> m_vectorPath;
+	std::vector<std::vector<CVector>> m_vPath;
 };
 
 #endif

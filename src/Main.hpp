@@ -43,6 +43,7 @@
 #include <cstring>
 #include <ctime>
 #include <vector>
+#include <algorithm>
 // Library includes
 #include <sdk/plugin.h>
 #include <raknet/BitStream.h>

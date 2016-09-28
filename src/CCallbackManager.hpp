@@ -12,8 +12,6 @@
 #ifndef CALLBACKMANAGER_H
 #define CALLBACKMANAGER_H
 
-#include <list>
-
 class CCallbackManager
 {
 public:
@@ -39,7 +37,7 @@ public:
 	static void OnStreamOut(WORD wPlayerId, WORD wForPlayerId);
 	static int  OnUpdate(WORD wPlayerId);
 
-	static std::list<AMX *> m_listAMX;
+	static std::vector<AMX *> m_vAMX;
 };
 
 #endif
