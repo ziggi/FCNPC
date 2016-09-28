@@ -363,7 +363,9 @@ void CPlayerData::Update(int iState)
 	// Update the tick count
 	m_dwUpdateTick = dwThisTick;
 	// Call update callback
-	CCallbackManager::OnUpdate(m_wPlayerId);
+	if (!CCallbackManager::OnUpdate(m_wPlayerId)) {
+		m_pPlayer->iUpdateState = UPDATE_STATE_NONE;
+	}
 }
 
 void CPlayerData::UpdateAim()

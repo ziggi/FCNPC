@@ -293,6 +293,7 @@ void CCallbackManager::OnStreamOut(WORD wPlayerId, WORD wForPlayerId)
 
 void CCallbackManager::OnUpdate(WORD wPlayerId)
 {
+	cell cReturn = 1;
 	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {
 		// Get the function index
 		int iIndex;
@@ -300,7 +301,12 @@ void CCallbackManager::OnUpdate(WORD wPlayerId)
 			// Push the parameters
 			amx_Push((*i), wPlayerId);
 			// Execute the callback
-			amx_Exec((*i), NULL, iIndex);
+			if (cReturn) {
+				amx_Exec((*i), &cReturn, iIndex);
+			} else {
+				amx_Exec((*i), NULL, iIndex);
+			}
 		}
 	}
+	return cReturn;
 }
