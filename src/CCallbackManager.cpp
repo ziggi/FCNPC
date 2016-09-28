@@ -291,7 +291,7 @@ void CCallbackManager::OnStreamOut(WORD wPlayerId, WORD wForPlayerId)
 	}
 }
 
-void CCallbackManager::OnUpdate(WORD wPlayerId)
+int CCallbackManager::OnUpdate(WORD wPlayerId)
 {
 	cell cReturn = 1;
 	for (std::list<AMX *>::iterator i = m_listAMX.begin(); i != m_listAMX.end(); i++) {
