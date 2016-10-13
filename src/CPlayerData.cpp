@@ -613,15 +613,6 @@ void CPlayerData::Process()
 			}
 		}
 
-		// Is the player moving by path
-		if (IsMovingByMovePath(m_iMovePath)) {
-			m_iMovePoint++;
-			CVector *vecPoint = pServer->GetMovePath()->GetPoint(m_iMovePath, m_iMovePoint);
-			if (vecPoint) {
-				UpdateMovingData(*vecPoint, m_fMoveRadius, m_bMoveSetAngle, m_fMoveSpeed);
-			}
-		}
-
 		// Is player moving
 		if (m_bMoving && byteState == PLAYER_STATE_DRIVER && !GetVehicle()) {
 			StopMoving();
@@ -646,6 +637,14 @@ void CPlayerData::Process()
 
 			if ((dwThisTick - m_dwMoveStartTime) < m_dwMoveTime) {
 				m_dwMoveTickCount = dwThisTick;
+			} else if (IsMovingByMovePath(m_iMovePath)) {
+				m_iMovePoint++;
+				CVector *vecPoint = pServer->GetMovePath()->GetPoint(m_iMovePath, m_iMovePoint);
+				if (vecPoint) {
+					UpdateMovingData(*vecPoint, m_fMoveRadius, m_bMoveSetAngle, m_fMoveSpeed);
+				} else {
+					StopMoving();
+				}
 			} else {
 				StopMoving();
 
