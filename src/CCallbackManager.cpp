@@ -311,3 +311,34 @@ int CCallbackManager::OnUpdate(WORD wPlayerId)
 	}
 	return cReturn;
 }
+
+void CCallbackManager::OnFinishMovePath(WORD wPlayerId, int iMovePath)
+{
+	for (auto &amx : m_vAMX) {
+		// Get the function index
+		int iIndex;
+		if (!amx_FindPublic(amx, "FCNPC_OnFinishMovePathPoint", &iIndex)) {
+			// Push the parameters
+			amx_Push(amx, iMovePath);
+			amx_Push(amx, wPlayerId);
+			// Execute the callback
+			amx_Exec(amx, NULL, iIndex);
+		}
+	}
+}
+
+void CCallbackManager::OnFinishMovePathPoint(WORD wPlayerId, int iMovePath, int iMovePoint)
+{
+	for (auto &amx : m_vAMX) {
+		// Get the function index
+		int iIndex;
+		if (!amx_FindPublic(amx, "FCNPC_OnFinishMovePathPoint", &iIndex)) {
+			// Push the parameters
+			amx_Push(amx, iMovePoint);
+			amx_Push(amx, iMovePath);
+			amx_Push(amx, wPlayerId);
+			// Execute the callback
+			amx_Exec(amx, NULL, iIndex);
+		}
+	}
+}

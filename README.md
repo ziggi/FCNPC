@@ -87,6 +87,9 @@ forward FCNPC_OnStreamIn(npcid, forplayerid);
 forward FCNPC_OnStreamOut(npcid, forplayerid);
 
 forward FCNPC_OnUpdate(npcid);
+
+forward FCNPC_OnFinishMovePath(npcid, pathid);
+forward FCNPC_OnFinishMovePathPoint(npcid, pathid, pointid);
 ```
 
 # Natives

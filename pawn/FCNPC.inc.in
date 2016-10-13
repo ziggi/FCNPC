@@ -65,6 +65,9 @@ forward FCNPC_OnStreamOut(npcid, forplayerid);
 
 forward FCNPC_OnUpdate(npcid);
 
+forward FCNPC_OnFinishMovePath(npcid, pathid);
+forward FCNPC_OnFinishMovePathPoint(npcid, pathid, pointid);
+
 // Natives
 native FCNPC_SetUpdateRate(rate);
 native FCNPC_InitMapAndreas(address);

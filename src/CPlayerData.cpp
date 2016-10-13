@@ -638,12 +638,15 @@ void CPlayerData::Process()
 			if ((dwThisTick - m_dwMoveStartTime) < m_dwMoveTime) {
 				m_dwMoveTickCount = dwThisTick;
 			} else if (IsMovingByMovePath(m_iMovePath)) {
+				CCallbackManager::OnFinishMovePathPoint(m_wPlayerId, m_iMovePath, m_iMovePoint);
+
 				m_iMovePoint++;
 				CVector *vecPoint = pServer->GetMovePath()->GetPoint(m_iMovePath, m_iMovePoint);
 				if (vecPoint) {
 					UpdateMovingData(*vecPoint, m_fMoveRadius, m_bMoveSetAngle, m_fMoveSpeed);
 				} else {
 					StopMoving();
+					CCallbackManager::OnFinishMovePath(m_wPlayerId, m_iMovePath);
 				}
 			} else {
 				StopMoving();

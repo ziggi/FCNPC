@@ -36,6 +36,8 @@ public:
 	static void OnStreamIn(WORD wPlayerId, WORD wForPlayerId);
 	static void OnStreamOut(WORD wPlayerId, WORD wForPlayerId);
 	static int  OnUpdate(WORD wPlayerId);
+	static void OnFinishMovePath(WORD wPlayerId, int iMovePath);
+	static void OnFinishMovePathPoint(WORD wPlayerId, int iMovePath, int iMovePoint);
 
 	static std::vector<AMX *> m_vAMX;
 };
