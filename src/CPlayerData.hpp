@@ -177,10 +177,12 @@ public:
 	int GetSurfingPlayerObject();
 	void StopSurfing();
 
-	bool StartPlayingPlayback(char *szFile);
+	bool StartPlayingPlayback(char *szFile, int iRecordId, bool bAutoUnload);
 	void StopPlayingPlayback();
 	void PausePlayingPlayback();
 	void ResumePlayingPlayback();
+	void SetPlayingPlaybackPath(char *szFile);
+	void GetPlayingPlaybackPath(char *szFile, size_t size);
 
 	bool PlayNode(int iNodeId, int iType);
 	void StopPlayingNode();
@@ -250,6 +252,7 @@ private:
 	float m_fTrainSpeed;
 	BYTE m_byteGearState;
 	bool m_bVelocityUpdatePos;
+	char m_szPlayingPath[MAX_PATH];
 };
 
 #endif

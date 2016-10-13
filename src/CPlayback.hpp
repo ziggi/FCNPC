@@ -18,23 +18,22 @@ class CPlayerData;
 class CPlayback
 {
 public:
-	CPlayback(char *szFile);
+	CPlayback(char *szFile, char *szPlayingPath, bool bAutoUnload);
+	CPlayback(int iRecordId, bool bAutoUnload);
 	~CPlayback();
 
 	bool Initialize();
 	bool Process(CPlayerData *pPlayerData);
-
+	void UnloadRecord();
 	void SetPaused(bool bPaused);
 
 private:
-	char m_szFile[MAX_PATH];
-	FILE *m_pFile;
-	int m_iPlaybackType;
-	DWORD m_dwTime;
+	bool m_bAutoUnload;
+	int m_iRecordId;
 	DWORD m_dwStartTime;
 	bool m_bPaused;
-	CSyncData m_syncData;
-	CVehicleSyncData m_vehicleSyncData;
+	Record_t *m_recordData;
+	int m_iCurrentIndex;
 };
 
 #endif

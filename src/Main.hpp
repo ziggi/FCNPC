@@ -67,6 +67,7 @@
 #include "CWeaponInfo.hpp"
 #include "CAnimationInfo.hpp"
 #include "CMovePath.hpp"
+#include "CRecordManager.hpp"
 // SAMP includes
 #include "CSAMPRakPeer.hpp"
 #include "CFunctions.hpp"

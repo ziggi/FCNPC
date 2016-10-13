@@ -23,6 +23,7 @@ CServer::CServer(eSAMPVersion version)
 	m_pPlayerDataManager = NULL;
 	m_pNodeManager = NULL;
 	m_pMovePath = NULL;
+	m_pRecordManager = NULL;
 	m_pMapAndreas = NULL;
 	// Initialize the update rate
 	m_dwUpdateRate = DEFAULT_UPDATE_RATE;
@@ -36,6 +37,7 @@ CServer::~CServer()
 	SAFE_DELETE(m_pPlayerDataManager);
 	SAFE_DELETE(m_pNodeManager);
 	SAFE_DELETE(m_pMovePath);
+	SAFE_DELETE(m_pRecordManager);
 	SAFE_DELETE(m_pMapAndreas);
 }
 
@@ -95,6 +97,9 @@ BYTE CServer::Initialize(AMX *pAMX)
 	// Create the move path instance
 	m_pMovePath = new CMovePath;
 
+	// Create the record instance
+	m_pRecordManager = new CRecordManager;
+
 	// Check the maxnpc from the config
 	if (CFunctions::GetMaxNPC() == 0) {
 		logprintf("Warning: the maxnpc limit is 0 (you will not be able to create NPCs unless you change it)");
@@ -128,6 +133,11 @@ CPlayerManager *CServer::GetPlayerManager()
 CNodeManager *CServer::GetNodeManager()
 {
 	return m_pNodeManager;
+}
+
+CRecordManager *CServer::GetRecordManager()
+{
+	return m_pRecordManager;
 }
 
 CMovePath *CServer::GetMovePath()

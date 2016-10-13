@@ -68,6 +68,7 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_fTrainSpeed = 0.0f;
 	m_byteGearState = 0;
 	m_bVelocityUpdatePos = false;
+	SetPlayingPlaybackPath("npcmodes/recordings/");
 }
 
 CPlayerData::~CPlayerData()
@@ -2012,7 +2013,7 @@ void CPlayerData::StopSurfing()
 	m_vecSurfing = CVector(0.0f, 0.0f, 0.0f);
 }
 
-bool CPlayerData::StartPlayingPlayback(char *szFile)
+bool CPlayerData::StartPlayingPlayback(char *szFile, int iRecordId, bool bAutoUnload)
 {
 	// Make sure the player is not already Playing
 	if (m_bPlaying) {
@@ -2020,7 +2021,12 @@ bool CPlayerData::StartPlayingPlayback(char *szFile)
 	}
 
 	// Create a new playback instance
-	m_pPlayback = new CPlayback(szFile);
+	if (iRecordId != -1) {
+		m_pPlayback = new CPlayback(iRecordId, bAutoUnload);
+	} else if (szFile) {
+		m_pPlayback = new CPlayback(szFile, m_szPlayingPath, bAutoUnload);
+	}
+	
 	// Initialize it
 	if (!m_pPlayback) {
 		return false;
@@ -2075,6 +2081,16 @@ void CPlayerData::ResumePlayingPlayback()
 
 	// Resume the playback
 	m_pPlayback->SetPaused(false);
+}
+
+void CPlayerData::SetPlayingPlaybackPath(char *szFile)
+{
+	strlcpy(m_szPlayingPath, szFile, sizeof(m_szPlayingPath));
+}
+
+void CPlayerData::GetPlayingPlaybackPath(char *szFile, size_t size)
+{
+	strlcpy(szFile, m_szPlayingPath, size);
 }
 
 bool CPlayerData::PlayNode(int iNodeId, int iType)

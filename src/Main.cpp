@@ -224,6 +224,10 @@ AMX_NATIVE_INFO PluginNatives[ ] = {
 	{"FCNPC_StopPlayingPlayback", CNatives::FCNPC_StopPlayingPlayback},
 	{"FCNPC_PausePlayingPlayback", CNatives::FCNPC_PausePlayingPlayback},
 	{"FCNPC_ResumePlayingPlayback", CNatives::FCNPC_ResumePlayingPlayback},
+	{"FCNPC_LoadPlayingPlayback", CNatives::FCNPC_LoadPlayingPlayback},
+	{"FCNPC_UnloadPlayingPlayback", CNatives::FCNPC_UnloadPlayingPlayback},
+	{"FCNPC_SetPlayingPlaybackPath", CNatives::FCNPC_SetPlayingPlaybackPath},
+	{"FCNPC_GetPlayingPlaybackPath", CNatives::FCNPC_GetPlayingPlaybackPath},
 
 	{"FCNPC_OpenNode", CNatives::FCNPC_OpenNode},
 	{"FCNPC_CloseNode", CNatives::FCNPC_CloseNode},

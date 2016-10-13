@@ -227,10 +227,14 @@ native FCNPC_SetSurfingPlayerObject(npcid, objectid);
 native FCNPC_GetSurfingPlayerObject(npcid);
 native FCNPC_StopSurfing(npcid);
 
-native FCNPC_StartPlayingPlayback(npcid, file[]);
+native FCNPC_StartPlayingPlayback(npcid, file[] = "", playbackid = -1, bool:auto_unload = false);
 native FCNPC_StopPlayingPlayback(npcid);
 native FCNPC_PausePlayingPlayback(npcid);
 native FCNPC_ResumePlayingPlayback(npcid);
+native FCNPC_LoadPlayingPlayback(file[]);
+native FCNPC_UnloadPlayingPlayback(playbackid);
+native FCNPC_SetPlayingPlaybackPath(npcid, path[]);
+native FCNPC_GetPlayingPlaybackPath(npcid, path[], const size = sizeof(path));
 
 native FCNPC_OpenNode(nodeid);
 native FCNPC_CloseNode(nodeid);

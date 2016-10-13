@@ -2558,17 +2558,14 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleInfiniteAmmo(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_StartPlayingPlayback(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "FCNPC_StartPlayingPlayback");
+	CHECK_PARAMS(3, "FCNPC_StartPlayingPlayback");
 
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);
 	char *szFile;
 	amx_StrParam(amx, params[2], szFile);
-
-	// Make sure the length is valid
-	if (strlen(szFile) == 0) {
-		return 0;
-	}
+	int iRecordId = static_cast<int>(params[3]);
+	bool bAutoUnload = static_cast<int>(params[4]) != 0;
 
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
@@ -2576,8 +2573,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StartPlayingPlayback(AMX *amx, cell *params
 		return 0;
 	}
 
+	// Make sure the playback is valid
+	if (szFile && strlen(szFile) == 0 && !pServer->GetRecordManager()->IsValid(iRecordId)) {
+		return 0;
+	}
+
 	// Start Playing the player playback
-	return pPlayerData->StartPlayingPlayback(szFile);
+	return pPlayerData->StartPlayingPlayback(szFile, iRecordId, bAutoUnload);
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_StopPlayingPlayback(AMX *amx, cell *params)
@@ -2631,6 +2633,92 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ResumePlayingPlayback(AMX *amx, cell *param
 
 	// Resume Playing the player playback
 	pPlayerData->ResumePlayingPlayback();
+	return 1;
+}
+
+// native FCNPC_LoadPlayingPlayback(file[]);
+cell AMX_NATIVE_CALL CNatives::FCNPC_LoadPlayingPlayback(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_LoadPlayingPlayback");
+
+	// Get the params
+	char *szFile;
+	amx_StrParam(amx, params[1], szFile);
+
+	// Make sure the filename is valid
+	if (strlen(szFile) == 0) {
+		return 0;
+	}
+
+	// Start Playing the player playback
+	return pServer->GetRecordManager()->Load(szFile);
+}
+
+// native FCNPC_UnloadPlayingPlayback(playbackid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_UnloadPlayingPlayback(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_UnloadPlayingPlayback");
+
+	// Get the params
+	int iRecordId = static_cast<int>(params[1]);
+
+	// Make sure the playback is valid
+	if (!pServer->GetRecordManager()->IsValid(iRecordId)) {
+		return 0;
+	}
+
+	// Start Playing the player playback
+	return !!pServer->GetRecordManager()->Unload(iRecordId);
+}
+
+// native FCNPC_SetPlayingPlaybackPath(npcid, path[]);
+cell AMX_NATIVE_CALL CNatives::FCNPC_SetPlayingPlaybackPath(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_SetPlayingPlaybackPath");
+
+	// Get the params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+	char *szFile;
+	amx_StrParam(amx, params[2], szFile);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// Make sure the path is valid
+	if (strlen(szFile) == 0) {
+		return 0;
+	}
+
+	// Set playing path the player playback
+	pPlayerData->SetPlayingPlaybackPath(szFile);
+	return 1;
+}
+
+// native FCNPC_GetPlayingPlaybackPath(npcid, path[], const size = sizeof(path));
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetPlayingPlaybackPath(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(3, "FCNPC_GetPlayingPlaybackPath");
+
+	cell *pAddress = NULL;
+
+	// Get the params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+	amx_GetAddr(amx, params[2], &pAddress);
+	size_t size = static_cast<size_t>(params[3]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// Get playing path the player playback
+	char *szPath = new char[size];
+	pPlayerData->GetPlayingPlaybackPath(szPath, size);
+	amx_SetString(pAddress, szPath, 0, 0, size);
 	return 1;
 }
 

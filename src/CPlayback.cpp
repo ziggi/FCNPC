@@ -10,117 +10,102 @@
 
 #include "Main.hpp"
 
-extern CNetGame      *pNetGame;
+extern CServer  *pServer;
+extern CNetGame *pNetGame;
 
-CPlayback::CPlayback(char *szFile)
+CPlayback::CPlayback(char *szFile, char *szPlayingPath, bool bAutoUnload)
 {
 	// Save the file name
-	strlcpy(m_szFile, szFile, sizeof(m_szFile));
+	char szPath[MAX_PATH];
+	snprintf(szPath, sizeof(szPath), "%s%s.rec", szPlayingPath, szFile);
+	m_iRecordId = pServer->GetRecordManager()->Load(szPath);
+	if (m_iRecordId == -1) {
+		logprintf("FCNPC Error: file '%s' not found.", szPath);
+	}
+	m_bAutoUnload = bAutoUnload;
 	// Reset variables
-	m_iPlaybackType = PLAYBACK_TYPE_NONE;
+	m_dwStartTime = 0;
 	m_bPaused = false;
-	memset(&m_syncData, 0, sizeof(CSyncData));
-	memset(&m_vehicleSyncData, 0, sizeof(CVehicleSyncData));
+	m_recordData = NULL;
+	m_iCurrentIndex = 0;
+}
+
+CPlayback::CPlayback(int iRecordId, bool bAutoUnload)
+{
+	// Save the record id
+	m_iRecordId = iRecordId;
+	m_bAutoUnload = bAutoUnload;
+	// Reset variables
+	m_dwStartTime = 0;
+	m_bPaused = false;
+	m_recordData = NULL;
+	m_iCurrentIndex = 0;
 }
 
 CPlayback::~CPlayback()
 {
-	// Close the file
-	if (m_pFile) {
-		fclose(m_pFile);
-	}
-
 	// Reset variables
-	m_iPlaybackType = PLAYBACK_TYPE_NONE;
-	m_bPaused = false;
-	memset(&m_syncData, 0, sizeof(CSyncData));
-	memset(&m_vehicleSyncData, 0, sizeof(CVehicleSyncData));
+	if (m_bAutoUnload) {
+		pServer->GetRecordManager()->Unload(m_iRecordId);
+	}
 }
 
 bool CPlayback::Initialize()
 {
-	// Format the file path
-	char szPath[MAX_PATH];
-	snprintf(szPath, sizeof(szPath), "npcmodes/recordings/%s.rec", m_szFile);
-	// Try to open the playback file
-	fopen_s(&m_pFile, szPath, "rb");
-	if (!m_pFile) {
-		logprintf("FCNPC Error: file '%s' not found.", szPath);
+	if (m_iRecordId == -1) {
 		return false;
 	}
-
-	// Check the file size
-	fseek(m_pFile, 0, SEEK_END);
-	size_t sSize = ftell(m_pFile);
-	fseek(m_pFile, 0, SEEK_SET);
-	if (!sSize) {
-		fclose(m_pFile);
-		return false;
-	}
-	// Read the playback type and file info ?
-	DWORD dwFile;
-	int iPlaybackType = 0;
-	fread(&dwFile, sizeof(DWORD), 1, m_pFile);
-	fread(&iPlaybackType, sizeof(int), 1, m_pFile);
-	// Save the playback type
-	if (iPlaybackType != PLAYBACK_TYPE_DRIVER && iPlaybackType != PLAYBACK_TYPE_ONFOOT) {
-		fclose(m_pFile);
-		return false;
-	}
-	// Save the playback type
-	m_iPlaybackType = iPlaybackType;
-	// Read the first Playing time
-	DWORD dwTime;
-	fread(&dwTime, sizeof(DWORD), 1, m_pFile);
-	m_dwTime = dwTime;
-	// Get the starting time
+	m_recordData = pServer->GetRecordManager()->Get(m_iRecordId);
 	m_dwStartTime = GetTickCount();
 	return true;
 }
 
 bool CPlayback::Process(CPlayerData *pPlayerData)
 {
+	if (m_iCurrentIndex >= static_cast<int>(m_recordData->v_dwTime.size())) {
+		return false;
+	}
 	// Dont process if its paused
 	if (m_bPaused) {
 		// Process the player
-		if (m_iPlaybackType == PLAYBACK_TYPE_DRIVER) {
+		if (m_recordData->iPlaybackType == PLAYBACK_TYPE_DRIVER) {
 			// Set the state
 			pPlayerData->SetState(PLAYER_STATE_DRIVER);
 			// Pause the sync data
-			m_vehicleSyncData.wUDAnalog = 0;
-			m_vehicleSyncData.wLRAnalog = 0;
-			m_vehicleSyncData.wKeys = 0;
-			m_vehicleSyncData.vecVelocity = CVector(0.0f, 0.0f, 0.0f);
+			CVehicleSyncData *vehicleSyncData = &m_recordData->v_vehicleSyncData.at(m_iCurrentIndex);
+			vehicleSyncData->wUDAnalog = 0;
+			vehicleSyncData->wLRAnalog = 0;
+			vehicleSyncData->wKeys = 0;
+			vehicleSyncData->vecVelocity = CVector(0.0f, 0.0f, 0.0f);
 			// Set vehicle sync data
-			pPlayerData->SetVehicleSync(&m_vehicleSyncData);
+			pPlayerData->SetVehicleSync(vehicleSyncData);
 			// Update the player
 			pPlayerData->UpdateSync(UPDATE_STATE_DRIVER);
-		} else if (m_iPlaybackType == PLAYBACK_TYPE_ONFOOT) {
+		} else if (m_recordData->iPlaybackType == PLAYBACK_TYPE_ONFOOT) {
 			// Set the state
 			pPlayerData->SetState(PLAYER_STATE_ONFOOT);
 			// Pause the sync data
-			m_syncData.wUDAnalog = 0;
-			m_syncData.wLRAnalog = 0;
-			m_syncData.wKeys = 0;
-			m_syncData.vecVelocity = CVector(0.0f, 0.0f, 0.0f);
+			CSyncData *playerSyncData = &m_recordData->v_playerSyncData.at(m_iCurrentIndex);
+			playerSyncData->wUDAnalog = 0;
+			playerSyncData->wLRAnalog = 0;
+			playerSyncData->wKeys = 0;
+			playerSyncData->vecVelocity = CVector(0.0f, 0.0f, 0.0f);
 			// Set vehicle sync data
-			pPlayerData->SetOnFootSync(&m_syncData);
+			pPlayerData->SetOnFootSync(playerSyncData);
 			// Update the player
 			pPlayerData->UpdateSync(UPDATE_STATE_ONFOOT);
 		}
 		// Update the starting time
-		m_dwStartTime = (GetTickCount() - m_dwTime);
+		m_dwStartTime = (GetTickCount() - m_recordData->v_dwTime[m_iCurrentIndex]);
 		return true;
 	}
 	// Check the time
-	if ((GetTickCount() - m_dwStartTime) >= m_dwTime) {
+	if ((GetTickCount() - m_dwStartTime) >= m_recordData->v_dwTime[m_iCurrentIndex]) {
 		// Read the first recording data
-		if (m_iPlaybackType == PLAYBACK_TYPE_DRIVER) {
+		if (m_recordData->iPlaybackType == PLAYBACK_TYPE_DRIVER) {
 			// Read the in car sync data
 			CVehicleSyncData vehicleSyncData;
-			if (!fread(&vehicleSyncData, sizeof(CVehicleSyncData), 1, m_pFile)) {
-				return false;
-			}
+			memcpy(&vehicleSyncData, &m_recordData->v_vehicleSyncData[m_iCurrentIndex], sizeof(CVehicleSyncData));
 
 			// Get the vehicle interface
 			CVehicle *pVehicle = pPlayerData->GetVehicle();
@@ -148,17 +133,12 @@ bool CPlayback::Process(CPlayerData *pPlayerData)
 
 			pPlayerData->SetVehicleSync(&vehicleSyncData);
 
-			// Save the last onfoot sync
-			memcpy(&m_vehicleSyncData, &vehicleSyncData, sizeof(CVehicleSyncData));
-
 			// Update the player
 			pPlayerData->Update(UPDATE_STATE_DRIVER);
-		} else if (m_iPlaybackType == PLAYBACK_TYPE_ONFOOT) {
+		} else if (m_recordData->iPlaybackType == PLAYBACK_TYPE_ONFOOT) {
 			// Read the on foot sync data
 			CSyncData syncData;
-			if (!fread(&syncData, sizeof(CSyncData), 1, m_pFile)) {
-				return false;
-			}
+			memcpy(&syncData, &m_recordData->v_playerSyncData[m_iCurrentIndex], sizeof(CSyncData));
 
 			// Apply the sync data
 			pPlayerData->SetState(PLAYER_STATE_ONFOOT);
@@ -174,18 +154,18 @@ bool CPlayback::Process(CPlayerData *pPlayerData)
 			pPlayerData->SetSurfingVehicle(syncData.wSurfingInfo);
 			pPlayerData->SetOnFootSync(&syncData);
 
-			// Save the last onfoot sync
-			memcpy(&m_syncData, &syncData, sizeof(CSyncData));
-
 			// Update the player
 			pPlayerData->Update(UPDATE_STATE_ONFOOT);
 		}
-		// Update the time
-		if (!fread(&m_dwTime, sizeof(DWORD), 1, m_pFile)) {
-			return false;
-		}
+		// Update the index
+		m_iCurrentIndex++;
 	}
 	return true;
+}
+
+void CPlayback::UnloadRecord()
+{
+	pServer->GetRecordManager()->Unload(m_iRecordId);
 }
 
 void CPlayback::SetPaused(bool bPaused)

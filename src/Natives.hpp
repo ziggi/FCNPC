@@ -151,6 +151,10 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_StopPlayingPlayback(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_PausePlayingPlayback(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_ResumePlayingPlayback(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_LoadPlayingPlayback(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_UnloadPlayingPlayback(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_SetPlayingPlaybackPath(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_GetPlayingPlaybackPath(AMX *amx, cell *params);
 
 	static cell AMX_NATIVE_CALL FCNPC_OpenNode(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_CloseNode(AMX *amx, cell *params);
