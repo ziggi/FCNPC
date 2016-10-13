@@ -20,10 +20,7 @@ void CCallbackManager::RegisterAMX(AMX *pAMX)
 
 void CCallbackManager::UnregisterAMX(AMX *pAMX)
 {
-	auto it = std::find(m_vAMX.begin(), m_vAMX.end(), pAMX);
-	if (it != m_vAMX.end()) {
-		m_vAMX.erase(it);
-	}
+	m_vAMX.erase(std::remove(m_vAMX.begin(), m_vAMX.end(), pAMX), m_vAMX.end());
 }
 
 void CCallbackManager::OnCreate(WORD wPlayerId)
