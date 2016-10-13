@@ -81,7 +81,9 @@ void CPlayerManager::Process()
 {
 	// Process all the players
 	for (auto &pPlayer : m_pNpcArray) {
-		pPlayer->Process();
+		if (pPlayer) {
+			pPlayer->Process();
+		}
 	}
 }
 
