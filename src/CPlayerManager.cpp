@@ -59,6 +59,7 @@ WORD CPlayerManager::AddPlayer(char *szName)
 		return INVALID_PLAYER_ID;
 	}
 
+	m_vNpcID.push_back(wPlayerId);
 	// Call the created callback
 	CCallbackManager::OnCreate(wPlayerId);
 	return wPlayerId;
@@ -72,6 +73,7 @@ bool CPlayerManager::DeletePlayer(WORD wPlayerId)
 	}
 
 	// Destroy the player
+	m_vNpcID.erase(std::remove(m_vNpcID.begin(), m_vNpcID.end(), wPlayerId), m_vNpcID.end());
 	m_pNpcArray[wPlayerId]->Destroy();
 	SAFE_DELETE(m_pNpcArray[wPlayerId]);
 	return true;
@@ -80,10 +82,8 @@ bool CPlayerManager::DeletePlayer(WORD wPlayerId)
 void CPlayerManager::Process()
 {
 	// Process all the players
-	for (auto &pPlayer : m_pNpcArray) {
-		if (pPlayer) {
-			pPlayer->Process();
-		}
+	for (auto &id : m_vNpcID) {
+		m_pNpcArray[id]->Process();
 	}
 }
 

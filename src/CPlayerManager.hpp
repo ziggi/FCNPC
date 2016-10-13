@@ -33,6 +33,7 @@ public:
 
 private:
 	CPlayerData *m_pNpcArray[MAX_PLAYERS];
+	std::vector<int> m_vNpcID;
 };
 
 #endif
