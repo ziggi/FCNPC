@@ -2927,14 +2927,14 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AddPointsToPath(AMX *amx, cell *params)
 	CVector vecPoint;
 	cell *pAddress = NULL;
 	amx_GetAddr(amx, params[2], &pAddress);
-	pAddress += 2;
+	pAddress += iSize;
 
 	for (int i = 0; i < iSize; i++) {
-		pAddress += i * 3;
-
 		vecPoint.fX = amx_ctof(*(pAddress));
 		vecPoint.fY = amx_ctof(*(pAddress + 1));
 		vecPoint.fZ = amx_ctof(*(pAddress + 2));
+
+		pAddress += 3;
 
 		pServer->GetMovePath()->AddPoint(iPathId, vecPoint);
 	}
