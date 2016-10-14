@@ -36,16 +36,16 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	// Get the logprintf function address
 	logprintf = (logprintf_t)ppData[PLUGIN_DATA_LOGPRINTF];
 	// Check server version
-	eSAMPVersion version;
+	eSAMPVersion sampVersion;
 
 	if ((DWORD)logprintf == CAddress::FUNC_Logprintf_037) {
-		version = SAMP_VERSION_037;
+		sampVersion = SAMP_VERSION_037;
 		strlcpy(szSampVersion, "0.3.7", sizeof(szSampVersion));
 	} else if ((DWORD)logprintf == CAddress::FUNC_Logprintf_037_R2_1) {
-		version = SAMP_VERSION_037_R2_1;
+		sampVersion = SAMP_VERSION_037_R2_1;
 		strlcpy(szSampVersion, "0.3.7 R2-1", sizeof(szSampVersion));
 	} else {
-		version = SAMP_VERSION_UNKNOWN;
+		sampVersion = SAMP_VERSION_UNKNOWN;
 		strlcpy(szSampVersion, "Unknown", sizeof(szSampVersion));
 	}
 	// Print the loading message
@@ -67,8 +67,20 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 #if defined(LINUX)
 	LoadTickCount();
 #endif
+	// start version checking
+	std::thread thr([] {
+		char szPluginVersion[16];
+		if (CUtils::GetLatestVersion(szPluginVersion)) {
+			if (strcmp(szPluginVersion, PLUGIN_VERSION) != 0) {
+				logprintf("\n** Please update your FCNPC plugin to %s from here: " HOME_URL ".\n", szPluginVersion);
+			}
+		} else {
+			logprintf("\n** FCNPC version check failed.\n");
+		}
+	});
+	thr.detach();
 	// Create the server instance
-	pServer = new CServer(version);
+	pServer = new CServer(sampVersion);
 	if (!pServer) {
 		logprintf("Failed. (Cant create server instance)");
 		return false;

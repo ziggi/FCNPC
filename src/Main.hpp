@@ -44,6 +44,8 @@
 #include <ctime>
 #include <vector>
 #include <algorithm>
+#include <curl/curl.h>
+#include <thread>
 // Library includes
 #include <sdk/plugin.h>
 #include <raknet/BitStream.h>
