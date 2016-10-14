@@ -2558,7 +2558,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleInfiniteAmmo(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_StartPlayingPlayback(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "FCNPC_StartPlayingPlayback");
+	CHECK_PARAMS(4, "FCNPC_StartPlayingPlayback");
 
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);

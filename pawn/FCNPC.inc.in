@@ -272,7 +272,7 @@ public FCNPC_OnVersionGet(index, response_code, data[])
 		new version[16];
 		strmid(version, data, 1, length);
 
-		if (length != 0 && strcmp(version, FCNPC_PLUGIN_VERSION) != 0) {
+		if (strcmp(version, FCNPC_PLUGIN_VERSION) != 0) {
 			printf("\n** Please update your FCNPC plugin to %s from here: https://github.com/ziggi/FCNPC/releases.\n", data);
 		}
 	}
