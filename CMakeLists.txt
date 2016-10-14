@@ -6,7 +6,8 @@ endif ()
 
 project (FCNPC)
 
-include (version.cmake)
+set (INCLUDE_VERSION 130)
+set (PLUGIN_VERSION "1.3.1")
 add_definitions (-DPLUGIN_VERSION="${PLUGIN_VERSION}" -DINCLUDE_VERSION=${INCLUDE_VERSION})
 
 set (CMAKE_SHARED_LIBRARY_PREFIX "")

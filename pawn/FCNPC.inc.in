@@ -242,7 +242,7 @@ native FCNPC_GoByMovePath(npcid, pathid, type = MOVE_TYPE_AUTO, Float:speed = MO
 
 public OnGameModeInit()
 {
-	HTTP(0, HTTP_GET, "raw.githubusercontent.com/ziggi/FCNPC/master/version.cmake", "", "FCNPC_OnVersionGet");
+	HTTP(0, HTTP_GET, "ziggi.org/github/lastrelease.php?owner=ziggi&repo=FCNPC&elem=tag_name", "", "FCNPC_OnVersionGet");
 	#if defined FCNPC_OnGameModeInit
 		return FCNPC_OnGameModeInit();
 	#else
@@ -264,18 +264,16 @@ forward FCNPC_OnVersionGet(index, response_code, data[]);
 public FCNPC_OnVersionGet(index, response_code, data[])
 {
 	if (index == 0 && response_code == 200) {
-		new
-			start_pos,
-			end_pos,
-			version[16];
+		new length = strlen(data);
+		if (length == 0) {
+			return;
+		}
 
-		start_pos = strfind(data, "PLUGIN_VERSION") + 16;
-		end_pos = strfind(data, "\"", .pos = start_pos + 1) + start_pos;
+		new version[16];
+		strmid(version, data, 1, length);
 
-		strmid(version, data, start_pos, end_pos);
-
-		if (strcmp(version, FCNPC_PLUGIN_VERSION) != 0) {
-			printf("\n** Please update your FCNPC plugin to %s from here: https://github.com/ziggi/FCNPC/releases.\n", version);
+		if (length != 0 && strcmp(version, FCNPC_PLUGIN_VERSION) != 0) {
+			printf("\n** Please update your FCNPC plugin to %s from here: https://github.com/ziggi/FCNPC/releases.\n", data);
 		}
 	}
 }
