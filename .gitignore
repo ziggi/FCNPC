@@ -14,6 +14,7 @@ Makefile
 cmake_install.cmake
 install_manifest.txt
 *.cmake
+!version.cmake
 DartConfiguration.tcl
 
 # VS

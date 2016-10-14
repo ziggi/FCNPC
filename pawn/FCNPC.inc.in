@@ -232,3 +232,52 @@ native FCNPC_IsValidMovePoint(pathid, pointid);
 native FCNPC_GetMovePoint(pathid, pointid, &Float:x, &Float:y, &Float:z);
 native FCNPC_GetNumberMovePoint(pathid);
 native FCNPC_GoByMovePath(npcid, pathid, type = MOVE_TYPE_AUTO, Float:speed = MOVE_SPEED_AUTO, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true);
+
+#tryinclude <a_http>
+#if !defined HTTP
+	#tryinclude "a_http"
+#endif
+
+#if defined HTTP
+
+public OnGameModeInit()
+{
+	HTTP(0, HTTP_GET, "raw.githubusercontent.com/ziggi/FCNPC/master/version.cmake", "", "FCNPC_OnVersionGet");
+	#if defined FCNPC_OnGameModeInit
+		return FCNPC_OnGameModeInit();
+	#else
+		return 1;
+	#endif
+}
+#if defined _ALS_OnGameModeInit
+	#undef OnGameModeInit
+#else
+	#define _ALS_OnGameModeInit
+#endif
+
+#define OnGameModeInit FCNPC_OnGameModeInit
+#if defined FCNPC_OnGameModeInit
+	forward FCNPC_OnGameModeInit();
+#endif
+
+forward FCNPC_OnVersionGet(index, response_code, data[]);
+public FCNPC_OnVersionGet(index, response_code, data[])
+{
+	if (index == 0 && response_code == 200) {
+		new
+			start_pos,
+			end_pos,
+			version[16];
+
+		start_pos = strfind(data, "PLUGIN_VERSION") + 16;
+		end_pos = strfind(data, "\"", .pos = start_pos + 1) + start_pos;
+
+		strmid(version, data, start_pos, end_pos);
+
+		if (strcmp(version, FCNPC_PLUGIN_VERSION) != 0) {
+			printf("\n** Please update your FCNPC plugin to %s from here: https://github.com/ziggi/FCNPC/releases.\n", version);
+		}
+	}
+}
+
+#endif
