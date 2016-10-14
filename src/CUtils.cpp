@@ -128,36 +128,3 @@ float CUtils::GetNearestFloatValue(float value, float *array, const size_t size)
 
 	return nearest;
 }
-
-static size_t writer(void *contents, size_t size, size_t nmemb, void *userp)
-{
-	((std::string*)userp)->append((char*)contents, size * nmemb);
-	return size * nmemb;
-}
-
-bool CUtils::GetLatestVersion(char szVersion[16])
-{
-	CURL *curl;
-	CURLcode res;
-	std::string temp;
-
-	curl = curl_easy_init();
-	if (curl) {
-		curl_easy_setopt(curl, CURLOPT_URL, "https://api.github.com/repos/ziggi/FCNPC/releases/latest");
-		curl_easy_setopt(curl, CURLOPT_USERAGENT, "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36");
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writer);
-		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &temp);
-		res = curl_easy_perform(curl);
-		curl_easy_cleanup(curl);
-
-		if (res == CURLE_OK) {
-			std::size_t start_pos = temp.find("tag_name") + 13;
-			std::size_t length = temp.find_first_of("\"", start_pos + 1) - start_pos;
-
-			length = temp.copy(szVersion, length, start_pos);
-			szVersion[length] = '\0';
-			return true;
-		}
-	}
-	return false;
-}

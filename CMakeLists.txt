@@ -6,10 +6,9 @@ endif ()
 
 project (FCNPC)
 
-set (HOME_URL "https://github.com/ziggi/FCNPC/releases")
 set (INCLUDE_VERSION 130)
 set (PLUGIN_VERSION "1.3.1")
-add_definitions (-DPLUGIN_VERSION="${PLUGIN_VERSION}" -DINCLUDE_VERSION=${INCLUDE_VERSION} -DHOME_URL="${HOME_URL}")
+add_definitions (-DPLUGIN_VERSION="${PLUGIN_VERSION}" -DINCLUDE_VERSION=${INCLUDE_VERSION})
 
 set (CMAKE_SHARED_LIBRARY_PREFIX "")
 
@@ -51,8 +50,6 @@ add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/subhook
 )
 
-find_package (CURL)
-
 file (GLOB FCNPC_SRC
 	${FCNPC_SRC}
 	${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
@@ -73,8 +70,4 @@ file (GLOB FCNPC_SRC
 add_library (${PROJECT_NAME} SHARED ${FCNPC_SRC})
 
 target_link_libraries (${PROJECT_NAME} subhook)
-if (CURL_FOUND)
-	target_link_libraries (${PROJECT_NAME} curl)
-endif ()
-
 configure_file(pawn/FCNPC.inc.in pawn/FCNPC.inc)
