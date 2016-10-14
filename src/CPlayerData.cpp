@@ -68,7 +68,7 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_fTrainSpeed = 0.0f;
 	m_byteGearState = 0;
 	m_bVelocityUpdatePos = false;
-	SetPlayingPlaybackPath("npcmodes/recordings/");
+	SetPlayingPlaybackPath((char *)"npcmodes/recordings/");
 }
 
 CPlayerData::~CPlayerData()
@@ -2026,7 +2026,7 @@ bool CPlayerData::StartPlayingPlayback(char *szFile, int iRecordId, bool bAutoUn
 	} else if (szFile) {
 		m_pPlayback = new CPlayback(szFile, m_szPlayingPath, bAutoUnload);
 	}
-	
+
 	// Initialize it
 	if (!m_pPlayback) {
 		return false;
