@@ -18,7 +18,7 @@ If you want to see that your scripts will work correctly, you need to declare th
 # How to clone
 Git clone with submodules:
 ```bash
-git clone --recursive git@github.com:ziggi/FCNPC.git
+git clone --recursive https://github.com/ziggi/FCNPC.git
 ```
 
 # Building (Windows)
