@@ -59,7 +59,8 @@ make
 #define NODE_TYPE_VEHICLE   (1)
 #define NODE_TYPE_BOAT      (2)
 
-#define INVALID_MOVE_PATH   (-1)
+#define INVALID_MOVEPATH_ID (-1)
+#define INVALID_RECORD_ID   (-1)
 ```
 
 # Callbacks
@@ -119,8 +120,8 @@ native Float:FCNPC_GetAngle(npcid);
 native FCNPC_SetQuaternion(npcid, Float:w, Float:x, Float:y, Float:z);
 native FCNPC_GiveQuaternion(npcid, Float:w, Float:x, Float:y, Float:z);
 native FCNPC_GetQuaternion(npcid, &Float:w, &Float:x, &Float:y, &Float:z);
-native FCNPC_SetVelocity(npcid, Float:x, Float:y, Float:z);
-native FCNPC_GiveVelocity(npcid, Float:x, Float:y, Float:z);
+native FCNPC_SetVelocity(npcid, Float:x, Float:y, Float:z, bool:update_pos = false);
+native FCNPC_GiveVelocity(npcid, Float:x, Float:y, Float:z, bool:update_pos = false);
 native FCNPC_GetVelocity(npcid, &Float:x, &Float:y, &Float:z);
 native FCNPC_SetInterior(npcid, interiorid);
 native FCNPC_GetInterior(npcid);
@@ -227,12 +228,12 @@ native FCNPC_SetSurfingPlayerObject(npcid, objectid);
 native FCNPC_GetSurfingPlayerObject(npcid);
 native FCNPC_StopSurfing(npcid);
 
-native FCNPC_StartPlayingPlayback(npcid, file[] = "", playbackid = -1, bool:auto_unload = false);
+native FCNPC_StartPlayingPlayback(npcid, file[] = "", recordid = INVALID_RECORD_ID, bool:auto_unload = false);
 native FCNPC_StopPlayingPlayback(npcid);
 native FCNPC_PausePlayingPlayback(npcid);
 native FCNPC_ResumePlayingPlayback(npcid);
 native FCNPC_LoadPlayingPlayback(file[]);
-native FCNPC_UnloadPlayingPlayback(playbackid);
+native FCNPC_UnloadPlayingPlayback(recordid);
 native FCNPC_SetPlayingPlaybackPath(npcid, path[]);
 native FCNPC_GetPlayingPlaybackPath(npcid, path[], const size = sizeof(path));
 

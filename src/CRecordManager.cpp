@@ -14,7 +14,7 @@ int CRecordManager::Load(char *szFile)
 {
 	// try to find file in memory
 	int index = Find(szFile);
-	if (index != -1) {
+	if (index != INVALID_RECORD_ID) {
 		return index;
 	}
 
@@ -23,7 +23,7 @@ int CRecordManager::Load(char *szFile)
 	// Try to open the playback file
 	fopen_s(&pFile, szFile, "rb");
 	if (!pFile) {
-		return -1;
+		return INVALID_RECORD_ID;
 	}
 
 	// Check the file size
@@ -32,7 +32,7 @@ int CRecordManager::Load(char *szFile)
 	fseek(pFile, 0, SEEK_SET);
 	if (!sSize) {
 		fclose(pFile);
-		return -1;
+		return INVALID_RECORD_ID;
 	}
 
 	// Read the playback type and file info ?
@@ -43,7 +43,7 @@ int CRecordManager::Load(char *szFile)
 	// Check the playback type
 	if (iPlaybackType != PLAYBACK_TYPE_DRIVER && iPlaybackType != PLAYBACK_TYPE_ONFOOT) {
 		fclose(pFile);
-		return -1;
+		return INVALID_RECORD_ID;
 	}
 
 	// add new record
@@ -96,7 +96,7 @@ bool CRecordManager::Unload(int iRecordId)
 
 bool CRecordManager::IsValid(int iRecordId)
 {
-	return static_cast<int>(m_vSyncData.size()) > iRecordId;
+	return iRecordId >= 0 && static_cast<int>(m_vSyncData.size()) > iRecordId;
 }
 
 int CRecordManager::Find(char *szFile)
@@ -106,7 +106,7 @@ int CRecordManager::Find(char *szFile)
 			return std::distance(m_vSyncData.begin(), it);
 		}
 	}
-	return -1;
+	return INVALID_RECORD_ID;
 }
 
 Record_t *CRecordManager::Get(int iRecordId)

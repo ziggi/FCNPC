@@ -56,7 +56,7 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_wSurfingInfo = 0;
 	m_pWeaponInfo = new CWeaponInfo();
 	m_wMoveId = INVALID_PLAYER_ID;
-	m_iMovePath = INVALID_MOVE_PATH;
+	m_iMovePath = INVALID_MOVEPATH_ID;
 	m_iMovePoint = 0;
 	m_iMoveType = MOVE_TYPE_AUTO;
 	m_fMoveRadius = 0.0f;
@@ -1418,7 +1418,7 @@ void CPlayerData::StopMoving()
 	// Reset moving flag
 	m_bMoving = false;
 	m_wMoveId = INVALID_PLAYER_ID;
-	m_iMovePath = INVALID_MOVE_PATH;
+	m_iMovePath = INVALID_MOVEPATH_ID;
 	m_iMovePoint = 0;
 	// Reset the player data
 	SetVelocity(CVector(0.0f, 0.0f, 0.0f));
@@ -1443,12 +1443,12 @@ bool CPlayerData::IsMoving()
 
 bool CPlayerData::IsMovingAtPlayer(WORD wPlayerId)
 {
-	return m_bMoving && m_wMoveId == wPlayerId && m_wMoveId != INVALID_PLAYER_ID;
+	return m_bMoving && m_wMoveId != INVALID_PLAYER_ID && m_wMoveId == wPlayerId;
 }
 
 bool CPlayerData::IsMovingByMovePath(int iMovePath)
 {
-	return m_bMoving && m_iMovePath == iMovePath && m_iMovePath != INVALID_MOVE_PATH;
+	return m_bMoving && m_iMovePath != INVALID_MOVEPATH_ID && m_iMovePath == iMovePath;
 }
 
 void CPlayerData::ToggleReloading(bool bToggle)
@@ -2021,7 +2021,7 @@ bool CPlayerData::StartPlayingPlayback(char *szFile, int iRecordId, bool bAutoUn
 	}
 
 	// Create a new playback instance
-	if (iRecordId != -1) {
+	if (iRecordId != INVALID_RECORD_ID) {
 		m_pPlayback = new CPlayback(iRecordId, bAutoUnload);
 	} else if (szFile) {
 		m_pPlayback = new CPlayback(szFile, m_szPlayingPath, bAutoUnload);

@@ -38,7 +38,8 @@ public FCNPC_IncludeVersion = FCNPC_INCLUDE_VERSION;
 #define NODE_TYPE_VEHICLE   (1)
 #define NODE_TYPE_BOAT      (2)
 
-#define INVALID_MOVE_PATH   (-1)
+#define INVALID_MOVEPATH_ID (-1)
+#define INVALID_RECORD_ID   (-1)
 
 // Callbacks
 forward FCNPC_OnCreate(npcid);
@@ -202,7 +203,7 @@ native FCNPC_SetSurfingPlayerObject(npcid, objectid);
 native FCNPC_GetSurfingPlayerObject(npcid);
 native FCNPC_StopSurfing(npcid);
 
-native FCNPC_StartPlayingPlayback(npcid, file[] = "", recordid = -1, bool:auto_unload = false);
+native FCNPC_StartPlayingPlayback(npcid, file[] = "", recordid = INVALID_RECORD_ID, bool:auto_unload = false);
 native FCNPC_StopPlayingPlayback(npcid);
 native FCNPC_PausePlayingPlayback(npcid);
 native FCNPC_ResumePlayingPlayback(npcid);

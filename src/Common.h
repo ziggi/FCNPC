@@ -58,7 +58,9 @@ extern logprintf_t          logprintf;
 #define MOVE_SPEED_RUN      0.56444f
 #define MOVE_SPEED_SPRINT   0.926784f
 // Move path
-#define INVALID_MOVE_PATH   -1
+#define INVALID_MOVEPATH_ID -1
+// Record
+#define INVALID_RECORD_ID   -1
 // Playback types
 #define PLAYBACK_TYPE_NONE              0
 #define PLAYBACK_TYPE_DRIVER            1
