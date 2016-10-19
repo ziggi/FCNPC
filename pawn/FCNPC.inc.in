@@ -306,3 +306,131 @@ native FCNPC_GoByMovePath(npcid, pathid, type = MOVE_TYPE_AUTO, Float:speed = MO
 		}
 	}
 #endif
+
+#if defined foreach
+	/*
+		Iterator
+	*/
+	new
+		Iterator:FCNPC<MAX_PLAYERS>;
+
+	/*
+		Init
+	*/
+	#if defined FILTERSCRIPT
+		/*
+			OnFilterScriptInit
+		*/
+		public OnFilterScriptInit()
+		{
+			Iter_Clear(FCNPC);
+
+			for (new i = 0; i != MAX_PLAYERS; ++i) {
+				if (!FCNPC_IsValid(i)) {
+					Iter_Add(FCNPC, i);
+				}
+			}
+
+			#if defined fcnpc_OnFilterScriptInit
+				return fcnpc_OnFilterScriptInit();
+			#else
+				return 1;
+			#endif
+		}
+		#if defined _ALS_OnFilterScriptInit
+			#undef OnFilterScriptInit
+		#else
+			#define _ALS_OnFilterScriptInit
+		#endif
+
+		#define OnFilterScriptInit fcnpc_OnFilterScriptInit
+		#if defined fcnpc_OnFilterScriptInit
+			forward fcnpc_OnFilterScriptInit();
+		#endif
+	#else
+		/*
+			OnGameModeInit
+		*/
+		public OnGameModeInit()
+		{
+			Iter_Clear(FCNPC);
+
+			for (new i = 0; i != MAX_PLAYERS; ++i) {
+				if (FCNPC_IsValid(i)) {
+					Iter_Add(FCNPC, i);
+				}
+			}
+
+			#if defined fcnpc_OnGameModeInit
+				return fcnpc_OnGameModeInit();
+			#else
+				return 1;
+			#endif
+		}
+		#if defined _ALS_OnGameModeInit
+			#undef OnGameModeInit
+		#else
+			#define _ALS_OnGameModeInit
+		#endif
+
+		#define OnGameModeInit fcnpc_OnGameModeInit
+		#if defined fcnpc_OnGameModeInit
+			forward fcnpc_OnGameModeInit();
+		#endif
+	#endif
+
+	/*
+		FCNPC_OnCreate
+	*/
+	public FCNPC_OnCreate(npcid)
+	{
+		Iter_Add(FCNPC, npcid);
+
+		#if defined fcnpc_FCNPC_OnCreate
+			return fcnpc_FCNPC_OnCreate(npcid);
+		#else
+			return 1;
+		#endif
+	}
+	#if defined _ALS_FCNPC_OnCreate
+		#undef FCNPC_OnCreate
+	#else
+		#define _ALS_FCNPC_OnCreate
+	#endif
+
+	#define FCNPC_OnCreate fcnpc_FCNPC_OnCreate
+	#if defined fcnpc_FCNPC_OnCreate
+		forward fcnpc_FCNPC_OnCreate(npcid);
+	#endif
+
+	/*
+		FCNPC_DestroySafe
+	*/
+	stock FCNPC_DestroySafe(&npcid)
+	{
+		new res = FCNPC_Destroy(npcid);
+		if (res) {
+			Iter_SafeRemove(FCNPC, npcid, npcid);
+		}
+		return res;
+	}
+
+	/*
+		FCNPC_Destroy
+	*/
+	stock fcnpc_FCNPC_Destroy(npcid)
+	{
+		new res = FCNPC_Destroy(npcid);
+		if (res) {
+			Iter_Remove(FCNPC, npcid);
+		}
+		return res;
+	}
+	#if defined _ALS_FCNPC_Destroy
+		#undef FCNPC_Destroy
+	#else
+		#define _ALS_FCNPC_Destroy
+	#endif
+
+	#define FCNPC_Destroy fcnpc_FCNPC_Destroy
+#endif
