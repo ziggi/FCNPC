@@ -1443,12 +1443,12 @@ bool CPlayerData::IsMoving()
 
 bool CPlayerData::IsMovingAtPlayer(WORD wPlayerId)
 {
-	return m_bMoving && m_wMoveId == wPlayerId;
+	return m_bMoving && m_wMoveId == wPlayerId && m_wMoveId != INVALID_PLAYER_ID;
 }
 
 bool CPlayerData::IsMovingByMovePath(int iMovePath)
 {
-	return m_bMoving && m_iMovePath == iMovePath;
+	return m_bMoving && m_iMovePath == iMovePath && m_iMovePath != INVALID_MOVE_PATH;
 }
 
 void CPlayerData::ToggleReloading(bool bToggle)
