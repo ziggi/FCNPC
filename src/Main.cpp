@@ -247,6 +247,8 @@ AMX_NATIVE_INFO PluginNatives[ ] = {
 	{"FCNPC_AddPointsToPath", CNatives::FCNPC_AddPointsToPath},
 	{"FCNPC_RemovePointFromPath", CNatives::FCNPC_RemovePointFromPath},
 	{"FCNPC_IsValidMovePoint", CNatives::FCNPC_IsValidMovePoint},
+	{"FCNPC_GetMovePoint", CNatives::FCNPC_GetMovePoint},
+	{"FCNPC_GetNumberMovePoint", CNatives::FCNPC_GetNumberMovePoint},
 	{"FCNPC_GoByMovePath", CNatives::FCNPC_GoByMovePath},
 
 	{0, 0}
