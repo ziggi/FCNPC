@@ -314,7 +314,7 @@ void CCallbackManager::OnFinishMovePath(WORD wPlayerId, int iMovePath)
 	for (auto &amx : m_vAMX) {
 		// Get the function index
 		int iIndex;
-		if (!amx_FindPublic(amx, "FCNPC_OnFinishMovePathPoint", &iIndex)) {
+		if (!amx_FindPublic(amx, "FCNPC_OnFinishMovePath", &iIndex)) {
 			// Push the parameters
 			amx_Push(amx, iMovePath);
 			amx_Push(amx, wPlayerId);

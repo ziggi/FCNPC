@@ -3054,7 +3054,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsValidMovePoint(AMX *amx, cell *params)
 }
 
 // native FCNPC_GetMovePoint(pathid, pointid, &Float:x, &Float:y, &Float:z);
-cell AMX_NATIVE_CALL FCNPC_GetMovePoint(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetMovePoint(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(5, "FCNPC_GetMovePoint");
 
@@ -3082,7 +3082,7 @@ cell AMX_NATIVE_CALL FCNPC_GetMovePoint(AMX *amx, cell *params)
 }
 
 // native FCNPC_GetNumberMovePoint(pathid);
-cell AMX_NATIVE_CALL FCNPC_GetNumberMovePoint(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetNumberMovePoint(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_GetNumberMovePoint");
 
