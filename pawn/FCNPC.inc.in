@@ -235,7 +235,10 @@ native FCNPC_GetNumberMovePoint(pathid);
 native FCNPC_GoByMovePath(npcid, pathid, type = MOVE_TYPE_AUTO, Float:speed = MOVE_SPEED_AUTO, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true);
 
 // Update checker
-#tryinclude <a_http>
+#if !defined HTTP
+	#tryinclude <a_http>
+#endif
+
 #if !defined HTTP
 	#tryinclude "a_http"
 #endif
