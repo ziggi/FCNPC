@@ -66,6 +66,7 @@ make
 # Callbacks
 ```Pawn
 forward FCNPC_OnCreate(npcid);
+forward FCNPC_OnDestroy(npcid);
 forward FCNPC_OnSpawn(npcid);
 forward FCNPC_OnRespawn(npcid);
 forward FCNPC_OnDeath(npcid, killerid, weaponid);

@@ -37,6 +37,18 @@ void CCallbackManager::OnCreate(WORD wPlayerId)
 	}
 }
 
+void CCallbackManager::OnDestroy(WORD wPlayerId)
+{
+	for (auto &amx : m_vAMX) {
+		// Get the function index
+		int iIndex;
+		if (!amx_FindPublic(amx, "FCNPC_OnDestroy", &iIndex)) {
+			amx_Push(amx, wPlayerId);
+			amx_Exec(amx, NULL, iIndex);
+		}
+	}
+}
+
 void CCallbackManager::OnSpawn(WORD wPlayerId)
 {
 	for (auto &amx : m_vAMX) {

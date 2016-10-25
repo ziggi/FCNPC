@@ -43,6 +43,7 @@ public FCNPC_IncludeVersion = FCNPC_INCLUDE_VERSION;
 
 // Callbacks
 forward FCNPC_OnCreate(npcid);
+forward FCNPC_OnDestroy(npcid);
 forward FCNPC_OnSpawn(npcid);
 forward FCNPC_OnRespawn(npcid);
 forward FCNPC_OnDeath(npcid, killerid, weaponid);

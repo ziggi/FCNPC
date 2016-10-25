@@ -20,6 +20,7 @@ public:
 	static void UnregisterAMX(AMX *pAMX);
 	// Callbacks
 	static void OnCreate(WORD wPlayerId);
+	static void OnDestroy(WORD wPlayerId);
 	static void OnSpawn(WORD wPlayerId);
 	static void OnRespawn(WORD wPlayerId);
 	static void OnDeath(WORD wPlayerId, WORD wKillerId, BYTE byteWeaponId);

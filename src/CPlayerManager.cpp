@@ -76,6 +76,8 @@ bool CPlayerManager::DeletePlayer(WORD wPlayerId)
 	m_vNpcID.erase(std::remove(m_vNpcID.begin(), m_vNpcID.end(), wPlayerId), m_vNpcID.end());
 	m_pNpcArray[wPlayerId]->Destroy();
 	SAFE_DELETE(m_pNpcArray[wPlayerId]);
+	// Call the created callback
+	CCallbackManager::OnDestroy(wPlayerId);
 	return true;
 }
 
