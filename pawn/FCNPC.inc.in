@@ -408,33 +408,35 @@ native FCNPC_GoByMovePath(npcid, pathid, type = MOVE_TYPE_AUTO, Float:speed = MO
 	#endif
 
 	/*
-		FCNPC_DestroySafe
+		FCNPC_OnDestroy
 	*/
-	stock FCNPC_DestroySafe(&npcid)
+	public FCNPC_OnDestroy(npcid)
 	{
-		new res = FCNPC_Destroy(npcid);
-		if (res) {
-			Iter_SafeRemove(FCNPC, npcid, npcid);
-		}
-		return res;
-	}
+		SetTimerEx("Iter_FCNPCOnDestroyInternal", 0, false, "i", npcid);
 
-	/*
-		FCNPC_Destroy
-	*/
-	stock fcnpc_FCNPC_Destroy(npcid)
-	{
-		new res = FCNPC_Destroy(npcid);
-		if (res) {
-			Iter_Remove(FCNPC, npcid);
-		}
-		return res;
+		#if defined fcnpc_FCNPC_OnDestroy
+			return fcnpc_FCNPC_OnDestroy(npcid);
+		#else
+			return 1;
+		#endif
 	}
-	#if defined _ALS_FCNPC_Destroy
-		#undef FCNPC_Destroy
+	#if defined _ALS_FCNPC_OnDestroy
+		#undef FCNPC_OnDestroy
 	#else
-		#define _ALS_FCNPC_Destroy
+		#define _ALS_FCNPC_OnDestroy
 	#endif
 
-	#define FCNPC_Destroy fcnpc_FCNPC_Destroy
+	#define FCNPC_OnDestroy fcnpc_FCNPC_OnDestroy
+	#if defined fcnpc_FCNPC_OnDestroy
+		forward fcnpc_FCNPC_OnDestroy(npcid);
+	#endif
+
+	/*
+		Iter_FCNPCOnDestroyInternal
+	*/
+	forward Iter_FCNPCOnDestroyInternal(npcid);
+	public Iter_FCNPCOnDestroyInternal(npcid)
+	{
+		Iter_Remove(FCNPC, npcid);
+	}
 #endif
