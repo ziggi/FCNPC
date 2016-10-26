@@ -26,7 +26,7 @@ CPlayback::CPlayback(char *szFile, char *szPlayingPath, bool bAutoUnload)
 	// Reset variables
 	m_dwStartTime = 0;
 	m_bPaused = false;
-	m_pRecordData = NULL;
+	m_recordData = Record_t();
 	m_iCurrentIndex = 0;
 }
 
@@ -38,7 +38,7 @@ CPlayback::CPlayback(int iRecordId, bool bAutoUnload)
 	// Reset variables
 	m_dwStartTime = 0;
 	m_bPaused = false;
-	m_pRecordData = NULL;
+	m_recordData = Record_t();
 	m_iCurrentIndex = 0;
 }
 
@@ -55,63 +55,62 @@ bool CPlayback::Initialize()
 	if (m_iRecordId == INVALID_RECORD_ID) {
 		return false;
 	}
-	m_pRecordData = pServer->GetRecordManager()->Get(m_iRecordId);
+	m_recordData = pServer->GetRecordManager()->Get(m_iRecordId);
 	m_dwStartTime = GetTickCount();
 	return true;
 }
 
 bool CPlayback::Process(CPlayerData *pPlayerData)
 {
-	if (m_iCurrentIndex >= static_cast<int>(m_pRecordData->v_dwTime.size())) {
+	if (m_iCurrentIndex >= static_cast<int>(m_recordData.v_dwTime.size())) {
 		return false;
 	}
 	// Dont process if its paused
 	if (m_bPaused) {
 		// Process the player
-		if (m_pRecordData->iPlaybackType == PLAYBACK_TYPE_DRIVER) {
+		if (m_recordData.iPlaybackType == PLAYBACK_TYPE_DRIVER) {
 			// Set the state
 			pPlayerData->SetState(PLAYER_STATE_DRIVER);
 			// Pause the sync data
-			CVehicleSyncData *vehicleSyncData = &m_pRecordData->v_vehicleSyncData.at(m_iCurrentIndex);
-			vehicleSyncData->wUDAnalog = 0;
-			vehicleSyncData->wLRAnalog = 0;
-			vehicleSyncData->wKeys = 0;
-			vehicleSyncData->vecVelocity = CVector(0.0f, 0.0f, 0.0f);
+			CVehicleSyncData vehicleSyncData = m_recordData.v_vehicleSyncData[m_iCurrentIndex];
+			vehicleSyncData.wUDAnalog = 0;
+			vehicleSyncData.wLRAnalog = 0;
+			vehicleSyncData.wKeys = 0;
+			vehicleSyncData.vecVelocity = CVector(0.0f, 0.0f, 0.0f);
 			// Set vehicle sync data
-			pPlayerData->SetVehicleSync(vehicleSyncData);
+			pPlayerData->SetVehicleSync(&vehicleSyncData);
 			// Update the player
 			pPlayerData->UpdateSync(UPDATE_STATE_DRIVER);
-		} else if (m_pRecordData->iPlaybackType == PLAYBACK_TYPE_ONFOOT) {
+		} else if (m_recordData.iPlaybackType == PLAYBACK_TYPE_ONFOOT) {
 			// Set the state
 			pPlayerData->SetState(PLAYER_STATE_ONFOOT);
 			// Pause the sync data
-			CSyncData *playerSyncData = &m_pRecordData->v_playerSyncData.at(m_iCurrentIndex);
-			playerSyncData->wUDAnalog = 0;
-			playerSyncData->wLRAnalog = 0;
-			playerSyncData->wKeys = 0;
-			playerSyncData->vecVelocity = CVector(0.0f, 0.0f, 0.0f);
+			CSyncData playerSyncData = m_recordData.v_playerSyncData[m_iCurrentIndex];
+			playerSyncData.wUDAnalog = 0;
+			playerSyncData.wLRAnalog = 0;
+			playerSyncData.wKeys = 0;
+			playerSyncData.vecVelocity = CVector(0.0f, 0.0f, 0.0f);
 			// Set vehicle sync data
-			pPlayerData->SetOnFootSync(playerSyncData);
+			pPlayerData->SetOnFootSync(&playerSyncData);
 			// Update the player
 			pPlayerData->UpdateSync(UPDATE_STATE_ONFOOT);
 		}
 		// Update the starting time
-		m_dwStartTime = (GetTickCount() - m_pRecordData->v_dwTime[m_iCurrentIndex]);
+		m_dwStartTime = (GetTickCount() - m_recordData.v_dwTime[m_iCurrentIndex]);
 		return true;
 	}
 	// Check the time
-	if ((GetTickCount() - m_dwStartTime) >= m_pRecordData->v_dwTime[m_iCurrentIndex]) {
+	if ((GetTickCount() - m_dwStartTime) >= m_recordData.v_dwTime[m_iCurrentIndex]) {
 		// Read the first recording data
-		if (m_pRecordData->iPlaybackType == PLAYBACK_TYPE_DRIVER) {
-			// Read the in car sync data
-			CVehicleSyncData vehicleSyncData;
-			memcpy(&vehicleSyncData, &m_pRecordData->v_vehicleSyncData[m_iCurrentIndex], sizeof(CVehicleSyncData));
-
+		if (m_recordData.iPlaybackType == PLAYBACK_TYPE_DRIVER) {
 			// Get the vehicle interface
 			CVehicle *pVehicle = pPlayerData->GetVehicle();
 			if (!pVehicle) {
 				return false;
 			}
+
+			// Get the in car sync data
+			CVehicleSyncData vehicleSyncData = m_recordData.v_vehicleSyncData[m_iCurrentIndex];
 
 			// Apply the sync data
 			pPlayerData->SetState(PLAYER_STATE_DRIVER);
@@ -135,10 +134,9 @@ bool CPlayback::Process(CPlayerData *pPlayerData)
 
 			// Update the player
 			pPlayerData->Update(UPDATE_STATE_DRIVER);
-		} else if (m_pRecordData->iPlaybackType == PLAYBACK_TYPE_ONFOOT) {
-			// Read the on foot sync data
-			CSyncData syncData;
-			memcpy(&syncData, &m_pRecordData->v_playerSyncData[m_iCurrentIndex], sizeof(CSyncData));
+		} else if (m_recordData.iPlaybackType == PLAYBACK_TYPE_ONFOOT) {
+			// Get the on foot sync data
+			CSyncData syncData = m_recordData.v_playerSyncData[m_iCurrentIndex];
 
 			// Apply the sync data
 			pPlayerData->SetState(PLAYER_STATE_ONFOOT);

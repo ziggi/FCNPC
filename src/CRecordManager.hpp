@@ -27,7 +27,7 @@ public:
 	bool Unload(int iRecordId);
 	bool IsValid(int iRecordId);
 	int Find(char *szFile);
-	Record_t *Get(int iRecordId);
+	Record_t Get(int iRecordId);
 
 private:
 	std::vector<Record_t> m_vSyncData;

@@ -32,7 +32,7 @@ private:
 	int m_iRecordId;
 	DWORD m_dwStartTime;
 	bool m_bPaused;
-	Record_t *m_pRecordData;
+	Record_t m_recordData;
 	int m_iCurrentIndex;
 };
 

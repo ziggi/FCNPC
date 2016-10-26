@@ -109,10 +109,10 @@ int CRecordManager::Find(char *szFile)
 	return INVALID_RECORD_ID;
 }
 
-Record_t *CRecordManager::Get(int iRecordId)
+Record_t CRecordManager::Get(int iRecordId)
 {
 	if (!IsValid(iRecordId)) {
-		return NULL;
+		return Record_t();
 	}
-	return &m_vSyncData.at(iRecordId);
+	return m_vSyncData[iRecordId];
 }
