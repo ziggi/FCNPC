@@ -330,7 +330,7 @@ native FCNPC_GoByMovePath(npcid, pathid, type = MOVE_TYPE_AUTO, Float:speed = MO
 			Iter_Clear(FCNPC);
 
 			for (new i = 0; i != MAX_PLAYERS; ++i) {
-				if (!FCNPC_IsValid(i)) {
+				if (FCNPC_IsValid(i)) {
 					Iter_Add(FCNPC, i);
 				}
 			}
