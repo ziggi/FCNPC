@@ -62,7 +62,7 @@ long WINAPI CExceptionHandler::ExceptionHandlerCallback(_EXCEPTION_POINTERS *pEx
 
 	fprintf(pFile, "\nInformation:\n");
 	fprintf(pFile, "  System: %s\n", SYSTEM_NAME);
-	fprintf(pFile, "  SA-MP: %s\n", szSampVersion);
+	fprintf(pFile, "  %s: %s\n", szSampClient, szSampVersion);
 	fprintf(pFile, "  FCNPC: %s\n", PLUGIN_VERSION);
 
 	fprintf(pFile, "\nFunctions:\n");
@@ -133,7 +133,7 @@ void CExceptionHandler::ExceptionHandlerCallback(int signum, siginfo_t * info, v
 
 	fprintf(pFile, "\nInformation:\n");
 	fprintf(pFile, "  System: %s\n", SYSTEM_NAME);
-	fprintf(pFile, "  SA-MP: %s\n", szSampVersion);
+	fprintf(pFile, "  %s: %s\n", szSampClient, szSampVersion);
 	fprintf(pFile, "  FCNPC: %s\n", PLUGIN_VERSION);
 
 	fprintf(pFile, "\nFunctions:\n");

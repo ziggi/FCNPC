@@ -21,6 +21,7 @@ DWORD        dwStartTick;
 CNetGame     *pNetGame;
 void         *pConsole = NULL;
 RakServer    *pRakServer = NULL;
+char         szSampClient[64];
 char         szSampVersion[64];
 
 PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports()
@@ -34,25 +35,32 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	// Get the AMX functions pointer
 	pAMXFunctions = ppData[PLUGIN_DATA_AMX_EXPORTS];
 	// Get the logprintf function address
-	logprintf = (logprintf_t)ppData[PLUGIN_DATA_LOGPRINTF];
+	logprintf = reinterpret_cast<logprintf_t>(ppData[PLUGIN_DATA_LOGPRINTF]);
 	// Check server version
 	eSAMPVersion version;
 
-	if ((DWORD)logprintf == CAddress::FUNC_Logprintf_037) {
+	if ((DWORD)0x9999 == CAddress::FindNetVersion()) {
+		version = CRMP_VERSION_037_R2_1;
+		strlcpy(szSampVersion, "0.3.7 R2-1", sizeof(szSampVersion));
+		strlcpy(szSampClient, "CR-MP", sizeof(szSampClient));
+	} else if ((DWORD)logprintf == CAddress::FUNC_Logprintf_037) {
 		version = SAMP_VERSION_037;
 		strlcpy(szSampVersion, "0.3.7", sizeof(szSampVersion));
+		strlcpy(szSampClient, "SA-MP", sizeof(szSampClient));
 	} else if ((DWORD)logprintf == CAddress::FUNC_Logprintf_037_R2_1) {
 		version = SAMP_VERSION_037_R2_1;
 		strlcpy(szSampVersion, "0.3.7 R2-1", sizeof(szSampVersion));
+		strlcpy(szSampClient, "SA-MP", sizeof(szSampClient));
 	} else {
 		version = SAMP_VERSION_UNKNOWN;
 		strlcpy(szSampVersion, "Unknown", sizeof(szSampVersion));
+		strlcpy(szSampClient, "SA-MP", sizeof(szSampClient));
 	}
 	// Print the loading message
 	logprintf("");
 	logprintf("-------------------------------------------------");
 	logprintf("     FCNPC - Fully Controllable NPC v" PLUGIN_VERSION "");
-	logprintf("           " SYSTEM_NAME " %s", szSampVersion);
+	logprintf("         " SYSTEM_NAME " %s %s", szSampClient, szSampVersion);
 	logprintf("          " __DATE__" at " __TIME__);
 	logprintf("");
 	logprintf("  Author:       OrMisicL (2013 - 2015)");

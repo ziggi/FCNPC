@@ -92,3 +92,4 @@ extern CNetGame     *pNetGame;
 extern void         *pConsole;
 extern RakServer    *pRakServer;
 extern char         szSampVersion[64];
+extern char         szSampClient[64];

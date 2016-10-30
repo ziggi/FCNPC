@@ -80,6 +80,23 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 			OFFSET_RemoteSystem__Unknown = 0xcb5;
 			break;
 
+		case CRMP_VERSION_037_R2_1:
+			FUNC_CPlayerPool__DeletePlayer = 0x466570;
+			FUNC_CPlayer__Kill = 0x484620;
+			FUNC_CPlayer__EnterVehicle = 0x484c70;
+			FUNC_CPlayer__ExitVehicle = 0x484f50;
+			FUNC_CPlayer__SpawnForWorld = 0x486d30;
+			FUNC_GetVehicleModelInfo = 0x488240;
+			FUNC_CConsole__GetIntVariable = 0x48b5b0;
+			FUNC_ClientJoin_RPC = 0x4918f0;
+			VAR_ServerAuthentication = 0x4f5fe8;
+			VAR_NetVersion = 0x9999;
+			OFFSET_RemoteSystemManager = 0x33c;
+			OFFSET_RemoteSystemSize = 0xcb8;
+			OFFSET_RemoteSystem__ConnectMode = 0xcb0;
+			OFFSET_RemoteSystem__Unknown = 0xcb5;
+			break;
+
 		case SAMP_VERSION_UNKNOWN:
 			// Functions
 			FUNC_CPlayerPool__DeletePlayer = CUtils::FindPattern("\x8B\x44\x24\x10\x64\x89\x25\x00\x00\x00\x00\x81\xEC\x20\x01\x00\x00\x66\x3D\xE8\x03\x53", "xxxxxxxxxxxxxxxxxxxxxx") - 0xE;
@@ -138,6 +155,23 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 			OFFSET_RemoteSystem__Unknown = 0xc67;
 			break;
 
+		case CRMP_VERSION_037_R2_1:
+			FUNC_CPlayerPool__DeletePlayer = 0x80d0a90;
+			FUNC_CPlayer__Kill = 0x80cb220;
+			FUNC_CPlayer__EnterVehicle = 0x80cc1c0;
+			FUNC_CPlayer__ExitVehicle = 0x80cc340;
+			FUNC_CPlayer__SpawnForWorld = 0x80ccfc0;
+			FUNC_GetVehicleModelInfo = 0x80d5d30;
+			FUNC_CConsole__GetIntVariable = 0x80a0070;
+			FUNC_ClientJoin_RPC = 0x80b0030;
+			VAR_ServerAuthentication = 0x81aa8a8;
+			VAR_NetVersion = 0x9999;
+			OFFSET_RemoteSystemManager = 0x334;
+			OFFSET_RemoteSystemSize = 0xc69;
+			OFFSET_RemoteSystem__ConnectMode = 0xc62;
+			OFFSET_RemoteSystem__Unknown = 0xc67;
+			break;
+
 		case SAMP_VERSION_UNKNOWN:
 			// Functions
 			FUNC_CPlayerPool__DeletePlayer = CUtils::FindPattern("\x55\x89\xE5\x81\xEC\x68\x01\x00\x00\x89\x5D\xF4\x0F\xB7\x5D\x0C\x0F\xB6\x45\x10", "xxxxxxxxxxxxxxxxxxx");
@@ -160,5 +194,23 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 			OFFSET_RemoteSystem__Unknown = *(DWORD *)(CUtils::FindPattern("\x80\xB8\x67\x0C\x00\x00\x02\x74\x1D\x8B\x45\xD8\x89\x04\x24", "xxxxxx?x?xxxxxx") + 2);
 			break;
 	}
+#endif
+}
+
+DWORD CAddress::FindNetVersion()
+{
+	DWORD dwAddress;
+#if defined(WIN32)
+	dwAddress = CUtils::FindPattern("\x8B\x4C\x24\x28\xA1\xE8\x5F\x4F\x00\x81\xF1\xD9\x0F\x00\x00\x3B\xC1", "xxxxx????xx????xx");
+	if (!dwAddress) {
+		return 0;
+	}
+	return *(DWORD *)(dwAddress + 11);
+#elif defined(LINUX)
+	dwAddress = CUtils::FindPattern("\x8B\x85\x7C\xFC\xFF\xFF\x35", "xxxxxxx");
+	if (!dwAddress) {
+		return 0;
+	}
+	return *(DWORD *)(dwAddress + 7);
 #endif
 }
