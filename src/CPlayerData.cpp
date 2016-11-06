@@ -646,8 +646,9 @@ void CPlayerData::Process()
 				if (vecPoint) {
 					UpdateMovingData(*vecPoint, m_fMoveRadius, m_bMoveSetAngle, m_fMoveSpeed);
 				} else {
-					CCallbackManager::OnFinishMovePath(m_wPlayerId, m_iMovePath);
+					int iMovePath = m_iMovePath;
 					StopMoving();
+					CCallbackManager::OnFinishMovePath(m_wPlayerId, iMovePath);
 				}
 			} else {
 				StopMoving();
