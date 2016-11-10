@@ -2955,6 +2955,23 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_InitMapAndreas(AMX *amx, cell *params)
 	return 0;
 }
 
+cell AMX_NATIVE_CALL CNatives::FCNPC_TriggerWeaponShot(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(8, "FCNPC_TriggerWeaponShot");
+
+	// Get the params
+	WORD wPlayerId = static_cast<WORD>(params[1]);
+	WORD wHitId = static_cast<WORD>(params[2]);
+	BYTE byteHitType = static_cast<BYTE>(params[3]);
+	BYTE byteWeaponId = static_cast<BYTE>(params[4]);
+	CVector vecPoint(amx_ctof(params[5]), amx_ctof(params[6]), amx_ctof(params[7]));
+	bool bIsHit = static_cast<int>(params[8]) != 0;
+
+	CFunctions::PlayerShoot(wPlayerId, wHitId, byteHitType, byteWeaponId, vecPoint, bIsHit); 
+	
+	return 0;
+}
+
 // native FCNPC_CreateMovePath();
 cell AMX_NATIVE_CALL CNatives::FCNPC_CreateMovePath(AMX *amx, cell *params)
 {

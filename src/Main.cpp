@@ -97,6 +97,7 @@ PLUGIN_EXPORT void PLUGIN_CALL Unload( )
 AMX_NATIVE_INFO PluginNatives[ ] = {
 	{"FCNPC_SetUpdateRate", CNatives::FCNPC_SetUpdateRate},
 	{"FCNPC_InitMapAndreas", CNatives::FCNPC_InitMapAndreas},
+	{"FCNPC_TriggerWeaponShot", CNatives::FCNPC_TriggerWeaponShot},
 
 	{"FCNPC_Create", CNatives::FCNPC_Create},
 	{"FCNPC_Destroy", CNatives::FCNPC_Destroy},
