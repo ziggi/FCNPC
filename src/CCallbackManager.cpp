@@ -178,14 +178,14 @@ void CCallbackManager::OnGiveDamage(WORD wPlayerId, WORD wIssuerId, BYTE byteWea
 	}
 }
 
-void CCallbackManager::OnWeaponShot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE byteWeaponId, CVector vecPoint, int iIsHit)
+int CCallbackManager::OnWeaponShot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE byteWeaponId, CVector vecPoint)
 {
+	cell cReturn = 1;
 	for (auto &amx : m_vAMX) {
 		// Get the function index
 		int iIndex;
 		if (!amx_FindPublic(amx, "FCNPC_OnWeaponShot", &iIndex)) {
 			// Push the parameters
-			amx_Push(amx, iIsHit);
 			amx_Push(amx, amx_ftoc(vecPoint.fZ));
 			amx_Push(amx, amx_ftoc(vecPoint.fY));
 			amx_Push(amx, amx_ftoc(vecPoint.fX));
@@ -194,9 +194,13 @@ void CCallbackManager::OnWeaponShot(WORD wPlayerId, WORD wHitId, BYTE byteHitTyp
 			amx_Push(amx, wHitId);
 			amx_Push(amx, wPlayerId);
 			// Execute the callback
-			amx_Exec(amx, NULL, iIndex);
+			amx_Exec(amx, &cReturn, iIndex);
+			if (!cReturn) {
+				return cReturn;
+			}
 		}
 	}
+	return cReturn;
 }
 
 int CCallbackManager::OnVehicleTakeDamage(WORD wPlayerId, WORD wDamagerId, WORD wVehicleId, BYTE byteWeaponId, CVector vecHit)

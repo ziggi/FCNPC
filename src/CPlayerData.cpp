@@ -221,6 +221,11 @@ void CPlayerData::SetVehicleSync(CVehicleSyncData *syncData)
 	memcpy(&m_pPlayer->vehicleSyncData, syncData, sizeof(CVehicleSyncData));
 }
 
+void CPlayerData::SetBulletSync(CBulletSyncData *syncData)
+{
+	memcpy(&m_pPlayer->bulletSyncData, syncData, sizeof(CBulletSyncData));
+}
+
 void CPlayerData::GetName(char *szName, size_t size)
 {
 	strlcpy(szName, m_szName, size);
@@ -821,7 +826,6 @@ void CPlayerData::Process()
 						bool bIsHit = rand() % 100 < static_cast<int>(GetWeaponAccuracy(m_byteWeaponId) * 100.0f);
 
 						CFunctions::PlayerShoot(m_wPlayerId, m_wHitId, m_byteHitType, m_byteWeaponId, m_vecAimAt, bIsHit);
-						CCallbackManager::OnWeaponShot(m_wPlayerId, m_wHitId, m_byteHitType, m_byteWeaponId, m_vecAimAt, bIsHit ? 1 : 0);
 					}
 
 					SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM | KEY_FIRE);

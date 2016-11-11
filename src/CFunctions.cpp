@@ -201,7 +201,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		bulletSyncData.byteHitType = BULLET_HIT_TYPE_NONE;
 	}
 	bulletSyncData.byteWeaponID = byteWeaponId;
-	bulletSyncData.vecCenterOfHit = CVector(0.1f, 0.1f, 0.1f);
+	bulletSyncData.vecCenterOfHit = CVector();
 	bulletSyncData.vecHitOrigin = vecOrigin;
 	bulletSyncData.vecHitTarget = vecPoint;
 
@@ -228,25 +228,71 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		}
 	}
 
-	// if it is a NPC
-	if (bIsHit && bulletSyncData.byteHitType == BULLET_HIT_TYPE_PLAYER && pServer->GetPlayerManager()->IsNpcConnected(bulletSyncData.wHitID)) {
-		CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(bulletSyncData.wHitID);
-
-		if (pPlayerData && !pPlayerData->IsInvulnerable()) {
-			SWeaponInfo sWeaponInfo = CWeaponInfo::GetDefaultInfo(byteWeaponId);
-
-			pPlayerData->ProcessDamage(wPlayerId, sWeaponInfo.fDamage, byteWeaponId, BODY_PART_TORSO);
-		}
+	// get center of hit
+	switch (bulletSyncData.byteHitType) {
+		case BULLET_HIT_TYPE_NONE:
+			bulletSyncData.vecCenterOfHit = bulletSyncData.vecHitTarget;
+			break;
+		case BULLET_HIT_TYPE_PLAYER:
+			if (bulletSyncData.wHitID >= 0 && bulletSyncData.wHitID < MAX_PLAYERS) {
+				CPlayer *pHitPlayerData = pNetGame->pPlayerPool->pPlayer[bulletSyncData.wHitID];
+				if (pHitPlayerData) {
+					bulletSyncData.vecCenterOfHit = bulletSyncData.vecHitTarget - pHitPlayerData->vecPosition;
+				}
+			}
+			break;
+		case BULLET_HIT_TYPE_VEHICLE:
+			if (bulletSyncData.wHitID >= 1 && bulletSyncData.wHitID < MAX_VEHICLES) {
+				CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[bulletSyncData.wHitID];
+				if (pVehicle) {
+					bulletSyncData.vecCenterOfHit = bulletSyncData.vecHitTarget - pVehicle->vecPosition;
+				}
+			}
+			break;
+		case BULLET_HIT_TYPE_OBJECT:
+			if (bulletSyncData.wHitID >= 1 && bulletSyncData.wHitID < MAX_OBJECTS) {
+				CObject *pObject = pNetGame->pObjectPool->pObjects[bulletSyncData.wHitID];
+				if (pObject) {
+					bulletSyncData.vecCenterOfHit = bulletSyncData.vecHitTarget - pObject->matWorld.pos;
+				}
+			}
+			break;
+		case BULLET_HIT_TYPE_PLAYER_OBJECT:
+			if (bulletSyncData.wHitID >= 1 && bulletSyncData.wHitID < MAX_OBJECTS) {
+				CObject *pObject = pNetGame->pObjectPool->pPlayerObjects[wPlayerId][bulletSyncData.wHitID];
+				if (pObject) {
+					bulletSyncData.vecCenterOfHit = bulletSyncData.vecHitTarget - pObject->matWorld.pos;
+				}
+			}
+			break;
 	}
 
-	// Write it to BitStream
-	RakNet::BitStream bsSend;
-	bsSend.Write(static_cast<BYTE>(ID_BULLET_SYNC));
-	bsSend.Write(wPlayerId);
-	bsSend.Write(reinterpret_cast<char*>(&bulletSyncData), sizeof(CBulletSyncData));
+	// update bullet sync data
+	pPlayerData->SetBulletSync(&bulletSyncData);
 
-	// Send it
-	CFunctions::GlobalPacket(&bsSend);
+	// call FCNPC_OnWeaponShot
+	int send = CCallbackManager::OnWeaponShot(wPlayerId, bulletSyncData.wHitID, bulletSyncData.byteHitType, bulletSyncData.byteWeaponID, bulletSyncData.vecCenterOfHit);
+	if (send != 0) {
+		// if it is a NPC
+		if (bIsHit && bulletSyncData.byteHitType == BULLET_HIT_TYPE_PLAYER && pServer->GetPlayerManager()->IsNpcConnected(bulletSyncData.wHitID)) {
+			CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(bulletSyncData.wHitID);
+
+			if (pPlayerData && !pPlayerData->IsInvulnerable()) {
+				SWeaponInfo sWeaponInfo = CWeaponInfo::GetDefaultInfo(byteWeaponId);
+
+				pPlayerData->ProcessDamage(wPlayerId, sWeaponInfo.fDamage, byteWeaponId, BODY_PART_TORSO);
+			}
+		}
+
+		// Write it to BitStream
+		RakNet::BitStream bsSend;
+		bsSend.Write(static_cast<BYTE>(ID_BULLET_SYNC));
+		bsSend.Write(wPlayerId);
+		bsSend.Write(reinterpret_cast<char*>(&bulletSyncData), sizeof(CBulletSyncData));
+
+		// Send it
+		CFunctions::GlobalPacket(&bsSend);
+	}
 }
 
 void CFunctions::GlobalRPC(int* szUniqueID, RakNet::BitStream* bsParams, WORD wExcludePlayerId, char PacketStream)

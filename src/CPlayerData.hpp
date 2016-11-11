@@ -20,10 +20,11 @@
 #include <stdio.h>
 
 class CPlayback;
-struct CSyncData;
-struct CVehicle;
-struct CVehicleSyncData;
 struct CPlayer;
+struct CVehicle;
+struct CSyncData;
+struct CVehicleSyncData;
+struct CBulletSyncData;
 
 class CPlayerData
 {
@@ -50,6 +51,7 @@ public:
 
 	void SetOnFootSync(CSyncData *syncData);
 	void SetVehicleSync(CVehicleSyncData *syncData);
+	void SetBulletSync(CBulletSyncData *syncData);
 
 	void SetName(char *szName);
 	void GetName(char *szName, size_t size);
