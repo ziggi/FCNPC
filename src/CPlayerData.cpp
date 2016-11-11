@@ -935,8 +935,6 @@ void CPlayerData::SetHealth(float fHealth)
 	// Validate the health
 	if (fHealth < 0.0f) {
 		fHealth = 0.0f;
-	} else if (fHealth > 200.0f) {
-		fHealth = 200.0f;
 	}
 
 	// Set the player health
@@ -953,8 +951,6 @@ void CPlayerData::SetArmour(float fArmour)
 	// Validate the armour
 	if (fArmour < 0.0f) {
 		fArmour = 0.0f;
-	} else if (fArmour > 200.0f) {
-		fArmour = 200.0f;
 	}
 
 	// Set the player armour
