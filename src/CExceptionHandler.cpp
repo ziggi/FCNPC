@@ -49,15 +49,15 @@ long WINAPI CExceptionHandler::ExceptionHandlerCallback(_EXCEPTION_POINTERS *pEx
 
 	// Write the exception informations
 	fprintf(pFile, "=========================== FCNPC Exception Handler ============================\n");
-	fprintf(pFile, "Address: 0x%p\n\n", pExceptionInfo->ExceptionRecord->ExceptionAddress);
+	fprintf(pFile, "Address: 0x%x\n\n", (DWORD)pExceptionInfo->ExceptionRecord->ExceptionAddress);
 	fprintf(pFile, "Registers:\n");
-	fprintf(pFile, "EAX: 0x%p - EBX: 0x%p - ECX: 0x%p - EDX: 0x%p\nESI: 0x%p - EDI: 0x%lx - EBP: 0x%p - ESP: 0x%p\n\n", pExceptionInfo->ContextRecord->Eax, pExceptionInfo->ContextRecord->Ebx,
+	fprintf(pFile, "EAX: 0x%x - EBX: 0x%x - ECX: 0x%x - EDX: 0x%x\nESI: 0x%x - EDI: 0x%lx - EBP: 0x%x - ESP: 0x%x\n\n", pExceptionInfo->ContextRecord->Eax, pExceptionInfo->ContextRecord->Ebx,
 	        pExceptionInfo->ContextRecord->Ecx, pExceptionInfo->ContextRecord->Edx, pExceptionInfo->ContextRecord->Esi, pExceptionInfo->ContextRecord->Edi,
 	        pExceptionInfo->ContextRecord->Ebp, pExceptionInfo->ContextRecord->Esp);
 
 	DWORD dwEsp = pExceptionInfo->ContextRecord->Esp;
 	fprintf(pFile, "Stack:\n");
-	fprintf(pFile, "0x0: 0x%p - 0x4: 0x%p - 0x8: 0x%p - 0xC: 0x%p - 0x10: 0x%p - 0x14: 0x%p\n0x18: 0x%p - 0x1C: 0x%p - 0x20: 0x%p\n", *(DWORD *)(dwEsp), *(DWORD *)(dwEsp + 4),
+	fprintf(pFile, "0x0: 0x%x - 0x4: 0x%x - 0x8: 0x%x - 0xC: 0x%x - 0x10: 0x%x - 0x14: 0x%x\n0x18: 0x%x - 0x1C: 0x%x - 0x20: 0x%x\n", *(DWORD *)(dwEsp), *(DWORD *)(dwEsp + 4),
 	        *(DWORD *)(dwEsp + 8), *(DWORD *)(dwEsp + 12), *(DWORD *)(dwEsp + 16), *(DWORD *)(dwEsp + 20), *(DWORD *)(dwEsp + 24), *(DWORD *)(dwEsp + 28), *(DWORD *)(dwEsp + 32));
 
 	fprintf(pFile, "\nInformation:\n");
@@ -112,7 +112,7 @@ void CExceptionHandler::ExceptionHandlerCallback(int signum, siginfo_t * info, v
 
 	// signal
 	sig_ucontext_t *uc = (sig_ucontext_t *)ucontext;
-	fprintf(pFile, "\nSignal %d (%s), address is %p from %p\n",
+	fprintf(pFile, "\nSignal %d (%s), address is %x from %x\n",
 	        signum,
 	        strsignal(signum),
 	        info->si_addr,

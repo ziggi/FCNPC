@@ -275,12 +275,12 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	if (send != 0) {
 		// if it is a NPC
 		if (bIsHit && bulletSyncData.byteHitType == BULLET_HIT_TYPE_PLAYER && pServer->GetPlayerManager()->IsNpcConnected(bulletSyncData.wHitID)) {
-			CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(bulletSyncData.wHitID);
+			CPlayerData *pHitPlayerData = pServer->GetPlayerManager()->GetAt(bulletSyncData.wHitID);
 
-			if (pPlayerData && !pPlayerData->IsInvulnerable()) {
+			if (pHitPlayerData && !pHitPlayerData->IsInvulnerable()) {
 				SWeaponInfo sWeaponInfo = CWeaponInfo::GetDefaultInfo(byteWeaponId);
 
-				pPlayerData->ProcessDamage(wPlayerId, sWeaponInfo.fDamage, byteWeaponId, BODY_PART_TORSO);
+				pHitPlayerData->ProcessDamage(wPlayerId, sWeaponInfo.fDamage, byteWeaponId, BODY_PART_TORSO);
 			}
 		}
 

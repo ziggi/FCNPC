@@ -88,14 +88,11 @@ WORD CNode::Process(CPlayerData *pPlayerData, WORD wPointId, WORD wLastPoint, in
 	WORD usStartLink = GetLinkId();
 	WORD usLinkCount = GetLinkCount();
 	BYTE byteCount = 0;
+	WORD wLinkId = usStartLink;
 	// Do we need to change the node ?
-	while(!iChangeNode) {
-		// Generate a random link id
-		WORD wLinkId = usStartLink + (rand() % usLinkCount);
-		// Set the node to the next random link
-		SetLink(wLinkId);
+	while (!iChangeNode) {
 		// Keep looping until we get a differente link point
-		while (m_nodeLink.wNodeId == wLastPoint && usLinkCount > 1) {
+		do {
 			// Increase the attempts count
 			byteCount++;
 			if (byteCount > 10) {
@@ -103,10 +100,10 @@ WORD CNode::Process(CPlayerData *pPlayerData, WORD wPointId, WORD wLastPoint, in
 			}
 
 			// Generate a random link id
-			WORD wLinkId = usStartLink + (rand() % usLinkCount);
+			wLinkId = usStartLink + (rand() % usLinkCount);
 			// Set the node to the next random link
 			SetLink(wLinkId);
-		}
+		} while (m_nodeLink.wNodeId == wLastPoint && usLinkCount > 1);
 		// Check if we need to change the node id
 		if (m_nodeLink.wAreaId != m_iNodeId) {
 			if (m_nodeLink.wAreaId != 65535) {

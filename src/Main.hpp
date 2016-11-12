@@ -18,6 +18,7 @@
 	#pragma warning(disable : 4127)
 	#define STDCALL __stdcall
 	#define THISCALL __thiscall
+	#define SN_TARGET_PS2
 #elif defined(LINUX)
 	#include <pthread.h>
 	#include <unistd.h>
