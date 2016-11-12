@@ -73,6 +73,7 @@ public OnFilterScriptInit()
 		FCNPC_GoTo(npcid, Mouvement[0][0], Mouvement[0][1], Mouvement[0][2], MOVE_TYPE_RUN, 0, true);
 	}
 //	FCNPC_Destroy(npcid);
+	return 1;
 }
 
 public FCNPC_OnDeath(npcid, killerid, weaponid)
@@ -96,7 +97,7 @@ public FCNPC_OnReachDestination(npcid)
 	NPC[npcid][stage]++;
 	if(NPC[npcid][stage] > 4)
         NPC[npcid][stage] = 0;
-        
+
 	new mstage = NPC[npcid][stage];
 	FCNPC_GoTo(npcid, Mouvement[mstage][0], Mouvement[mstage][1], Mouvement[mstage][2], MOVE_TYPE_RUN, 0, true);
 	return 1;

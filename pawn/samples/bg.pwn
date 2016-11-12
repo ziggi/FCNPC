@@ -60,6 +60,7 @@ public OnFilterScriptInit()
 	printf("    FCNPC Bodyguard System");
 	printf("    Author: ziggi");
 	printf("-------------------------------\n");
+	return 1;
 }
 
 public OnFilterScriptExit()

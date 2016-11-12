@@ -292,7 +292,7 @@ public OnFilterScriptInit()
 	TextDrawBackgroundColor(TextdrawText, 51);
 	TextDrawFont(TextdrawText, 1);
 	TextDrawSetProportional(TextdrawText, 1);
-	
+
 	TextdrawFollow = TextDrawCreate(323.200042, 414.400054, "");
 	TextDrawLetterSize(TextdrawFollow, 0.449999, 1.600000);
 	TextDrawAlignment(TextdrawFollow, 2);
@@ -302,6 +302,7 @@ public OnFilterScriptInit()
 	TextDrawBackgroundColor(TextdrawFollow, 51);
 	TextDrawFont(TextdrawFollow, 1);
 	TextDrawSetProportional(TextdrawFollow, 1);
+	return 1;
 }
 
 public OnFilterScriptExit()
@@ -395,7 +396,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 			SendClientMessage(playerid, COLOR_GREY, "Use </mission invite> to invite players to it");
 			return 1;
 		}
-		
+
 		// Join mission
 		if (!strcmp(tmp, "join", true))
 		{
@@ -428,7 +429,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 			JoinMission(playerid, strval(tmp), slot);
 			return 1;
 		}
-		
+
 		// Leave mission
 		if (!strcmp(tmp, "leave", true))
 		{
@@ -442,7 +443,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 			SendClientMessage(playerid, COLOR_GREY, "You have left the mission");
 			return 1;
 		}
-		
+
 		// Invite to mission
 		if (!strcmp(tmp, "invite", true))
 		{
@@ -485,7 +486,7 @@ public FCNPC_OnVehicleEntryComplete(npcid, vehicleid, seat)
 	{
 		return 1;
 	}
-		
+
 	if (Mission[mission][level] == 1)
 	{
 		// Stop the cutscene
@@ -504,7 +505,7 @@ public FCNPC_OnVehicleExitComplete(npcid)
 	{
 		return 1;
 	}
-		
+
 	if (Mission[mission][level] == 4)
 	{
 		PlayCutscene(mission);
@@ -520,7 +521,7 @@ public FCNPC_OnFinishPlayback(npcid)
 	{
 		return 1;
 	}
-		
+
 	if (Mission[mission][level] == 2 || Mission[mission][level] == 3 || Mission[mission][level] == 4 || Mission[mission][level] == 5)
 		// Stop the cutscene
 		EndCutscene(mission);
@@ -606,7 +607,7 @@ stock GetRandomMissionPlayerToShoot(mission, npc)
 {
 	if (!IsAnyPlayerInRange(mission, npc))
 		return INVALID_PLAYER_ID;
-		
+
 	new Float:x, Float:y, Float:z;
 	FCNPC_GetPosition(npc, x, y, z);
 	// Choose a random id
@@ -616,7 +617,7 @@ stock GetRandomMissionPlayerToShoot(mission, npc)
 	{
 		id = random(MAX_MISSION_PLAYERS);
 	}
-		
+
 	return id;
 }
 
@@ -648,7 +649,7 @@ stock GetRandomMissionPlayerSpectace(mission)
 	{
 		return INVALID_PLAYER_ID;
 	}
-		
+
 	new player = random(MAX_MISSION_PLAYERS);
 	while (!IsPlayerConnected(Mission[mission][players][player]) || Mission[mission][player_dead][player])
 	{
@@ -665,7 +666,7 @@ stock GetNPCMission(npcid)
 	{
 		return INVALID_MISSION;
 	}
-		
+
 	for (new i = 0; i < MAX_MISSIONS; i++)
 	{
 		for (new j = 0; j < MAX_MISSION_NPCS; j++)
@@ -703,7 +704,7 @@ public BeginMissionTimer(mission)
 	{
 		GameTextForPlayer(Mission[mission][players][i], "~b~Mission started.", 3000, 0);
 	}
- 
+
 	// Start the actual mission timer
 	missiontimer[mission] = SetTimerEx("ProcessMissionTimer", 100, true, "i", mission);
 	return 1;
@@ -816,7 +817,7 @@ public ProcessMissionTimer(mission)
 			{
 				continue;
 			}
-				
+
 			new Float:distance = GetPlayerDistanceFromPoint(Mission[mission][players][i], x, y, z);
 			if (distance > 150.0)
 			{
@@ -901,7 +902,7 @@ public StartMission(slotid, starterid)
 		{
 			return false;
 		}
-			
+
 		// Spawn the NPC and set his angle
 		FCNPC_Spawn(Mission[slotid][npcs][i], MissionNPCInfo[i][0], MissionSpawns[i][0], MissionSpawns[i][1], MissionSpawns[i][2]);
 		FCNPC_SetAngle(Mission[slotid][npcs][i], MissionSpawns[i][3]);
@@ -949,7 +950,7 @@ public EndMission(missionid, reason[], bool:success)
 		{
 			continue;
 		}
-			
+
 		TextDrawHideForPlayer(Mission[missionid][players][j], TextdrawBox);
 		TextDrawHideForPlayer(Mission[missionid][players][j], TextdrawBox2);
 		TextDrawHideForPlayer(Mission[missionid][players][j], TextdrawBoxText);
@@ -968,7 +969,7 @@ public EndMission(missionid, reason[], bool:success)
 		{
 			GameTextForPlayer(Mission[missionid][players][j], reason, 5000, 0);
 		}
-			
+
 		PlayerMission[Mission[missionid][players][j]] = INVALID_MISSION;
 		PlayerCreatedMission[Mission[missionid][players][j]] = INVALID_MISSION;
 		Mission[missionid][players][j] = INVALID_PLAYER_ID;
@@ -1010,15 +1011,15 @@ public JoinMission(playerid, mission, slot)
 	// Set his virtual world
 	SetPlayerVirtualWorld(playerid, mission + 1);
 	// Display message
-	/*if (GetMissionPlayers(mission) < MAX_MISSION_PLAYERS)
+	if (GetMissionPlayers(mission) < MAX_MISSION_PLAYERS)
 	{
 		GameTextForPlayer(playerid, "~w~Joined mission ~n~~r~Waiting for players ...", 4000, 0);
 	}
 	else
-	{*/
+	{
 		GameTextForPlayer(playerid, "~w~Joined mission ~n~~b~Starting ...", 4000, 0);
 		SetTimerEx("BeginMissionTimer", 5000, 0, "i", mission);
-	//}
+	}
 	// Notify others about the player join
 	new msg[64], name[MAX_PLAYER_NAME];
 	GetPlayerName(playerid, name, sizeof(name));
@@ -1029,7 +1030,7 @@ public JoinMission(playerid, mission, slot)
 		{
 			continue;
 		}
-			
+
 		GameTextForPlayer(Mission[mission][players][i], msg, 3000, 3);
 	}
 }
@@ -1256,7 +1257,7 @@ public LockCameraTimer(mission, playerid, type)
 		{
 			SetPlayerCameraPos(Mission[mission][players][i], x - 4.0, y, z + 0.2);
 		}
-			
+
 		SetPlayerCameraLookAt(Mission[mission][players][i], x, y, z);
 	}
 }
@@ -1303,7 +1304,7 @@ public OnPlayerDeath(playerid, killerid, reason)
 		{
 			EndMission(PlayerMission[playerid], "all players dead", false);
 		}
-			
+
 		// Send a death message
 		SendDeathMessage(killerid, playerid, reason);
 	}
@@ -1322,7 +1323,7 @@ public FCNPC_OnDeath(npcid, killerid, weaponid)
 			// Play the next cutscene
 			PlayCutscene(mission);
 		}
-			
+
 		// Send a death message
 		SendDeathMessage(killerid, npcid, weaponid);
 
