@@ -115,8 +115,8 @@ void CExceptionHandler::ExceptionHandlerCallback(int signum, siginfo_t * info, v
 	fprintf(pFile, "\nSignal %d (%s), address is %x from %x\n",
 	        signum,
 	        strsignal(signum),
-	        info->si_addr,
-	        (void *)uc->uc_mcontext.eip);
+	        (DWORD)info->si_addr,
+	        (DWORD)uc->uc_mcontext.eip);
 
 	// backtrace
 	int i, nptrs;
