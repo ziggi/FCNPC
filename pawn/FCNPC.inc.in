@@ -251,8 +251,9 @@ native FCNPC_GoByMovePath(npcid, pathid, type = MOVE_TYPE_AUTO, Float:speed = MO
 		public OnFilterScriptInit()
 		{
 			FCNPC_SendVersionRequest();
-			#if defined FCNPC_OnFilterScriptInit
-				return FCNPC_OnFilterScriptInit();
+
+			#if defined fcnpc0_OnFilterScriptInit
+				return fcnpc0_OnFilterScriptInit();
 			#else
 				return 1;
 			#endif
@@ -263,16 +264,17 @@ native FCNPC_GoByMovePath(npcid, pathid, type = MOVE_TYPE_AUTO, Float:speed = MO
 			#define _ALS_OnFilterScriptInit
 		#endif
 
-		#define OnFilterScriptInit FCNPC_OnFilterScriptInit
-		#if defined FCNPC_OnFilterScriptInit
-			forward FCNPC_OnFilterScriptInit();
+		#define OnFilterScriptInit fcnpc0_OnFilterScriptInit
+		#if defined fcnpc0_OnFilterScriptInit
+			forward fcnpc0_OnFilterScriptInit();
 		#endif
 	#else
 		public OnGameModeInit()
 		{
 			FCNPC_SendVersionRequest();
-			#if defined FCNPC_OnGameModeInit
-				return FCNPC_OnGameModeInit();
+
+			#if defined fcnpc0_OnGameModeInit
+				return fcnpc0_OnGameModeInit();
 			#else
 				return 1;
 			#endif
@@ -283,9 +285,9 @@ native FCNPC_GoByMovePath(npcid, pathid, type = MOVE_TYPE_AUTO, Float:speed = MO
 			#define _ALS_OnGameModeInit
 		#endif
 
-		#define OnGameModeInit FCNPC_OnGameModeInit
-		#if defined FCNPC_OnGameModeInit
-			forward FCNPC_OnGameModeInit();
+		#define OnGameModeInit fcnpc0_OnGameModeInit
+		#if defined fcnpc0_OnGameModeInit
+			forward fcnpc0_OnGameModeInit();
 		#endif
 	#endif
 
@@ -337,8 +339,8 @@ native FCNPC_GoByMovePath(npcid, pathid, type = MOVE_TYPE_AUTO, Float:speed = MO
 				}
 			}
 
-			#if defined fcnpc_OnFilterScriptInit
-				return fcnpc_OnFilterScriptInit();
+			#if defined fcnpc1_OnFilterScriptInit
+				return fcnpc1_OnFilterScriptInit();
 			#else
 				return 1;
 			#endif
@@ -349,9 +351,9 @@ native FCNPC_GoByMovePath(npcid, pathid, type = MOVE_TYPE_AUTO, Float:speed = MO
 			#define _ALS_OnFilterScriptInit
 		#endif
 
-		#define OnFilterScriptInit fcnpc_OnFilterScriptInit
-		#if defined fcnpc_OnFilterScriptInit
-			forward fcnpc_OnFilterScriptInit();
+		#define OnFilterScriptInit fcnpc1_OnFilterScriptInit
+		#if defined fcnpc1_OnFilterScriptInit
+			forward fcnpc1_OnFilterScriptInit();
 		#endif
 	#else
 		/*
@@ -367,8 +369,8 @@ native FCNPC_GoByMovePath(npcid, pathid, type = MOVE_TYPE_AUTO, Float:speed = MO
 				}
 			}
 
-			#if defined fcnpc_OnGameModeInit
-				return fcnpc_OnGameModeInit();
+			#if defined fcnpc1_OnGameModeInit
+				return fcnpc1_OnGameModeInit();
 			#else
 				return 1;
 			#endif
@@ -379,9 +381,9 @@ native FCNPC_GoByMovePath(npcid, pathid, type = MOVE_TYPE_AUTO, Float:speed = MO
 			#define _ALS_OnGameModeInit
 		#endif
 
-		#define OnGameModeInit fcnpc_OnGameModeInit
-		#if defined fcnpc_OnGameModeInit
-			forward fcnpc_OnGameModeInit();
+		#define OnGameModeInit fcnpc1_OnGameModeInit
+		#if defined fcnpc1_OnGameModeInit
+			forward fcnpc1_OnGameModeInit();
 		#endif
 	#endif
 
@@ -392,8 +394,8 @@ native FCNPC_GoByMovePath(npcid, pathid, type = MOVE_TYPE_AUTO, Float:speed = MO
 	{
 		Iter_Add(FCNPC, npcid);
 
-		#if defined fcnpc_FCNPC_OnCreate
-			return fcnpc_FCNPC_OnCreate(npcid);
+		#if defined fcnpc1_FCNPC_OnCreate
+			return fcnpc1_FCNPC_OnCreate(npcid);
 		#else
 			return 1;
 		#endif
@@ -404,9 +406,9 @@ native FCNPC_GoByMovePath(npcid, pathid, type = MOVE_TYPE_AUTO, Float:speed = MO
 		#define _ALS_FCNPC_OnCreate
 	#endif
 
-	#define FCNPC_OnCreate fcnpc_FCNPC_OnCreate
-	#if defined fcnpc_FCNPC_OnCreate
-		forward fcnpc_FCNPC_OnCreate(npcid);
+	#define FCNPC_OnCreate fcnpc1_FCNPC_OnCreate
+	#if defined fcnpc1_FCNPC_OnCreate
+		forward fcnpc1_FCNPC_OnCreate(npcid);
 	#endif
 
 	/*
@@ -416,8 +418,8 @@ native FCNPC_GoByMovePath(npcid, pathid, type = MOVE_TYPE_AUTO, Float:speed = MO
 	{
 		SetTimerEx("Iter_FCNPCOnDestroyInternal", 0, false, "i", npcid);
 
-		#if defined fcnpc_FCNPC_OnDestroy
-			return fcnpc_FCNPC_OnDestroy(npcid);
+		#if defined fcnpc1_FCNPC_OnDestroy
+			return fcnpc1_FCNPC_OnDestroy(npcid);
 		#else
 			return 1;
 		#endif
@@ -428,9 +430,9 @@ native FCNPC_GoByMovePath(npcid, pathid, type = MOVE_TYPE_AUTO, Float:speed = MO
 		#define _ALS_FCNPC_OnDestroy
 	#endif
 
-	#define FCNPC_OnDestroy fcnpc_FCNPC_OnDestroy
-	#if defined fcnpc_FCNPC_OnDestroy
-		forward fcnpc_FCNPC_OnDestroy(npcid);
+	#define FCNPC_OnDestroy fcnpc1_FCNPC_OnDestroy
+	#if defined fcnpc1_FCNPC_OnDestroy
+		forward fcnpc1_FCNPC_OnDestroy(npcid);
 	#endif
 
 	/*
