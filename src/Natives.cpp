@@ -1963,6 +1963,24 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsAimingAtPlayer(AMX *amx, cell *params)
 	return pPlayerData->IsAimingAtPlayer(wPlayerId);
 }
 
+// native FCNPC_GetAimingPlayer(npcid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetAimingPlayer(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_GetAimingPlayer");
+
+	// Get the params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return INVALID_PLAYER_ID;
+	}
+
+	// Get the player aim target
+	return pPlayerData->GetAimingPlayer();
+}
+
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsShooting(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_IsShooting");

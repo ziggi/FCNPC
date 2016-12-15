@@ -200,6 +200,7 @@ AMX_NATIVE_INFO PluginNatives[ ] = {
 	{"FCNPC_IsAttacking", CNatives::FCNPC_IsAttacking},
 	{"FCNPC_IsAiming", CNatives::FCNPC_IsAiming},
 	{"FCNPC_IsAimingAtPlayer", CNatives::FCNPC_IsAimingAtPlayer},
+	{"FCNPC_GetAimingPlayer", CNatives::FCNPC_GetAimingPlayer},
 	{"FCNPC_IsShooting", CNatives::FCNPC_IsShooting},
 	{"FCNPC_IsReloading", CNatives::FCNPC_IsReloading},
 

@@ -141,6 +141,7 @@ public:
 	bool IsAttacking();
 	bool IsAiming();
 	bool IsAimingAtPlayer(WORD wPlayerId);
+	WORD GetAimingPlayer();
 	bool IsShooting();
 	bool IsReloading();
 

@@ -199,6 +199,7 @@ native FCNPC_StopAttack(npcid);
 native FCNPC_IsAttacking(npcid);
 native FCNPC_IsAiming(npcid);
 native FCNPC_IsAimingAtPlayer(npcid, playerid);
+native FCNPC_GetAimingPlayer(npcid);
 native FCNPC_IsShooting(npcid);
 native FCNPC_IsReloading(npcid);
 

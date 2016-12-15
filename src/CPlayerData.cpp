@@ -1628,6 +1628,14 @@ bool CPlayerData::IsAimingAtPlayer(WORD wPlayerId)
 	return m_bAiming && m_byteHitType == BULLET_HIT_TYPE_PLAYER && m_wHitId == wPlayerId;
 }
 
+WORD CPlayerData::GetAimingPlayer()
+{
+	if (m_bAiming && m_byteHitType == BULLET_HIT_TYPE_PLAYER) {
+		return m_wHitId;
+	}
+	return INVALID_PLAYER_ID;
+}
+
 bool CPlayerData::IsShooting()
 {
 	return m_bAiming && m_bShooting;

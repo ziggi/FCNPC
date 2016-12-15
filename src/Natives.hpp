@@ -116,6 +116,7 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_IsAttacking(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_IsAiming(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_IsAimingAtPlayer(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_GetAimingPlayer(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_IsShooting(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_IsReloading(AMX *amx, cell *params);
 
