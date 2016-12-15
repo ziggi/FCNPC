@@ -26,6 +26,7 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_vecDestination = CVector();
 	m_vecNodeVelocity = CVector();
 	m_vecAimAt = CVector();
+	m_vecAimOffset = CVector();
 	m_bSetup = false;
 	m_bSpawned = false;
 	m_bMoving = false;
@@ -759,8 +760,9 @@ void CPlayerData::Process()
 			if (pServer->GetPlayerManager()->IsPlayerConnected(m_wHitId) && IsAimingAtPlayer(m_wHitId)) {
 				CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[m_wHitId];
 				if (pPlayer) {
-					if (m_vecAimAt != pPlayer->vecPosition) {
-						UpdateAimingData(pPlayer->vecPosition, m_bAimSetAngle);
+					CVector vecAimPoint = pPlayer->vecPosition + m_vecAimOffset;
+					if (m_vecAimAt != vecAimPoint) {
+						UpdateAimingData(vecAimPoint, m_bAimSetAngle);
 					}
 				} else {
 					StopAim();
@@ -1493,12 +1495,13 @@ void CPlayerData::AimAt(CVector vecPoint, bool bShoot, int iShootDelay, bool bSe
 	m_bShooting = bShoot;
 }
 
-void CPlayerData::AimAtPlayer(WORD wHitId, bool bShoot, int iShootDelay, bool bSetAngle)
+void CPlayerData::AimAtPlayer(WORD wHitId, bool bShoot, int iShootDelay, bool bSetAngle, CVector vecOffset)
 {
 	CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[wHitId];
-	AimAt(pPlayer->vecPosition, bShoot, iShootDelay, bSetAngle);
+	AimAt(pPlayer->vecPosition + vecOffset, bShoot, iShootDelay, bSetAngle);
 	m_wHitId = wHitId;
 	m_byteHitType = BULLET_HIT_TYPE_PLAYER;
+	m_vecAimOffset = vecOffset;
 }
 
 void CPlayerData::UpdateAimingData(CVector vecPoint, bool bSetAngle)

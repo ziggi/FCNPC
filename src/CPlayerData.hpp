@@ -133,7 +133,7 @@ public:
 	void ToggleInfiniteAmmo(bool bToggle);
 
 	void AimAt(CVector vecPoint, bool bShoot, int iShootDelay, bool bSetAngle);
-	void AimAtPlayer(WORD wHitId, bool bShoot, int iShootDelay, bool bSetAngle);
+	void AimAtPlayer(WORD wHitId, bool bShoot, int iShootDelay, bool bSetAngle, CVector vecOffset);
 	void UpdateAimingData(CVector vecPoint, bool bSetAngle);
 	void StopAim();
 	bool MeleeAttack(int iTime, bool bUseFightstyle);
@@ -239,6 +239,7 @@ private:
 	CPlayback *m_pPlayback;
 	CNode *m_pNode;
 	CVector m_vecAimAt;
+	CVector m_vecAimOffset;
 	CPlayer *m_pPlayer;
 	CVector m_vecSurfing;
 	WORD m_wSurfingInfo;
