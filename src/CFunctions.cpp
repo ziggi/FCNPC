@@ -217,7 +217,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 				continue;
 			}
 
-			bool bIsPlayerOnRay = CMath::GetDistanceFromRayToPoint(vecOrigin, vecPoint, pPlayer->vecPosition) < SHOOTING_ACCURACY;
+			bool bIsPlayerOnRay = CMath::GetDistanceFromRayToPoint(vecOrigin, vecPoint, pPlayer->vecPosition) < MAX_HIT_RADIUS;
 			bool bIsPlayerInDamageRange = bIsPlayerOnRay && CMath::GetDistanceBetween3DPoints(vecOrigin, pPlayer->vecPosition) < MAX_DAMAGE_DISTANCE;
 
 			if (bIsPlayerOnRay && bIsPlayerInDamageRange) {
