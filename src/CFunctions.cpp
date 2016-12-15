@@ -186,9 +186,9 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	pPlayerData->GetPosition(&vecOrigin);
 
 	if (pPlayerData->GetSpecialAction() == SPECIAL_ACTION_DUCK) {
-		vecOrigin += CVector(0.0f, 0.0f, 0.3f);
+		vecOrigin.fZ += 0.3f;
 	} else {
-		vecOrigin += CVector(0.0f, 0.0f, 0.7f);
+		vecOrigin.fZ += 0.7f;
 	}
 
 	// Create the SendBullet structure
