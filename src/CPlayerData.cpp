@@ -698,6 +698,14 @@ void CPlayerData::Process()
 					StopMoving();
 					CCallbackManager::OnFinishMovePath(m_wPlayerId, iMovePath);
 				}
+			} else if (m_bPlayingNode) {
+				if (CCallbackManager::OnFinishNodePoint(m_wPlayerId, m_wNodePoint)) {
+					WORD wNewPoint = m_pNode->Process(this, m_wNodePoint, m_wNodeLastPoint);
+					m_wNodeLastPoint = m_wNodePoint;
+					m_wNodePoint = wNewPoint;
+				} else {
+					StopPlayingNode();
+				}
 			} else {
 				StopMoving();
 
@@ -711,17 +719,7 @@ void CPlayerData::Process()
 
 					CFunctions::PlayerEnterVehicle(m_pPlayer, m_wVehicleToEnter, m_byteSeatToEnter);
 				} else {
-					if (m_bPlayingNode) {
-						if (CCallbackManager::OnFinishNodePoint(m_wPlayerId, m_wNodePoint)) {
-							WORD wNewPoint = m_pNode->Process(this, m_wNodePoint, m_wNodeLastPoint);
-							m_wNodeLastPoint = m_wNodePoint;
-							m_wNodePoint = wNewPoint;
-						} else {
-							StopPlayingNode();
-						}
-					} else {
-						CCallbackManager::OnReachDestination(m_wPlayerId);
-					}
+					CCallbackManager::OnReachDestination(m_wPlayerId);
 				}
 			}
 		}
@@ -2163,9 +2161,9 @@ bool CPlayerData::PlayNode(int iNodeId, int iMoveType, bool bUseMapAndreas, floa
 	// Get the node instance
 	m_pNode = pServer->GetNodeManager()->GetAt(iNodeId);
 
-	CVector vecStart;
-	m_pNode->GetPosition(&vecStart);
-	SetPosition(vecStart);
+	CVector vecPos;
+	m_pNode->GetPosition(&vecPos);
+	SetPosition(vecPos);
 
 	m_pNode->SetLink(m_pNode->GetLinkId());
 	m_wNodePoint = m_pNode->GetLinkPoint();
@@ -2173,6 +2171,9 @@ bool CPlayerData::PlayNode(int iNodeId, int iMoveType, bool bUseMapAndreas, floa
 	m_bPlayingNode = true;
 
 	UpdateNodePoint(m_wNodePoint);
+
+	m_pNode->GetPosition(&vecPos);
+	GoTo(vecPos, iMoveType, bUseMapAndreas, fRadius, bSetAngle, fSpeed);
 	return true;
 }
 
