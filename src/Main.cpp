@@ -250,7 +250,7 @@ AMX_NATIVE_INFO PluginNatives[ ] = {
 	{"FCNPC_PlayNode", CNatives::FCNPC_PlayNode},
 	{"FCNPC_StopPlayingNode", CNatives::FCNPC_StopPlayingNode},
 	{"FCNPC_PausePlayingNode", CNatives::FCNPC_PausePlayingNode},
-	{"FCNPC_ResumelayingNode", CNatives::FCNPC_ResumelayingNode},
+	{"FCNPC_ResumePlayingNode", CNatives::FCNPC_ResumePlayingNode},
 
 	{"FCNPC_CreateMovePath", CNatives::FCNPC_CreateMovePath},
 	{"FCNPC_DestroyMovePath", CNatives::FCNPC_DestroyMovePath},

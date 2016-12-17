@@ -169,7 +169,7 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_PlayNode(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_StopPlayingNode(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_PausePlayingNode(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_ResumelayingNode(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_ResumePlayingNode(AMX *amx, cell *params);
 
 	static cell AMX_NATIVE_CALL FCNPC_CreateMovePath(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_DestroyMovePath(AMX *amx, cell *params);

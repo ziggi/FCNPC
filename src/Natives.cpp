@@ -2982,7 +2982,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_PausePlayingNode(AMX *amx, cell *params)
 	return 1;
 }
 
-cell AMX_NATIVE_CALL CNatives::FCNPC_ResumelayingNode(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL CNatives::FCNPC_ResumePlayingNode(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_ResumelayingNode");
 
