@@ -33,11 +33,6 @@ public FCNPC_IncludeVersion = FCNPC_INCLUDE_VERSION;
 
 #define MAX_NODES           (64)
 
-#define NODE_TYPE_NONE      (-1)
-#define NODE_TYPE_PED       (0)
-#define NODE_TYPE_VEHICLE   (1)
-#define NODE_TYPE_BOAT      (2)
-
 #define INVALID_MOVEPATH_ID (-1)
 #define INVALID_RECORD_ID   (-1)
 
@@ -224,8 +219,10 @@ native FCNPC_SetNodePoint(nodeid, point);
 native FCNPC_GetNodePointPosition(nodeid, &Float:x, &Float:y, &Float:z);
 native FCNPC_GetNodePointCount(nodeid);
 native FCNPC_GetNodeInfo(nodeid, &vehnodes, &pednodes, &navinode);
-native FCNPC_PlayNode(npcid, nodeid, type);
+native FCNPC_PlayNode(npcid, nodeid, move_type = MOVE_TYPE_AUTO, Float:speed = MOVE_SPEED_AUTO, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true);
 native FCNPC_StopPlayingNode(npcid);
+native FCNPC_PausePlayingNode(npcid);
+native FCNPC_ResumePlayingNode(npcid);
 
 native FCNPC_CreateMovePath();
 native FCNPC_DestroyMovePath(pathid);

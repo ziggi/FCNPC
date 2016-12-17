@@ -24,7 +24,6 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	SetName(szName);
 	// Reset variables
 	m_vecDestination = CVector();
-	m_vecNodeVelocity = CVector();
 	m_vecAimAt = CVector();
 	m_vecAimOffset = CVector();
 	m_bSetup = false;
@@ -376,6 +375,36 @@ void CPlayerData::Update(int iState)
 		m_pPlayer->iUpdateState = UPDATE_STATE_NONE;
 	}
 }
+void CPlayerData::ResetSyncMoving(int iState)
+{
+	if (iState == UPDATE_STATE_DRIVER) {
+		// Set the state
+		SetState(PLAYER_STATE_DRIVER);
+		// Pause the sync data
+		CVehicleSyncData vehicleSyncData = m_pPlayer->vehicleSyncData;
+		vehicleSyncData.wUDAnalog = 0;
+		vehicleSyncData.wLRAnalog = 0;
+		vehicleSyncData.wKeys = 0;
+		vehicleSyncData.vecVelocity = CVector(0.0f, 0.0f, 0.0f);
+		// Set vehicle sync data
+		SetVehicleSync(&vehicleSyncData);
+		// Update the player
+		UpdateSync(UPDATE_STATE_DRIVER);
+	} else if (iState == UPDATE_STATE_ONFOOT) {
+		// Set the state
+		SetState(PLAYER_STATE_ONFOOT);
+		// Pause the sync data
+		CSyncData playerSyncData = m_pPlayer->syncData;
+		playerSyncData.wUDAnalog = 0;
+		playerSyncData.wLRAnalog = 0;
+		playerSyncData.wKeys = 0;
+		playerSyncData.vecVelocity = CVector(0.0f, 0.0f, 0.0f);
+		// Set vehicle sync data
+		SetOnFootSync(&playerSyncData);
+		// Update the player
+		UpdateSync(UPDATE_STATE_ONFOOT);
+	}
+}
 
 void CPlayerData::UpdateAim()
 {
@@ -580,9 +609,22 @@ void CPlayerData::Process()
 		return;
 	}
 
+	// get data
 	DWORD dwThisTick = GetTickCount();
 	DWORD dwUpdateRate = pServer->GetUpdateRate();
 	BYTE byteState = GetState();
+
+	// check node
+	if (m_bPlayingNode) {
+		if (m_pNode->IsPaused()) {
+			if (byteState == PLAYER_STATE_DRIVER) {
+				ResetSyncMoving(UPDATE_STATE_DRIVER);
+			} else if (byteState == PLAYER_STATE_ONFOOT) {
+				ResetSyncMoving(UPDATE_STATE_ONFOOT);
+			}
+			return;
+		}
+	}
 
 	// Process death
 	if (GetHealth() <= 0.0f && byteState != PLAYER_STATE_WASTED && byteState != PLAYER_STATE_SPAWNED) {
@@ -671,7 +713,7 @@ void CPlayerData::Process()
 				} else {
 					if (m_bPlayingNode) {
 						if (CCallbackManager::OnFinishNodePoint(m_wPlayerId, m_wNodePoint)) {
-							WORD wNewPoint = m_pNode->Process(this, m_wNodePoint, m_wNodeLastPoint, m_iNodeType, m_vecNodeVelocity);
+							WORD wNewPoint = m_pNode->Process(this, m_wNodePoint, m_wNodeLastPoint);
 							m_wNodeLastPoint = m_wNodePoint;
 							m_wNodePoint = wNewPoint;
 						} else {
@@ -2106,7 +2148,7 @@ void CPlayerData::GetPlayingPlaybackPath(char *szFile, size_t size)
 	strlcpy(szFile, m_szPlayingPath, size);
 }
 
-bool CPlayerData::PlayNode(int iNodeId, int iType)
+bool CPlayerData::PlayNode(int iNodeId, int iMoveType, bool bUseMapAndreas, float fRadius, bool bSetAngle, float fSpeed)
 {
 	// Stop the player playback if he's playing one
 	if (m_bPlaying) {
@@ -2120,29 +2162,17 @@ bool CPlayerData::PlayNode(int iNodeId, int iType)
 
 	// Get the node instance
 	m_pNode = pServer->GetNodeManager()->GetAt(iNodeId);
-	// Save the last point
-	m_wNodeLastPoint = m_pNode->GetPointId();
-	// Save the node type
-	m_iNodeType = iType;
-	// Get the starting point
+
 	CVector vecStart;
 	m_pNode->GetPosition(&vecStart);
-	// Save the node moving velocity
-	m_vecNodeVelocity = m_pPlayer->vecVelocity;
-	// Set the player in the starting point
 	SetPosition(vecStart);
-	// Get the node link and set it to the next position
+
 	m_pNode->SetLink(m_pNode->GetLinkId());
-	m_pNode->SetPoint(m_pNode->GetLinkPoint());
-	// Save the current point
 	m_wNodePoint = m_pNode->GetLinkPoint();
-	// Get the destination point
-	CVector vecDestination;
-	m_pNode->GetPosition(&vecDestination);
-	// Move the player to it
-	GoTo(vecDestination, iType == NODE_TYPE_PED ? MOVE_TYPE_WALK : MOVE_TYPE_DRIVE, false);
-	// Set the player as playing node
+	m_wNodeLastPoint = m_pNode->GetPointId();
 	m_bPlayingNode = true;
+
+	UpdateNodePoint(m_wNodePoint);
 	return true;
 }
 
@@ -2156,20 +2186,35 @@ void CPlayerData::StopPlayingNode()
 	// Reset the node instance
 	m_pNode = NULL;
 	// Reset the player data
-	SetVelocity(CVector(0.0f, 0.0f, 0.0f));
+	StopMoving();
 	SetKeys(KEY_NONE, KEY_NONE, KEY_NONE);
-	SetTrainSpeed(0.0f);
-	m_vecNodeVelocity = CVector();
 	// Reset the node flag
 	m_bPlayingNode = false;
 	m_wNodePoint = 0;
 	m_wNodeLastPoint = 0;
-	m_iNodeType = 0;
 	// Call the node finish callback
 	CCallbackManager::OnFinishNode(m_wPlayerId);
 }
 
-WORD CPlayerData::ChangeNode(int iNodeId, unsigned short wLinkId)
+void CPlayerData::PausePlayingNode()
+{
+	if (!m_bPlayingNode) {
+		return;
+	}
+
+	m_pNode->SetPaused(true);
+}
+
+void CPlayerData::ResumePlayingNode()
+{
+	if (!m_bPlayingNode) {
+		return;
+	}
+
+	m_pNode->SetPaused(false);
+}
+
+WORD CPlayerData::ChangeNode(int iNodeId, WORD wLinkId)
 {
 	// Make sure the player is playing a node
 	if (!m_bPlayingNode) {
@@ -2179,5 +2224,20 @@ WORD CPlayerData::ChangeNode(int iNodeId, unsigned short wLinkId)
 	// Get the node instance
 	m_pNode = pServer->GetNodeManager()->GetAt(iNodeId);
 	// Process the node change
-	return m_pNode->ProcessNodeChange(this, wLinkId, m_iNodeType, m_vecNodeVelocity);
+	return m_pNode->ProcessNodeChange(this, wLinkId);
+}
+
+bool CPlayerData::UpdateNodePoint(WORD wPointId)
+{
+	if (!m_bPlayingNode) {
+		return false;
+	}
+
+	CVector vecPosition;
+
+	m_pNode->SetPoint(wPointId);
+	m_pNode->GetPosition(&vecPosition);
+
+	UpdateMovingData(vecPosition, m_fMoveRadius, m_bMoveSetAngle, m_fMoveSpeed);
+	return true;
 }

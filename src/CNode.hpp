@@ -71,10 +71,11 @@ public:
 	~CNode();
 
 	bool Initialize();
-	WORD Process(CPlayerData *pPlayerData, WORD wPointId, WORD wLastPoint, int iType, CVector vecVelocity);
-	WORD ProcessNodeChange(CPlayerData *pPlayerData, WORD wLinkId, int iType, CVector vecVelocity);
+	WORD Process(CPlayerData *pPlayerData, WORD wPointId, WORD wLastPoint);
+	WORD ProcessNodeChange(CPlayerData *pPlayerData, WORD wLinkId);
 
 	void SetPaused(bool bPaused);
+	bool IsPaused();
 	void GetPosition(CVector *pVecPosition);
 	int GetNodesNumber();
 	void GetHeaderInfo(DWORD *dwVehicleNodes, DWORD *dwPedNodes, DWORD *dwNaviNodes);

@@ -2917,14 +2917,19 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetNodeInfo(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_PlayNode(npcid, nodeid, move_type = MOVE_TYPE_AUTO, Float:speed = MOVE_SPEED_AUTO, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true);
 cell AMX_NATIVE_CALL CNatives::FCNPC_PlayNode(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "FCNPC_PlayNode");
+	CHECK_PARAMS(7, "FCNPC_PlayNode");
 
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);
 	int iNodeId = static_cast<int>(params[2]);
-	int iType = static_cast<int>(params[3]);
+	int iMoveType = static_cast<int>(params[3]);
+	float fSpeed = amx_ctof(params[4]);
+	bool bZMap = static_cast<int>(params[5]) != 0;
+	float fRadius = amx_ctof(params[6]);
+	bool bSetAngle = static_cast<int>(params[7]) != 0;
 
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
@@ -2938,7 +2943,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_PlayNode(AMX *amx, cell *params)
 	}
 
 	// Play the node
-	return pPlayerData->PlayNode(iNodeId, iType);
+	return pPlayerData->PlayNode(iNodeId, iMoveType, bZMap, fRadius, bSetAngle, fSpeed);
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_StopPlayingNode(AMX *amx, cell *params)
@@ -2956,6 +2961,42 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StopPlayingNode(AMX *amx, cell *params)
 
 	// Stop playing the node
 	pPlayerData->StopPlayingNode();
+	return 1;
+}
+
+cell AMX_NATIVE_CALL CNatives::FCNPC_PausePlayingNode(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_PausePlayingNode");
+
+	// Get the params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// Stop playing the node
+	pPlayerData->PausePlayingNode();
+	return 1;
+}
+
+cell AMX_NATIVE_CALL CNatives::FCNPC_ResumelayingNode(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_ResumelayingNode");
+
+	// Get the params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// Stop playing the node
+	pPlayerData->ResumePlayingNode();
 	return 1;
 }
 

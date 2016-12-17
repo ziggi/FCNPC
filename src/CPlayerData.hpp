@@ -43,6 +43,7 @@ public:
 	void Kill(WORD wKillerId, BYTE byteReason);
 	void Update(int iState);
 	void UpdateSync(int iState);
+	void ResetSyncMoving(int iState);
 	void UpdateAim();
 	bool IsSpawned();
 	bool IsStreamedIn(WORD wForPlayerId);
@@ -187,9 +188,12 @@ public:
 	void SetPlayingPlaybackPath(char *szFile);
 	void GetPlayingPlaybackPath(char *szFile, size_t size);
 
-	bool PlayNode(int iNodeId, int iType);
+	bool PlayNode(int iNodeId, int iMoveType, bool bUseMapAndreas, float fRadius, bool bSetAngle, float fSpeed);
 	void StopPlayingNode();
-	WORD ChangeNode(int iNodeId, unsigned short wLinkId);
+	void PausePlayingNode();
+	void ResumePlayingNode();
+	WORD ChangeNode(int iNodeId, WORD wLinkId);
+	bool UpdateNodePoint(WORD wPointId);
 
 private:
 	WORD m_wPlayerId;
@@ -232,10 +236,8 @@ private:
 	WORD m_wLastDamagerId;
 	WORD m_wNodePoint;
 	WORD m_wNodeLastPoint;
-	int m_iNodeType;
 	bool m_bHasReload;
 	bool m_bHasInfiniteAmmo;
-	CVector m_vecNodeVelocity;
 	CPlayback *m_pPlayback;
 	CNode *m_pNode;
 	CVector m_vecAimAt;
