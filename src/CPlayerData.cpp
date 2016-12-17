@@ -859,7 +859,6 @@ void CPlayerData::Process()
 					bool bIsNeedToReload = m_bHasReload
 					                       && iClip > 1
 					                       && m_wAmmo != 0
-					                       && m_wAmmo != iClip
 					                       && m_wAmmo % iClip == 0;
 
 					if (bIsNeedToReload) {
