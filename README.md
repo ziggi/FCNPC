@@ -75,6 +75,8 @@ forward FCNPC_OnFinishPlayback(npcid);
 forward FCNPC_OnTakeDamage(npcid, damagerid, weaponid, bodypart, Float:health_loss);
 forward FCNPC_OnGiveDamage(npcid, issuerid, weaponid, bodypart, Float:health_loss);
 forward FCNPC_OnVehicleTakeDamage(npcid, damagerid, vehicleid, weaponid, Float:x, Float:y, Float:z);
+forward FCNPC_OnWeaponShot(npcid, weaponid, hittype, hitid, Float:x, Float:y, Float:z);
+forward FCNPC_OnWeaponStateChange(npcid, weapon_state);
 
 forward FCNPC_OnFinishNodePoint(npcid, point);
 forward FCNPC_OnChangeNode(npcid, nodeid);
@@ -197,6 +199,7 @@ native FCNPC_IsAimingAtPlayer(npcid, playerid);
 native FCNPC_GetAimingPlayer(npcid);
 native FCNPC_IsShooting(npcid);
 native FCNPC_IsReloading(npcid);
+native FCNPC_TriggerWeaponShot(npcid, weaponid, hittype, hitid, Float:x, Float:y, Float:z, bool:ishit = true);
 
 native FCNPC_EnterVehicle(npcid, vehicleid, seatid, type = MOVE_TYPE_WALK);
 native FCNPC_ExitVehicle(npcid);

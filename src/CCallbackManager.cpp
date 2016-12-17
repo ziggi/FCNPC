@@ -203,6 +203,21 @@ int CCallbackManager::OnWeaponShot(WORD wPlayerId, WORD wHitId, BYTE byteHitType
 	return cReturn;
 }
 
+void CCallbackManager::OnWeaponStateChange(WORD wPlayerId, int iWeaponState)
+{
+	int iIndex;
+	for (auto &amx : m_vAMX) {
+		// Get the function index
+		if (!amx_FindPublic(amx, "FCNPC_OnWeaponStateChange", &iIndex)) {
+			// Push the parameters
+			amx_Push(amx, iWeaponState);
+			amx_Push(amx, wPlayerId);
+			// Execute the callback
+			amx_Exec(amx, NULL, iIndex);
+		}
+	}
+}
+
 int CCallbackManager::OnVehicleTakeDamage(WORD wPlayerId, WORD wDamagerId, WORD wVehicleId, BYTE byteWeaponId, CVector vecHit)
 {
 	cell cReturn = 1;

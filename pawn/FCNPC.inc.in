@@ -53,6 +53,7 @@ forward FCNPC_OnTakeDamage(npcid, damagerid, weaponid, bodypart, Float:health_lo
 forward FCNPC_OnGiveDamage(npcid, issuerid, weaponid, bodypart, Float:health_loss);
 forward FCNPC_OnVehicleTakeDamage(npcid, damagerid, vehicleid, weaponid, Float:x, Float:y, Float:z);
 forward FCNPC_OnWeaponShot(npcid, weaponid, hittype, hitid, Float:x, Float:y, Float:z);
+forward FCNPC_OnWeaponStateChange(npcid, weapon_state);
 
 forward FCNPC_OnFinishNodePoint(npcid, point);
 forward FCNPC_OnChangeNode(npcid, nodeid);

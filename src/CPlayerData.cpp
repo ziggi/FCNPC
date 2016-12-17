@@ -426,89 +426,95 @@ void CPlayerData::UpdateAim()
 		} else {
 			m_pPlayer->aimSyncData.byteCameraMode = 53;
 		}
-
-		// Set the weapon state
-		switch (byteWeaponId) {
-			case 0:
-			case WEAPON_BRASSKNUCKLE:
-			case WEAPON_GOLFCLUB:
-			case WEAPON_NITESTICK:
-			case WEAPON_KNIFE:
-			case WEAPON_BAT:
-			case WEAPON_SHOVEL:
-			case WEAPON_POOLSTICK:
-			case WEAPON_KATANA:
-			case WEAPON_CHAINSAW:
-			case WEAPON_DILDO:
-			case WEAPON_DILDO2:
-			case WEAPON_VIBRATOR:
-			case WEAPON_VIBRATOR2:
-			case WEAPON_FLOWER:
-			case WEAPON_CANE:
-			case WEAPON_BOMB:
-			case WEAPON_CAMERA:
-			case WEAPON_NIGHTVISION:
-			case WEAPON_INFRARED:
-			case WEAPON_PARACHUTE:
-				SetWeaponState(WEAPONSTATE_NO_BULLETS);
-				break;
-
-			case WEAPON_GRENADE:
-			case WEAPON_TEARGAS:
-			case WEAPON_MOLTOV:
-			case WEAPON_SHOTGUN:
-			case WEAPON_SAWEDOFF:
-			case WEAPON_SHOTGSPA:
-			case WEAPON_RIFLE:
-			case WEAPON_SNIPER:
-			case WEAPON_ROCKETLAUNCHER:
-			case WEAPON_HEATSEEKER:
-			case WEAPON_SATCHEL:
-				SetWeaponState(WEAPONSTATE_LAST_BULLET);
-				break;
-
-			case WEAPON_COLT45:
-			case WEAPON_SILENCED:
-			case WEAPON_DEAGLE:
-			case WEAPON_UZI:
-			case WEAPON_MP5:
-			case WEAPON_AK47:
-			case WEAPON_M4:
-			case WEAPON_TEC9:
-			case WEAPON_FLAMETHROWER:
-			case WEAPON_MINIGUN:
-			case WEAPON_SPRAYCAN:
-			case WEAPON_FIREEXTINGUISHER:
-				if (m_bReloading) {
-					SetWeaponState(WEAPONSTATE_RELOADING);
-				} else if (m_wAmmo == 1) {
-					SetWeaponState(WEAPONSTATE_LAST_BULLET);
-				} else if (m_wAmmo == 0) {
-					SetWeaponState(WEAPONSTATE_NO_BULLETS);
-				} else {
-					SetWeaponState(WEAPONSTATE_MORE_BULLETS);
-				}
-				break;
-
-			default:
-				SetWeaponState(WEAPONSTATE_NO_BULLETS);
-				break;
-		}
 	} else {
 		// Set the camera mode and weapon state
 		m_pPlayer->aimSyncData.byteCameraMode = 0;
-		SetWeaponState(WEAPONSTATE_NO_BULLETS);
 		// Convert the player angle to radians
 		float fAngle = CMath::DegreeToRadians(GetAngle());
 		// Calculate the camera target
 		CVector vecTarget(m_pPlayer->aimSyncData.vecPosition.fX - sin(fAngle) * 0.2f,
-		                  m_pPlayer->aimSyncData.vecPosition.fY + cos(fAngle) * 0.2f, m_pPlayer->aimSyncData.vecPosition.fZ);
+		                  m_pPlayer->aimSyncData.vecPosition.fY + cos(fAngle) * 0.2f,
+		                  m_pPlayer->aimSyncData.vecPosition.fZ);
 
 		// Calculate the camera front vector
 		m_pPlayer->aimSyncData.vecFront = vecTarget - m_pPlayer->aimSyncData.vecPosition;
 	}
+
+	// Update the weapon state
+	UpdateWeaponState();
 	// Set the aim sync flag
 	m_pPlayer->bHasAimSync = true;
+}
+
+void CPlayerData::UpdateWeaponState()
+{
+	BYTE byteWeaponId = m_pPlayer->syncData.byteWeapon;
+	switch (byteWeaponId) {
+		case 0:
+		case WEAPON_BRASSKNUCKLE:
+		case WEAPON_GOLFCLUB:
+		case WEAPON_NITESTICK:
+		case WEAPON_KNIFE:
+		case WEAPON_BAT:
+		case WEAPON_SHOVEL:
+		case WEAPON_POOLSTICK:
+		case WEAPON_KATANA:
+		case WEAPON_CHAINSAW:
+		case WEAPON_DILDO:
+		case WEAPON_DILDO2:
+		case WEAPON_VIBRATOR:
+		case WEAPON_VIBRATOR2:
+		case WEAPON_FLOWER:
+		case WEAPON_CANE:
+		case WEAPON_BOMB:
+		case WEAPON_CAMERA:
+		case WEAPON_NIGHTVISION:
+		case WEAPON_INFRARED:
+		case WEAPON_PARACHUTE:
+			SetWeaponState(WEAPONSTATE_NO_BULLETS);
+			break;
+
+		case WEAPON_GRENADE:
+		case WEAPON_TEARGAS:
+		case WEAPON_MOLTOV:
+		case WEAPON_SHOTGUN:
+		case WEAPON_SAWEDOFF:
+		case WEAPON_SHOTGSPA:
+		case WEAPON_RIFLE:
+		case WEAPON_SNIPER:
+		case WEAPON_ROCKETLAUNCHER:
+		case WEAPON_HEATSEEKER:
+		case WEAPON_SATCHEL:
+			SetWeaponState(WEAPONSTATE_LAST_BULLET);
+			break;
+
+		case WEAPON_COLT45:
+		case WEAPON_SILENCED:
+		case WEAPON_DEAGLE:
+		case WEAPON_UZI:
+		case WEAPON_MP5:
+		case WEAPON_AK47:
+		case WEAPON_M4:
+		case WEAPON_TEC9:
+		case WEAPON_FLAMETHROWER:
+		case WEAPON_MINIGUN:
+		case WEAPON_SPRAYCAN:
+		case WEAPON_FIREEXTINGUISHER:
+			if (m_bReloading) {
+				SetWeaponState(WEAPONSTATE_RELOADING);
+			} else if (m_wAmmo == 1) {
+				SetWeaponState(WEAPONSTATE_LAST_BULLET);
+			} else if (m_wAmmo == 0) {
+				SetWeaponState(WEAPONSTATE_NO_BULLETS);
+			} else {
+				SetWeaponState(WEAPONSTATE_MORE_BULLETS);
+			}
+			break;
+
+		default:
+			SetWeaponState(WEAPONSTATE_NO_BULLETS);
+			break;
+	}
 }
 
 bool CPlayerData::IsSpawned()
@@ -823,15 +829,13 @@ void CPlayerData::Process()
 				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM);
 			}
 		} else if (m_bShooting) {
-			if (m_wAmmo == 0) {
-				if (!m_bHasInfiniteAmmo) {
-					m_bShooting = false;
-					SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM);
-				} else {
-					m_wAmmo = 500;
-				}
+			if (m_bHasInfiniteAmmo) {
+				m_wAmmo = 500;
 			}
-			if (m_wAmmo > 0) {
+			if (m_wAmmo == 0) {
+				m_bShooting = false;
+				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM);
+			} else {
 				// Get the shoot time
 				int iShootTime = GetWeaponShootTime(m_byteWeaponId);
 
@@ -1121,7 +1125,16 @@ WORD CPlayerData::GetWeaponSkill(DWORD dwSkill)
 
 void CPlayerData::SetWeaponState(int iState)
 {
+	if (iState == WEAPONSTATE_UNKNOWN) {
+		return;
+	}
+
+	int iOldState = m_pPlayer->aimSyncData.byteWeaponState;
 	m_pPlayer->aimSyncData.byteWeaponState = iState;
+
+	if (iOldState != iState) {
+		CCallbackManager::OnWeaponStateChange(m_wPlayerId, iState);
+	}
 }
 
 int CPlayerData::GetWeaponState()
@@ -1905,6 +1918,9 @@ void CPlayerData::SetVehicle(WORD wVehicleId, BYTE byteSeatId)
 	m_pPlayer->wVehicleId = wVehicleId;
 	m_pPlayer->byteSeatId = byteSeatId;
 	m_dwVehicleDeadTick = 0;
+	if (byteSeatId == 0) {
+		SetWeaponState(WEAPONSTATE_UNKNOWN);
+	}
 
 	if (wVehicleId == INVALID_VEHICLE_ID && m_pPlayer->wVehicleId != INVALID_VEHICLE_ID) {
 		CVehicle *pVehicle = GetVehicle();

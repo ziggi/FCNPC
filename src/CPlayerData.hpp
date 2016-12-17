@@ -85,6 +85,7 @@ public:
 	WORD GetWeaponSkill(DWORD dwSkill);
 	void SetWeaponState(int iState);
 	int GetWeaponState();
+	void UpdateWeaponState();
 
 	int GetWeaponType(BYTE byteWeaponId);
 	bool SetWeaponReloadTime(BYTE byteWeaponId, int iTime);
