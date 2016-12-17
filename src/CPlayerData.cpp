@@ -622,6 +622,7 @@ void CPlayerData::Process()
 			} else if (byteState == PLAYER_STATE_ONFOOT) {
 				ResetSyncMoving(UPDATE_STATE_ONFOOT);
 			}
+			m_dwMoveTickCount = dwThisTick;
 			return;
 		}
 	}
