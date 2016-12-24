@@ -194,6 +194,7 @@ public:
 	void PausePlayingNode();
 	void ResumePlayingNode();
 	bool IsPlayingNodePaused();
+	bool IsPlayingNode();
 	WORD ChangeNode(int iNodeId, WORD wLinkId);
 	bool UpdateNodePoint(WORD wPointId);
 
@@ -212,6 +213,7 @@ private:
 	bool m_bExiting;
 	bool m_bPlaying;
 	bool m_bPlayingNode;
+	bool m_bIsPlayingNodePaused;
 	bool m_bMeleeAttack;
 	bool m_bMeleeFightstyle;
 	bool m_bIsInvulnerable;
@@ -255,6 +257,12 @@ private:
 	float m_fMoveRadius;
 	bool m_bMoveSetAngle;
 	float m_fMoveSpeed;
+	int m_iNodeMoveType;
+	bool m_bNodeUseMapAndreas;
+	float m_fNodeMoveRadius;
+	bool m_bNodeMoveSetAngle;
+	float m_fNodeMoveSpeed;
+	CVector m_vecNodeLastPos;
 	CVector m_vecMovePlayerPosition;
 	WORD m_wHydraThrustAngle[2];
 	float m_fTrainSpeed;

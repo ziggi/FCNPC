@@ -74,8 +74,6 @@ public:
 	WORD Process(CPlayerData *pPlayerData, WORD wPointId, WORD wLastPoint);
 	WORD ProcessNodeChange(CPlayerData *pPlayerData, WORD wLinkId);
 
-	void SetPaused(bool bPaused);
-	bool IsPaused();
 	void GetPosition(CVector *pVecPosition);
 	int GetNodesNumber();
 	void GetHeaderInfo(DWORD *dwVehicleNodes, DWORD *dwPedNodes, DWORD *dwNaviNodes);
@@ -95,7 +93,6 @@ public:
 private:
 	int m_iNodeId;
 	FILE *m_pFile;
-	bool m_bPaused;
 	CNodeHeader m_nodeHeader;
 	CPathNode m_nodePath;
 	CLinkNode m_nodeLink;

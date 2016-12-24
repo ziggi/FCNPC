@@ -40,6 +40,7 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_bHasInfiniteAmmo = false;
 	m_bPlaying = false;
 	m_bPlayingNode = false;
+	m_bIsPlayingNodePaused = false;
 	m_bMeleeAttack = false;
 	m_bMeleeFightstyle = false;
 	m_bIsInvulnerable = false;
@@ -62,6 +63,12 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_fMoveRadius = 0.0f;
 	m_bMoveSetAngle = false;
 	m_fMoveSpeed = MOVE_SPEED_AUTO;
+	m_iNodeMoveType = MOVE_TYPE_AUTO;
+	m_bNodeUseMapAndreas = false;
+	m_fNodeMoveRadius = 0.0f;
+	m_bNodeMoveSetAngle = false;
+	m_fNodeMoveSpeed = MOVE_SPEED_AUTO;
+	m_vecNodeLastPos = CVector();
 	m_vecMovePlayerPosition = CVector();
 	m_wHydraThrustAngle[0] =
 		m_wHydraThrustAngle[1] = 5000;
@@ -620,19 +627,6 @@ void CPlayerData::Process()
 	DWORD dwUpdateRate = pServer->GetUpdateRate();
 	BYTE byteState = GetState();
 
-	// check node
-	if (m_bPlayingNode) {
-		if (m_pNode->IsPaused()) {
-			if (byteState == PLAYER_STATE_DRIVER) {
-				ResetSyncMoving(UPDATE_STATE_DRIVER);
-			} else if (byteState == PLAYER_STATE_ONFOOT) {
-				ResetSyncMoving(UPDATE_STATE_ONFOOT);
-			}
-			m_dwMoveTickCount = dwThisTick;
-			return;
-		}
-	}
-
 	// Process death
 	if (GetHealth() <= 0.0f && byteState != PLAYER_STATE_WASTED && byteState != PLAYER_STATE_SPAWNED) {
 		// Get the last damager weapon
@@ -705,7 +699,7 @@ void CPlayerData::Process()
 					StopMoving();
 					CCallbackManager::OnFinishMovePath(m_wPlayerId, iMovePath);
 				}
-			} else if (m_bPlayingNode) {
+			} else if (m_bPlayingNode && !m_bIsPlayingNodePaused) {
 				if (CCallbackManager::OnFinishNodePoint(m_wPlayerId, m_wNodePoint)) {
 					WORD wNewPoint = m_pNode->Process(this, m_wNodePoint, m_wNodeLastPoint);
 					m_wNodeLastPoint = m_wNodePoint;
@@ -1445,7 +1439,10 @@ void CPlayerData::UpdateMovingData(CVector vecDestination, float fRadius, bool b
 
 	float fDistance = CMath::GetDistanceBetween3DPoints(vecPosition, vecDestination);
 
-	CVector vecFront = (vecDestination - vecPosition) / fDistance;
+	CVector vecFront = CVector();
+	if (fDistance != 0.0f) {
+		vecFront = (vecDestination - vecPosition) / fDistance;
+	}
 
 	if (bSetAngle) {
 		SetAngle(CMath::RadiansToDegree(atan2(vecFront.fY, vecFront.fX)));
@@ -1454,7 +1451,11 @@ void CPlayerData::UpdateMovingData(CVector vecDestination, float fRadius, bool b
 	vecFront *= (fSpeed / 100.0f); // Step per 1ms
 	SetVelocity(vecFront);
 	// Calculate the moving time
-	m_dwMoveTime = static_cast<DWORD>(fDistance / vecFront.Length());
+	if (vecFront.Length() != 0.0f) {
+		m_dwMoveTime = static_cast<DWORD>(fDistance / vecFront.Length());
+	} else {
+		m_dwMoveTime = 0;
+	}
 	// Get the start move tick
 	m_dwMoveTickCount =
 		m_dwMoveStartTime = GetTickCount();
@@ -2174,6 +2175,13 @@ bool CPlayerData::PlayNode(int iNodeId, int iMoveType, bool bUseMapAndreas, floa
 		StopPlayingNode();
 	}
 
+	// save data
+	m_iNodeMoveType = iMoveType;
+	m_bNodeUseMapAndreas = bUseMapAndreas;
+	m_fNodeMoveRadius = fRadius;
+	m_bNodeMoveSetAngle = bSetAngle;
+	m_fNodeMoveSpeed = fSpeed;
+
 	// Get the node instance
 	m_pNode = pServer->GetNodeManager()->GetAt(iNodeId);
 
@@ -2207,31 +2215,47 @@ void CPlayerData::StopPlayingNode()
 	SetKeys(KEY_NONE, KEY_NONE, KEY_NONE);
 	// Reset the node flag
 	m_bPlayingNode = false;
+	m_bIsPlayingNodePaused = false;
 	m_wNodePoint = 0;
 	m_wNodeLastPoint = 0;
+	m_iNodeMoveType = MOVE_TYPE_AUTO;
+	m_bNodeUseMapAndreas = false;
+	m_fNodeMoveRadius = 0.0f;
+	m_bNodeMoveSetAngle = true;
+	m_fNodeMoveSpeed = MOVE_SPEED_AUTO;
+	m_vecNodeLastPos = CVector();
 	// Call the node finish callback
 	CCallbackManager::OnFinishNode(m_wPlayerId);
 }
 
 void CPlayerData::PausePlayingNode()
 {
-	if (!m_bPlayingNode) {
+	if (!m_bPlayingNode || m_bIsPlayingNodePaused) {
 		return;
 	}
 
-	m_pNode->SetPaused(true);
+	StopMoving();
+	GetPosition(&m_vecNodeLastPos);
+
+	m_bIsPlayingNodePaused = true;
 }
 
 void CPlayerData::ResumePlayingNode()
 {
-	if (!m_bPlayingNode) {
+	if (!m_bPlayingNode || !m_bIsPlayingNodePaused) {
 		return;
 	}
 
-	m_pNode->SetPaused(false);
+	m_bIsPlayingNodePaused = false;
+	GoTo(m_vecNodeLastPos, m_iNodeMoveType, m_bNodeUseMapAndreas, m_fNodeMoveRadius, m_bNodeMoveSetAngle, m_fNodeMoveSpeed);
 }
 
 bool CPlayerData::IsPlayingNodePaused()
+{
+	return m_bIsPlayingNodePaused;
+}
+
+bool CPlayerData::IsPlayingNode()
 {
 	return m_bPlayingNode;
 }

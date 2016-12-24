@@ -18,8 +18,6 @@ CNode::CNode(int iNodeId)
 	m_iNodeId = iNodeId;
 	// Reset file pointer
 	m_pFile = NULL;
-	// Reset paused state
-	m_bPaused = false;
 }
 
 CNode::~CNode()
@@ -60,16 +58,6 @@ bool CNode::Initialize()
 	fread(&m_nodePath, sizeof(CPathNode), 1, m_pFile);
 
 	return true;
-}
-
-void CNode::SetPaused(bool bPaused)
-{
-	m_bPaused = bPaused;
-}
-
-bool CNode::IsPaused()
-{
-	return m_bPaused;
 }
 
 int CNode::GetNodesNumber()
