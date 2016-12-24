@@ -977,12 +977,12 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetAnimationByName(AMX *amx, cell *params)
 	WORD wNpcId = static_cast<WORD>(params[1]);
 	char *szName;
 	amx_StrParam(amx, params[2], szName);
-	float fDelta = amx_ctof(params[4]);
-	bool bLoop = static_cast<int>(params[5]) != 0;
-	bool bLockX = static_cast<int>(params[6]) != 0;
-	bool bLockY = static_cast<int>(params[7]) != 0;
-	bool bFreeze = static_cast<int>(params[8]) != 0;
-	int iTime = static_cast<int>(params[9]);
+	float fDelta = amx_ctof(params[3]);
+	bool bLoop = static_cast<int>(params[4]) != 0;
+	bool bLockX = static_cast<int>(params[5]) != 0;
+	bool bLockY = static_cast<int>(params[6]) != 0;
+	bool bFreeze = static_cast<int>(params[7]) != 0;
+	int iTime = static_cast<int>(params[8]);
 
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
