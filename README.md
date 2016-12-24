@@ -249,6 +249,7 @@ native FCNPC_PlayNode(npcid, nodeid, move_type = MOVE_TYPE_AUTO, Float:speed = M
 native FCNPC_StopPlayingNode(npcid);
 native FCNPC_PausePlayingNode(npcid);
 native FCNPC_ResumePlayingNode(npcid);
+native FCNPC_IsPlayingNodePaused(npcid);
 
 native FCNPC_CreateMovePath();
 native FCNPC_DestroyMovePath(pathid);

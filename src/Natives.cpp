@@ -3000,6 +3000,24 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ResumePlayingNode(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_IsPlayingNodePaused(npcid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_IsPlayingNodePaused(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_IsPlayingNodePaused");
+
+	// Get the params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// return node playing status
+	return pPlayerData->IsPlayingNodePaused();
+}
+
 cell AMX_NATIVE_CALL CNatives::FCNPC_InitMapAndreas(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_InitMapAndreas");

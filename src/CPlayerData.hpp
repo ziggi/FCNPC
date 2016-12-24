@@ -193,6 +193,7 @@ public:
 	void StopPlayingNode();
 	void PausePlayingNode();
 	void ResumePlayingNode();
+	bool IsPlayingNodePaused();
 	WORD ChangeNode(int iNodeId, WORD wLinkId);
 	bool UpdateNodePoint(WORD wPointId);
 

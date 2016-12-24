@@ -2231,6 +2231,11 @@ void CPlayerData::ResumePlayingNode()
 	m_pNode->SetPaused(false);
 }
 
+bool CPlayerData::IsPlayingNodePaused()
+{
+	return m_bPlayingNode;
+}
+
 WORD CPlayerData::ChangeNode(int iNodeId, WORD wLinkId)
 {
 	// Make sure the player is playing a node
