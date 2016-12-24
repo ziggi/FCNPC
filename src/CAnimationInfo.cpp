@@ -387,6 +387,9 @@ char *CAnimationInfo::GetNameByIndex(WORD wIndex)
 
 WORD CAnimationInfo::GetIndexByName(char *szName)
 {
+	for (int i = 0; szName[i]; i++) {
+		szName[i] = toupper(szName[i]);
+	}
 	for (WORD i = 0; i < MAX_ANIMATIONS; i++) {
 		if (strcmp(szName, m_cAnimationsName[i]) == 0) {
 			return i;
