@@ -160,7 +160,7 @@ int CCallbackManager::OnTakeDamage(WORD wPlayerId, WORD wDamagerId, BYTE byteWea
 	return cReturn;
 }
 
-void CCallbackManager::OnGiveDamage(WORD wPlayerId, WORD wIssuerId, BYTE byteWeaponId, int iBodyPart, float fHealthLoss)
+void CCallbackManager::OnGiveDamage(WORD wPlayerId, WORD wDamagedId, BYTE byteWeaponId, int iBodyPart, float fHealthLoss)
 {
 	for (auto &amx : m_vAMX) {
 		// Get the function index
@@ -170,7 +170,7 @@ void CCallbackManager::OnGiveDamage(WORD wPlayerId, WORD wIssuerId, BYTE byteWea
 			amx_Push(amx, amx_ftoc(fHealthLoss));
 			amx_Push(amx, iBodyPart);
 			amx_Push(amx, byteWeaponId);
-			amx_Push(amx, wIssuerId);
+			amx_Push(amx, wDamagedId);
 			amx_Push(amx, wPlayerId);
 			// Execute the callback
 			amx_Exec(amx, NULL, iIndex);

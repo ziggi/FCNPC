@@ -260,7 +260,7 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 
 		// call custom callback
 		if (pPlayerData) {
-			CCallbackManager::OnGiveDamage(pDamage.wPlayerId, pDamage.wSecondPlayerId, pDamage.byteWeaponId, pDamage.iBodypart, pDamage.fHealthLoss);
+			CCallbackManager::OnGiveDamage(pDamage.wSecondPlayerId, pDamage.wPlayerId, pDamage.byteWeaponId, pDamage.iBodypart, pDamage.fHealthLoss);
 		}
 
 		bHookIsExec = true;
