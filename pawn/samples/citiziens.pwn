@@ -37,6 +37,7 @@ public OnFilterScriptInit()
 	printf(" FCNPC - Fully Customizable NPC citiziens FS");
 	printf("");
 	printf("- Author: OrMisicL");
+	printf("- Contributor: ziggi");
 	printf("-------------------------------------------------");
 	printf("");
 	//
@@ -168,7 +169,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 		}
 		return 1;
 	}
-	return 1;
+	return 0;
 }
 
 public FCNPC_OnChangeNode(npcid, nodeid)
@@ -191,7 +192,7 @@ stock IsValidZone(zoneid)
 #elseif defined SAN_FIERRO
 	return zoneid == 17 || (zoneid >= 24 && zoneid <= 26) || (zoneid >= 32 && zoneid <= 24)  || (zoneid >= 40 && zoneid <= 41);
 #elseif defined LAS_VENTURAS
-	return (zoneid >= 37 && zoneid <= 39) || (zoneid >= 45 && zoneid <= 47) || (zoneid >= 53 && zoneid <= 55) || (zoneid >= 61 && zoneid <= 63);
+	return (zoneid >= 38 && zoneid <= 39) || (zoneid >= 45 && zoneid <= 47) || (zoneid >= 53 && zoneid <= 55) || (zoneid >= 61 && zoneid <= 63);
 #else
 	return false;
 #endif
