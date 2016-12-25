@@ -26,6 +26,7 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_vecDestination = CVector();
 	m_vecAimAt = CVector();
 	m_vecAimOffset = CVector();
+	m_vecAimOffsetFrom = CVector();
 	m_bSetup = false;
 	m_bSpawned = false;
 	m_bMoving = false;
@@ -865,7 +866,7 @@ void CPlayerData::Process()
 					if (GetWeaponType(m_byteWeaponId) == WEAPON_TYPE_SHOOT) {
 						bool bIsHit = rand() % 100 < static_cast<int>(GetWeaponAccuracy(m_byteWeaponId) * 100.0f);
 
-						CFunctions::PlayerShoot(m_wPlayerId, m_wHitId, m_byteHitType, m_byteWeaponId, m_vecAimAt, bIsHit);
+						CFunctions::PlayerShoot(m_wPlayerId, m_wHitId, m_byteHitType, m_byteWeaponId, m_vecAimAt, m_vecAimOffsetFrom, bIsHit);
 					}
 
 					SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM | KEY_FIRE);
@@ -1519,7 +1520,7 @@ void CPlayerData::ToggleInfiniteAmmo(bool bToggle)
 	m_bHasInfiniteAmmo = bToggle;
 }
 
-void CPlayerData::AimAt(CVector vecPoint, bool bShoot, int iShootDelay, bool bSetAngle)
+void CPlayerData::AimAt(CVector vecPoint, bool bShoot, int iShootDelay, bool bSetAngle, CVector vecOffsetFrom)
 {
 	// Set the aiming flag
 	if (!m_bAiming) {
@@ -1529,6 +1530,7 @@ void CPlayerData::AimAt(CVector vecPoint, bool bShoot, int iShootDelay, bool bSe
 	}
 
 	// Update aiming data
+	m_vecAimOffsetFrom = vecOffsetFrom;
 	UpdateAimingData(vecPoint, bSetAngle);
 
 	// Set keys
@@ -1549,10 +1551,10 @@ void CPlayerData::AimAt(CVector vecPoint, bool bShoot, int iShootDelay, bool bSe
 	m_bShooting = bShoot;
 }
 
-void CPlayerData::AimAtPlayer(WORD wHitId, bool bShoot, int iShootDelay, bool bSetAngle, CVector vecOffset)
+void CPlayerData::AimAtPlayer(WORD wHitId, bool bShoot, int iShootDelay, bool bSetAngle, CVector vecOffset, CVector vecOffsetFrom)
 {
 	CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[wHitId];
-	AimAt(pPlayer->vecPosition + vecOffset, bShoot, iShootDelay, bSetAngle);
+	AimAt(pPlayer->vecPosition + vecOffset, bShoot, iShootDelay, bSetAngle, vecOffsetFrom);
 	m_wHitId = wHitId;
 	m_byteHitType = BULLET_HIT_TYPE_PLAYER;
 	m_vecAimOffset = vecOffset;
@@ -1561,7 +1563,7 @@ void CPlayerData::AimAtPlayer(WORD wHitId, bool bShoot, int iShootDelay, bool bS
 void CPlayerData::UpdateAimingData(CVector vecPoint, bool bSetAngle)
 {
 	// Adjust the player position
-	CVector vecPosition = m_pPlayer->vecPosition;
+	CVector vecPosition = m_pPlayer->vecPosition + m_vecAimOffsetFrom;
 	// Get the aiming distance
 	CVector vecDistance = vecPoint - vecPosition;
 	// Get the distance to the destination point

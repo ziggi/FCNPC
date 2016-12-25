@@ -163,8 +163,8 @@ native FCNPC_Stop(npcid);
 native FCNPC_IsMoving(npcid);
 native FCNPC_IsMovingAtPlayer(npcid, playerid);
 
-native FCNPC_AimAt(npcid, Float:x, Float:y, Float:z, bool:shoot = false, shoot_delay = -1, bool:setangle = true);
-native FCNPC_AimAtPlayer(npcid, playerid, bool:shoot = false, shoot_delay = -1, bool:setangle = true, Float:offset_x = 0.0, Float:offset_y = 0.0, Float:offset_z = 0.0);
+native FCNPC_AimAt(npcid, Float:x, Float:y, Float:z, bool:shoot = false, shoot_delay = -1, bool:setangle = true, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0);
+native FCNPC_AimAtPlayer(npcid, playerid, bool:shoot = false, shoot_delay = -1, bool:setangle = true, Float:offset_x = 0.0, Float:offset_y = 0.0, Float:offset_z = 0.0, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0);
 native FCNPC_StopAim(npcid);
 native FCNPC_MeleeAttack(npcid, delay = -1, bool:fightstyle = false);
 native FCNPC_StopAttack(npcid);
@@ -174,7 +174,7 @@ native FCNPC_IsAimingAtPlayer(npcid, playerid);
 native FCNPC_GetAimingPlayer(npcid);
 native FCNPC_IsShooting(npcid);
 native FCNPC_IsReloading(npcid);
-native FCNPC_TriggerWeaponShot(npcid, weaponid, hittype, hitid, Float:x, Float:y, Float:z, bool:ishit = true);
+native FCNPC_TriggerWeaponShot(npcid, weaponid, hittype, hitid, Float:x, Float:y, Float:z, bool:ishit = true, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0);
 
 native FCNPC_EnterVehicle(npcid, vehicleid, seatid, type = MOVE_TYPE_WALK);
 native FCNPC_ExitVehicle(npcid);

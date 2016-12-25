@@ -171,7 +171,7 @@ WORD CFunctions::GetMaxNPC()
 	return static_cast<WORD>(pfn__CConsole__GetIntVariable(pConsole, "maxnpc"));
 }
 
-void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE byteWeaponId, CVector vecPoint, bool bIsHit)
+void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE byteWeaponId, CVector vecPoint, CVector vecOffsetFrom, bool bIsHit)
 {
 	// Validate the player
 	if (!pServer->GetPlayerManager()->IsNpcConnected(wPlayerId)) {
@@ -184,12 +184,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	// Get the origin hit vector position
 	CVector vecOrigin;
 	pPlayerData->GetPosition(&vecOrigin);
-
-	if (pPlayerData->GetSpecialAction() == SPECIAL_ACTION_DUCK) {
-		vecOrigin.fZ += 0.3f;
-	} else {
-		vecOrigin.fZ += 0.7f;
-	}
+	vecOrigin += vecOffsetFrom;
 
 	// Create the SendBullet structure
 	CBulletSyncData bulletSyncData;

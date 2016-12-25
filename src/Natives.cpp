@@ -1781,7 +1781,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponDefaultInfo(AMX *amx, cell *params
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_AimAt(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(7, "FCNPC_AimAt");
+	CHECK_PARAMS(10, "FCNPC_AimAt");
 
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);
@@ -1789,6 +1789,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAt(AMX *amx, cell *params)
 	bool bShoot = static_cast<int>(params[5]) != 0;
 	int iShootDelay = static_cast<int>(params[6]);
 	bool bSetAngle = static_cast<int>(params[7]) != 0;
+	CVector vecOffsetFrom(amx_ctof(params[8]), amx_ctof(params[9]), amx_ctof(params[10]));
 
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
@@ -1804,7 +1805,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAt(AMX *amx, cell *params)
 		case WEAPON_TYPE_SPRAY:
 		case WEAPON_TYPE_THROW:
 			pPlayerData->StopAim();
-			pPlayerData->AimAt(vecPoint, bShoot, iShootDelay, bSetAngle);
+			pPlayerData->AimAt(vecPoint, bShoot, iShootDelay, bSetAngle, vecOffsetFrom);
 			return 1;
 	}
 
@@ -1813,7 +1814,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAt(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_AimAtPlayer(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(8, "FCNPC_AimAtPlayer");
+	CHECK_PARAMS(11, "FCNPC_AimAtPlayer");
 
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);
@@ -1821,7 +1822,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAtPlayer(AMX *amx, cell *params)
 	bool bShoot = static_cast<int>(params[3]) != 0;
 	int iShootDelay = static_cast<int>(params[4]);
 	bool bSetAngle = static_cast<int>(params[5]) != 0;
-	CVector vecOffset(amx_ctof(params[6]), amx_ctof(params[7]), amx_ctof(params[8]));
+	CVector vecOffsetTo(amx_ctof(params[6]), amx_ctof(params[7]), amx_ctof(params[8]));
+	CVector vecOffsetFrom(amx_ctof(params[9]), amx_ctof(params[10]), amx_ctof(params[11]));
 
 	// Make sure the npc is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
@@ -1843,7 +1845,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAtPlayer(AMX *amx, cell *params)
 		case WEAPON_TYPE_SPRAY:
 		case WEAPON_TYPE_THROW:
 			pPlayerData->StopAim();
-			pPlayerData->AimAtPlayer(wPlayerId, bShoot, iShootDelay, bSetAngle, vecOffset);
+			pPlayerData->AimAtPlayer(wPlayerId, bShoot, iShootDelay, bSetAngle, vecOffsetTo, vecOffsetFrom);
 			return 1;
 	}
 
@@ -3051,10 +3053,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_InitMapAndreas(AMX *amx, cell *params)
 	return 0;
 }
 
-// native FCNPC_TriggerWeaponShot(npcid, weaponid, hittype, hitid, Float:x, Float:y, Float:z, bool:ishit = true);
+// native FCNPC_TriggerWeaponShot(npcid, weaponid, hittype, hitid, Float:x, Float:y, Float:z, bool:ishit = true, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0);
 cell AMX_NATIVE_CALL CNatives::FCNPC_TriggerWeaponShot(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(8, "FCNPC_TriggerWeaponShot");
+	CHECK_PARAMS(11, "FCNPC_TriggerWeaponShot");
 
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);
@@ -3063,12 +3065,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_TriggerWeaponShot(AMX *amx, cell *params)
 	WORD wHitId = static_cast<WORD>(params[4]);
 	CVector vecPoint(amx_ctof(params[5]), amx_ctof(params[6]), amx_ctof(params[7]));
 	bool bIsHit = static_cast<int>(params[8]) != 0;
+	CVector vecOffsetFrom(amx_ctof(params[9]), amx_ctof(params[10]), amx_ctof(params[11]));
 
 	if (!pServer->GetPlayerManager()->IsNpcConnected(wNpcId)) {
 		return 0;
 	}
 
-	CFunctions::PlayerShoot(wNpcId, wHitId, byteHitType, byteWeaponId, vecPoint, bIsHit);
+	CFunctions::PlayerShoot(wNpcId, wHitId, byteHitType, byteWeaponId, vecPoint, vecOffsetFrom, bIsHit);
 	return 1;
 }
 
