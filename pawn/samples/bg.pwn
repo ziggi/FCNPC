@@ -178,7 +178,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 				Float:pos_x,
 				Float:pos_y;
 
-			GetCoordsBefore(player_x, player_y, player_angle, 2.0, pos_x, pos_y);
+			GetCoordsInFront(player_x, player_y, player_angle, 2.0, pos_x, pos_y);
 
 			FCNPC_Spawn(npcid, random(4) + 163, pos_x, pos_y, player_z);
 			FCNPC_SetAngleToPlayer(npcid, playerid);
@@ -647,7 +647,7 @@ stock strcharsplit(const string[], &index, seperator = ' ')
 	return result;
 }
 
-stock GetCoordsBefore(Float:x, Float:y, Float:a, Float:distance, &Float:res_x, &Float:res_y)
+stock GetCoordsInFront(Float:x, Float:y, Float:a, Float:distance, &Float:res_x, &Float:res_y)
 {
 	res_x = x + (distance * floatsin(-a, degrees));
 	res_y = y + (distance * floatcos(-a, degrees));
