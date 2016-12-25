@@ -9,7 +9,13 @@
 #define FILTERSCRIPT
 
 #include <a_samp>
-#include <FCNPC>
+
+#tryinclude <FCNPC>
+#tryinclude "FCNPC"
+#tryinclude "../FCNPC"
+#if !defined _FCNPC_included
+	#error Add FCNPC.inc to your scripts directory
+#endif
 
 #define COLOR_GREY 0xAFAFAFAA
 #define COLOR_RED  0xB35959AA
