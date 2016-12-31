@@ -3235,3 +3235,41 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GoByMovePath(AMX *amx, cell *params)
 	// move the player
 	return pPlayerData->GoByMovePath(iPathId, iType, bZMap, fRadius, bSetAngle, fSpeed);
 }
+
+// native FCNPC_ToggleMapAndreasUsage(npcid, bool:enabled);
+cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleMapAndreasUsage(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_ToggleMapAndreasUsage");
+
+	// Get the params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+	bool bIsEnabled = static_cast<int>(params[2]) != 0;
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// Toggle MapAndreas usage
+	pPlayerData->ToggleMapAndreasUsage(bIsEnabled);
+	return 1;
+}
+
+// native FCNPC_IsMapAndreasUsed(npcid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_IsMapAndreasUsed(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_IsMapAndreasUsed");
+
+	// Get the params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// return the state
+	return pPlayerData->IsMapAndreasUsed();
+}

@@ -2289,3 +2289,14 @@ bool CPlayerData::UpdateNodePoint(WORD wPointId)
 	UpdateMovingData(vecPosition, m_fMoveRadius, m_bMoveSetAngle, m_fMoveSpeed);
 	return true;
 }
+
+void CPlayerData::ToggleMapAndreasUsage(bool bIsEnabled)
+{
+	m_bUseMapAndreas = bIsEnabled;
+	m_bNodeUseMapAndreas = bIsEnabled;
+}
+
+bool CPlayerData::IsMapAndreasUsed()
+{
+	return m_bUseMapAndreas || m_bNodeUseMapAndreas;
+}

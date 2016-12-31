@@ -198,6 +198,9 @@ public:
 	WORD ChangeNode(int iNodeId, WORD wLinkId);
 	bool UpdateNodePoint(WORD wPointId);
 
+	void ToggleMapAndreasUsage(bool bIsEnabled);
+	bool IsMapAndreasUsed();
+
 private:
 	WORD m_wPlayerId;
 	bool m_bSetup;

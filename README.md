@@ -262,4 +262,7 @@ native FCNPC_IsValidMovePoint(pathid, pointid);
 native FCNPC_GetMovePoint(pathid, pointid, &Float:x, &Float:y, &Float:z);
 native FCNPC_GetNumberMovePoint(pathid);
 native FCNPC_GoByMovePath(npcid, pathid, type = MOVE_TYPE_AUTO, Float:speed = MOVE_SPEED_AUTO, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true);
+
+native FCNPC_ToggleMapAndreasUsage(npcid, bool:enabled);
+native FCNPC_IsMapAndreasUsed(npcid);
 ```
