@@ -681,7 +681,7 @@ void CPlayerData::Process()
 				vecNewPosition += vecVelocity * static_cast<float>(iTickDiff);
 			}
 
-			if (m_bUseMapAndreas && pServer->IsMapAndreasInited()) {
+			if (m_bUseMapAndreas && pServer->IsMapAndreasInited() && vecNewPosition.fZ >= 0.0f) {
 				vecNewPosition.fZ = pServer->GetMapAndreas()->FindZ_For2DCoord(vecNewPosition.fX, vecNewPosition.fY) + 0.5f;
 			}
 			SetPosition(vecNewPosition);
@@ -736,7 +736,7 @@ void CPlayerData::Process()
 
 			vecPosition += vecVelocity;
 
-			if (m_bUseMapAndreas && pServer->IsMapAndreasInited()) {
+			if (m_bUseMapAndreas && pServer->IsMapAndreasInited() && vecPosition.fZ >= 0.0f) {
 				vecPosition.fZ = pServer->GetMapAndreas()->FindZ_For2DCoord(vecPosition.fX, vecPosition.fY) + 0.5f;
 			}
 			SetPosition(vecPosition);
