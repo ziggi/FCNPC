@@ -15,14 +15,59 @@ If you want to see that your scripts will work correctly, you need to declare th
 - OnPlayerStreamIn
 - OnPlayerStreamOut
 
-# How to clone
-Git clone with submodules:
+Example:
+```Pawn
+public OnPlayerGiveDamage(playerid, damagedid, Float: amount, weaponid, bodypart)
+{
+	return 0;
+}
+
+public OnPlayerTakeDamage(playerid, issuerid, Float: amount, weaponid, bodypart)
+{
+	return 0;
+}
+
+public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY, Float:fZ)
+{
+	return 1;
+}
+
+public OnPlayerStreamIn(playerid, forplayerid)
+{
+	return 1;
+}
+
+public OnPlayerStreamOut(playerid, forplayerid)
+{
+	return 1;
+}
+```
+
+# MapAndreas usage
+Download MapAndreas 1.2.1 from [here](http://forum.sa-mp.com/showpost.php?p=3130004&postcount=153).
+
+Init MapAndreas in your script:
+```Pawn
+public OnFilterScriptInit()
+{
+	// ...
+	MapAndreas_Init(MAP_ANDREAS_MODE_FULL);
+	FCNPC_InitMapAndreas(MapAndreas_GetAddress());
+	// ...
+	return 1;
+}
+```
+
+# How to download all sources
+This repo contains submodules, this means that you should clone this with this command:
 ```bash
 git clone --recursive https://github.com/ziggi/FCNPC.git
 ```
 
 # Building (Windows)
-You can use Visual Studio for build. Just use CMake for generate VS project:
+You can use Visual Studio for build. Just use CMake for generate VS project.
+
+Example for Visual Studio 12 2013:
 ```bash
 cd FCNPC
 mkdir build
