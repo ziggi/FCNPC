@@ -1467,6 +1467,11 @@ void CPlayerData::UpdateMovingData(CVector vecDestination, float fRadius, bool b
 	m_fMoveSpeed = fSpeed;
 }
 
+void CPlayerData::GetDestination(CVector *pvecDestination)
+{
+	*pvecDestination = m_vecDestination;
+}
+
 void CPlayerData::StopMoving()
 {
 	// Make sure the player is moving

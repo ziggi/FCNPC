@@ -1268,6 +1268,49 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsMovingAtPlayer(AMX *amx, cell *params)
 	return pPlayerData->IsMovingAtPlayer(wPlayerId);
 }
 
+// native FCNPC_GetDestinationPoint(npcid, &Float:x, &Float:y, &Float:z);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetDestinationPoint(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(4, "FCNPC_GetDestinationPoint");
+
+	// get params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		// Get the argument pointers and set its value
+		cell *pAddress = NULL;
+		float fPos = 0.0f;
+		amx_GetAddr(amx, params[2], &pAddress);
+		*pAddress = amx_ftoc(fPos);
+
+		amx_GetAddr(amx, params[3], &pAddress);
+		*pAddress = amx_ftoc(fPos);
+
+		amx_GetAddr(amx, params[4], &pAddress);
+		*pAddress = amx_ftoc(fPos);
+		return 0;
+	}
+
+	// Get the player destination
+	CVector vecDestination;
+	pPlayerData->GetDestination(&vecDestination);
+
+	// Get the argument pointers and set its value
+	cell *pAddress = NULL;
+	amx_GetAddr(amx, params[2], &pAddress);
+	*pAddress = amx_ftoc(vecDestination.fX);
+
+	amx_GetAddr(amx, params[3], &pAddress);
+	*pAddress = amx_ftoc(vecDestination.fY);
+
+	amx_GetAddr(amx, params[4], &pAddress);
+	*pAddress = amx_ftoc(vecDestination.fZ);
+
+	return 1;
+}
+
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeapon(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_SetWeapon");

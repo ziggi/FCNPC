@@ -191,6 +191,7 @@ AMX_NATIVE_INFO PluginNatives[ ] = {
 	{"FCNPC_Stop", CNatives::FCNPC_Stop},
 	{"FCNPC_IsMoving", CNatives::FCNPC_IsMoving},
 	{"FCNPC_IsMovingAtPlayer", CNatives::FCNPC_IsMovingAtPlayer},
+	{"FCNPC_GetDestinationPoint", CNatives::FCNPC_GetDestinationPoint},
 
 	{"FCNPC_AimAt", CNatives::FCNPC_AimAt},
 	{"FCNPC_AimAtPlayer", CNatives::FCNPC_AimAtPlayer},

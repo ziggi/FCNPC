@@ -126,6 +126,7 @@ public:
 	bool GoToPlayer(WORD wPlayerId, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f);
 	bool GoByMovePath(int iPathId, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f);
 	void UpdateMovingData(CVector vecDestination, float fRadius, bool bSetAngle, float fSpeed);
+	void GetDestination(CVector *pvecDestination);
 	void StopMoving();
 	bool IsMoving();
 	bool IsMovingAtPlayer(WORD wPlayerId);
