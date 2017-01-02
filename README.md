@@ -59,7 +59,7 @@ public OnFilterScriptInit()
 ```
 
 # How to download all sources
-This repo contains submodules, this means that you should clone this with this command:
+This repo contains submodules, this means that you should clone this with `--recursive` argument:
 ```bash
 git clone --recursive https://github.com/ziggi/FCNPC.git
 ```
