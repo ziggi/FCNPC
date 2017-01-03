@@ -50,6 +50,7 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_wNodePoint = 0;
 	m_wNodeLastPoint = 0;
 	m_wLastDamagerId = INVALID_PLAYER_ID;
+	m_byteLastDamagerWeapon = 255;
 	m_wVehicleToEnter = INVALID_VEHICLE_ID;
 	m_byteSeatToEnter = 0;
 	m_wHitId = INVALID_PLAYER_ID;
@@ -155,6 +156,7 @@ bool CPlayerData::Spawn(int iSkinId)
 	SetState(PLAYER_STATE_ONFOOT);
 	// Reset stats
 	m_wLastDamagerId = INVALID_PLAYER_ID;
+	m_byteLastDamagerWeapon = 255;
 	SetVehicle(INVALID_VEHICLE_ID, 0);
 	// Call the NPC spawn callback
 	CCallbackManager::OnSpawn(m_wPlayerId);
@@ -208,6 +210,7 @@ bool CPlayerData::Respawn()
 
 	// Reset stats
 	m_wLastDamagerId = INVALID_PLAYER_ID;
+	m_byteLastDamagerWeapon = 255;
 	// Call the NPC spawn callback
 	CCallbackManager::OnRespawn(m_wPlayerId);
 	return true;
@@ -630,12 +633,6 @@ void CPlayerData::Process()
 
 	// Process death
 	if (GetHealth() <= 0.0f && byteState != PLAYER_STATE_WASTED && byteState != PLAYER_STATE_SPAWNED) {
-		// Get the last damager weapon
-		BYTE byteWeapon = 255;
-		if (pServer->GetPlayerManager()->IsPlayerConnected(m_wLastDamagerId)) {
-			byteWeapon = pNetGame->pPlayerPool->pPlayer[m_wLastDamagerId]->syncData.byteWeapon;
-		}
-
 		// check on vehicle
 		if (byteState == PLAYER_STATE_DRIVER || byteState == PLAYER_STATE_PASSENGER) {
 			RemoveFromVehicle();
@@ -645,7 +642,7 @@ void CPlayerData::Process()
 		// Kill the player
 		if (dwThisTick - m_dwKillVehicleTickCount >= dwUpdateRate) {
 			m_dwKillVehicleTickCount = 0;
-			Kill(m_wLastDamagerId, byteWeapon);
+			Kill(m_wLastDamagerId, m_byteLastDamagerWeapon);
 		}
 	}
 
@@ -1732,6 +1729,7 @@ void CPlayerData::ProcessDamage(WORD wDamagerId, float fHealthLoss, BYTE byteWea
 	}
 	// Save the last damager
 	m_wLastDamagerId = wDamagerId;
+	m_byteLastDamagerWeapon = byteWeaponId;
 }
 
 void CPlayerData::ProcessVehicleDamage(WORD wDamagerId, WORD wVehicleId, BYTE byteWeaponId, CVector vecHit)

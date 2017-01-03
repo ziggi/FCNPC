@@ -242,6 +242,7 @@ private:
 	WORD m_wVehicleToEnter;
 	BYTE m_byteSeatToEnter;
 	WORD m_wLastDamagerId;
+	BYTE m_byteLastDamagerWeapon;
 	WORD m_wNodePoint;
 	WORD m_wNodeLastPoint;
 	bool m_bHasReload;
