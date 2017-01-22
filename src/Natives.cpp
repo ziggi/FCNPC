@@ -3181,11 +3181,9 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AddPointsToPath(AMX *amx, cell *params)
 	pAddress += iSize;
 
 	for (int i = 0; i < iSize; i++) {
-		vecPoint.fX = amx_ctof(*(pAddress));
-		vecPoint.fY = amx_ctof(*(pAddress + 1));
-		vecPoint.fZ = amx_ctof(*(pAddress + 2));
-
-		pAddress += 3;
+		vecPoint.fX = amx_ctof(*(pAddress++));
+		vecPoint.fY = amx_ctof(*(pAddress++));
+		vecPoint.fZ = amx_ctof(*(pAddress++));
 
 		pServer->GetMovePath()->AddPoint(iPathId, vecPoint);
 	}
@@ -3221,7 +3219,6 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AddPointsToPath2(AMX *amx, cell *params)
 		vecPoint.fY = amx_ctof(*(pAddressY + i));
 		vecPoint.fZ = amx_ctof(*(pAddressZ + i));
 
-		logprintf("fX: %f, fY: %f, fZ: %f", vecPoint.fX, vecPoint.fY, vecPoint.fZ);
 		pServer->GetMovePath()->AddPoint(iPathId, vecPoint);
 	}
 	return 1;
