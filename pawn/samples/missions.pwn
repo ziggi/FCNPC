@@ -948,6 +948,7 @@ public EndMission(missionid, reason[], bool:success)
 		return;
 	}
 	KillTimer(missiontimer[missionid]);
+	FreeCamera(mission);
 	// Reset missions
 	Mission[missionid][started] = false;
 	for (new j = 0; j < MAX_MISSION_PLAYERS; j++)
