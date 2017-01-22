@@ -128,3 +128,10 @@ float CMath::GetAngle(float fRotationX, float fRotationY)
 
 	return fReturn;
 }
+
+void CMath::GetCoordsInFront(float fX, float fY, float fA, float fDistance, float &fResX, float &fResY)
+{
+	float fAngleRadian = DegreeToRadians(-fA);
+	fResX = fX + (fDistance * sin(fAngleRadian));
+	fResY = fY + (fDistance * cos(fAngleRadian));
+}

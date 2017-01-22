@@ -65,6 +65,7 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_fMoveRadius = 0.0f;
 	m_bMoveSetAngle = false;
 	m_fMoveSpeed = MOVE_SPEED_AUTO;
+	m_fDistOffset = 0.0f;
 	m_iNodeMoveType = MOVE_TYPE_AUTO;
 	m_bNodeUseMapAndreas = false;
 	m_fNodeMoveRadius = 0.0f;
@@ -654,7 +655,7 @@ void CPlayerData::Process()
 			if (pPlayer) {
 				if (CMath::GetDistanceBetween3DPoints(m_vecMovePlayerPosition, pPlayer->vecPosition) > 1.5) {
 					m_vecMovePlayerPosition = pPlayer->vecPosition;
-					UpdateMovingData(pPlayer->vecPosition, m_fMoveRadius, m_bMoveSetAngle, m_fMoveSpeed);
+					UpdateMovingData(pPlayer->vecPosition, m_fMoveRadius, m_bMoveSetAngle, m_fMoveSpeed, m_fDistOffset);
 				}
 			} else {
 				StopMoving();
@@ -691,7 +692,7 @@ void CPlayerData::Process()
 				m_iMovePoint++;
 				CVector *vecPoint = pServer->GetMovePath()->GetPoint(m_iMovePath, m_iMovePoint);
 				if (vecPoint) {
-					UpdateMovingData(*vecPoint, m_fMoveRadius, m_bMoveSetAngle, m_fMoveSpeed);
+					UpdateMovingData(*vecPoint, m_fMoveRadius, m_bMoveSetAngle, m_fMoveSpeed, m_fDistOffset);
 				} else {
 					int iMovePath = m_iMovePath;
 					StopMoving();
@@ -1333,7 +1334,7 @@ void CPlayerData::GetKeys(WORD *pwUDAnalog, WORD *pwLRAnalog, DWORD *pdwKeys)
 	*pdwKeys = m_pPlayer->dwKeys;
 }
 
-bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float fRadius, bool bSetAngle, float fSpeed)
+bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset)
 {
 	// Validate the movement
 	if (iType == MOVE_TYPE_AUTO && GetState() == PLAYER_STATE_DRIVER) {
@@ -1395,7 +1396,7 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float f
 	// Set the moving keys
 	SetKeys(wUDKey, wLRKey, dwMoveKey);
 	// Update moving data
-	UpdateMovingData(vecPoint, fRadius, bSetAngle, fSpeed);
+	UpdateMovingData(vecPoint, fRadius, bSetAngle, fSpeed, fDistOffset);
 	// Mark as moving
 	m_bMoving = true;
 	// Save the flags
@@ -1404,10 +1405,10 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float f
 	return true;
 }
 
-bool CPlayerData::GoToPlayer(WORD wPlayerId, int iType, bool bUseMapAndreas, float fRadius, bool bSetAngle, float fSpeed)
+bool CPlayerData::GoToPlayer(WORD wPlayerId, int iType, bool bUseMapAndreas, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset)
 {
 	CVector vecPos = pNetGame->pPlayerPool->pPlayer[wPlayerId]->vecPosition;
-	if (GoTo(vecPos, iType, bUseMapAndreas, fRadius, bSetAngle, fSpeed)) {
+	if (GoTo(vecPos, iType, bUseMapAndreas, fRadius, bSetAngle, fSpeed, fDistOffset)) {
 		m_wMoveId = wPlayerId;
 		m_vecMovePlayerPosition = vecPos;
 		return true;
@@ -1415,10 +1416,10 @@ bool CPlayerData::GoToPlayer(WORD wPlayerId, int iType, bool bUseMapAndreas, flo
 	return false;
 }
 
-bool CPlayerData::GoByMovePath(int iPathId, int iType, bool bUseMapAndreas, float fRadius, bool bSetAngle, float fSpeed)
+bool CPlayerData::GoByMovePath(int iPathId, int iType, bool bUseMapAndreas, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset)
 {
 	CVector *vecPos = pServer->GetMovePath()->GetPoint(iPathId, 0);
-	if (GoTo(*vecPos, iType, bUseMapAndreas, fRadius, bSetAngle, fSpeed)) {
+	if (GoTo(*vecPos, iType, bUseMapAndreas, fRadius, bSetAngle, fSpeed, fDistOffset)) {
 		m_iMovePath = iPathId;
 		m_iMovePoint = 0;
 		return true;
@@ -1426,7 +1427,7 @@ bool CPlayerData::GoByMovePath(int iPathId, int iType, bool bUseMapAndreas, floa
 	return false;
 }
 
-void CPlayerData::UpdateMovingData(CVector vecDestination, float fRadius, bool bSetAngle, float fSpeed)
+void CPlayerData::UpdateMovingData(CVector vecDestination, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset)
 {
 	if (fRadius != 0.0f) {
 		vecDestination -= CVector(CUtils::RandomFloat(-fRadius, fRadius), CUtils::RandomFloat(-fRadius, fRadius), 0.0);
@@ -1442,9 +1443,16 @@ void CPlayerData::UpdateMovingData(CVector vecDestination, float fRadius, bool b
 		vecFront = (vecDestination - vecPosition) / fDistance;
 	}
 
-	if (bSetAngle) {
-		SetAngle(CMath::RadiansToDegree(atan2(vecFront.fY, vecFront.fX)));
+	float fAngle = CMath::GetAngle(vecFront.fY, vecFront.fX);
+
+	if (fDistOffset != 0.0f) {
+		CMath::GetCoordsInFront(vecPosition.fX, vecPosition.fY, fAngle, fDistance + fDistOffset, vecDestination.fX, vecDestination.fY);
 	}
+
+	if (bSetAngle) {
+		SetAngle(fAngle);
+	}
+
 	// Set the moving velocity
 	vecFront *= (fSpeed / 100.0f); // Step per 1ms
 	SetVelocity(vecFront);
@@ -1462,6 +1470,7 @@ void CPlayerData::UpdateMovingData(CVector vecDestination, float fRadius, bool b
 	m_fMoveRadius = fRadius;
 	m_bMoveSetAngle = bSetAngle;
 	m_fMoveSpeed = fSpeed;
+	m_fDistOffset = fDistOffset;
 }
 
 void CPlayerData::GetDestination(CVector *pvecDestination)
@@ -1590,7 +1599,7 @@ void CPlayerData::UpdateAimingData(CVector vecPoint, bool bSetAngle)
 	vecDistance /= fDistance;
 
 	if (bSetAngle) {
-		SetAngle(CMath::RadiansToDegree(atan2(vecDistance.fY, vecDistance.fX)));
+		SetAngle(CMath::GetAngle(vecDistance.fY, vecDistance.fX));
 	}
 
 	// Set the aim sync data
@@ -2289,7 +2298,7 @@ bool CPlayerData::UpdateNodePoint(WORD wPointId)
 	m_pNode->SetPoint(wPointId);
 	m_pNode->GetPosition(&vecPosition);
 
-	UpdateMovingData(vecPosition, m_fMoveRadius, m_bMoveSetAngle, m_fMoveSpeed);
+	UpdateMovingData(vecPosition, m_fMoveRadius, m_bMoveSetAngle, m_fMoveSpeed, m_fDistOffset);
 	return true;
 }
 

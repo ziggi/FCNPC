@@ -122,10 +122,10 @@ public:
 	void ApplyAnimation(char *szAnimationLib, char *szAnimationName, float fDelta, bool bLoop, bool bLockX, bool bLockY, bool bFreeze, int iTime);
 	void ClearAnimations();
 
-	bool GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f);
-	bool GoToPlayer(WORD wPlayerId, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f);
-	bool GoByMovePath(int iPathId, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f);
-	void UpdateMovingData(CVector vecDestination, float fRadius, bool bSetAngle, float fSpeed);
+	bool GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f);
+	bool GoToPlayer(WORD wPlayerId, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f);
+	bool GoByMovePath(int iPathId, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f);
+	void UpdateMovingData(CVector vecDestination, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset);
 	void GetDestination(CVector *pvecDestination);
 	void StopMoving();
 	bool IsMoving();
@@ -263,6 +263,7 @@ private:
 	float m_fMoveRadius;
 	bool m_bMoveSetAngle;
 	float m_fMoveSpeed;
+	float m_fDistOffset;
 	int m_iNodeMoveType;
 	bool m_bNodeUseMapAndreas;
 	float m_fNodeMoveRadius;
