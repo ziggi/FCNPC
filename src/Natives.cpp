@@ -1161,7 +1161,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetFightingStyle(AMX *amx, cell *params)
 // native FCNPC_GoTo(npcid, Float:X, Float:Y, Float:Z, type = MOVE_TYPE_AUTO, Float:speed = -1.0, bool:UseZMap = false, Float:radius = 0.0, bool:setangle = true, Float:dist_offset = 0.0);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GoTo(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(9, "FCNPC_GoTo");
+	CHECK_PARAMS(10, "FCNPC_GoTo");
 
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);
@@ -1183,10 +1183,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GoTo(AMX *amx, cell *params)
 	return pPlayerData->GoTo(vecPoint, iType, bZMap, fRadius, bSetAngle, fSpeed, fDistOffset);
 }
 
-// native FCNPC_GoToPlayer(npcid, playereid, type, Float:speed, bool:UseZMap = false, Float:radius = 0.0, bool:setangle = true, Float:dist_offset = 0.0);
+// native FCNPC_GoToPlayer(npcid, playereid, type, Float:speed, bool:UseZMap = false, Float:radius = 0.0, bool:setangle = true, Float:dist_offset = 0.0, Float:dist_check = 1.5);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GoToPlayer(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(7, "FCNPC_GoToPlayer");
+	CHECK_PARAMS(9, "FCNPC_GoToPlayer");
 
 	// get params
 	WORD wNpcId = static_cast<WORD>(params[1]);
@@ -1197,6 +1197,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GoToPlayer(AMX *amx, cell *params)
 	float fRadius = amx_ctof(params[6]);
 	bool bSetAngle = static_cast<int>(params[7]) != 0;
 	float fDistOffset = amx_ctof(params[8]);
+	float fDistCheck = amx_ctof(params[9]);
 
 	// validation
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
@@ -1209,7 +1210,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GoToPlayer(AMX *amx, cell *params)
 	}
 
 	// move the player
-	return pPlayerData->GoToPlayer(wPlayerId, iType, bZMap, fRadius, bSetAngle, fSpeed, fDistOffset);
+	return pPlayerData->GoToPlayer(wPlayerId, iType, bZMap, fRadius, bSetAngle, fSpeed, fDistOffset, fDistCheck);
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_Stop(AMX *amx, cell *params)
@@ -3292,7 +3293,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetNumberMovePoint(AMX *amx, cell *params)
 // native FCNPC_GoByMovePath(npcid, pathid, type = MOVE_TYPE_AUTO, Float:speed = MOVE_SPEED_AUTO, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = truee, Float:dist_offset = 0.0);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GoByMovePath(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(7, "FCNPC_GoByMovePath");
+	CHECK_PARAMS(8, "FCNPC_GoByMovePath");
 
 	// get params
 	WORD wNpcId = static_cast<WORD>(params[1]);

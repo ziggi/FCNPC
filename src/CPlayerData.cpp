@@ -73,6 +73,7 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_fNodeMoveSpeed = MOVE_SPEED_AUTO;
 	m_vecNodeLastPos = CVector();
 	m_vecMovePlayerPosition = CVector();
+	m_fDistCheck = 0.0f;
 	m_wHydraThrustAngle[0] =
 		m_wHydraThrustAngle[1] = 5000;
 	m_fTrainSpeed = 0.0f;
@@ -653,7 +654,7 @@ void CPlayerData::Process()
 		if (pServer->GetPlayerManager()->IsPlayerConnected(m_wMoveId) && IsMovingAtPlayer(m_wMoveId)) {
 			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[m_wMoveId];
 			if (pPlayer) {
-				if (CMath::GetDistanceBetween3DPoints(m_vecMovePlayerPosition, pPlayer->vecPosition) > 1.5) {
+				if (CMath::GetDistanceBetween3DPoints(m_vecMovePlayerPosition, pPlayer->vecPosition) > m_fDistCheck) {
 					m_vecMovePlayerPosition = pPlayer->vecPosition;
 					UpdateMovingData(pPlayer->vecPosition, m_fMoveRadius, m_bMoveSetAngle, m_fMoveSpeed, m_fDistOffset);
 				}
@@ -1405,12 +1406,13 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float f
 	return true;
 }
 
-bool CPlayerData::GoToPlayer(WORD wPlayerId, int iType, bool bUseMapAndreas, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset)
+bool CPlayerData::GoToPlayer(WORD wPlayerId, int iType, bool bUseMapAndreas, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset, float fDistCheck)
 {
 	CVector vecPos = pNetGame->pPlayerPool->pPlayer[wPlayerId]->vecPosition;
 	if (GoTo(vecPos, iType, bUseMapAndreas, fRadius, bSetAngle, fSpeed, fDistOffset)) {
 		m_wMoveId = wPlayerId;
 		m_vecMovePlayerPosition = vecPos;
+		m_fDistCheck = fDistCheck;
 		return true;
 	}
 	return false;

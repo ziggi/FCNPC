@@ -123,7 +123,7 @@ public:
 	void ClearAnimations();
 
 	bool GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f);
-	bool GoToPlayer(WORD wPlayerId, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f);
+	bool GoToPlayer(WORD wPlayerId, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f, float fDistCheck = 1.5f);
 	bool GoByMovePath(int iPathId, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f);
 	void UpdateMovingData(CVector vecDestination, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset);
 	void GetDestination(CVector *pvecDestination);
@@ -271,6 +271,7 @@ private:
 	float m_fNodeMoveSpeed;
 	CVector m_vecNodeLastPos;
 	CVector m_vecMovePlayerPosition;
+	float m_fDistCheck;
 	WORD m_wHydraThrustAngle[2];
 	float m_fTrainSpeed;
 	BYTE m_byteGearState;
