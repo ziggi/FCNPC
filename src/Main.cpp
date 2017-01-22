@@ -277,8 +277,8 @@ PLUGIN_EXPORT int PLUGIN_CALL AmxLoad(AMX *pAMX)
 {
 	if (!bServerInit) {
 		// Initialize the server
-		BYTE byteError = 0;
-		if ((byteError = pServer->Initialize(pAMX)) != 0) {
+		BYTE byteError = pServer->Initialize(pAMX);
+		if (byteError != ERROR_NO) {
 			// Get the error
 			char szError[64];
 			CUtils::GetPluginError(byteError, szError, sizeof(szError));

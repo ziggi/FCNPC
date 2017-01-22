@@ -11,6 +11,13 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+enum {
+	ERROR_NO,
+	ERROR_PLAYER_MANAGER_FAIL,
+	ERROR_NODE_MANAGER_FAIL,
+	ERROR_INCLUDE_VERSION
+};
+
 class CUtils
 {
 public:

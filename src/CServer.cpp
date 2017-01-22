@@ -70,7 +70,7 @@ BYTE CServer::Initialize(AMX *pAMX)
 			}
 		}
 		if (iIncludeVersion != INCLUDE_VERSION) {
-			return 6;
+			return ERROR_INCLUDE_VERSION;
 		}
 	}
 
@@ -85,13 +85,13 @@ BYTE CServer::Initialize(AMX *pAMX)
 	// Create the player manager instance
 	m_pPlayerDataManager = new CPlayerManager();
 	if (!m_pPlayerDataManager) {
-		return 2;
+		return ERROR_PLAYER_MANAGER_FAIL;
 	}
 
 	// Create the node manager instance
 	m_pNodeManager = new CNodeManager();
 	if (!m_pNodeManager) {
-		return 3;
+		return ERROR_NODE_MANAGER_FAIL;
 	}
 
 	// Create the move path instance
@@ -109,7 +109,7 @@ BYTE CServer::Initialize(AMX *pAMX)
 		logprintf("Warning: the maxplayers limit is less than maxnpc (possible crash)");
 	}
 
-	return 0;
+	return ERROR_NO;
 }
 
 void CServer::Process()

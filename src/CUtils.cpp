@@ -32,28 +32,16 @@
 
 void CUtils::GetPluginError(BYTE byteError, char *szError, size_t sSize)
 {
-	switch(byteError) {
-		case 1:
-			strlcpy(szError, "File \"scriptfiles/FCNPC/ZMap.hmap\" is not found", sSize);
-			break;
-
-		case 2:
+	switch (byteError) {
+		case ERROR_PLAYER_MANAGER_FAIL:
 			strlcpy(szError, "Failed to create PlayerManager instance", sSize);
 			break;
 
-		case 3:
+		case ERROR_NODE_MANAGER_FAIL:
 			strlcpy(szError, "Failed to create NodeManager instance", sSize);
 			break;
 
-		case 4:
-			strlcpy(szError, "Failed to create damage thread", sSize);
-			break;
-
-		case 5:
-			strlcpy(szError, "Failed to create RPCParams instance", sSize);
-			break;
-
-		case 6:
+		case ERROR_INCLUDE_VERSION:
 			strlcpy(szError, "Include file version does not match plugin version", sSize);
 			break;
 
