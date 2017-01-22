@@ -179,6 +179,7 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_IsValidMovePath(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_AddPointToPath(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_AddPointsToPath(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_AddPointsToPath2(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_RemovePointFromPath(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_IsValidMovePoint(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetMovePoint(AMX *amx, cell *params);

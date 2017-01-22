@@ -3192,6 +3192,41 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AddPointsToPath(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_AddPointsToPath2(pathid, Float:points_x[], Float:points_y[], Float:points_z[], const size = sizeof(points_x));
+cell AMX_NATIVE_CALL CNatives::FCNPC_AddPointsToPath2(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(5, "FCNPC_AddPointsToPath2");
+
+	// get params
+	int iPathId = static_cast<int>(params[1]);
+	int iSize = static_cast<int>(params[5]);
+
+	// validation
+	if (!pServer->GetMovePath()->IsPathValid(iPathId)) {
+		return 0;
+	}
+
+	// get and add points
+	CVector vecPoint;
+	cell *pAddressX = NULL;
+	cell *pAddressY = NULL;
+	cell *pAddressZ = NULL;
+
+	amx_GetAddr(amx, params[2], &pAddressX);
+	amx_GetAddr(amx, params[3], &pAddressY);
+	amx_GetAddr(amx, params[4], &pAddressZ);
+
+	for (int i = 0; i < iSize; i++) {
+		vecPoint.fX = amx_ctof(*(pAddressX + i));
+		vecPoint.fY = amx_ctof(*(pAddressY + i));
+		vecPoint.fZ = amx_ctof(*(pAddressZ + i));
+
+		logprintf("fX: %f, fY: %f, fZ: %f", vecPoint.fX, vecPoint.fY, vecPoint.fZ);
+		pServer->GetMovePath()->AddPoint(iPathId, vecPoint);
+	}
+	return 1;
+}
+
 // native FCNPC_RemovePointFromPath(pathid, pointid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_RemovePointFromPath(AMX *amx, cell *params)
 {
