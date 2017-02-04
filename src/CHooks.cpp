@@ -232,7 +232,7 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 	int ret = 0;
 
 	if (bGiveDamage) {
-		bGiveDamage = false;
+		bHookIsExec = true;
 
 		// get the npc data
 		CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(pDamage.wSecondPlayerId);
@@ -247,10 +247,8 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 				pPlayerData->ProcessDamage(pDamage.wPlayerId, pDamage.fHealthLoss, pDamage.byteWeaponId, pDamage.iBodypart);
 			}
 		}
-
-		bHookIsExec = true;
 	} else if (bTakeDamage) {
-		bTakeDamage = false;
+		bHookIsExec = true;
 
 		// call hooked callback
 		ret = pfn_amx_Exec(amx, retval, index);
@@ -262,10 +260,8 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 		if (pPlayerData) {
 			CCallbackManager::OnGiveDamage(pDamage.wSecondPlayerId, pDamage.wPlayerId, pDamage.byteWeaponId, pDamage.iBodypart, pDamage.fHealthLoss);
 		}
-
-		bHookIsExec = true;
 	} else if (bWeaponShot) {
-		bWeaponShot = false;
+		bHookIsExec = true;
 
 		// call hooked callback
 		ret = pfn_amx_Exec(amx, retval, index);
@@ -279,10 +275,8 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 				pPlayerData->ProcessVehicleDamage(pWeaponShot.wPlayerId, pWeaponShot.wHitId, pWeaponShot.byteWeaponId, pWeaponShot.vecHit);
 			}
 		}
-
-		bHookIsExec = true;
 	} else if (bStreamIn) {
-		bStreamIn = false;
+		bHookIsExec = true;
 
 		CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(pStream.wPlayerId);
 		if (pPlayerData) {
@@ -292,10 +286,8 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 			// call hooked callback
 			ret = pfn_amx_Exec(amx, retval, index);
 		}
-
-		bHookIsExec = true;
 	} else if (bStreamOut) {
-		bStreamOut = false;
+		bHookIsExec = true;
 
 		CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(pStream.wPlayerId);
 		if (pPlayerData) {
@@ -306,8 +298,6 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 			// call hooked callback
 			ret = pfn_amx_Exec(amx, retval, index);
 		}
-
-		bHookIsExec = true;
 	} else {
 		ret = pfn_amx_Exec(amx, retval, index);
 	}
