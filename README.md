@@ -303,7 +303,7 @@ native FCNPC_DestroyMovePath(pathid);
 native FCNPC_IsValidMovePath(pathid);
 native FCNPC_AddPointToPath(pathid, Float:x, Float:y, Float:z);
 native FCNPC_AddPointsToPath(pathid, Float:points[][3], const size = sizeof(points));
-native FCNPC_AddPointsToPath2(pathid, Float:points_x[], Float:points_y[], Float:points_z[], const size = sizeof(points));
+native FCNPC_AddPointsToPath2(pathid, Float:points_x[], Float:points_y[], Float:points_z[], const size = sizeof(points_x));
 native FCNPC_RemovePointFromPath(pathid, pointid);
 native FCNPC_IsValidMovePoint(pathid, pointid);
 native FCNPC_GetMovePoint(pathid, pointid, &Float:x, &Float:y, &Float:z);
