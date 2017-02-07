@@ -1448,7 +1448,12 @@ void CPlayerData::UpdateMovingData(CVector vecDestination, float fRadius, bool b
 	float fAngle = CMath::GetAngle(vecFront.fX, vecFront.fY);
 
 	if (fDistOffset != 0.0f) {
-		CMath::GetCoordsInFront(vecPosition.fX, vecPosition.fY, fAngle, fDistance + fDistOffset, vecDestination.fX, vecDestination.fY);
+		fDistance += fDistOffset;
+		CMath::GetCoordsInFront(vecPosition.fX, vecPosition.fY, fAngle, fDistance, vecDestination.fX, vecDestination.fY);
+
+		if (fDistance != 0.0f) {
+			vecFront = (vecDestination - vecPosition) / fDistance;
+		}
 	}
 
 	if (bSetAngle) {
