@@ -239,7 +239,7 @@ float CServer::GetVehicleAngle(CVehicle *pVehicle)
 	if (bIsBadMatrix || bIsTrain) {
 		fAngle = pVehicle->customSpawn.fRot;
 	} else {
-		fAngle = CMath::GetAngle(-pVehicle->vehMatrix.up.fX, pVehicle->vehMatrix.up.fY);
+		fAngle = CMath::GetAngle(pVehicle->vehMatrix.up.fX, pVehicle->vehMatrix.up.fY);
 	}
 
 	return fAngle;

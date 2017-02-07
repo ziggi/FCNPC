@@ -1445,7 +1445,7 @@ void CPlayerData::UpdateMovingData(CVector vecDestination, float fRadius, bool b
 		vecFront = (vecDestination - vecPosition) / fDistance;
 	}
 
-	float fAngle = CMath::GetAngle(vecFront.fY, vecFront.fX);
+	float fAngle = CMath::GetAngle(vecFront.fX, vecFront.fY);
 
 	if (fDistOffset != 0.0f) {
 		CMath::GetCoordsInFront(vecPosition.fX, vecPosition.fY, fAngle, fDistance + fDistOffset, vecDestination.fX, vecDestination.fY);
@@ -1601,7 +1601,7 @@ void CPlayerData::UpdateAimingData(CVector vecPoint, bool bSetAngle)
 	vecDistance /= fDistance;
 
 	if (bSetAngle) {
-		SetAngle(CMath::GetAngle(vecDistance.fY, vecDistance.fX));
+		SetAngle(CMath::GetAngle(vecDistance.fX, vecDistance.fY));
 	}
 
 	// Set the aim sync data

@@ -332,7 +332,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetAngleToPos(AMX *amx, cell *params)
 	pPlayerData->GetPosition(&vecPos);
 
 	CVector vecFront = vecPoint - vecPos;
-	pPlayerData->SetAngle(CMath::GetAngle(vecFront.fY, vecFront.fX));
+	pPlayerData->SetAngle(CMath::GetAngle(vecFront.fX, vecFront.fY));
 	return 1;
 }
 
@@ -363,7 +363,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetAngleToPlayer(AMX *amx, cell *params)
 	pPlayerData->GetPosition(&vecPos);
 
 	CVector vecFront = vecPlayerPos - vecPos;
-	pPlayerData->SetAngle(CMath::GetAngle(vecFront.fY, vecFront.fX));
+	pPlayerData->SetAngle(CMath::GetAngle(vecFront.fX, vecFront.fY));
 	return 1;
 }
 

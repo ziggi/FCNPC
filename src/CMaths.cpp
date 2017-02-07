@@ -119,13 +119,12 @@ bool CMath::IsInRange(float fRange1, float fRange2, float fRadius)
 
 float CMath::GetAngle(float fRotationX, float fRotationY)
 {
-	float fReturn = atan2(fRotationX, fRotationY) * 180.0f / M_PI;
+	float fReturn = atan2(fRotationY, fRotationX) * (180.0f / M_PI) + 270.0f;
 	if (fReturn >= 360.0f) {
 		fReturn -= 360.0f;
 	} else if (fReturn < 0.0f) {
 		fReturn += 360.0f;
 	}
-
 	return fReturn;
 }
 
