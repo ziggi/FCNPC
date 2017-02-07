@@ -185,7 +185,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 			FCNPC_SetVirtualWorld(npcid, GetPlayerVirtualWorld(playerid));
 			FCNPC_SetInterior(npcid, GetPlayerInterior(playerid));
 			FCNPC_SetWeapon(npcid, random(3) + 22);
-			FCNPC_SetAmmo(npcid, 400);
+			FCNPC_ToggleInfiniteAmmo(npcid, true);
 			FCNPC_SetArmour(npcid, 80);
 			FCNPC_SetFightingStyle(npcid, random(4) + 3);
 
