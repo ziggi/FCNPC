@@ -359,6 +359,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 			param = strcharsplit(cmdtext, idx);
 			new seat = strval(param);
 
+			BG_UnFollowPlayer(playerid, slot);
 			BG_EnterVehicle(playerid, slot, vehicleid, seat);
 			return 1;
 		}
@@ -525,24 +526,24 @@ public BG_SetFollowPosition(npcid, playerid)
 		Float:pos_x,
 		Float:pos_y,
 		Float:pos_z,
-		Float:radius,
+		Float:dist_offset,
 		Float:range,
 		Float:speed;
 
 	GetPlayerPos(playerid, pos_x, pos_y, pos_z);
 
 	if (FCNPC_GetVehicleID(npcid) != INVALID_VEHICLE_ID) {
-		radius = 4.0;
-		range = radius + 1.0;
+		dist_offset = -3.0;
+		range = -dist_offset + 1.0;
 		speed = 0.8;
 	} else {
-		radius = 1.0;
-		range = radius + 0.5;
+		dist_offset = -1.0;
+		range = -dist_offset + 0.5;
 		speed = MOVE_SPEED_AUTO;
 	}
 
 	if (!IsPlayerInRangeOfPoint(npcid, range, pos_x, pos_y, pos_z)) {
-		FCNPC_GoToPlayer(npcid, playerid, .speed = speed, .radius = radius);
+		FCNPC_GoToPlayer(npcid, playerid, .speed = speed, .dist_offset = dist_offset);
 		KillTimer(gFollowTimer[npcid]);
 		gFollowTimer[npcid] = 0;
 		return 1;
