@@ -1366,7 +1366,7 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float f
 			} else if (iType == MOVE_TYPE_SPRINT) {
 				fSpeed = MOVE_SPEED_SPRINT;
 			}
-		} else {
+		} else if (iType == MOVE_TYPE_AUTO) {
 			float fSpeedValues[] = {MOVE_SPEED_WALK, MOVE_SPEED_RUN, MOVE_SPEED_SPRINT};
 			float fNearestSpeed = CUtils::GetNearestFloatValue(fSpeed, fSpeedValues, sizeof(fSpeedValues) / sizeof(float));
 
