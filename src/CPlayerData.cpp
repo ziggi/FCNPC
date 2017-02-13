@@ -680,9 +680,7 @@ void CPlayerData::Process()
 				vecNewPosition += vecVelocity * static_cast<float>(iTickDiff);
 			}
 
-			if (m_bUseMapAndreas && pServer->IsMapAndreasInited() && vecNewPosition.fZ >= 0.0f) {
-				vecNewPosition.fZ = pServer->GetMapAndreas()->FindZ_For2DCoord(vecNewPosition.fX, vecNewPosition.fY) + 0.5f;
-			}
+			UpdateZPosition(&vecNewPosition);
 			SetPosition(vecNewPosition);
 
 			if ((dwThisTick - m_dwMoveStartTime) < m_dwMoveTime) {
@@ -735,9 +733,7 @@ void CPlayerData::Process()
 
 			vecPosition += vecVelocity;
 
-			if (m_bUseMapAndreas && pServer->IsMapAndreasInited() && vecPosition.fZ >= 0.0f) {
-				vecPosition.fZ = pServer->GetMapAndreas()->FindZ_For2DCoord(vecPosition.fX, vecPosition.fY) + 0.5f;
-			}
+			UpdateZPosition(&vecPosition);
 			SetPosition(vecPosition);
 		}
 	}
@@ -917,6 +913,16 @@ void CPlayerData::GetPosition(CVector *pvecPosition)
 		*pvecPosition = pServer->GetVehiclePos(pVehicle);
 	} else {
 		*pvecPosition = m_pPlayer->vecPosition;
+	}
+}
+
+void CPlayerData::UpdateZPosition(CVector *pvecPosition)
+{
+	if (m_bUseMapAndreas && pServer->IsMapAndreasInited() && pvecPosition->fZ >= 0.0f) {
+		float fNewZ = pServer->GetMapAndreas()->FindZ_For2DCoord(pvecPosition->fX, pvecPosition->fY) + 0.5f;
+		if (CCallbackManager::OnChangeZ(m_wPlayerId, fNewZ, pvecPosition->fZ)) {
+			pvecPosition->fZ = fNewZ;
+		}
 	}
 }
 

@@ -134,6 +134,8 @@ forward FCNPC_OnUpdate(npcid);
 
 forward FCNPC_OnFinishMovePath(npcid, pathid);
 forward FCNPC_OnFinishMovePathPoint(npcid, pathid, pointid);
+
+forward FCNPC_OnChangeZ(playerid, Float:new_z, Float:old_z);
 ```
 
 # Natives

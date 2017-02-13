@@ -41,6 +41,7 @@ public:
 	static int  OnUpdate(WORD wPlayerId);
 	static void OnFinishMovePath(WORD wPlayerId, int iMovePath);
 	static void OnFinishMovePathPoint(WORD wPlayerId, int iMovePath, int iMovePoint);
+	static int OnChangeZ(WORD wPlayerId, float fNewZ, float fOldZ);
 
 	static std::vector<AMX *> m_vAMX;
 };

@@ -62,6 +62,7 @@ public:
 
 	void SetPosition(CVector vecPosition);
 	void GetPosition(CVector *pvecPosition);
+	void UpdateZPosition(CVector *pvecPosition);
 	void SetQuaternion(float *fQuaternion);
 	void GetQuaternion(float *fQuaternion);
 	void SetAngle(float fAngle);

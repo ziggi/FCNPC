@@ -391,3 +391,22 @@ void CCallbackManager::OnFinishMovePathPoint(WORD wPlayerId, int iMovePath, int 
 		}
 	}
 }
+
+int CCallbackManager::OnChangeZ(WORD wPlayerId, float fNewZ, float fOldZ)
+{
+	cell cReturn = 1;
+	int iIndex;
+	for (auto &amx : m_vAMX) {
+		if (!amx_FindPublic(amx, "FCNPC_OnChangeZ", &iIndex)) {
+			amx_Push(amx, fOldZ);
+			amx_Push(amx, fNewZ);
+			amx_Push(amx, wPlayerId);
+
+			amx_Exec(amx, &cReturn, iIndex);
+			if (!cReturn) {
+				return cReturn;
+			}
+		}
+	}
+	return cReturn;
+}
