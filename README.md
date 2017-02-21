@@ -135,7 +135,7 @@ forward FCNPC_OnUpdate(npcid);
 forward FCNPC_OnFinishMovePath(npcid, pathid);
 forward FCNPC_OnFinishMovePathPoint(npcid, pathid, pointid);
 
-forward FCNPC_OnChangeZ(npcid, Float:new_z, Float:old_z);
+forward FCNPC_OnChangeHeightPos(npcid, Float:new_z, Float:old_z); // disabled by default, see FCNPC_SetMinHeightPosCall
 ```
 
 # Natives
@@ -314,4 +314,5 @@ native FCNPC_GoByMovePath(npcid, pathid, type = MOVE_TYPE_AUTO, Float:speed = MO
 
 native FCNPC_ToggleMapAndreasUsage(npcid, bool:enabled);
 native FCNPC_IsMapAndreasUsed(npcid);
+native FCNPC_SetMinHeightPosCall(npcid, Float:height);
 ```

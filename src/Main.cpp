@@ -269,6 +269,8 @@ AMX_NATIVE_INFO PluginNatives[ ] = {
 
 	{"FCNPC_ToggleMapAndreasUsage", CNatives::FCNPC_ToggleMapAndreasUsage},
 	{"FCNPC_IsMapAndreasUsed", CNatives::FCNPC_IsMapAndreasUsed},
+	{"FCNPC_SetMinHeightPosCall", CNatives::FCNPC_SetMinHeightPosCall},
+	{"FCNPC_GetMinHeightPosCall", CNatives::FCNPC_GetMinHeightPosCall},
 
 	{0, 0}
 };

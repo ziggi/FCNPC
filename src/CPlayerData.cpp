@@ -31,6 +31,7 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_bSpawned = false;
 	m_bMoving = false;
 	m_bUseMapAndreas = false;
+	m_fMinHeightPos = -1.0f;
 	m_bAiming = false;
 	m_bReloading = false;
 	m_bShooting = false;
@@ -680,7 +681,7 @@ void CPlayerData::Process()
 				vecNewPosition += vecVelocity * static_cast<float>(iTickDiff);
 			}
 
-			UpdateZPosition(&vecNewPosition);
+			UpdateHeightPos(&vecNewPosition);
 			SetPosition(vecNewPosition);
 
 			if ((dwThisTick - m_dwMoveStartTime) < m_dwMoveTime) {
@@ -733,7 +734,7 @@ void CPlayerData::Process()
 
 			vecPosition += vecVelocity;
 
-			UpdateZPosition(&vecPosition);
+			UpdateHeightPos(&vecPosition);
 			SetPosition(vecPosition);
 		}
 	}
@@ -916,12 +917,16 @@ void CPlayerData::GetPosition(CVector *pvecPosition)
 	}
 }
 
-void CPlayerData::UpdateZPosition(CVector *pvecPosition)
+void CPlayerData::UpdateHeightPos(CVector *pvecPosition)
 {
 	if (m_bUseMapAndreas && pServer->IsMapAndreasInited() && pvecPosition->fZ >= 0.0f) {
 		float fNewZ = pServer->GetMapAndreas()->FindZ_For2DCoord(pvecPosition->fX, pvecPosition->fY) + 0.5f;
-		if (CCallbackManager::OnChangeZ(m_wPlayerId, fNewZ, pvecPosition->fZ)) {
+		if (m_fMinHeightPos < 0.0f) {
 			pvecPosition->fZ = fNewZ;
+		} else if (m_fMinHeightPos <= std::abs(fNewZ - pvecPosition->fZ)) {
+			if (CCallbackManager::OnChangeHeightPos(m_wPlayerId, fNewZ, pvecPosition->fZ)) {
+				pvecPosition->fZ = fNewZ;
+			}
 		}
 	}
 }
@@ -2324,4 +2329,14 @@ void CPlayerData::ToggleMapAndreasUsage(bool bIsEnabled)
 bool CPlayerData::IsMapAndreasUsed()
 {
 	return m_bUseMapAndreas || m_bNodeUseMapAndreas;
+}
+
+void CPlayerData::SetMinHeightPosCall(float fHeight)
+{
+	m_fMinHeightPos = fHeight;
+}
+
+float CPlayerData::GetMinHeightPosCall()
+{
+	return m_fMinHeightPos;
 }

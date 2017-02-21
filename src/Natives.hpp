@@ -188,6 +188,8 @@ public:
 
 	static cell AMX_NATIVE_CALL FCNPC_ToggleMapAndreasUsage(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_IsMapAndreasUsed(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_SetMinHeightPosCall(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_GetMinHeightPosCall(AMX *amx, cell *params);
 };
 
 #endif

@@ -3352,3 +3352,42 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsMapAndreasUsed(AMX *amx, cell *params)
 	// return the state
 	return pPlayerData->IsMapAndreasUsed();
 }
+
+// native FCNPC_SetMinHeightPosCall(npcid, Float:height);
+cell AMX_NATIVE_CALL CNatives::FCNPC_SetMinHeightPosCall(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_SetMinHeightPosCall");
+
+	// Get params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+	float fHeight = amx_ctof(params[2]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// update minimum height
+	pPlayerData->SetMinHeightPosCall(fHeight);
+	return 1;
+}
+
+// native FCNPC_GetMinHeightPosCall(npcid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetMinHeightPosCall(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_GetMinHeightPosCall");
+
+	// Get params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// get height pos
+	float fHeight = pPlayerData->GetMinHeightPosCall();
+	return amx_ftoc(fHeight);
+}

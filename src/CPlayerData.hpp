@@ -62,7 +62,7 @@ public:
 
 	void SetPosition(CVector vecPosition);
 	void GetPosition(CVector *pvecPosition);
-	void UpdateZPosition(CVector *pvecPosition);
+	void UpdateHeightPos(CVector *pvecPosition);
 	void SetQuaternion(float *fQuaternion);
 	void GetQuaternion(float *fQuaternion);
 	void SetAngle(float fAngle);
@@ -202,6 +202,8 @@ public:
 
 	void ToggleMapAndreasUsage(bool bIsEnabled);
 	bool IsMapAndreasUsed();
+	void SetMinHeightPosCall(float fHeight);
+	float GetMinHeightPosCall();
 
 private:
 	WORD m_wPlayerId;
@@ -210,6 +212,7 @@ private:
 	bool m_bSpawned;
 	bool m_bMoving;
 	bool m_bUseMapAndreas;
+	float m_fMinHeightPos;
 	bool m_bAiming;
 	bool m_bReloading;
 	bool m_bShooting;
