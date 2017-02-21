@@ -315,4 +315,5 @@ native FCNPC_GoByMovePath(npcid, pathid, type = MOVE_TYPE_AUTO, Float:speed = MO
 native FCNPC_ToggleMapAndreasUsage(npcid, bool:enabled);
 native FCNPC_IsMapAndreasUsed(npcid);
 native FCNPC_SetMinHeightPosCall(npcid, Float:height);
+native Float:FCNPC_GetMinHeightPosCall(npcid);
 ```
