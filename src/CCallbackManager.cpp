@@ -398,8 +398,8 @@ int CCallbackManager::OnChangeHeightPos(WORD wPlayerId, float fNewZ, float fOldZ
 	int iIndex;
 	for (auto &amx : m_vAMX) {
 		if (!amx_FindPublic(amx, "FCNPC_OnChangeHeightPos", &iIndex)) {
-			amx_Push(amx, fOldZ);
-			amx_Push(amx, fNewZ);
+			amx_Push(amx, amx_ftoc(fOldZ));
+			amx_Push(amx, amx_ftoc(fNewZ));
 			amx_Push(amx, wPlayerId);
 
 			amx_Exec(amx, &cReturn, iIndex);
