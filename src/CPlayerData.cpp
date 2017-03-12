@@ -180,6 +180,7 @@ bool CPlayerData::Respawn()
 
 	// Get the last player stats
 	CVector vecPosition = m_pPlayer->vecPosition;
+	float fAngle = m_pPlayer->fAngle;
 	float fHealth = m_pPlayer->fHealth;
 	float fArmour = m_pPlayer->fArmour;
 	WORD wVehicleId = m_pPlayer->wVehicleId;
@@ -201,6 +202,7 @@ bool CPlayerData::Respawn()
 		SetArmour(fArmour);
 	}
 	SetPosition(vecPosition);
+	SetAngle(fAngle);
 	SetSpecialAction(byteSpecialAction);
 	if (wVehicleId != INVALID_VEHICLE_ID) {
 		PutInVehicle(wVehicleId, byteSeat);
