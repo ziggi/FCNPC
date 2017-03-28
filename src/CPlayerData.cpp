@@ -672,21 +672,23 @@ void CPlayerData::Process()
 			SetState(PLAYER_STATE_ONFOOT);
 			SetVehicle(INVALID_VEHICLE_ID, 0);
 		} else if (m_bMoving) {
-			CVector vecNewPosition;
-			CVector vecVelocity;
+			DWORD dwMoveTick = dwThisTick - m_dwMoveStartTime;
 
-			GetPosition(&vecNewPosition);
-			GetVelocity(&vecVelocity);
+			if (dwMoveTick < m_dwMoveTime) {
+				CVector vecNewPosition;
+				CVector vecVelocity;
 
-			int iTickDiff = dwThisTick - m_dwMoveTickCount;
-			if (iTickDiff > 0) {
-				vecNewPosition += vecVelocity * static_cast<float>(iTickDiff);
-			}
+				GetPosition(&vecNewPosition);
+				GetVelocity(&vecVelocity);
 
-			UpdateHeightPos(&vecNewPosition);
-			SetPosition(vecNewPosition);
+				int iTickDiff = dwThisTick - m_dwMoveTickCount;
+				if (iTickDiff > 0) {
+					vecNewPosition += vecVelocity * static_cast<float>(iTickDiff);
+				}
 
-			if ((dwThisTick - m_dwMoveStartTime) < m_dwMoveTime) {
+				UpdateHeightPos(&vecNewPosition);
+				SetPosition(vecNewPosition);
+
 				m_dwMoveTickCount = dwThisTick;
 			} else if (IsMovingByMovePath(m_iMovePath)) {
 				CCallbackManager::OnFinishMovePathPoint(m_wPlayerId, m_iMovePath, m_iMovePoint);
@@ -708,7 +710,7 @@ void CPlayerData::Process()
 				} else {
 					StopPlayingNode();
 				}
-			} else {
+			} else if (dwMoveTick > m_dwMoveTime + 300) {
 				StopMoving();
 
 				if (m_wVehicleToEnter != INVALID_VEHICLE_ID) {
