@@ -517,7 +517,7 @@ void CPlayerData::UpdateWeaponState()
 		case WEAPON_FIREEXTINGUISHER:
 			if (m_bReloading) {
 				SetWeaponState(WEAPONSTATE_RELOADING);
-			} else if (m_wAmmo == 1 || byteWeaponId == WEAPON_SHOTGUN) {
+			} else if (m_wAmmo == 1) {
 				SetWeaponState(WEAPONSTATE_LAST_BULLET);
 			} else if (m_wAmmo == 0) {
 				SetWeaponState(WEAPONSTATE_NO_BULLETS);
@@ -532,8 +532,7 @@ void CPlayerData::UpdateWeaponState()
 			}
 			else if (m_wAmmo == 0) {
 				SetWeaponState(WEAPONSTATE_NO_BULLETS);
-			}
-			else {
+			} else {
 				SetWeaponState(WEAPONSTATE_LAST_BULLET);
 			}
 			break;
