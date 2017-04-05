@@ -504,7 +504,6 @@ void CPlayerData::UpdateWeaponState()
 		case WEAPON_COLT45:
 		case WEAPON_SILENCED:
 		case WEAPON_DEAGLE:
-		case WEAPON_SHOTGUN:
 		case WEAPON_SAWEDOFF:
 		case WEAPON_SHOTGSPA:
 		case WEAPON_UZI:
@@ -524,6 +523,18 @@ void CPlayerData::UpdateWeaponState()
 				SetWeaponState(WEAPONSTATE_NO_BULLETS);
 			} else {
 				SetWeaponState(WEAPONSTATE_MORE_BULLETS);
+			}
+			break;
+
+		case WEAPON_SHOTGUN:
+			if (m_bReloading) {
+				SetWeaponState(WEAPONSTATE_RELOADING);
+			}
+			else if (m_wAmmo == 0) {
+				SetWeaponState(WEAPONSTATE_NO_BULLETS);
+			}
+			else {
+				SetWeaponState(WEAPONSTATE_LAST_BULLET);
 			}
 			break;
 
