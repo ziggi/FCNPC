@@ -529,8 +529,7 @@ void CPlayerData::UpdateWeaponState()
 		case WEAPON_SHOTGUN:
 			if (m_bReloading) {
 				SetWeaponState(WEAPONSTATE_RELOADING);
-			}
-			else if (m_wAmmo == 0) {
+			} else if (m_wAmmo == 0) {
 				SetWeaponState(WEAPONSTATE_NO_BULLETS);
 			} else {
 				SetWeaponState(WEAPONSTATE_LAST_BULLET);
