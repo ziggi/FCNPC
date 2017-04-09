@@ -16,7 +16,8 @@ extern void         *pAMXFunctions;
 
 BYTE bytePushCount;
 char szPreviousFuncName[32];
-bool bHookIsExec;
+bool bHookIsExecStart;
+bool bHookIsExecEnd;
 bool bHookIsPush;
 bool bFindPublicIsBlocked;
 bool bIsPublicFound;
@@ -82,50 +83,50 @@ amx_Exec_t pfn_amx_Exec = NULL;
 int amx_FindPublic_Hook(AMX *amx, const char *funcname, int *index)
 {
 	pfn_amx_FindPublic = (amx_FindPublic_t)(subhook_get_trampoline(hookFindPublic));
-	bytePushCount = 0;
 
-	if (bHookIsExec || !bHookIsPush) {
-		if (bHookIsExec && !strcmp(funcname, szPreviousFuncName)) {
+	if (bHookIsExecStart) {
+		if (!bHookIsExecEnd) {
 			if (bFindPublicIsBlocked) {
 				return 1;
-			} else {
-				return pfn_amx_FindPublic(amx, funcname, index);
 			}
-		} else {
-			bFindPublicIsBlocked = false;
-			bHookIsExec = false;
-			bHookIsPush = false;
-			bIsPublicFound = false;
-			szPreviousFuncName[0] = '\0';
-			bGiveDamage = false;
-			bTakeDamage = false;
-			bWeaponShot = false;
-			bStreamIn = false;
-			bStreamOut = false;
+
+			return pfn_amx_FindPublic(amx, funcname, index);
 		}
+
+		// exec is complete
+		bytePushCount = 0;
+		bFindPublicIsBlocked = false;
+		bHookIsExecStart = false;
+		bHookIsExecEnd = false;
+		bHookIsPush = false;
+		bIsPublicFound = false;
+		szPreviousFuncName[0] = '\0';
+		bGiveDamage = false;
+		bTakeDamage = false;
+		bWeaponShot = false;
+		bStreamIn = false;
+		bStreamOut = false;
 	}
 
-	if (!bHookIsExec && !bHookIsPush && !bIsPublicFound) {
-		if (!strcmp(funcname, "OnPlayerGiveDamage")) {
-			bIsPublicFound = true;
-			bGiveDamage = true;
-		} else if (!strcmp(funcname, "OnPlayerTakeDamage")) {
-			bIsPublicFound = true;
-			bTakeDamage = true;
-		} else if (!strcmp(funcname, "OnPlayerWeaponShot")) {
-			bIsPublicFound = true;
-			bWeaponShot = true;
-		} else if (!strcmp(funcname, "OnPlayerStreamIn")) {
-			bIsPublicFound = true;
-			bStreamIn = true;
-		} else if (!strcmp(funcname, "OnPlayerStreamOut")) {
-			bIsPublicFound = true;
-			bStreamOut = true;
-		}
+	if (!strcmp(funcname, "OnPlayerGiveDamage")) {
+		bIsPublicFound = true;
+		bGiveDamage = true;
+	} else if (!strcmp(funcname, "OnPlayerTakeDamage")) {
+		bIsPublicFound = true;
+		bTakeDamage = true;
+	} else if (!strcmp(funcname, "OnPlayerWeaponShot")) {
+		bIsPublicFound = true;
+		bWeaponShot = true;
+	} else if (!strcmp(funcname, "OnPlayerStreamIn")) {
+		bIsPublicFound = true;
+		bStreamIn = true;
+	} else if (!strcmp(funcname, "OnPlayerStreamOut")) {
+		bIsPublicFound = true;
+		bStreamOut = true;
+	}
 
-		if (bIsPublicFound) {
-			strlcpy(szPreviousFuncName, funcname, sizeof(szPreviousFuncName));
-		}
+	if (bIsPublicFound) {
+		strlcpy(szPreviousFuncName, funcname, sizeof(szPreviousFuncName));
 	}
 
 	return pfn_amx_FindPublic(amx, funcname, index);
@@ -133,9 +134,16 @@ int amx_FindPublic_Hook(AMX *amx, const char *funcname, int *index)
 
 int amx_Push_Hook(AMX *amx, cell value)
 {
+	pfn_amx_Push = (amx_Push_t)(subhook_get_trampoline(hookPush));
+
+	if (bHookIsExecStart && !bHookIsExecEnd) {
+		return pfn_amx_Push(amx, value);
+	}
+
 	// Are we retrieving parameters ?
 	if (bGiveDamage || bTakeDamage) {
 		bHookIsPush = true;
+
 		switch (bytePushCount) {
 			case 4:
 				pDamage.wPlayerId = static_cast<WORD>(value);
@@ -157,10 +165,12 @@ int amx_Push_Hook(AMX *amx, cell value)
 				pDamage.iBodypart = static_cast<int>(value);
 				break;
 		}
+
 		// Increase the parameters count
 		bytePushCount++;
 	} else if (bWeaponShot) {
 		bHookIsPush = true;
+
 		switch (bytePushCount) {
 			case 6:
 				pWeaponShot.wPlayerId = static_cast<WORD>(value);
@@ -190,10 +200,12 @@ int amx_Push_Hook(AMX *amx, cell value)
 				pWeaponShot.vecHit.fZ = amx_ctof(value);
 				break;
 		}
+
 		// Increase the parameters count
 		bytePushCount++;
 	} else if (bStreamIn) {
 		bHookIsPush = true;
+
 		switch (bytePushCount) {
 			case 1:
 				pStream.wPlayerId = static_cast<WORD>(value);
@@ -203,10 +215,12 @@ int amx_Push_Hook(AMX *amx, cell value)
 				pStream.wForPlayerId = static_cast<WORD>(value);
 				break;
 		}
+
 		// Increase the parameters count
 		bytePushCount++;
 	} else if (bStreamOut) {
 		bHookIsPush = true;
+
 		switch (bytePushCount) {
 			case 1:
 				pStream.wPlayerId = static_cast<WORD>(value);
@@ -216,11 +230,10 @@ int amx_Push_Hook(AMX *amx, cell value)
 				pStream.wForPlayerId = static_cast<WORD>(value);
 				break;
 		}
+
 		// Increase the parameters count
 		bytePushCount++;
 	}
-
-	pfn_amx_Push = (amx_Push_t)(subhook_get_trampoline(hookPush));
 
 	return pfn_amx_Push(amx, value);
 }
@@ -229,10 +242,14 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 {
 	pfn_amx_Exec = (amx_Exec_t)(subhook_get_trampoline(hookExec));
 
+	if (bHookIsExecStart && !bHookIsExecEnd) {
+		return pfn_amx_Exec(amx, retval, index);
+	}
+
 	int ret = 0;
 
 	if (bGiveDamage) {
-		bHookIsExec = true;
+		bHookIsExecStart = true;
 
 		// get the npc data
 		CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(pDamage.wSecondPlayerId);
@@ -247,8 +264,10 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 				pPlayerData->ProcessDamage(pDamage.wPlayerId, pDamage.fHealthLoss, pDamage.byteWeaponId, pDamage.iBodypart);
 			}
 		}
+
+		bHookIsExecEnd = true;
 	} else if (bTakeDamage) {
-		bHookIsExec = true;
+		bHookIsExecStart = true;
 
 		// call hooked callback
 		ret = pfn_amx_Exec(amx, retval, index);
@@ -260,8 +279,10 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 		if (pPlayerData) {
 			CCallbackManager::OnGiveDamage(pDamage.wSecondPlayerId, pDamage.wPlayerId, pDamage.byteWeaponId, pDamage.iBodypart, pDamage.fHealthLoss);
 		}
+
+		bHookIsExecEnd = true;
 	} else if (bWeaponShot) {
-		bHookIsExec = true;
+		bHookIsExecStart = true;
 
 		// call hooked callback
 		ret = pfn_amx_Exec(amx, retval, index);
@@ -275,29 +296,32 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 				pPlayerData->ProcessVehicleDamage(pWeaponShot.wPlayerId, pWeaponShot.wHitId, pWeaponShot.byteWeaponId, pWeaponShot.vecHit);
 			}
 		}
+
+		bHookIsExecEnd = true;
 	} else if (bStreamIn) {
-		bHookIsExec = true;
+		bHookIsExecStart = true;
 
 		CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(pStream.wPlayerId);
 		if (pPlayerData) {
+			bFindPublicIsBlocked = true;
 			pPlayerData->ProcessStreamIn(pStream.wForPlayerId);
-			bFindPublicIsBlocked = true;
 		} else {
-			// call hooked callback
 			ret = pfn_amx_Exec(amx, retval, index);
 		}
+
+		bHookIsExecEnd = true;
 	} else if (bStreamOut) {
-		bHookIsExec = true;
+		bHookIsExecStart = true;
 
 		CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(pStream.wPlayerId);
 		if (pPlayerData) {
-			// call custom callback
-			pPlayerData->ProcessStreamOut(pStream.wForPlayerId);
 			bFindPublicIsBlocked = true;
+			pPlayerData->ProcessStreamOut(pStream.wForPlayerId);
 		} else {
-			// call hooked callback
 			ret = pfn_amx_Exec(amx, retval, index);
 		}
+
+		bHookIsExecEnd = true;
 	} else {
 		ret = pfn_amx_Exec(amx, retval, index);
 	}
@@ -308,7 +332,8 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 void CHooks::InstallHooks()
 {
 	// Reset public flag
-	bHookIsExec = false;
+	bHookIsExecStart = false;
+	bHookIsExecEnd = false;
 	bHookIsPush = false;
 	bFindPublicIsBlocked = false;
 	bIsPublicFound = false;
