@@ -1407,6 +1407,65 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetAmmo(AMX *amx, cell *params)
 	return pPlayerData->GetAmmo();
 }
 
+// native FCNPC_SetAmmoInClip(npcid, ammo);
+cell AMX_NATIVE_CALL CNatives::FCNPC_SetAmmoInClip(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_SetAmmoInClip");
+
+	// Get the params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+	WORD wAmmo = static_cast<WORD>(params[2]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// Set the player ammo
+	pPlayerData->SetAmmoInClip(wAmmo);
+	return 1;
+}
+
+// native FCNPC_GiveAmmoInClip(npcid, ammo);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GiveAmmoInClip(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_GiveAmmoInClip");
+
+	// Get the params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+	WORD wAmmo = static_cast<WORD>(params[2]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// Set the player ammo
+	WORD wNewAmmo = pPlayerData->GetAmmoInClip() + wAmmo;
+	pPlayerData->SetAmmoInClip(wNewAmmo);
+	return wNewAmmo;
+}
+
+// native FCNPC_GetAmmoInClip(npcid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetAmmoInClip(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_GetAmmoInClip");
+
+	// Get the params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// Get the player ammo
+	return pPlayerData->GetAmmoInClip();
+}
+
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponSkillLevel(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(3, "FCNPC_SetWeaponSkillLevel");

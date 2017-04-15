@@ -82,6 +82,8 @@ public:
 	BYTE GetWeapon();
 	void SetAmmo(WORD wAmmo);
 	WORD GetAmmo();
+	void SetAmmoInClip(WORD wAmmo);
+	WORD GetAmmoInClip();
 	void SetWeaponSkill(DWORD dwSkill, WORD wLevel);
 	WORD GetWeaponSkill(DWORD dwSkill);
 	void SetWeaponState(int iState);

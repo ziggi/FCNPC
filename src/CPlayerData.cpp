@@ -1120,6 +1120,18 @@ WORD CPlayerData::GetAmmo()
 	return m_wAmmo;
 }
 
+void CPlayerData::SetAmmoInClip(WORD wAmmo)
+{
+	WORD wClipSize = static_cast<WORD>(GetWeaponActualClipSize(m_byteWeaponId));
+
+	m_wAmmoInClip = wAmmo < wClipSize ? wAmmo : wClipSize;
+}
+
+WORD CPlayerData::GetAmmoInClip()
+{
+	return m_wAmmoInClip;
+}
+
 void CPlayerData::SetWeaponSkill(DWORD dwSkill, WORD wLevel)
 {
 	if (m_pPlayer->byteState < 11) {
