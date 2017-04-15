@@ -1110,9 +1110,9 @@ void CPlayerData::SetAmmo(WORD wAmmo)
 	m_wAmmo = wAmmo;
 
 	// set the player ammo in clip
-	int iClipSize = GetWeaponActualClipSize(m_byteWeaponId);
-
-	m_wAmmoInClip = m_wAmmo < iClipSize ? m_wAmmo : iClipSize;
+	if (m_wAmmo < m_wAmmoInClip) {
+		m_wAmmoInClip = m_wAmmo;
+	}
 }
 
 WORD CPlayerData::GetAmmo()
