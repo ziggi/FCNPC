@@ -48,6 +48,7 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_bIsInvulnerable = false;
 	m_byteWeaponId = 0;
 	m_wAmmo = 0;
+	m_wAmmoInClip = 0;
 	m_wNodePoint = 0;
 	m_wNodeLastPoint = 0;
 	m_wLastDamagerId = INVALID_PLAYER_ID;
@@ -517,9 +518,9 @@ void CPlayerData::UpdateWeaponState()
 		case WEAPON_FIREEXTINGUISHER:
 			if (m_bReloading) {
 				SetWeaponState(WEAPONSTATE_RELOADING);
-			} else if (m_wAmmo == 1) {
+			} else if (m_wAmmoInClip == 1) {
 				SetWeaponState(WEAPONSTATE_LAST_BULLET);
-			} else if (m_wAmmo == 0) {
+			} else if (m_wAmmoInClip == 0) {
 				SetWeaponState(WEAPONSTATE_NO_BULLETS);
 			} else {
 				SetWeaponState(WEAPONSTATE_MORE_BULLETS);
@@ -529,7 +530,7 @@ void CPlayerData::UpdateWeaponState()
 		case WEAPON_SHOTGUN:
 			if (m_bReloading) {
 				SetWeaponState(WEAPONSTATE_RELOADING);
-			} else if (m_wAmmo == 0) {
+			} else if (m_wAmmoInClip == 0) {
 				SetWeaponState(WEAPONSTATE_NO_BULLETS);
 			} else {
 				SetWeaponState(WEAPONSTATE_LAST_BULLET);
@@ -829,14 +830,12 @@ void CPlayerData::Process()
 				m_dwShootTickCount = dwThisTick;
 				m_bReloading = false;
 				m_bShooting = true;
+				m_wAmmoInClip = GetWeaponActualClipSize(m_byteWeaponId);
 			} else {
 				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM);
 			}
 		} else if (m_bShooting) {
-			if (m_bHasInfiniteAmmo) {
-				m_wAmmo = 500;
-			}
-			if (m_wAmmo == 0) {
+			if (m_wAmmo == 0 && !m_bHasInfiniteAmmo) {
 				m_bShooting = false;
 				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM);
 			} else {
@@ -856,14 +855,17 @@ void CPlayerData::Process()
 
 				// shoot time
 				if (iShootTime != -1 && iShootTime <= static_cast<int>(dwLastShootTime)) {
-					m_wAmmo--;
+					if (!m_bHasInfiniteAmmo) {
+						m_wAmmo--;
+					}
+					m_wAmmoInClip--;
 
 					// Check for reload
-					int iClip = GetWeaponClipSize(m_byteWeaponId);
+					int iClipSize = GetWeaponActualClipSize(m_byteWeaponId);
 					bool bIsNeedToReload = m_bHasReload
-					                       && iClip > 1
+					                       && iClipSize > 1
 					                       && m_wAmmo != 0
-					                       && m_wAmmo % iClip == 0;
+					                       && m_wAmmoInClip == 0;
 
 					if (bIsNeedToReload) {
 						m_dwReloadTickCount = dwThisTick;
@@ -1104,13 +1106,13 @@ BYTE CPlayerData::GetWeapon()
 
 void CPlayerData::SetAmmo(WORD wAmmo)
 {
-	// Validate the ammo
-	if (wAmmo > 0xFFFF) {
-		return;
-	}
-
-	// Set the player ammo
+	// set the player ammo
 	m_wAmmo = wAmmo;
+
+	// set the player ammo in clip
+	int iClipSize = GetWeaponActualClipSize(m_byteWeaponId);
+
+	m_wAmmoInClip = m_wAmmo < iClipSize ? m_wAmmo : iClipSize;
 }
 
 WORD CPlayerData::GetAmmo()

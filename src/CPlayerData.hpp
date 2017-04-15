@@ -241,6 +241,7 @@ private:
 	CVector m_vecDestination;
 	BYTE m_byteWeaponId;
 	WORD m_wAmmo;
+	WORD m_wAmmoInClip;
 	WORD m_wHitId;
 	bool m_bAimSetAngle;
 	BYTE m_byteHitType;
