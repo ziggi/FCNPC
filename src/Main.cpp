@@ -159,6 +159,7 @@ AMX_NATIVE_INFO PluginNatives[ ] = {
 	{"FCNPC_GetWeaponShootTime", CNatives::FCNPC_GetWeaponShootTime},
 	{"FCNPC_SetWeaponClipSize", CNatives::FCNPC_SetWeaponClipSize},
 	{"FCNPC_GetWeaponClipSize", CNatives::FCNPC_GetWeaponClipSize},
+	{"FCNPC_GetWeaponActualClipSize", CNatives::FCNPC_GetWeaponActualClipSize},
 	{"FCNPC_SetWeaponAccuracy", CNatives::FCNPC_SetWeaponAccuracy},
 	{"FCNPC_GetWeaponAccuracy", CNatives::FCNPC_GetWeaponAccuracy},
 

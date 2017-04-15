@@ -1195,6 +1195,11 @@ bool CPlayerData::SetWeaponClipSize(BYTE byteWeaponId, int iSize)
 
 int CPlayerData::GetWeaponClipSize(BYTE byteWeaponId)
 {
+	return m_pWeaponInfo->GetClipSize(byteWeaponId);
+}
+
+int CPlayerData::GetWeaponActualClipSize(BYTE byteWeaponId)
+{
 	int iSize = m_pWeaponInfo->GetClipSize(byteWeaponId);
 
 	if (m_pWeaponInfo->IsDoubleHanded(byteWeaponId) && GetWeaponSkill(m_pWeaponInfo->GetSkillID(byteWeaponId)) == 999) {

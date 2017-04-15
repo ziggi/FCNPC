@@ -1636,6 +1636,25 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponClipSize(AMX *amx, cell *params)
 	return pPlayerData->GetWeaponClipSize(byteWeaponId);
 }
 
+// native FCNPC_GetWeaponActualClipSize(npcid, weaponid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponActualClipSize(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_GetWeaponActualClipSize");
+
+	// Get params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+	BYTE byteWeaponId = static_cast<BYTE>(params[2]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// Get the player weapon clip size
+	return pPlayerData->GetWeaponActualClipSize(byteWeaponId);
+}
+
 // native FCNPC_SetWeaponAccuracy(npcid, weaponid, Float:accuracy);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponAccuracy(AMX *amx, cell *params)
 {
