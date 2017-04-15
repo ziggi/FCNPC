@@ -129,8 +129,11 @@ bool CPlayerData::Setup()
 
 	// Set the setup flag
 	m_bSetup = true;
-	// Reset his state
+
+	// Reset his data
 	SetState(PLAYER_STATE_NONE);
+	m_pPlayer->spawn.byteTeam = NO_TEAM;
+
 	// Initialize the update tick
 	m_dwUpdateTick = GetTickCount();
 	return true;
