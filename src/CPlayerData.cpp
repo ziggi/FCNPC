@@ -1184,7 +1184,9 @@ void CPlayerData::SetWeaponState(int iState)
 			}
 			break;
 		case WEAPONSTATE_MORE_BULLETS:
-			m_wAmmoInClip = static_cast<WORD>(GetWeaponActualClipSize(m_byteWeaponId));
+			if (m_wAmmo > 1 && m_wAmmoInClip <= 1) {
+				m_wAmmoInClip = static_cast<WORD>(GetWeaponActualClipSize(m_byteWeaponId));
+			}
 			break;
 		case WEAPONSTATE_NO_BULLETS:
 			m_wAmmoInClip = 0;
