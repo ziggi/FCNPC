@@ -826,7 +826,7 @@ void CPlayerData::Process()
 		}
 
 		if (m_bReloading) {
-			int iReloadTime = GetWeaponReloadTime(m_byteWeaponId);
+			int iReloadTime = GetWeaponActualReloadTime(m_byteWeaponId);
 			bool bIsReloadFinished = iReloadTime != -1 && (dwThisTick - m_dwReloadTickCount) >= static_cast<DWORD>(iReloadTime);
 
 			if (bIsReloadFinished) {
@@ -1196,6 +1196,21 @@ bool CPlayerData::SetWeaponReloadTime(BYTE byteWeaponId, int iTime)
 int CPlayerData::GetWeaponReloadTime(BYTE byteWeaponId)
 {
 	return m_pWeaponInfo->GetReloadTime(byteWeaponId);
+}
+
+int CPlayerData::GetWeaponActualReloadTime(BYTE byteWeaponId)
+{
+	int iTime = m_pWeaponInfo->GetReloadTime(byteWeaponId);
+
+	if (IsWeaponDoubleHanded(byteWeaponId)) {
+		switch (byteWeaponId) {
+			case WEAPON_SAWEDOFF:
+				iTime += 700;
+				break;
+		}
+	}
+
+	return iTime;
 }
 
 bool CPlayerData::SetWeaponShootTime(BYTE byteWeaponId, int iTime)

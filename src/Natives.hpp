@@ -77,6 +77,7 @@ public:
 
 	static cell AMX_NATIVE_CALL FCNPC_SetWeaponReloadTime(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetWeaponReloadTime(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_GetWeaponActualReloadTime(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetWeaponShootTime(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetWeaponShootTime(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetWeaponClipSize(AMX *amx, cell *params);

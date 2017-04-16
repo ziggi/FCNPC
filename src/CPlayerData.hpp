@@ -93,6 +93,7 @@ public:
 	int GetWeaponType(BYTE byteWeaponId);
 	bool SetWeaponReloadTime(BYTE byteWeaponId, int iTime);
 	int GetWeaponReloadTime(BYTE byteWeaponId);
+	int GetWeaponActualReloadTime(BYTE byteWeaponId);
 	bool SetWeaponShootTime(BYTE byteWeaponId, int iTime);
 	int GetWeaponShootTime(BYTE byteWeaponId);
 	bool SetWeaponClipSize(BYTE byteWeaponId, int iSize);

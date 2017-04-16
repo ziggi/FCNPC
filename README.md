@@ -202,6 +202,7 @@ native FCNPC_GetWeaponState(npcid);
 
 native FCNPC_SetWeaponReloadTime(npcid, weaponid, time);
 native FCNPC_GetWeaponReloadTime(npcid, weaponid);
+native FCNPC_GetWeaponActualReloadTime(npcid, weaponid);
 native FCNPC_SetWeaponShootTime(npcid, weaponid, time);
 native FCNPC_GetWeaponShootTime(npcid, weaponid);
 native FCNPC_SetWeaponClipSize(npcid, weaponid, size);

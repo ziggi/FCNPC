@@ -1617,6 +1617,25 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponReloadTime(AMX *amx, cell *params)
 	return pPlayerData->GetWeaponReloadTime(byteWeaponId);
 }
 
+// native FCNPC_GetWeaponActualReloadTime(npcid, weaponid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponActualReloadTime(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_GetWeaponActualReloadTime");
+
+	// Get params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+	BYTE byteWeaponId = static_cast<BYTE>(params[2]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// Get the player weapon reload time
+	return pPlayerData->GetWeaponActualReloadTime(byteWeaponId);
+}
+
 // native FCNPC_SetWeaponShootTime(npcid, weaponid, time);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponShootTime(AMX *amx, cell *params)
 {
