@@ -1169,6 +1169,23 @@ void CPlayerData::SetWeaponState(int iState)
 	int iOldState = m_pPlayer->aimSyncData.byteWeaponState;
 	m_pPlayer->aimSyncData.byteWeaponState = iState;
 
+	switch (iState) {
+		case WEAPONSTATE_LAST_BULLET:
+			m_wAmmoInClip = 1;
+			break;
+		case WEAPONSTATE_MORE_BULLETS:
+			m_wAmmoInClip = static_cast<WORD>(GetWeaponActualClipSize(m_byteWeaponId));
+			break;
+		case WEAPONSTATE_NO_BULLETS:
+			m_wAmmoInClip = 0;
+			break;
+		case WEAPONSTATE_RELOADING:
+			m_dwReloadTickCount = GetTickCount();
+			m_bReloading = true;
+			m_bShooting = false;
+			break;
+	}
+
 	if (iOldState != iState) {
 		CCallbackManager::OnWeaponStateChange(m_wPlayerId, iState);
 	}
