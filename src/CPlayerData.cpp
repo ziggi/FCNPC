@@ -833,7 +833,7 @@ void CPlayerData::Process()
 				m_dwShootTickCount = dwThisTick;
 				m_bReloading = false;
 				m_bShooting = true;
-				m_wAmmoInClip = GetWeaponActualClipSize(m_byteWeaponId);
+				m_wAmmoInClip = static_cast<WORD>(GetWeaponActualClipSize(m_byteWeaponId));
 			} else {
 				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM);
 			}
@@ -858,16 +858,28 @@ void CPlayerData::Process()
 
 				// shoot time
 				if (iShootTime != -1 && iShootTime <= static_cast<int>(dwLastShootTime)) {
-					if (!m_bHasInfiniteAmmo) {
-						m_wAmmo--;
+					// Send bullet
+					if (m_wAmmoInClip != 0) {
+						if (GetWeaponType(m_byteWeaponId) == WEAPON_TYPE_SHOOT) {
+							bool bIsHit = rand() % 100 < static_cast<int>(GetWeaponAccuracy(m_byteWeaponId) * 100.0f);
+
+							CFunctions::PlayerShoot(m_wPlayerId, m_wHitId, m_byteHitType, m_byteWeaponId, m_vecAimAt, m_vecAimOffsetFrom, bIsHit);
+						}
+
+						SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM | KEY_FIRE);
+
+						// decrease the ammo
+						if (!m_bHasInfiniteAmmo) {
+							m_wAmmo--;
+						}
+
+						m_wAmmoInClip--;
 					}
-					m_wAmmoInClip--;
 
 					// Check for reload
-					int iClipSize = GetWeaponActualClipSize(m_byteWeaponId);
 					bool bIsNeedToReload = m_bHasReload
-					                       && iClipSize > 1
-					                       && m_wAmmo != 0
+					                       && GetWeaponActualClipSize(m_byteWeaponId) > 1
+					                       && (m_wAmmo != 0 || m_bHasInfiniteAmmo)
 					                       && m_wAmmoInClip == 0;
 
 					if (bIsNeedToReload) {
@@ -875,15 +887,6 @@ void CPlayerData::Process()
 						m_bReloading = true;
 						m_bShooting = false;
 					}
-
-					// Send bullet
-					if (GetWeaponType(m_byteWeaponId) == WEAPON_TYPE_SHOOT) {
-						bool bIsHit = rand() % 100 < static_cast<int>(GetWeaponAccuracy(m_byteWeaponId) * 100.0f);
-
-						CFunctions::PlayerShoot(m_wPlayerId, m_wHitId, m_byteHitType, m_byteWeaponId, m_vecAimAt, m_vecAimOffsetFrom, bIsHit);
-					}
-
-					SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM | KEY_FIRE);
 
 					// Update the shoot tick
 					m_dwShootTickCount = dwThisTick;
@@ -1207,7 +1210,13 @@ int CPlayerData::GetWeaponShootTime(BYTE byteWeaponId)
 
 bool CPlayerData::SetWeaponClipSize(BYTE byteWeaponId, int iSize)
 {
-	return m_pWeaponInfo->SetClipSize(byteWeaponId, iSize);
+	bool bSuccess = m_pWeaponInfo->SetClipSize(byteWeaponId, iSize);
+
+	if (bSuccess) {
+		m_wAmmoInClip = static_cast<WORD>(GetWeaponActualClipSize(byteWeaponId));
+	}
+
+	return bSuccess;
 }
 
 int CPlayerData::GetWeaponClipSize(BYTE byteWeaponId)
@@ -1219,11 +1228,20 @@ int CPlayerData::GetWeaponActualClipSize(BYTE byteWeaponId)
 {
 	int iSize = m_pWeaponInfo->GetClipSize(byteWeaponId);
 
-	if (m_pWeaponInfo->IsDoubleHanded(byteWeaponId) && GetWeaponSkill(m_pWeaponInfo->GetSkillID(byteWeaponId)) == 999) {
+	if (IsWeaponDoubleHanded(byteWeaponId)) {
 		iSize *= 2;
 	}
 
+	if (m_wAmmo < iSize && !m_bHasInfiniteAmmo) {
+		iSize = m_wAmmo;
+	}
+
 	return iSize;
+}
+
+bool CPlayerData::IsWeaponDoubleHanded(BYTE byteWeaponId)
+{
+	return m_pWeaponInfo->IsDoubleHanded(byteWeaponId) && GetWeaponSkill(m_pWeaponInfo->GetSkillID(byteWeaponId)) >= 999;
 }
 
 bool CPlayerData::SetWeaponAccuracy(BYTE byteWeaponId, float fAccuracy)
@@ -1238,7 +1256,13 @@ float CPlayerData::GetWeaponAccuracy(BYTE byteWeaponId)
 
 bool CPlayerData::SetWeaponInfo(BYTE byteWeaponId, SWeaponInfo sWeaponInfo)
 {
-	return m_pWeaponInfo->SetInfo(byteWeaponId, sWeaponInfo);
+	bool bSuccess = m_pWeaponInfo->SetInfo(byteWeaponId, sWeaponInfo);
+
+	if (bSuccess) {
+		m_wAmmoInClip = static_cast<WORD>(GetWeaponActualClipSize(byteWeaponId));
+	}
+
+	return bSuccess;
 }
 
 SWeaponInfo CPlayerData::GetWeaponInfo(BYTE byteWeaponId)
