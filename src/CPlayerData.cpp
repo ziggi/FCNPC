@@ -1227,7 +1227,7 @@ bool CPlayerData::SetWeaponClipSize(BYTE byteWeaponId, int iSize)
 {
 	bool bSuccess = m_pWeaponInfo->SetClipSize(byteWeaponId, iSize);
 
-	if (bSuccess) {
+	if (bSuccess && m_byteWeaponId == byteWeaponId) {
 		m_wAmmoInClip = static_cast<WORD>(GetWeaponActualClipSize(byteWeaponId));
 	}
 
@@ -1273,7 +1273,7 @@ bool CPlayerData::SetWeaponInfo(BYTE byteWeaponId, SWeaponInfo sWeaponInfo)
 {
 	bool bSuccess = m_pWeaponInfo->SetInfo(byteWeaponId, sWeaponInfo);
 
-	if (bSuccess) {
+	if (bSuccess && m_byteWeaponId == byteWeaponId) {
 		m_wAmmoInClip = static_cast<WORD>(GetWeaponActualClipSize(byteWeaponId));
 	}
 
