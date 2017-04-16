@@ -1096,13 +1096,12 @@ int CPlayerData::GetVirtualWorld()
 
 void CPlayerData::SetWeapon(BYTE byteWeaponId)
 {
-	// Validate the weapon id
 	if (byteWeaponId < 0 || byteWeaponId > 46) {
 		return;
 	}
 
-	// Set the player weapon id
 	m_byteWeaponId = byteWeaponId;
+	m_wAmmoInClip = 0;
 }
 
 BYTE CPlayerData::GetWeapon()
