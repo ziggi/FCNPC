@@ -1142,7 +1142,10 @@ void CPlayerData::SetWeaponSkill(DWORD dwSkill, WORD wLevel)
 	if (m_pPlayer->byteState < 11) {
 		WORD wClipSize = static_cast<WORD>(GetWeaponClipSize(m_byteWeaponId));
 
-		if (IsWeaponDoubleHanded(m_byteWeaponId) && wLevel < 999 && m_wAmmoInClip > wClipSize) {
+		if (dwSkill == static_cast<DWORD>(m_pWeaponInfo->GetSkillID(m_byteWeaponId))
+			&& IsWeaponDoubleHanded(m_byteWeaponId)
+			&& wLevel < 999
+			&& m_wAmmoInClip > wClipSize) {
 			m_wAmmoInClip = m_wAmmo < m_wAmmoInClip ? m_wAmmo : wClipSize;
 		}
 		
