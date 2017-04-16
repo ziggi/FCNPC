@@ -19,7 +19,6 @@ char szPreviousFuncName[32];
 bool bHookIsExecStart;
 bool bHookIsExecEnd;
 bool bHookIsPush;
-bool bFindPublicIsBlocked;
 bool bIsPublicFound;
 
 // damage
@@ -86,16 +85,11 @@ int amx_FindPublic_Hook(AMX *amx, const char *funcname, int *index)
 
 	if (bHookIsExecStart) {
 		if (!bHookIsExecEnd) {
-			if (bFindPublicIsBlocked) {
-				return 1;
-			}
-
 			return pfn_amx_FindPublic(amx, funcname, index);
 		}
 
 		// exec is complete
 		bytePushCount = 0;
-		bFindPublicIsBlocked = false;
 		bHookIsExecStart = false;
 		bHookIsExecEnd = false;
 		bHookIsPush = false;
@@ -303,7 +297,6 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 
 		CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(pStream.wPlayerId);
 		if (pPlayerData) {
-			bFindPublicIsBlocked = true;
 			pPlayerData->ProcessStreamIn(pStream.wForPlayerId);
 		} else {
 			ret = pfn_amx_Exec(amx, retval, index);
@@ -315,7 +308,6 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 
 		CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(pStream.wPlayerId);
 		if (pPlayerData) {
-			bFindPublicIsBlocked = true;
 			pPlayerData->ProcessStreamOut(pStream.wForPlayerId);
 		} else {
 			ret = pfn_amx_Exec(amx, retval, index);
@@ -335,7 +327,6 @@ void CHooks::InstallHooks()
 	bHookIsExecStart = false;
 	bHookIsExecEnd = false;
 	bHookIsPush = false;
-	bFindPublicIsBlocked = false;
 	bIsPublicFound = false;
 	bGiveDamage = false;
 	bTakeDamage = false;
