@@ -1177,7 +1177,9 @@ void CPlayerData::SetWeaponState(int iState)
 
 	switch (iState) {
 		case WEAPONSTATE_LAST_BULLET:
-			m_wAmmoInClip = 1;
+			if (m_wAmmo > 0) {
+				m_wAmmoInClip = 1;
+			}
 			break;
 		case WEAPONSTATE_MORE_BULLETS:
 			m_wAmmoInClip = static_cast<WORD>(GetWeaponActualClipSize(m_byteWeaponId));
