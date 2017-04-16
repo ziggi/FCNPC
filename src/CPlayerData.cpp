@@ -1100,8 +1100,11 @@ void CPlayerData::SetWeapon(BYTE byteWeaponId)
 		return;
 	}
 
+	if (byteWeaponId != m_byteWeaponId) {
+		m_wAmmoInClip = 0;
+	}
+	
 	m_byteWeaponId = byteWeaponId;
-	m_wAmmoInClip = 0;
 }
 
 BYTE CPlayerData::GetWeapon()
