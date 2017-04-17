@@ -523,9 +523,9 @@ void CPlayerData::UpdateWeaponState()
 				SetWeaponState(WEAPONSTATE_RELOADING);
 			} else if (m_wAmmoInClip == 1) {
 				SetWeaponState(WEAPONSTATE_LAST_BULLET);
-			} else if (m_wAmmo == 0) {
+			} else if (m_wAmmo == 0 && !m_bHasInfiniteAmmo) {
 				SetWeaponState(WEAPONSTATE_NO_BULLETS);
-			} else {
+			} else if (m_wAmmoInClip > 1) {
 				SetWeaponState(WEAPONSTATE_MORE_BULLETS);
 			}
 			break;
@@ -533,9 +533,9 @@ void CPlayerData::UpdateWeaponState()
 		case WEAPON_SHOTGUN:
 			if (m_bReloading) {
 				SetWeaponState(WEAPONSTATE_RELOADING);
-			} else if (m_wAmmo == 0) {
+			} else if (m_wAmmo == 0 && !m_bHasInfiniteAmmo) {
 				SetWeaponState(WEAPONSTATE_NO_BULLETS);
-			} else {
+			} else if (m_wAmmoInClip == 1) {
 				SetWeaponState(WEAPONSTATE_LAST_BULLET);
 			}
 			break;
@@ -1202,9 +1202,11 @@ void CPlayerData::SetWeaponState(int iState)
 			m_wAmmoInClip = 0;
 			break;
 		case WEAPONSTATE_RELOADING:
-			m_dwReloadTickCount = GetTickCount();
-			m_bReloading = true;
-			m_bShooting = false;
+			if (!m_bReloading) {
+				m_dwReloadTickCount = GetTickCount();
+				m_bReloading = true;
+				m_bShooting = false;
+			}
 			break;
 	}
 
