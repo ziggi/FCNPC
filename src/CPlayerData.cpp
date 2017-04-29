@@ -1748,6 +1748,10 @@ void CPlayerData::StopAim()
 		return;
 	}
 
+	if (m_bReloading) {
+		m_wAmmoInClip = static_cast<WORD>(GetWeaponActualClipSize(m_byteWeaponId));
+	}
+
 	// Reset aiming flags
 	m_bAiming = false;
 	m_bReloading = false;
