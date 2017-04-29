@@ -878,7 +878,7 @@ void CPlayerData::Process()
 
 					// Check for reload
 					bool bIsNeedToReload = m_bHasReload
-					                       && GetWeaponActualClipSize(m_byteWeaponId) > 1
+					                       && GetWeaponActualClipSize(m_byteWeaponId) > 0
 					                       && (m_wAmmo != 0 || m_bHasInfiniteAmmo)
 					                       && m_wAmmoInClip == 0;
 
