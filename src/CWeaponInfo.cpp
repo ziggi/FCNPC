@@ -234,8 +234,12 @@ bool CWeaponInfo::IsValid(BYTE byteWeaponId)
 
 bool CWeaponInfo::IsDoubleHanded(BYTE byteWeaponId)
 {
-	if (byteWeaponId == 22 || byteWeaponId == 26 || byteWeaponId == 28 || byteWeaponId == 32) {
-		return true;
+	switch (byteWeaponId) {
+		case WEAPON_COLT45:
+		case WEAPON_SAWEDOFF:
+		case WEAPON_UZI:
+		case WEAPON_TEC9:
+			return true;
 	}
 
 	return false;

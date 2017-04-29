@@ -1244,11 +1244,7 @@ int CPlayerData::GetWeaponActualReloadTime(BYTE byteWeaponId)
 	int iTime = m_pWeaponInfo->GetReloadTime(byteWeaponId);
 
 	if (IsWeaponDoubleHanded(byteWeaponId)) {
-		switch (byteWeaponId) {
-			case WEAPON_SAWEDOFF:
-				iTime += 700;
-				break;
-		}
+		iTime += 700;
 	}
 
 	return iTime;
