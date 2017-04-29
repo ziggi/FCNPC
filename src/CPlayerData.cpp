@@ -1242,8 +1242,9 @@ int CPlayerData::GetWeaponReloadTime(BYTE byteWeaponId)
 int CPlayerData::GetWeaponActualReloadTime(BYTE byteWeaponId)
 {
 	int iTime = m_pWeaponInfo->GetReloadTime(byteWeaponId);
+	DWORD dwSkill = static_cast<DWORD>(m_pWeaponInfo->GetSkillID(byteWeaponId));
 
-	if (IsWeaponDoubleHanded(byteWeaponId)) {
+	if (IsWeaponDoubleHanded(byteWeaponId) && GetWeaponSkill(dwSkill) >= 999) {
 		iTime += 700;
 	}
 
