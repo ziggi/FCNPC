@@ -10,9 +10,18 @@
 
 #include <a_samp>
 
-#tryinclude <FCNPC>
-#tryinclude "FCNPC"
-#tryinclude "../FCNPC"
+#if !defined _FCNPC_included
+	#tryinclude <FCNPC>
+#endif
+
+#if !defined _FCNPC_included
+	#tryinclude "FCNPC"
+#endif
+
+#if !defined _FCNPC_included
+	#tryinclude "../FCNPC"
+#endif
+
 #if !defined _FCNPC_included
 	#error Add FCNPC.inc to your scripts directory
 #endif
