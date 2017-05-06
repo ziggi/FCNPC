@@ -70,4 +70,4 @@ file (GLOB FCNPC_SRC
 add_library (${PROJECT_NAME} SHARED ${FCNPC_SRC})
 
 target_link_libraries (${PROJECT_NAME} subhook)
-configure_file(pawn/FCNPC.inc.in pawn/FCNPC.inc)
+configure_file(src/FCNPC.inc.in ${CMAKE_CURRENT_SOURCE_DIR}/sampsvr_files/FCNPC.inc)
