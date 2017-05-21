@@ -1347,8 +1347,8 @@ void CPlayerData::SetFightingStyle(BYTE byteStyle)
 	bsData.Write(m_wPlayerId);
 	bsData.Write(byteStyle);
 
-	CFunctions::AddedPlayersRPC(&RPC_SetFightingStyle, &bsData, m_wPlayerId);
-	CFunctions::PlayerRPC(&RPC_SetFightingStyle, &bsData, m_wPlayerId);
+	CFunctions::AddedPlayersRPC(&RPC_SetPlayerFightingStyle, &bsData, m_wPlayerId);
+	CFunctions::PlayerRPC(&RPC_SetPlayerFightingStyle, &bsData, m_wPlayerId);
 }
 
 BYTE CPlayerData::GetFightingStyle()

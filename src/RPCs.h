@@ -33,44 +33,14 @@
 #ifndef YSF_RPCS_H
 #define YSF_RPCS_H
 
-extern int RPC_Gravity;
-extern int RPC_Weather;
-extern int RPC_CreatePickup;
-extern int RPC_DestroyPickup;
-extern int RPC_SetPlayerTeam;
-extern int RPC_CreateObject;
-extern int RPC_DestroyObject;
-extern int RPC_AttachObject;
-extern int RPC_Widescreen;
-extern int RPC_ShowGangZone;
-extern int RPC_HideGangZone;
-extern int RPC_FlashGangZone;
-extern int RPC_StopFlashGangZone;
-extern int RPC_RemovePlayerAttachedObject;
 extern int RPC_ShowPlayerForPlayer;
-extern int RPC_HidePlayerForPlayer;
-extern int RPC_WorldPlayerDeath;
-extern int RPC_ChatBubble;
-extern int RPC_SetPlayerSkin;
-extern int RPC_SetPlayerName;
-extern int RPC_SetPlayerHealth;
-extern int RPC_SetPlayerArmour;
-extern int RPC_SetFightingStyle;
 extern int RPC_SetPlayerSkillLevel;
 extern int RPC_ApplyAnimation;
 extern int RPC_ClearAnimations;
-extern int RPC_ClientMessage;
-extern int RPC_ScrDisplayGameText;
-extern int RPC_Chat;
-extern int RPC_NewPlayer;
-
-extern int RPC_UpdateScoresPingsIPs;
-extern int RPC_PickedUpPickup;
-extern int RPC_Spawn;
-extern int RPC_Death;
-extern int RPC_DeathBroadcast;
-
-void InitRPCs();
+extern int RPC_SetPlayerFightingStyle;
+extern int RPC_SetPlayerSkin;
+extern int RPC_HidePlayerForPlayer;
+extern int RPC_WorldPlayerDeath;
 
 enum PacketEnumeration : unsigned char {
 	ID_VEHICLE_SYNC = 200,
