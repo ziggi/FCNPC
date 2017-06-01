@@ -67,6 +67,7 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_fMoveRadius = 0.0f;
 	m_bMoveSetAngle = false;
 	m_fMoveSpeed = MOVE_SPEED_AUTO;
+	m_dwMoveStopDelay = 0;
 	m_fDistOffset = 0.0f;
 	m_iNodeMoveType = MOVE_TYPE_AUTO;
 	m_bNodeUseMapAndreas = false;
@@ -723,7 +724,7 @@ void CPlayerData::Process()
 				} else {
 					StopPlayingNode();
 				}
-			} else if (dwMoveTick > m_dwMoveTime + 300) {
+			} else if (dwMoveTick > m_dwMoveTime + m_dwMoveStopDelay) {
 				StopMoving();
 
 				if (m_wVehicleToEnter != INVALID_VEHICLE_ID) {
@@ -1458,7 +1459,7 @@ void CPlayerData::GetKeys(WORD *pwUDAnalog, WORD *pwLRAnalog, DWORD *pdwKeys)
 	*pdwKeys = m_pPlayer->dwKeys;
 }
 
-bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset)
+bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset, DWORD dwStopDelay)
 {
 	// Validate the movement
 	if (iType == MOVE_TYPE_AUTO && GetState() == PLAYER_STATE_DRIVER) {
@@ -1523,19 +1524,21 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float f
 	UpdateMovingData(vecPoint, fRadius, bSetAngle, fSpeed, fDistOffset);
 	// Mark as moving
 	m_bMoving = true;
-	// Save the flags
+	// Save the data
 	m_bUseMapAndreas = bUseMapAndreas;
 	m_iMoveType = iType;
+	m_dwMoveStopDelay = dwStopDelay;
 	return true;
 }
 
-bool CPlayerData::GoToPlayer(WORD wPlayerId, int iType, bool bUseMapAndreas, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset, float fDistCheck)
+bool CPlayerData::GoToPlayer(WORD wPlayerId, int iType, bool bUseMapAndreas, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset, float fDistCheck, DWORD dwStopDelay)
 {
 	CVector vecPos = pNetGame->pPlayerPool->pPlayer[wPlayerId]->vecPosition;
 	if (GoTo(vecPos, iType, bUseMapAndreas, fRadius, bSetAngle, fSpeed, fDistOffset)) {
 		m_wMoveId = wPlayerId;
 		m_vecMovePlayerPosition = vecPos;
 		m_fDistCheck = fDistCheck;
+		m_dwMoveStopDelay = dwStopDelay;
 		return true;
 	}
 	return false;

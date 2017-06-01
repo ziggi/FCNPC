@@ -128,8 +128,8 @@ public:
 	void ApplyAnimation(char *szAnimationLib, char *szAnimationName, float fDelta, bool bLoop, bool bLockX, bool bLockY, bool bFreeze, int iTime);
 	void ClearAnimations();
 
-	bool GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f);
-	bool GoToPlayer(WORD wPlayerId, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f, float fDistCheck = 1.5f);
+	bool GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f, DWORD dwStopDelay = 250);
+	bool GoToPlayer(WORD wPlayerId, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f, float fDistCheck = 1.5f, DWORD dwStopDelay = 250);
 	bool GoByMovePath(int iPathId, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f);
 	void UpdateMovingData(CVector vecDestination, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset);
 	void GetDestination(CVector *pvecDestination);
@@ -239,6 +239,7 @@ private:
 	DWORD m_dwEnterExitTickCount;
 	DWORD m_dwMoveStartTime;
 	DWORD m_dwMoveTime;
+	DWORD m_dwMoveStopDelay;
 	DWORD m_dwMeleeDelay;
 	DWORD m_dwKillVehicleTickCount;
 	DWORD m_dwVehicleDeadTick;
