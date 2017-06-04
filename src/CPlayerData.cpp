@@ -600,8 +600,12 @@ BYTE CPlayerData::GetState()
 	return m_pPlayer->byteState;
 }
 
-void CPlayerData::Kill(WORD wKillerId, BYTE byteReason)
+bool CPlayerData::Kill(WORD wKillerId, BYTE byteReason)
 {
+	if (m_pPlayer->byteState == PLAYER_STATE_WASTED) {
+		return false;
+	}
+
 	// Stop Playing any playback
 	if (m_bPlaying) {
 		StopPlayingPlayback();
@@ -622,6 +626,8 @@ void CPlayerData::Kill(WORD wKillerId, BYTE byteReason)
 	SetState(PLAYER_STATE_WASTED);
 	// Call the NPC death callback
 	CCallbackManager::OnDeath(m_wPlayerId, wKillerId, byteReason);
+
+	return true;
 }
 
 void CPlayerData::Process()

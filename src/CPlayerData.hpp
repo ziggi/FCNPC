@@ -40,7 +40,7 @@ public:
 	bool Spawn(int iSkinId);
 	bool Respawn();
 	void SetSpawnPosition(CVector vecPosition);
-	void Kill(WORD wKillerId, BYTE byteReason);
+	bool Kill(WORD wKillerId, BYTE byteReason);
 	void Update(int iState);
 	void UpdateSync(int iState);
 	void ResetSyncMoving(int iState);
