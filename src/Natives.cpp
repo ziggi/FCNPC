@@ -3385,6 +3385,11 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetNumberMovePoint(AMX *amx, cell *params)
 	// get params
 	int iPathId = static_cast<int>(params[1]);
 
+	// validation
+	if (!pServer->GetMovePath()->IsPathValid(iPathId)) {
+		return -1;
+	}
+
 	return pServer->GetMovePath()->GetPoints(iPathId)->size();
 }
 
