@@ -13,7 +13,11 @@
 int CMovePath::Create()
 {
 	size_t index = m_vPath.size();
-	m_vPath.push_back(std::vector<CVector>());
+	try {
+		m_vPath.push_back(std::vector<CVector>());
+	} catch (...) {
+		return INVALID_MOVEPATH_ID;
+	}
 	return static_cast<int>(index);
 }
 
