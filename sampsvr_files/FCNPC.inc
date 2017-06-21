@@ -261,7 +261,7 @@ native Float:FCNPC_GetMinHeightPosCall(npcid);
 	#tryinclude "a_http"
 #endif
 
-#if defined HTTP
+#if defined HTTP && !defined FCNPC_DISABLE_VERSION_CHECK
 	#if defined FILTERSCRIPT
 		public OnFilterScriptInit()
 		{
