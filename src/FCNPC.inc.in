@@ -316,15 +316,19 @@ native Float:FCNPC_GetMinHeightPosCall(npcid);
 	{
 		if (index == 0 && response_code == 200) {
 			new length = strlen(data);
-			if (length == 0) {
+			if (length == 0 || length > 10) {
 				return;
 			}
 
 			new version[16];
 			strmid(version, data, 1, length);
 
+			if (!('0' <= version[0] <= '9')) {
+				return;
+			}
+
 			if (strcmp(version, FCNPC_PLUGIN_VERSION) != 0) {
-				printf("\n** Please update your FCNPC plugin to %s from here: https://github.com/ziggi/FCNPC/releases.\n", data);
+				printf("\n** Please update your FCNPC plugin to %s from here: https://github.com/ziggi/FCNPC/releases.\n", version);
 			}
 		}
 	}
