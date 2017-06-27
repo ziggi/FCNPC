@@ -31,15 +31,16 @@ CPlayerManager::~CPlayerManager()
 WORD CPlayerManager::AddPlayer(char *szName)
 {
 	// Make sure the name is valid
-	if (strlen(szName) > MAX_PLAYER_NAME || pServer->DoesNameExist(szName)) {
-		logprintf("[FCNPC] Error: name '%s' is invalid.", szName);
+	int iLength = strlen(szName);
+	if (iLength == 0 || iLength > MAX_PLAYER_NAME || pServer->DoesNameExist(szName)) {
+		logprintf("[FCNPC] Error: NPC '%s' not created. Name '%s' is invalid or there is already another player connected with that name.", szName, szName);
 		return INVALID_PLAYER_ID;
 	}
 
 	// Create the player in SAMP server
 	WORD wPlayerId = CFunctions::NewPlayer(szName);
 	if (wPlayerId == INVALID_PLAYER_ID) {
-		logprintf("[FCNPC] Error: player '%s' is not created.", szName);
+		logprintf("[FCNPC] Error: NPC '%s' not created. The maxplayers limit in server.cfg has been reached.", szName);
 		return INVALID_PLAYER_ID;
 	}
 
@@ -47,7 +48,7 @@ WORD CPlayerManager::AddPlayer(char *szName)
 	m_pNpcArray[wPlayerId] = new CPlayerData(wPlayerId, szName);
 	if (!m_pNpcArray[wPlayerId]) {
 		CFunctions::DeletePlayer(wPlayerId);
-		logprintf("[FCNPC] Error: player instance for '%s' is not created.", szName);
+		logprintf("[FCNPC] Error: NPC '%s' not created. The NPC instance could not be created.", szName);
 		return INVALID_PLAYER_ID;
 	}
 
@@ -55,7 +56,7 @@ WORD CPlayerManager::AddPlayer(char *szName)
 	if (!SetupPlayer(wPlayerId)) {
 		SAFE_DELETE(m_pNpcArray[wPlayerId]);
 		CFunctions::DeletePlayer(wPlayerId);
-		logprintf("[FCNPC] Error: player '%s' is not setup.", szName);
+		logprintf("[FCNPC] Error: NPC '%s' not created. Name '%s' is invalid or the maxnpc limit in server.cfg has been reached.", szName, szName);
 		return INVALID_PLAYER_ID;
 	}
 

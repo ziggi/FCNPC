@@ -102,11 +102,11 @@ BYTE CServer::Initialize(AMX *pAMX)
 
 	// Check the maxnpc from the config
 	if (CFunctions::GetMaxNPC() == 0) {
-		logprintf("Warning: the maxnpc limit is 0 (you will not be able to create NPCs unless you change it)");
+		logprintf("[FCNPC] Warning: Unable to create NPCs. The maxnpc limit in server.cfg is 0.");
 	}
 	// Check the maxnpc and maxplayers in the config
 	else if (CFunctions::GetMaxPlayers() < CFunctions::GetMaxNPC()) {
-		logprintf("Warning: the maxplayers limit is less than maxnpc (possible crash)");
+		logprintf("[FCNPC] Warning: Crash possible. The maxplayers limit in server.cfg is less than the maxnpc limit.");
 	}
 
 	return ERROR_NO;

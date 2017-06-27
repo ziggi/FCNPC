@@ -289,7 +289,7 @@ PLUGIN_EXPORT int PLUGIN_CALL AmxLoad(AMX *pAMX)
 			// Get the error
 			char szError[64];
 			CUtils::GetPluginError(byteError, szError, sizeof(szError));
-			logprintf("FCNPC Init Failed. (Error: %s)", szError);
+			logprintf("[FCNPC] Error: Script initialization failed. %s.", szError);
 			exit(0);
 		}
 		// Initialize the starting tick
