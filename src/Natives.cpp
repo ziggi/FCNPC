@@ -21,12 +21,6 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_Create(AMX *amx, cell *params)
 	char *szName;
 	amx_StrParam(amx, params[1], szName);
 
-	// Make sure the length is valid
-	int iLength = strlen(szName);
-	if (iLength == 0 || iLength > MAX_PLAYER_NAME) {
-		return INVALID_PLAYER_ID;
-	}
-
 	return pServer->GetPlayerManager()->AddPlayer(szName);
 }
 

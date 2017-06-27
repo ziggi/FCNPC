@@ -20,7 +20,7 @@ CPlayback::CPlayback(char *szFile, char *szPlayingPath, bool bAutoUnload)
 	snprintf(szPath, sizeof(szPath), "%s%s.rec", szPlayingPath, szFile);
 	m_iRecordId = pServer->GetRecordManager()->Load(szPath);
 	if (m_iRecordId == INVALID_RECORD_ID) {
-		logprintf("FCNPC Error: file '%s' not found.", szPath);
+		logprintf("[FCNPC] Error: Playback initialization failed. Playback file '%s' not found.", szPath);
 	}
 	m_bAutoUnload = bAutoUnload;
 	// Reset variables
