@@ -276,6 +276,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 				SWeaponInfo sWeaponInfo = CWeaponInfo::GetDefaultInfo(byteWeaponId);
 
 				pHitPlayerData->ProcessDamage(wPlayerId, sWeaponInfo.fDamage, byteWeaponId, BODY_PART_TORSO);
+				CCallbackManager::OnGiveDamage(wPlayerId, bulletSyncData.wHitID, byteWeaponId, BODY_PART_TORSO, sWeaponInfo.fDamage);
 			}
 		}
 
