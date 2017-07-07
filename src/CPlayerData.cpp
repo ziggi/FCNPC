@@ -800,10 +800,10 @@ void CPlayerData::Process()
 				CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[m_wVehicleToEnter];
 				if (pVehicle) {
 					SetState(m_byteSeatToEnter == 0 ? PLAYER_STATE_DRIVER : PLAYER_STATE_PASSENGER);
-					CCallbackManager::OnVehicleEntryComplete(m_wPlayerId, m_wVehicleToEnter, m_byteSeatToEnter);
-
 					SetVehicle(m_wVehicleToEnter, m_byteSeatToEnter);
 					SetAngle(pServer->GetVehicleAngle(pVehicle));
+
+					CCallbackManager::OnVehicleEntryComplete(m_wPlayerId, m_wVehicleToEnter, m_byteSeatToEnter);
 				}
 
 				m_bEntering = false;
