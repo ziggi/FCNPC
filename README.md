@@ -7,42 +7,6 @@ If you found a bug or get crash, create issue in [issues section](https://github
 
 Discussion in [forum thread](http://forum.sa-mp.com/showthread.php?t=428066). Or in [Russian forum thread](http://forum.sa-mp.com/showthread.php?t=602965).
 
-# Usage notes
-If you want to see that your scripts will work correctly, you need to declare this callback functions at least in one of your scripts:
-- OnPlayerGiveDamage
-- OnPlayerTakeDamage
-- OnPlayerWeaponShot
-- OnPlayerStreamIn
-- OnPlayerStreamOut
-
-Example:
-```Pawn
-public OnPlayerGiveDamage(playerid, damagedid, Float: amount, weaponid, bodypart)
-{
-	return 0;
-}
-
-public OnPlayerTakeDamage(playerid, issuerid, Float: amount, weaponid, bodypart)
-{
-	return 0;
-}
-
-public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY, Float:fZ)
-{
-	return 1;
-}
-
-public OnPlayerStreamIn(playerid, forplayerid)
-{
-	return 1;
-}
-
-public OnPlayerStreamOut(playerid, forplayerid)
-{
-	return 1;
-}
-```
-
 # MapAndreas usage
 Download MapAndreas 1.2.1 from [here](http://forum.sa-mp.com/showpost.php?p=3130004&postcount=153).
 
