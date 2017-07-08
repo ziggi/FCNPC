@@ -145,6 +145,15 @@ CMovePath *CServer::GetMovePath()
 	return m_pMovePath;
 }
 
+bool CServer::IsValidNickName(char *szName)
+{
+	int iLength = strlen(szName);
+	if (iLength < 1 || iLength > MAX_PLAYER_NAME) {
+		return false;
+	}
+	return true;
+}
+
 bool CServer::DoesNameExist(char *szName)
 {
 	// Loop through all the players

@@ -39,6 +39,7 @@ public:
 	CRecordManager *GetRecordManager();
 	CMovePath *GetMovePath();
 
+	bool IsValidNickName(char *szName);
 	bool DoesNameExist(char *szName);
 
 	bool SetTickRate(int iRate);
