@@ -71,6 +71,9 @@ forward FCNPC_OnChangeHeightPos(npcid, Float:new_z, Float:old_z); // disabled by
 
 // Natives
 native FCNPC_SetUpdateRate(rate);
+native FCNPC_GetUpdateRate();
+native FCNPC_SetTickRate(rate);
+native FCNPC_GetTickRate();
 native FCNPC_InitMapAndreas(address);
 
 native FCNPC_Create(name[]);

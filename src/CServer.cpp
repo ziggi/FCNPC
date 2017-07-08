@@ -16,7 +16,7 @@ extern CNetGame *pNetGame;
 CServer::CServer(eSAMPVersion version)
 {
 	m_iTicks = 0;
-	m_iTickRate = 5;
+	m_iTickRate = DEFAULT_TICK_RATE;
 
 	m_Version = version;
 	// Reset instances
@@ -160,6 +160,20 @@ bool CServer::DoesNameExist(char *szName)
 		}
 	}
 	return false;
+}
+
+bool CServer::SetTickRate(int iRate)
+{
+	if (iRate < 0) {
+		return false;
+	}
+	m_iTickRate = iRate;
+	return true;
+}
+
+int CServer::GetTickRate()
+{
+	return m_iTickRate;
 }
 
 bool CServer::SetUpdateRate(DWORD dwRate)

@@ -2898,6 +2898,27 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetUpdateRate(AMX *amx, cell *params)
 	return pServer->SetUpdateRate(iRate);
 }
 
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetUpdateRate(AMX *amx, cell *params)
+{
+	return pServer->GetUpdateRate();
+}
+
+cell AMX_NATIVE_CALL CNatives::FCNPC_SetTickRate(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_SetUpdateRate");
+
+	// Get the params
+	int iRate = static_cast<int>(params[1]);
+
+	// Set the tick rate
+	return pServer->SetTickRate(iRate);
+}
+
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetTickRate(AMX *amx, cell *params)
+{
+	return pServer->GetTickRate();
+}
+
 cell AMX_NATIVE_CALL CNatives::FCNPC_OpenNode(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_OpenNode");
