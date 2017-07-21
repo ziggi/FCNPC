@@ -2126,8 +2126,6 @@ void CPlayerData::SetVehicleHealth(float fHealth)
 	// Validate the health
 	if (fHealth < 0.0f) {
 		fHealth = 0.0f;
-	} else if (fHealth > 1000.0f) {
-		fHealth = 1000.0f;
 	}
 
 	CVehicle *pVehicle = GetVehicle();
