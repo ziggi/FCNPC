@@ -37,79 +37,55 @@ public FCNPC_IncludeVersion = FCNPC_INCLUDE_VERSION;
 #define FCNPC_INVALID_RECORD_ID   (-1)
 
 // Compatibility with older versions
-#if defined MOVE_TYPE_AUTO
-	#error MOVE_TYPE_AUTO already defined in another include, use FCNPC_MOVE_TYPE_AUTO instead
-#else
-	#define MOVE_TYPE_AUTO (-1)
+#if !defined MOVE_TYPE_AUTO
+	#define MOVE_TYPE_AUTO FCNPC_MOVE_TYPE_AUTO
 #endif
 
-#if defined MOVE_TYPE_WALK
-	#error MOVE_TYPE_WALK already defined in another include, use FCNPC_MOVE_TYPE_WALK instead
-#else
-	#define MOVE_TYPE_WALK (0)
+#if !defined MOVE_TYPE_WALK
+	#define MOVE_TYPE_WALK FCNPC_MOVE_TYPE_WALK
 #endif
 
-#if defined MOVE_TYPE_RUN
-	#error MOVE_TYPE_RUN already defined in another include, use FCNPC_MOVE_TYPE_RUN instead
-#else
-	#define MOVE_TYPE_RUN (1)
+#if !defined MOVE_TYPE_RUN
+	#define MOVE_TYPE_RUN FCNPC_MOVE_TYPE_RUN
 #endif
 
-#if defined MOVE_TYPE_SPRINT
-	#error MOVE_TYPE_SPRINT already defined in another include, use FCNPC_MOVE_TYPE_SPRINT instead
-#else
-	#define MOVE_TYPE_SPRINT (2)
+#if !defined MOVE_TYPE_SPRINT
+	#define MOVE_TYPE_SPRINT FCNPC_MOVE_TYPE_SPRINT
 #endif
 
-#if defined MOVE_TYPE_DRIVE
-	#error MOVE_TYPE_DRIVE already defined in another include, use FCNPC_MOVE_TYPE_DRIVE instead
-#else
-	#define MOVE_TYPE_DRIVE (3)
+#if !defined MOVE_TYPE_DRIVE
+	#define MOVE_TYPE_DRIVE FCNPC_MOVE_TYPE_DRIVE
 #endif
 
 
-#if defined MOVE_SPEED_AUTO
-	#error MOVE_SPEED_AUTO already defined in another include, use FCNPC_MOVE_SPEED_AUTO instead
-#else
-	#define MOVE_SPEED_AUTO (-1.0)
+#if !defined MOVE_SPEED_AUTO
+	#define MOVE_SPEED_AUTO FCNPC_MOVE_SPEED_AUTO
 #endif
 
-#if defined MOVE_SPEED_WALK
-	#error MOVE_SPEED_WALK already defined in another include, use FCNPC_MOVE_SPEED_WALK instead
-#else
-	#define MOVE_SPEED_WALK (0.1552086)
+#if !defined MOVE_SPEED_WALK
+	#define MOVE_SPEED_WALK FCNPC_MOVE_SPEED_WALK
 #endif
 
-#if defined MOVE_SPEED_RUN
-	#error MOVE_SPEED_RUN already defined in another include, use FCNPC_MOVE_SPEED_RUN instead
-#else
-	#define MOVE_SPEED_RUN (0.56444)
+#if !defined MOVE_SPEED_RUN
+	#define MOVE_SPEED_RUN FCNPC_MOVE_SPEED_RUN
 #endif
 
-#if defined MOVE_SPEED_SPRINT
-	#error MOVE_SPEED_SPRINT already defined in another include, use FCNPC_MOVE_SPEED_SPRINT instead
-#else
-	#define MOVE_SPEED_SPRINT (0.926784)
+#if !defined MOVE_SPEED_SPRINT
+	#define MOVE_SPEED_SPRINT FCNPC_MOVE_SPEED_SPRINT
 #endif
 
 
-#if defined MAX_NODES
-	#error MAX_NODES already defined in another include, use FCNPC_MAX_NODES instead
-#else
-	#define MAX_NODES (64)
+#if !defined MAX_NODES
+	#define MAX_NODES FCNPC_MAX_NODES
 #endif
 
 
-#if defined INVALID_MOVEPATH_ID
-	#error INVALID_MOVEPATH_ID already defined in another include, use FCNPC_INVALID_MOVEPATH_ID instead
-#else
-	#define INVALID_MOVEPATH_ID (-1)
+#if !defined INVALID_MOVEPATH_ID
+	#define INVALID_MOVEPATH_ID FCNPC_INVALID_MOVEPATH_ID
 #endif
 
-#if defined INVALID_RECORD_ID
-	#error INVALID_RECORD_ID already defined in another include, use FCNPC_INVALID_RECORD_ID instead
-#else
-	#define INVALID_RECORD_ID (-1)
+#if !defined INVALID_RECORD_ID
+	#define INVALID_RECORD_ID FCNPC_INVALID_RECORD_ID
 #endif
 
 // Callbacks
@@ -243,8 +219,8 @@ native FCNPC_GetFightingStyle(npcid);
 native FCNPC_ToggleReloading(npcid, bool:toggle);
 native FCNPC_ToggleInfiniteAmmo(npcid, bool:toggle);
 
-native FCNPC_GoTo(npcid, Float:x, Float:y, Float:z, type = MOVE_TYPE_AUTO, Float:speed = MOVE_SPEED_AUTO, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true, Float:dist_offset = 0.0, stopdelay = 250);
-native FCNPC_GoToPlayer(npcid, playerid, type = MOVE_TYPE_AUTO, Float:speed = MOVE_SPEED_AUTO, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true, Float:dist_offset = 0.0, Float:dist_check = 1.5, stopdelay = 250);
+native FCNPC_GoTo(npcid, Float:x, Float:y, Float:z, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true, Float:dist_offset = 0.0, stopdelay = 250);
+native FCNPC_GoToPlayer(npcid, playerid, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true, Float:dist_offset = 0.0, Float:dist_check = 1.5, stopdelay = 250);
 native FCNPC_Stop(npcid);
 native FCNPC_IsMoving(npcid);
 native FCNPC_IsMovingAtPlayer(npcid, playerid);
@@ -263,7 +239,7 @@ native FCNPC_IsShooting(npcid);
 native FCNPC_IsReloading(npcid);
 native FCNPC_TriggerWeaponShot(npcid, weaponid, hittype, hitid, Float:x, Float:y, Float:z, bool:ishit = true, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0);
 
-native FCNPC_EnterVehicle(npcid, vehicleid, seatid, type = MOVE_TYPE_WALK);
+native FCNPC_EnterVehicle(npcid, vehicleid, seatid, type = FCNPC_MOVE_TYPE_WALK);
 native FCNPC_ExitVehicle(npcid);
 
 native FCNPC_PutInVehicle(npcid, vehicleid, seatid);
@@ -290,7 +266,7 @@ native FCNPC_SetSurfingPlayerObject(npcid, objectid);
 native FCNPC_GetSurfingPlayerObject(npcid);
 native FCNPC_StopSurfing(npcid);
 
-native FCNPC_StartPlayingPlayback(npcid, file[] = "", recordid = INVALID_RECORD_ID, bool:auto_unload = false);
+native FCNPC_StartPlayingPlayback(npcid, file[] = "", recordid = FCNPC_INVALID_RECORD_ID, bool:auto_unload = false);
 native FCNPC_StopPlayingPlayback(npcid);
 native FCNPC_PausePlayingPlayback(npcid);
 native FCNPC_ResumePlayingPlayback(npcid);
@@ -307,7 +283,7 @@ native FCNPC_SetNodePoint(nodeid, point);
 native FCNPC_GetNodePointPosition(nodeid, &Float:x, &Float:y, &Float:z);
 native FCNPC_GetNodePointCount(nodeid);
 native FCNPC_GetNodeInfo(nodeid, &vehnodes, &pednodes, &navinode);
-native FCNPC_PlayNode(npcid, nodeid, move_type = MOVE_TYPE_AUTO, Float:speed = MOVE_SPEED_AUTO, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true);
+native FCNPC_PlayNode(npcid, nodeid, move_type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true);
 native FCNPC_StopPlayingNode(npcid);
 native FCNPC_PausePlayingNode(npcid);
 native FCNPC_ResumePlayingNode(npcid);
@@ -324,7 +300,7 @@ native FCNPC_RemovePointFromPath(pathid, pointid);
 native FCNPC_IsValidMovePoint(pathid, pointid);
 native FCNPC_GetMovePoint(pathid, pointid, &Float:x, &Float:y, &Float:z);
 native FCNPC_GetNumberMovePoint(pathid);
-native FCNPC_GoByMovePath(npcid, pathid, type = MOVE_TYPE_AUTO, Float:speed = MOVE_SPEED_AUTO, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true, Float:dist_offset = 0.0);
+native FCNPC_GoByMovePath(npcid, pathid, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true, Float:dist_offset = 0.0);
 
 native FCNPC_ToggleMapAndreasUsage(npcid, bool:enabled);
 native FCNPC_IsMapAndreasUsed(npcid);
