@@ -20,21 +20,97 @@ public FCNPC_IncludeVersion = FCNPC_INCLUDE_VERSION;
 #pragma unused FCNPC_IncludeVersion
 
 // Definitions
-#define MOVE_TYPE_AUTO      (-1)
-#define MOVE_TYPE_WALK      (0)
-#define MOVE_TYPE_RUN       (1)
-#define MOVE_TYPE_SPRINT    (2)
-#define MOVE_TYPE_DRIVE     (3)
+#define FCNPC_MOVE_TYPE_AUTO      (-1)
+#define FCNPC_MOVE_TYPE_WALK      (0)
+#define FCNPC_MOVE_TYPE_RUN       (1)
+#define FCNPC_MOVE_TYPE_SPRINT    (2)
+#define FCNPC_MOVE_TYPE_DRIVE     (3)
 
-#define MOVE_SPEED_AUTO     (-1.0)
-#define MOVE_SPEED_WALK     (0.1552086)
-#define MOVE_SPEED_RUN      (0.56444)
-#define MOVE_SPEED_SPRINT   (0.926784)
+#define FCNPC_MOVE_SPEED_AUTO     (-1.0)
+#define FCNPC_MOVE_SPEED_WALK     (0.1552086)
+#define FCNPC_MOVE_SPEED_RUN      (0.56444)
+#define FCNPC_MOVE_SPEED_SPRINT   (0.926784)
 
-#define MAX_NODES           (64)
+#define FCNPC_MAX_NODES           (64)
 
-#define INVALID_MOVEPATH_ID (-1)
-#define INVALID_RECORD_ID   (-1)
+#define FCNPC_INVALID_MOVEPATH_ID (-1)
+#define FCNPC_INVALID_RECORD_ID   (-1)
+
+// Compatibility with older versions
+#if defined MOVE_TYPE_AUTO
+	#error MOVE_TYPE_AUTO already defined in another include, use FCNPC_MOVE_TYPE_AUTO instead
+#else
+	#define MOVE_TYPE_AUTO (-1)
+#endif
+
+#if defined MOVE_TYPE_WALK
+	#error MOVE_TYPE_WALK already defined in another include, use FCNPC_MOVE_TYPE_WALK instead
+#else
+	#define MOVE_TYPE_WALK (0)
+#endif
+
+#if defined MOVE_TYPE_RUN
+	#error MOVE_TYPE_RUN already defined in another include, use FCNPC_MOVE_TYPE_RUN instead
+#else
+	#define MOVE_TYPE_RUN (1)
+#endif
+
+#if defined MOVE_TYPE_SPRINT
+	#error MOVE_TYPE_SPRINT already defined in another include, use FCNPC_MOVE_TYPE_SPRINT instead
+#else
+	#define MOVE_TYPE_SPRINT (2)
+#endif
+
+#if defined MOVE_TYPE_DRIVE
+	#error MOVE_TYPE_DRIVE already defined in another include, use FCNPC_MOVE_TYPE_DRIVE instead
+#else
+	#define MOVE_TYPE_DRIVE (3)
+#endif
+
+
+#if defined MOVE_SPEED_AUTO
+	#error MOVE_SPEED_AUTO already defined in another include, use FCNPC_MOVE_SPEED_AUTO instead
+#else
+	#define MOVE_SPEED_AUTO (-1.0)
+#endif
+
+#if defined MOVE_SPEED_WALK
+	#error MOVE_SPEED_WALK already defined in another include, use FCNPC_MOVE_SPEED_WALK instead
+#else
+	#define MOVE_SPEED_WALK (0.1552086)
+#endif
+
+#if defined MOVE_SPEED_RUN
+	#error MOVE_SPEED_RUN already defined in another include, use FCNPC_MOVE_SPEED_RUN instead
+#else
+	#define MOVE_SPEED_RUN (0.56444)
+#endif
+
+#if defined MOVE_SPEED_SPRINT
+	#error MOVE_SPEED_SPRINT already defined in another include, use FCNPC_MOVE_SPEED_SPRINT instead
+#else
+	#define MOVE_SPEED_SPRINT (0.926784)
+#endif
+
+
+#if defined MAX_NODES
+	#error MAX_NODES already defined in another include, use FCNPC_MAX_NODES instead
+#else
+	#define MAX_NODES (64)
+#endif
+
+
+#if defined INVALID_MOVEPATH_ID
+	#error INVALID_MOVEPATH_ID already defined in another include, use FCNPC_INVALID_MOVEPATH_ID instead
+#else
+	#define INVALID_MOVEPATH_ID (-1)
+#endif
+
+#if defined INVALID_RECORD_ID
+	#error INVALID_RECORD_ID already defined in another include, use FCNPC_INVALID_RECORD_ID instead
+#else
+	#define INVALID_RECORD_ID (-1)
+#endif
 
 // Callbacks
 forward FCNPC_OnCreate(npcid);
@@ -338,7 +414,6 @@ public OnPlayerStreamIn(playerid, forplayerid)
 
 public OnPlayerStreamOut(playerid, forplayerid)
 {
-	
 	#if defined FCNPC_OnPlayerStreamOut
 		return FCNPC_OnPlayerStreamOut(playerid, forplayerid);
 	#else
