@@ -40,16 +40,16 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	eSAMPVersion version;
 
 	if ((DWORD)0x9999 == CAddress::FindNetVersion()) {
-		version = CRMP_VERSION_037_R2_1;
-		strlcpy(szSampVersion, "0.3.7 R2-1", sizeof(szSampVersion));
+		version = CRMP_VERSION_037_R2;
+		strlcpy(szSampVersion, "0.3.7 R2", sizeof(szSampVersion));
 		strlcpy(szSampClient, "CR-MP", sizeof(szSampClient));
 	} else if ((DWORD)logprintf == CAddress::FUNC_Logprintf_037) {
 		version = SAMP_VERSION_037;
 		strlcpy(szSampVersion, "0.3.7", sizeof(szSampVersion));
 		strlcpy(szSampClient, "SA-MP", sizeof(szSampClient));
-	} else if ((DWORD)logprintf == CAddress::FUNC_Logprintf_037_R2_1) {
-		version = SAMP_VERSION_037_R2_1;
-		strlcpy(szSampVersion, "0.3.7 R2-1", sizeof(szSampVersion));
+	} else if ((DWORD)logprintf == CAddress::FUNC_Logprintf_037_R2) {
+		version = SAMP_VERSION_037_R2;
+		strlcpy(szSampVersion, "0.3.7 R2", sizeof(szSampVersion));
 		strlcpy(szSampClient, "SA-MP", sizeof(szSampClient));
 	} else {
 		version = SAMP_VERSION_UNKNOWN;
