@@ -14,7 +14,7 @@
 
 // Version
 #define FCNPC_INCLUDE_VERSION 174
-#define FCNPC_PLUGIN_VERSION  "1.7.4"
+#define FCNPC_PLUGIN_VERSION  "1.7.5"
 
 public FCNPC_IncludeVersion = FCNPC_INCLUDE_VERSION;
 #pragma unused FCNPC_IncludeVersion
