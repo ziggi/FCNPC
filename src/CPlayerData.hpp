@@ -211,7 +211,7 @@ public:
 	void SetMinHeightPosCall(float fHeight);
 	float GetMinHeightPosCall();
 
-	CPlayer *CPlayerData::GetInterface();
+	CPlayer *GetInterface();
 
 private:
 	WORD m_wPlayerId;
