@@ -30,6 +30,12 @@ CPlayerManager::~CPlayerManager()
 
 WORD CPlayerManager::AddPlayer(char *szName)
 {
+	// Check name for already connected NPCs
+	WORD wPlayerId = GetId(szName);
+	if (wPlayerId != INVALID_PLAYER_ID) {
+		return wPlayerId;
+	}
+
 	// Make sure the name is valid
 	if (!pServer->IsValidNickName(szName)) {
 		logprintf("[FCNPC] Error: NPC '%s' not created. Name '%s' is invalid.", szName, szName);
@@ -43,7 +49,7 @@ WORD CPlayerManager::AddPlayer(char *szName)
 	}
 
 	// Create the player in SAMP server
-	WORD wPlayerId = CFunctions::NewPlayer(szName);
+	wPlayerId = CFunctions::NewPlayer(szName);
 	if (wPlayerId == INVALID_PLAYER_ID) {
 		logprintf("[FCNPC] Error: NPC '%s' not created. The maxplayers limit in server.cfg has been reached.", szName);
 		return INVALID_PLAYER_ID;
@@ -137,6 +143,16 @@ bool CPlayerManager::IsPlayerConnected(WORD wPlayerId)
 	} else {
 		return pNetGame->pPlayerPool->bIsPlayerConnectedEx[wPlayerId] != 0;
 	}
+}
+
+WORD CPlayerManager::GetId(char *szName)
+{
+	for (auto &id : m_vNpcID) {
+		if (!strcmp(szName, pNetGame->pPlayerPool->szName[id])) {
+			return id;
+		}
+	}
+	return INVALID_PLAYER_ID;
 }
 
 CPlayerData *CPlayerManager::GetAt(WORD wPlayerId)

@@ -21,6 +21,7 @@ public:
 
 	bool IsNpcConnected(WORD wPlayerId);
 	bool IsPlayerConnected(WORD wPlayerId);
+	WORD GetId(char *szName);
 	CPlayerData *GetAt(WORD wPlayerId);
 	bool SetupPlayer(WORD wPlayerId);
 
