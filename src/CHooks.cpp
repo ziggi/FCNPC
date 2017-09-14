@@ -62,6 +62,9 @@ t_OnPlayerStream pStream;
 bool bStreamIn;
 bool bStreamOut;
 
+// gamemode exit
+bool bOnGameModeExit;
+
 // subhook
 subhook_t hookFindPublic;
 subhook_t hookPush;
@@ -100,6 +103,7 @@ int amx_FindPublic_Hook(AMX *amx, const char *funcname, int *index)
 		bWeaponShot = false;
 		bStreamIn = false;
 		bStreamOut = false;
+		bOnGameModeExit = false;
 	}
 
 	if (!strcmp(funcname, "OnPlayerGiveDamage")) {
@@ -117,6 +121,9 @@ int amx_FindPublic_Hook(AMX *amx, const char *funcname, int *index)
 	} else if (!strcmp(funcname, "OnPlayerStreamOut")) {
 		bIsPublicFound = true;
 		bStreamOut = true;
+	} else if (!strcmp(funcname, "OnGameModeExit")) {
+		bIsPublicFound = true;
+		bOnGameModeExit = true;
 	}
 
 	if (bIsPublicFound) {
@@ -312,6 +319,16 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 		} else {
 			ret = pfn_amx_Exec(amx, retval, index);
 		}
+
+		bHookIsExecEnd = true;
+	} else if (bOnGameModeExit) {
+		bHookIsExecStart = true;
+
+		// reset all NPCs
+		pServer->GetPlayerManager()->ResetAllPlayers();
+
+		// call hooked callback
+		ret = pfn_amx_Exec(amx, retval, index);
 
 		bHookIsExecEnd = true;
 	} else {

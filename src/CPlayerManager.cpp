@@ -87,8 +87,38 @@ bool CPlayerManager::DeletePlayer(WORD wPlayerId)
 	return true;
 }
 
+bool CPlayerManager::ResetPlayer(WORD wPlayerId)
+{
+	// If he's not connected then dont go any further
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wPlayerId);
+	if (!pPlayerData) {
+		return false;
+	}
+
+	CPlayer *pPlayer = pPlayerData->GetInterface();
+	if (!pPlayer) {
+		return false;
+	}
+
+	// Reset player data
+	pPlayer->bReadyToSpawn = false;
+	pPlayerData->SetSpawnedStatus(false);
+	return true;
+}
+
+void CPlayerManager::ResetAllPlayers()
+{
+	for (auto &id : m_vNpcID) {
+		ResetPlayer(id);
+	}
+}
+
 void CPlayerManager::Process()
 {
+	if (!pNetGame->pGameModePool) {
+		return;
+	}
+
 	// Process all the players
 	for (auto &id : m_vNpcID) {
 		m_pNpcArray[id]->Process();

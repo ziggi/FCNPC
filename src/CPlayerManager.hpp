@@ -26,6 +26,8 @@ public:
 
 	WORD AddPlayer(char *szName);
 	bool DeletePlayer(WORD wPlayerId);
+	bool ResetPlayer(WORD wPlayerId);
+	void ResetAllPlayers();
 
 	void Process();
 
@@ -33,7 +35,7 @@ public:
 
 private:
 	CPlayerData *m_pNpcArray[MAX_PLAYERS];
-	std::vector<int> m_vNpcID;
+	std::vector<WORD> m_vNpcID;
 };
 
 #endif

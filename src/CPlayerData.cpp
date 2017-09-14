@@ -552,6 +552,11 @@ bool CPlayerData::IsSpawned()
 	return m_bSpawned;
 }
 
+void CPlayerData::SetSpawnedStatus(bool status)
+{
+	m_bSpawned = status;
+}
+
 bool CPlayerData::IsStreamedIn(WORD wForPlayerId)
 {
 	return pNetGame->pPlayerPool->pPlayer[wForPlayerId]->byteStreamedIn[m_wPlayerId] != 0;
@@ -2462,4 +2467,9 @@ void CPlayerData::SetMinHeightPosCall(float fHeight)
 float CPlayerData::GetMinHeightPosCall()
 {
 	return m_fMinHeightPos;
+}
+
+CPlayer *CPlayerData::GetInterface()
+{
+	return m_pPlayer;
 }

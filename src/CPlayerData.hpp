@@ -46,6 +46,7 @@ public:
 	void ResetSyncMoving(int iState);
 	void UpdateAim();
 	bool IsSpawned();
+	void SetSpawnedStatus(bool status);
 	bool IsStreamedIn(WORD wForPlayerId);
 	void ShowForPlayer(WORD wPlayerId);
 	void ShowForStreamedPlayers();
@@ -209,6 +210,8 @@ public:
 	bool IsMapAndreasUsed();
 	void SetMinHeightPosCall(float fHeight);
 	float GetMinHeightPosCall();
+
+	CPlayer *CPlayerData::GetInterface();
 
 private:
 	WORD m_wPlayerId;
