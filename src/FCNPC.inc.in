@@ -14,7 +14,6 @@
 
 // Version
 #define FCNPC_INCLUDE_VERSION ${INCLUDE_VERSION}
-#define FCNPC_PLUGIN_VERSION  "${PLUGIN_VERSION}"
 
 public FCNPC_IncludeVersion = FCNPC_INCLUDE_VERSION;
 #pragma unused FCNPC_IncludeVersion
@@ -122,6 +121,7 @@ forward FCNPC_OnFinishMovePathPoint(npcid, pathid, pointid);
 forward FCNPC_OnChangeHeightPos(npcid, Float:new_z, Float:old_z); // disabled by default, see FCNPC_SetMinHeightPosCall
 
 // Natives
+native FCNPC_GetPluginVersion(version[], const size = sizeof(version));
 native FCNPC_SetUpdateRate(rate);
 native FCNPC_GetUpdateRate();
 native FCNPC_SetTickRate(rate);
@@ -483,7 +483,10 @@ public OnPlayerStreamOut(playerid, forplayerid)
 				return;
 			}
 
-			if (strcmp(version, FCNPC_PLUGIN_VERSION) != 0) {
+			new plugin_version[16];
+			FCNPC_GetPluginVersion(plugin_version);
+
+			if (strcmp(version, plugin_version) != 0) {
 				printf("\n** Please update your FCNPC plugin to %s from here: https://github.com/ziggi/FCNPC/releases.\n", version);
 			}
 		}

@@ -2885,6 +2885,20 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetPlayingPlaybackPath(AMX *amx, cell *para
 	return 1;
 }
 
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetPluginVersion(AMX *amx, cell *params)
+{
+	cell *pAddress = NULL;
+
+	// Get the params
+	amx_GetAddr(amx, params[1], &pAddress);
+	size_t size = static_cast<size_t>(params[2]);
+
+	// Write version to the string
+	char *szPath = new char[size];
+	amx_SetString(pAddress, PLUGIN_VERSION, 0, 0, size);
+	return 1;
+}
+
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetUpdateRate(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_SetUpdateRate");

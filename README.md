@@ -104,6 +104,7 @@ forward FCNPC_OnChangeHeightPos(npcid, Float:new_z, Float:old_z); // disabled by
 
 # Natives
 ```Pawn
+native FCNPC_GetPluginVersion(version[], const size = sizeof(version));
 native FCNPC_SetUpdateRate(rate);
 native FCNPC_GetUpdateRate();
 native FCNPC_SetTickRate(rate);

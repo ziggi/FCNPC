@@ -95,6 +95,7 @@ PLUGIN_EXPORT void PLUGIN_CALL Unload( )
 }
 // Natives table
 AMX_NATIVE_INFO PluginNatives[ ] = {
+	{"FCNPC_GetPluginVersion", CNatives::FCNPC_GetPluginVersion},
 	{"FCNPC_SetUpdateRate", CNatives::FCNPC_SetUpdateRate},
 	{"FCNPC_GetUpdateRate", CNatives::FCNPC_GetUpdateRate},
 	{"FCNPC_SetTickRate", CNatives::FCNPC_SetTickRate},

@@ -14,6 +14,7 @@
 class CNatives
 {
 public:
+	static cell AMX_NATIVE_CALL FCNPC_GetPluginVersion(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetUpdateRate(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetUpdateRate(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetTickRate(AMX *amx, cell *params);
