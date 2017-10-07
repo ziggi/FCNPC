@@ -753,6 +753,11 @@ void CPlayerData::Process()
 			}
 		}
 
+		// if an NPC has removed in callback
+		if (!pServer->GetPlayerManager()->IsNpcConnected(m_wPlayerId)) {
+			return;
+		}
+
 		// Is velocity updates position
 		if (m_bVelocityUpdatePos) {
 			CVector vecPosition;
@@ -809,6 +814,11 @@ void CPlayerData::Process()
 					SetAngle(pServer->GetVehicleAngle(pVehicle));
 
 					CCallbackManager::OnVehicleEntryComplete(m_wPlayerId, m_wVehicleToEnter, m_byteSeatToEnter);
+
+					// if an NPC has removed in callback
+					if (!pServer->GetPlayerManager()->IsNpcConnected(m_wPlayerId)) {
+						return;
+					}
 				}
 
 				m_bEntering = false;
