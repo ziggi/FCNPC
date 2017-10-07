@@ -1935,6 +1935,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAt(AMX *amx, cell *params)
 		return 0;
 	}
 
+	if (pPlayerData->IsMoving() && pPlayerData->GetMovingType() == MOVE_TYPE_SPRINT) {
+		return 0;
+	}
+
 	int iWeaponType = pPlayerData->GetWeaponType(pPlayerData->GetWeapon());
 	switch (iWeaponType) {
 		case WEAPON_TYPE_MELEE:

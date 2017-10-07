@@ -847,12 +847,12 @@ void CPlayerData::Process()
 				m_bShooting = true;
 				m_wAmmoInClip = static_cast<WORD>(GetWeaponActualClipSize(m_byteWeaponId));
 			} else {
-				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM);
+				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys & ~KEY_FIRE | KEY_AIM);
 			}
 		} else if (m_bShooting) {
 			if (m_wAmmo == 0 && !m_bHasInfiniteAmmo) {
 				m_bShooting = false;
-				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM);
+				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys & ~KEY_FIRE | KEY_AIM);
 			} else {
 				// Get the shoot time
 				int iShootTime = GetWeaponShootTime(m_byteWeaponId);
@@ -865,7 +865,7 @@ void CPlayerData::Process()
 				DWORD dwLastShootTime = dwThisTick - m_dwShootTickCount;
 
 				if (dwLastShootTime >= m_dwShootDelay) {
-					SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM);
+					SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys & ~KEY_FIRE | KEY_AIM);
 				}
 
 				// shoot time
@@ -878,7 +878,7 @@ void CPlayerData::Process()
 							CFunctions::PlayerShoot(m_wPlayerId, m_wHitId, m_byteHitType, m_byteWeaponId, m_vecAimAt, m_vecAimOffsetFrom, bIsHit);
 						}
 
-						SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM | KEY_FIRE);
+						SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys | KEY_AIM | KEY_FIRE);
 
 						// decrease the ammo
 						if (!m_bHasInfiniteAmmo) {
@@ -906,10 +906,10 @@ void CPlayerData::Process()
 			}
 		} else if (m_bMeleeAttack) {
 			if ((dwThisTick - m_dwShootTickCount) >= m_dwMeleeDelay) {
-				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_bMeleeFightstyle ? KEY_AIM | KEY_SECONDARY_ATTACK : KEY_FIRE);
+				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys | (m_bMeleeFightstyle ? KEY_AIM | KEY_SECONDARY_ATTACK : KEY_FIRE));
 				m_dwShootTickCount = dwThisTick;
 			} else {
-				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_bMeleeFightstyle ? KEY_AIM : KEY_NONE);
+				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys & ~(m_bMeleeFightstyle ? KEY_SECONDARY_ATTACK : KEY_FIRE));
 			}
 		}
 
@@ -1481,13 +1481,17 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float f
 		return false;
 	}
 
+	if (iType == MOVE_TYPE_SPRINT && m_bAiming) {
+		StopAim();
+	}
+
 	// Get the moving type key and speed
 	WORD wUDKey = m_pPlayer->wUDAnalog;
 	WORD wLRKey = m_pPlayer->wLRAnalog;
 	DWORD dwMoveKey = m_pPlayer->dwKeys;
 
 	if (iType == MOVE_TYPE_AUTO || iType == MOVE_TYPE_WALK || iType == MOVE_TYPE_RUN || iType == MOVE_TYPE_SPRINT) {
-		wUDKey = static_cast<WORD>(KEY_UP);
+		wUDKey |= static_cast<WORD>(KEY_UP);
 
 		if (iType == MOVE_TYPE_AUTO && fSpeed == MOVE_SPEED_AUTO) {
 			iType = MOVE_TYPE_RUN;
@@ -1515,14 +1519,14 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float f
 		}
 
 		if (iType == MOVE_TYPE_RUN) {
-			dwMoveKey = KEY_NONE;
+			dwMoveKey |= KEY_NONE;
 		} else if (iType == MOVE_TYPE_WALK) {
-			dwMoveKey = KEY_WALK;
+			dwMoveKey |= KEY_WALK;
 		} else if (iType == MOVE_TYPE_SPRINT) {
-			dwMoveKey = KEY_SPRINT;
+			dwMoveKey |= KEY_SPRINT;
 		}
 	} else if (iType == MOVE_TYPE_DRIVE) {
-		dwMoveKey = KEY_SPRINT;
+		dwMoveKey |= KEY_SPRINT;
 
 		if (fSpeed == MOVE_SPEED_AUTO) {
 			fSpeed = 1.0f;
@@ -1638,9 +1642,9 @@ void CPlayerData::StopMoving()
 	SetVelocity(CVector(0.0f, 0.0f, 0.0f));
 	SetTrainSpeed(0.0f);
 	if (GetState() == PLAYER_STATE_DRIVER) {
-		SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_NONE);
+		SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys & ~KEY_SPRINT);
 	} else {
-		SetKeys(KEY_NONE, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys);
+		SetKeys(m_pPlayer->wUDAnalog & ~KEY_UP, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys);
 	}
 	// Reset other moving variables
 	m_dwMoveTime = 0;
@@ -1665,6 +1669,11 @@ bool CPlayerData::IsMovingByMovePath(int iMovePath)
 	return m_bMoving && m_iMovePath != INVALID_MOVEPATH_ID && m_iMovePath == iMovePath;
 }
 
+int CPlayerData::GetMovingType()
+{
+	return m_iMoveType;
+}
+
 void CPlayerData::ToggleReloading(bool bToggle)
 {
 	m_bHasReload = bToggle;
@@ -1677,6 +1686,10 @@ void CPlayerData::ToggleInfiniteAmmo(bool bToggle)
 
 void CPlayerData::AimAt(CVector vecPoint, bool bShoot, int iShootDelay, bool bSetAngle, CVector vecOffsetFrom)
 {
+	if (m_bMoving && m_iMoveType == MOVE_TYPE_SPRINT) {
+		return;
+	}
+
 	// Set the aiming flag
 	if (!m_bAiming) {
 		// Get the shooting start tick
@@ -1691,7 +1704,7 @@ void CPlayerData::AimAt(CVector vecPoint, bool bShoot, int iShootDelay, bool bSe
 	// Set keys
 	if (!m_bAiming) {
 		m_bAiming = true;
-		SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_AIM);
+		SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys | KEY_AIM);
 	}
 
 	// set the shoot delay
@@ -1775,7 +1788,7 @@ void CPlayerData::StopAim()
 	m_bAimSetAngle = false;
 	m_byteHitType = BULLET_HIT_TYPE_NONE;
 	// Reset keys
-	SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_NONE);
+	SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys & ~(KEY_AIM | KEY_FIRE));
 }
 
 bool CPlayerData::MeleeAttack(int iTime, bool bUseFightstyle)
@@ -1813,7 +1826,7 @@ bool CPlayerData::MeleeAttack(int iTime, bool bUseFightstyle)
 	// Set the melee use fightstyle flag
 	m_bMeleeFightstyle = bUseFightstyle;
 	// Set the melee keys
-	SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_bMeleeFightstyle ? KEY_AIM | KEY_SECONDARY_ATTACK : KEY_FIRE);
+	SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys | (m_bMeleeFightstyle ? KEY_AIM | KEY_SECONDARY_ATTACK : KEY_FIRE));
 	return true;
 }
 
@@ -1824,11 +1837,11 @@ void CPlayerData::StopAttack()
 		return;
 	}
 
+	// Reset keys
+	SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys & ~(m_bMeleeFightstyle ? KEY_AIM | KEY_SECONDARY_ATTACK : KEY_FIRE));
 	// Reset attacking flag
 	m_bMeleeAttack = false;
 	m_bMeleeFightstyle = false;
-	// Reset keys
-	SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, KEY_NONE);
 }
 
 bool CPlayerData::IsAttacking()

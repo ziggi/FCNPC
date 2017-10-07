@@ -138,6 +138,7 @@ public:
 	bool IsMoving();
 	bool IsMovingAtPlayer(WORD wPlayerId);
 	bool IsMovingByMovePath(int iMovePath);
+	int GetMovingType();
 
 	void ToggleReloading(bool bToggle);
 	void ToggleInfiniteAmmo(bool bToggle);
