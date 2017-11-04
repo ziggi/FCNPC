@@ -15,7 +15,6 @@ extern logprintf_t  logprintf;
 extern void         *pAMXFunctions;
 
 BYTE bytePushCount;
-char szPreviousFuncName[32];
 bool bHookIsExecStart;
 bool bHookIsExecEnd;
 bool bHookIsPush;
@@ -92,18 +91,7 @@ int amx_FindPublic_Hook(AMX *amx, const char *funcname, int *index)
 		}
 
 		// exec is complete
-		bytePushCount = 0;
-		bHookIsExecStart = false;
-		bHookIsExecEnd = false;
-		bHookIsPush = false;
-		bIsPublicFound = false;
-		szPreviousFuncName[0] = '\0';
-		bGiveDamage = false;
-		bTakeDamage = false;
-		bWeaponShot = false;
-		bStreamIn = false;
-		bStreamOut = false;
-		bOnGameModeExit = false;
+		CHooks::CleanUp();
 	}
 
 	if (!strcmp(funcname, "OnPlayerGiveDamage")) {
@@ -124,10 +112,6 @@ int amx_FindPublic_Hook(AMX *amx, const char *funcname, int *index)
 	} else if (!strcmp(funcname, "OnGameModeExit")) {
 		bIsPublicFound = true;
 		bOnGameModeExit = true;
-	}
-
-	if (bIsPublicFound) {
-		strlcpy(szPreviousFuncName, funcname, sizeof(szPreviousFuncName));
 	}
 
 	return pfn_amx_FindPublic(amx, funcname, index);
@@ -341,15 +325,7 @@ int amx_Exec_Hook(AMX *amx, long *retval, int index)
 void CHooks::InstallHooks()
 {
 	// Reset public flag
-	bHookIsExecStart = false;
-	bHookIsExecEnd = false;
-	bHookIsPush = false;
-	bIsPublicFound = false;
-	bGiveDamage = false;
-	bTakeDamage = false;
-	bWeaponShot = false;
-	bStreamIn = false;
-	bStreamOut = false;
+	CleanUp();
 
 	// Find the function pointers
 	BYTE *pFindPublic = *(BYTE **)((DWORD)pAMXFunctions + PLUGIN_AMX_EXPORT_FindPublic * 4);
@@ -367,4 +343,19 @@ void CHooks::InstallHooks()
 	// Hook for amx_Exec
 	hookExec = subhook_new(pExec, (BYTE *)&amx_Exec_Hook, (subhook_options_t)0);
 	subhook_install(hookExec);
+}
+
+void CHooks::CleanUp()
+{
+	bytePushCount = 0;
+	bHookIsExecStart = false;
+	bHookIsExecEnd = false;
+	bHookIsPush = false;
+	bIsPublicFound = false;
+	bGiveDamage = false;
+	bTakeDamage = false;
+	bWeaponShot = false;
+	bStreamIn = false;
+	bStreamOut = false;
+	bOnGameModeExit = false;
 }
