@@ -48,7 +48,7 @@
 // Library includes
 #include <sdk/plugin.h>
 #include <raknet/BitStream.h>
-#include <mapandreas/MapAndreas.h>
+#include "vendor/MapAndreas/MapAndreas.h"
 #include <subhook/subhook.h>
 #include <strlcpy/strlcpy.h>
 // ExceptionHandler includes
@@ -85,6 +85,7 @@
 #include "CPlayerData.hpp"
 // Scripting includes
 #include "Natives.hpp"
+//#include "vendor/MapAndreas/natives.h"
 
 // externals
 extern CServer      *pServer;
