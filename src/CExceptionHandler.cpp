@@ -38,7 +38,7 @@ void CExceptionHandler::UnInstall()
 #elif defined(LINUX)
 	struct sigaction sigact;
 
-	sigact.sa_sigaction = SIG_DFL;
+	sigact.sa_handler = SIG_DFL;
 	sigact.sa_flags = SA_RESTART | SA_SIGINFO;
 
 	sigaction(SIGSEGV, &sigact, (struct sigaction *)NULL);
