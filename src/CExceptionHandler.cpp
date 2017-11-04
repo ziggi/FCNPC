@@ -18,7 +18,15 @@ void CExceptionHandler::Install()
 #if defined(WIN32)
 	SetUnhandledExceptionFilter(ExceptionHandlerCallback);
 #elif defined(LINUX)
-	sigaction(SIGSEGV, SIG_DFL, (struct sigaction *)NULL);
+	struct sigaction sigact;
+
+	sigact.sa_sigaction = ExceptionHandlerCallback;
+	sigact.sa_flags = SA_RESTART | SA_SIGINFO;
+
+	if (sigaction(SIGSEGV, &sigact, (struct sigaction *)NULL) != 0) {
+		fprintf(stderr, "Error setting signal handler for %d (%s)\n", SIGSEGV, strsignal(SIGSEGV));
+		exit(EXIT_FAILURE);
+	}
 #endif
 }
 
@@ -30,13 +38,10 @@ void CExceptionHandler::UnInstall()
 #elif defined(LINUX)
 	struct sigaction sigact;
 
-	sigact.sa_sigaction = ExceptionHandlerCallback;
+	sigact.sa_sigaction = SIG_DFL;
 	sigact.sa_flags = SA_RESTART | SA_SIGINFO;
 
-	if (sigaction(SIGSEGV, &sigact, (struct sigaction *)NULL) != 0) {
-		fprintf(stderr, "Error setting signal handler for %d (%s)\n", SIGSEGV, strsignal(SIGSEGV));
-		exit(EXIT_FAILURE);
-	}
+	sigaction(SIGSEGV, &sigact, (struct sigaction *)NULL);
 #endif
 }
 
