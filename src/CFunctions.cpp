@@ -125,7 +125,7 @@ WORD CFunctions::NewPlayer(char *szName)
 
 	pfn__ClientJoin_RPC(&pNPCParams);
 
-	//reinterpret_cast<CSAMPRakPeer*>(pRakServer)->SetDisonnectedPlayer(wPlayerId);
+	reinterpret_cast<CSAMPRakPeer*>(pRakServer)->SetDisonnectedPlayer(wPlayerId);
 
 	// Return the player id
 	return wPlayerId;
