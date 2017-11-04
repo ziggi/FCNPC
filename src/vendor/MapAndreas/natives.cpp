@@ -21,7 +21,7 @@ cell AMX_NATIVE_CALL CMapAndreasNatives::Init(AMX *amx, cell *params)
 
 	int iRetVal = MapAndreas.Init(params[1], cname, params[3]);
 
-	if(iRetVal != MAP_ANDREAS_ERROR_SUCCESS) {
+	if (iRetVal != MAP_ANDREAS_ERROR_SUCCESS) {
 		logprintf("MapAndreas: plugin could not init!");
 		logprintf("MapAndreas: check files and make sure you have enough memory!");
 		return 0;
@@ -38,13 +38,15 @@ cell AMX_NATIVE_CALL CMapAndreasNatives::FindZ_For2DCoord(AMX *amx, cell *params
 	float Y = amx_ctof(params[2]);
 	float Z;
 
-	Z = MapAndreas.FindZ_For2DCoord(X,Y);
+	Z = MapAndreas.FindZ_For2DCoord(X, Y);
 
 	cell* cptr;
 	amx_GetAddr(amx, params[3], &cptr);
 	*cptr = amx_ftoc(Z);
 
-	if(Z > 0.0f) return 1;
+	if (Z > 0.0f) {
+		return 1;
+	}
 
 	return 0;
 }
@@ -90,13 +92,15 @@ cell AMX_NATIVE_CALL CMapAndreasNatives::FindAverageZ(AMX *amx, cell *params)
 	float Y = amx_ctof(params[2]);
 	float Z;
 
-	Z = MapAndreas.GetAverageZ(X,Y);
+	Z = MapAndreas.GetAverageZ(X, Y);
 
 	cell* cptr;
 	amx_GetAddr(amx, params[3], &cptr);
 	*cptr = amx_ftoc(Z);
 
-	if(Z > 0.0f) return 1;
+	if (Z > 0.0f) {
+		return 1;
+	}
 
 	return 0;
 }
@@ -107,8 +111,10 @@ cell AMX_NATIVE_CALL CMapAndreasNatives::FindAverageZ(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL CMapAndreasNatives::GetAddress(AMX *amx, cell *params)
 {
 	//Test code
-	if(MapAndreas.IsInited()) return (int) &MapAndreas;
-	else return NULL;
+	if (MapAndreas.IsInited()) {
+		return (int)&MapAndreas;
+	}
+	return NULL;
 }
 
 //----------------------------------------------------------
