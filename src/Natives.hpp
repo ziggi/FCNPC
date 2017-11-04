@@ -21,6 +21,8 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_GetTickRate(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_InitMapAndreas(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_TriggerWeaponShot(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_ToggleCrashLogCreation(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_GetCrashLogCreation(AMX *amx, cell *params);
 
 	static cell AMX_NATIVE_CALL FCNPC_Create(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_Destroy(AMX *amx, cell *params);

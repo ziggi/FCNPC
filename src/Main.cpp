@@ -102,6 +102,8 @@ AMX_NATIVE_INFO PluginNatives[] = {
 	{ "FCNPC_GetTickRate", CNatives::FCNPC_GetTickRate },
 	{ "FCNPC_InitMapAndreas", CNatives::FCNPC_InitMapAndreas },
 	{ "FCNPC_TriggerWeaponShot", CNatives::FCNPC_TriggerWeaponShot },
+	{ "FCNPC_ToggleCrashLogCreation", CNatives::FCNPC_ToggleCrashLogCreation },
+	{ "FCNPC_GetCrashLogCreation", CNatives::FCNPC_GetCrashLogCreation },
 
 	{ "FCNPC_Create", CNatives::FCNPC_Create },
 	{ "FCNPC_Destroy", CNatives::FCNPC_Destroy },

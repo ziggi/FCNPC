@@ -14,9 +14,19 @@ extern CServer *pServer;
 
 void CExceptionHandler::Install()
 {
-	// Set the exception handler callback
+	// disable the exception handler callback
 #if defined(WIN32)
 	SetUnhandledExceptionFilter(ExceptionHandlerCallback);
+#elif defined(LINUX)
+	sigaction(SIGSEGV, SIG_DFL, (struct sigaction *)NULL);
+#endif
+}
+
+void CExceptionHandler::UnInstall()
+{
+	// Set the exception handler callback
+#if defined(WIN32)
+	SetUnhandledExceptionFilter(NULL);
 #elif defined(LINUX)
 	struct sigaction sigact;
 

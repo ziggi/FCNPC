@@ -3526,3 +3526,25 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetMinHeightPosCall(AMX *amx, cell *params)
 	float fHeight = pPlayerData->GetMinHeightPosCall();
 	return amx_ftoc(fHeight);
 }
+
+// native FCNPC_ToggleCrashLogCreation(bool:toggle);
+cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleCrashLogCreation(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_ToggleCrashLogCreation");
+
+	// get the params
+	bool bIsEnabled = static_cast<int>(params[1]) != 0;
+
+	// change the state
+	pServer->ToggleCrashLogCreation(bIsEnabled);
+	return 1;
+}
+
+// native FCNPC_GetCrashLogCreation();
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetCrashLogCreation(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(0, "FCNPC_GetCrashLogCreation");
+
+	// get the state
+	return static_cast<int>(pServer->GetCrashLogCreation());
+}

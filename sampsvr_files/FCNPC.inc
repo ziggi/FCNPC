@@ -127,6 +127,8 @@ native FCNPC_GetUpdateRate();
 native FCNPC_SetTickRate(rate);
 native FCNPC_GetTickRate();
 native FCNPC_InitMapAndreas(address);
+native FCNPC_ToggleCrashLogCreation(bool:toggle);
+native FCNPC_GetCrashLogCreation();
 
 native FCNPC_Create(name[]);
 native FCNPC_Destroy(npcid);

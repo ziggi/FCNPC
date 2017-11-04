@@ -27,6 +27,8 @@ CServer::CServer(eSAMPVersion version)
 	m_pMapAndreas = NULL;
 	// Initialize the update rate
 	m_dwUpdateRate = DEFAULT_UPDATE_RATE;
+	// enable crashlog by default
+	m_bCrashLogCreation = true;
 	// Initialize random seed
 	srand(static_cast<unsigned int>(time(NULL)));
 }
@@ -143,6 +145,26 @@ CRecordManager *CServer::GetRecordManager()
 CMovePath *CServer::GetMovePath()
 {
 	return m_pMovePath;
+}
+
+void CServer::ToggleCrashLogCreation(bool enabled)
+{
+	if (m_bCrashLogCreation) {
+		if (!enabled) {
+			CExceptionHandler::UnInstall();
+		}
+	} else {
+		if (enabled) {
+			CExceptionHandler::Install();
+		}
+	}
+
+	m_bCrashLogCreation = enabled;
+}
+
+bool CServer::GetCrashLogCreation()
+{
+	return m_bCrashLogCreation;
 }
 
 bool CServer::IsValidNickName(char *szName)

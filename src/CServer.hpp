@@ -47,6 +47,9 @@ public:
 	bool SetUpdateRate(DWORD dwRate);
 	DWORD GetUpdateRate();
 
+	void ToggleCrashLogCreation(bool enabled);
+	bool GetCrashLogCreation();
+
 	void SetMapAndreas(CMapAndreas *pMapAndreas);
 	CMapAndreas *GetMapAndreas();
 	bool IsMapAndreasInited();
@@ -67,6 +70,7 @@ private:
 	CMovePath *m_pMovePath;
 	CMapAndreas *m_pMapAndreas;
 	DWORD m_dwUpdateRate;
+	bool m_bCrashLogCreation;
 
 	int m_iTicks;
 	int m_iTickRate;

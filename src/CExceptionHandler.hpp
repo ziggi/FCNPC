@@ -29,6 +29,7 @@ class CExceptionHandler
 {
 public:
 	static void Install();
+	static void UnInstall();
 
 	// Exception handler callback
 #if defined(WIN32)
