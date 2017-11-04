@@ -857,12 +857,12 @@ void CPlayerData::Process()
 				m_bShooting = true;
 				m_wAmmoInClip = static_cast<WORD>(GetWeaponActualClipSize(m_byteWeaponId));
 			} else {
-				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys & ~KEY_FIRE | KEY_AIM);
+				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, (m_pPlayer->dwKeys & ~KEY_FIRE) | KEY_AIM);
 			}
 		} else if (m_bShooting) {
 			if (m_wAmmo == 0 && !m_bHasInfiniteAmmo) {
 				m_bShooting = false;
-				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys & ~KEY_FIRE | KEY_AIM);
+				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, (m_pPlayer->dwKeys & ~KEY_FIRE) | KEY_AIM);
 			} else {
 				// Get the shoot time
 				int iShootTime = GetWeaponShootTime(m_byteWeaponId);
@@ -875,7 +875,7 @@ void CPlayerData::Process()
 				DWORD dwLastShootTime = dwThisTick - m_dwShootTickCount;
 
 				if (dwLastShootTime >= m_dwShootDelay) {
-					SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys & ~KEY_FIRE | KEY_AIM);
+					SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, (m_pPlayer->dwKeys & ~KEY_FIRE) | KEY_AIM);
 				}
 
 				// shoot time

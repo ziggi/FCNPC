@@ -114,7 +114,7 @@ cell AMX_NATIVE_CALL CMapAndreasNatives::GetAddress(AMX *amx, cell *params)
 	if (MapAndreas.IsInited()) {
 		return (int)&MapAndreas;
 	}
-	return NULL;
+	return 0;
 }
 
 //----------------------------------------------------------

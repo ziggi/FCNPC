@@ -42,19 +42,17 @@ int CMapAndreas::Init(int iMode, char* cname, int len)
 		return MAP_ANDREAS_ERROR_SUCCESS;
 	}
 
-	char* name = NULL;
+	char* name = new char [MAP_ANDREAS_MAX_NAME];
 	if (len > 1) {
 		name = cname;
 	} else {
 		switch (iMode) {
 			case MAP_ANDREAS_MODE_NOBUFFER:
-				name = MAP_ANDREAS_HMAP_FILE_FULL;
-				break;
 			case MAP_ANDREAS_MODE_FULL:
-				name = MAP_ANDREAS_HMAP_FILE_FULL;
+				strlcpy(name, MAP_ANDREAS_HMAP_FILE_FULL, MAP_ANDREAS_MAX_NAME);
 				break;
 			case MAP_ANDREAS_MODE_MINIMAL:
-				name = MAP_ANDREAS_HMAP_FILE_MINIMAL;
+				strlcpy(name, MAP_ANDREAS_HMAP_FILE_MINIMAL, MAP_ANDREAS_MAX_NAME);
 				break;
 		}
 	}
