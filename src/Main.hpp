@@ -85,7 +85,7 @@
 #include "CPlayerData.hpp"
 // Scripting includes
 #include "Natives.hpp"
-//#include "vendor/MapAndreas/natives.h"
+#include "vendor/MapAndreas/natives.h"
 
 // externals
 extern CServer      *pServer;
