@@ -209,6 +209,27 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 			break;
 	}
 #endif
+/*
+	logprintf("\nFunctions:");
+	logprintf("  FUNC_CPlayerPool__DeletePlayer: 0x%x", CAddress::FUNC_CPlayerPool__DeletePlayer);
+	logprintf("  FUNC_CPlayer__Kill: 0x%x", CAddress::FUNC_CPlayer__Kill);
+	logprintf("  FUNC_CPlayer__EnterVehicle: 0x%x", CAddress::FUNC_CPlayer__EnterVehicle);
+	logprintf("  FUNC_CPlayer__ExitVehicle: 0x%x", CAddress::FUNC_CPlayer__ExitVehicle);
+	logprintf("  FUNC_CPlayer__SpawnForWorld: 0x%x", CAddress::FUNC_CPlayer__SpawnForWorld);
+	logprintf("  FUNC_GetVehicleModelInfo: 0x%x", CAddress::FUNC_GetVehicleModelInfo);
+	logprintf("  FUNC_CConsole__GetIntVariable: 0x%x", CAddress::FUNC_CConsole__GetIntVariable);
+	logprintf("  FUNC_ClientJoin_RPC: 0x%x", CAddress::FUNC_ClientJoin_RPC);
+
+	logprintf("\nPointers:");
+	logprintf("  VAR_ServerAuthentication: 0x%x", CAddress::VAR_ServerAuthentication);
+	logprintf("  VAR_NetVersion: 0x%x", CAddress::VAR_NetVersion);
+
+	logprintf("\nOffsets:");
+	logprintf("  OFFSET_RemoteSystemManager: 0x%x", CAddress::OFFSET_RemoteSystemManager);
+	logprintf("  OFFSET_RemoteSystemSize: 0x%x", CAddress::OFFSET_RemoteSystemSize);
+	logprintf("  OFFSET_RemoteSystem__ConnectMode: 0x%x", CAddress::OFFSET_RemoteSystem__ConnectMode);
+	logprintf("  OFFSET_RemoteSystem__Unknown: 0x%x", CAddress::OFFSET_RemoteSystem__Unknown);
+*/
 }
 
 DWORD CAddress::FindNetVersion()

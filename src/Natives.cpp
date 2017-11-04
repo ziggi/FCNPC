@@ -2894,7 +2894,6 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetPluginVersion(AMX *amx, cell *params)
 	size_t size = static_cast<size_t>(params[2]);
 
 	// Write version to the string
-	char *szPath = new char[size];
 	amx_SetString(pAddress, PLUGIN_VERSION, 0, 0, size);
 	return 1;
 }
