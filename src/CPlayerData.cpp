@@ -2283,7 +2283,7 @@ void CPlayerData::StopSurfing()
 	m_vecSurfing = CVector(0.0f, 0.0f, 0.0f);
 }
 
-bool CPlayerData::StartPlayingPlayback(char *szFile, int iRecordId, bool bAutoUnload)
+bool CPlayerData::StartPlayingPlayback(char *szFile, int iRecordId, bool bAutoUnload, CVector vecPoint, float *fQuaternion)
 {
 	// Make sure the player is not already Playing
 	if (m_bPlaying) {
@@ -2302,7 +2302,7 @@ bool CPlayerData::StartPlayingPlayback(char *szFile, int iRecordId, bool bAutoUn
 		return false;
 	}
 
-	if (!m_pPlayback->Initialize()) {
+	if (!m_pPlayback->Initialize(vecPoint, fQuaternion)) {
 		SAFE_DELETE(m_pPlayback);
 		return false;
 	}

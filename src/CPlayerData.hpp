@@ -193,7 +193,7 @@ public:
 	int GetSurfingPlayerObject();
 	void StopSurfing();
 
-	bool StartPlayingPlayback(char *szFile, int iRecordId, bool bAutoUnload);
+	bool StartPlayingPlayback(char *szFile, int iRecordId, bool bAutoUnload, CVector vecPoint, float *fQuaternion);
 	void StopPlayingPlayback();
 	void PausePlayingPlayback();
 	void ResumePlayingPlayback();

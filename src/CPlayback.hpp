@@ -22,7 +22,7 @@ public:
 	CPlayback(int iRecordId, bool bAutoUnload);
 	~CPlayback();
 
-	bool Initialize();
+	bool Initialize(CVector vecPoint, float *fQuaternion);
 	bool Process(CPlayerData *pPlayerData);
 	void UnloadRecord();
 	void SetPaused(bool bPaused);
