@@ -218,6 +218,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 			if (bIsPlayerOnRay && bIsPlayerInDamageRange) {
 				bulletSyncData.byteHitType = BULLET_HIT_TYPE_PLAYER;
 				bulletSyncData.wHitID = i;
+				bulletSyncData.vecHitTarget = CMath::GetNearestPointToRay(vecOrigin, vecPoint, pPlayer->vecPosition);
 				break;
 			}
 		}

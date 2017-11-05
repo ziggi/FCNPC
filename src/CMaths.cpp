@@ -22,9 +22,13 @@ float CMath::GetDistanceBetween3DPoints(CVector vecPosition, CVector _vecPositio
 
 float CMath::GetDistanceFromRayToPoint(CVector vecStartPosition, CVector vecEndPosition, CVector vecPoint)
 {
+	return GetDistanceBetween3DPoints(GetNearestPointToRay(vecStartPosition, vecEndPosition, vecPoint), vecPoint);
+}
+
+CVector CMath::GetNearestPointToRay(CVector vecStartPosition, CVector vecEndPosition, CVector vecPoint)
+{
 	CVector vecDirection = (vecEndPosition - vecStartPosition) / GetDistanceBetween3DPoints(vecStartPosition, vecEndPosition);
-	CVector vecTemp = vecDirection * GetDistanceBetween3DPoints(vecStartPosition, vecPoint) + vecStartPosition;
-	return GetDistanceBetween3DPoints(vecTemp, vecPoint);
+	return vecDirection * GetDistanceBetween3DPoints(vecStartPosition, vecPoint) + vecStartPosition;
 }
 
 float CMath::Max(const float a, const float b)

@@ -23,6 +23,7 @@ class CMath
 public:
 	static float GetDistanceBetween3DPoints(CVector vecPosition, CVector _vecPosition);
 	static float GetDistanceFromRayToPoint(CVector vecStartPosition, CVector vecEndPosition, CVector vecPoint);
+	static CVector GetNearestPointToRay(CVector vecStartPosition, CVector vecEndPosition, CVector vecPoint);
 
 	static float Max(const float a, const float b);
 
