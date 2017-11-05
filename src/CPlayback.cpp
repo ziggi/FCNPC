@@ -15,7 +15,7 @@ extern CNetGame *pNetGame;
 
 CPlayback::CPlayback(char *szFile, char *szPlayingPath, bool bAutoUnload)
 {
-	// Save the record data
+	// Save the file name
 	char szPath[MAX_PATH];
 	snprintf(szPath, sizeof(szPath), "%s%s.rec", szPlayingPath, szFile);
 	m_iRecordId = pServer->GetRecordManager()->Load(szPath);
@@ -32,7 +32,7 @@ CPlayback::CPlayback(char *szFile, char *szPlayingPath, bool bAutoUnload)
 
 CPlayback::CPlayback(int iRecordId, bool bAutoUnload)
 {
-	// Save the record data
+	// Save the record id
 	m_iRecordId = iRecordId;
 	m_bAutoUnload = bAutoUnload;
 	// Reset variables
@@ -50,32 +50,12 @@ CPlayback::~CPlayback()
 	}
 }
 
-bool CPlayback::Initialize(CVector vecPoint, float *fQuaternion)
+bool CPlayback::Initialize()
 {
 	if (m_iRecordId == INVALID_RECORD_ID) {
 		return false;
 	}
-
 	m_recordData = pServer->GetRecordManager()->Get(m_iRecordId);
-
-	if (vecPoint != CVector()) {
-		int iSize = static_cast<int>(m_recordData.v_dwTime.size());
-
-		if (m_recordData.iPlaybackType == PLAYBACK_TYPE_DRIVER) {
-			CVector vecPointOffset = m_recordData.v_vehicleSyncData[0].vecPosition - vecPoint;
-
-			for (int i = 0; i < iSize; i++) {
-				m_recordData.v_vehicleSyncData[i].vecPosition -= vecPointOffset;
-			}
-		} else if (m_recordData.iPlaybackType == PLAYBACK_TYPE_ONFOOT) {
-			CVector vecPointOffset = m_recordData.v_playerSyncData[0].vecPosition - vecPoint;
-
-			for (int i = 0; i < iSize; i++) {
-				m_recordData.v_playerSyncData[i].vecPosition -= vecPointOffset;
-			}
-		}
-	}
-	
 	m_dwStartTime = GetTickCount();
 	return true;
 }

@@ -2785,10 +2785,9 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleInfiniteAmmo(AMX *amx, cell *params)
 	return 1;
 }
 
-// native FCNPC_StartPlayingPlayback(npcid, file[] = "", recordid = FCNPC_INVALID_RECORD_ID, bool:auto_unload = false, Float : delta_x = 0.0, Float : delta_y = 0.0, Float : delta_z = 0.0, Float : delta_qw = 0.0, Float : delta_qx = 0.0, Float : delta_qy = 0.0, Float : delta_qz = 0.0);
 cell AMX_NATIVE_CALL CNatives::FCNPC_StartPlayingPlayback(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(11, "FCNPC_StartPlayingPlayback");
+	CHECK_PARAMS(4, "FCNPC_StartPlayingPlayback");
 
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);
@@ -2796,12 +2795,6 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StartPlayingPlayback(AMX *amx, cell *params
 	amx_StrParam(amx, params[2], szFile);
 	int iRecordId = static_cast<int>(params[3]);
 	bool bAutoUnload = static_cast<int>(params[4]) != 0;
-	CVector vecPoint(amx_ctof(params[5]), amx_ctof(params[6]), amx_ctof(params[7]));
-	float *fQuaternion = new float[4];
-	fQuaternion[0] = amx_ctof(params[8]);
-	fQuaternion[1] = amx_ctof(params[9]);
-	fQuaternion[2] = amx_ctof(params[10]);
-	fQuaternion[3] = amx_ctof(params[11]);
 
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
@@ -2815,9 +2808,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StartPlayingPlayback(AMX *amx, cell *params
 	}
 
 	// Start Playing the player playback
-	bool bSuccess = pPlayerData->StartPlayingPlayback(szFile, iRecordId, bAutoUnload, vecPoint, fQuaternion);
-	SAFE_DELETE(fQuaternion);
-	return bSuccess;
+	return pPlayerData->StartPlayingPlayback(szFile, iRecordId, bAutoUnload);
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_StopPlayingPlayback(AMX *amx, cell *params)
