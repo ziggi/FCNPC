@@ -131,6 +131,8 @@ AMX_NATIVE_INFO PluginNatives[] = {
 	{ "FCNPC_SetVelocity", CNatives::FCNPC_SetVelocity },
 	{ "FCNPC_GiveVelocity", CNatives::FCNPC_GiveVelocity },
 	{ "FCNPC_GetVelocity", CNatives::FCNPC_GetVelocity },
+	{ "FCNPC_SetSpeed", CNatives::FCNPC_SetSpeed },
+	{ "FCNPC_GetSpeed", CNatives::FCNPC_GetSpeed },
 	{ "FCNPC_SetInterior", CNatives::FCNPC_SetInterior },
 	{ "FCNPC_GetInterior", CNatives::FCNPC_GetInterior },
 	{ "FCNPC_SetVirtualWorld", CNatives::FCNPC_SetVirtualWorld },

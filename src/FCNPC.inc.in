@@ -156,6 +156,8 @@ native FCNPC_GetQuaternion(npcid, &Float:w, &Float:x, &Float:y, &Float:z);
 native FCNPC_SetVelocity(npcid, Float:x, Float:y, Float:z, bool:update_pos = false);
 native FCNPC_GiveVelocity(npcid, Float:x, Float:y, Float:z, bool:update_pos = false);
 native FCNPC_GetVelocity(npcid, &Float:x, &Float:y, &Float:z);
+native FCNPC_SetSpeed(npcid, Float:speed);
+native Float:FCNPC_GetSpeed(npcid);
 native FCNPC_SetInterior(npcid, interiorid);
 native FCNPC_GetInterior(npcid);
 native FCNPC_SetVirtualWorld(npcid, worldid);

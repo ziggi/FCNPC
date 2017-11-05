@@ -669,6 +669,46 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVelocity(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_SetSpeed(npcid, Float:speed);
+cell AMX_NATIVE_CALL CNatives::FCNPC_SetSpeed(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_SetSpeed");
+
+	// Get the params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+	float fSpeed = amx_ctof(params[2]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// Set the player velocity
+	pPlayerData->SetSpeed(fSpeed);
+	return 1;
+}
+
+// native Float:FCNPC_GetSpeed(npcid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetSpeed(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_GetSpeed");
+
+	// Get the params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+	float fSpeed = 0.0f;
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return amx_ftoc(fSpeed);
+	}
+
+	// Get the player health
+	fSpeed = pPlayerData->GetSpeed();
+	return amx_ftoc(fSpeed);
+}
+
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetHealth(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_SetHealth");

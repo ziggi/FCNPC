@@ -70,6 +70,8 @@ public:
 	float GetAngle();
 	void SetVelocity(CVector vecVelocity, bool bUpdatePos = false);
 	void GetVelocity(CVector *pvecVelocity);
+	void SetSpeed(float fSpeed);
+	float GetSpeed();
 
 	void SetHealth(float fHealth);
 	float GetHealth();

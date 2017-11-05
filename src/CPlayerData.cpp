@@ -1464,6 +1464,23 @@ void CPlayerData::GetVelocity(CVector *pvecVelocity)
 	}
 }
 
+void CPlayerData::SetSpeed(float fSpeed)
+{
+	if (m_bPlayingNode) {
+		UpdateMovingData(m_vecNodeLastPos, m_fNodeMoveRadius, m_bNodeMoveSetAngle, fSpeed, 0.0f);
+	} else {
+		UpdateMovingData(m_vecDestination, m_fMoveRadius, m_bMoveSetAngle, fSpeed, m_fDistOffset);
+	}
+}
+
+float CPlayerData::GetSpeed()
+{
+	if (m_bPlayingNode) {
+		return m_fNodeMoveSpeed;
+	}
+	return m_fMoveSpeed;
+}
+
 void CPlayerData::SetKeys(WORD wUDAnalog, WORD wLRAnalog, DWORD dwKeys)
 {
 	// Save the keys
