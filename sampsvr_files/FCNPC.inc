@@ -305,7 +305,7 @@ native FCNPC_RemovePointFromPath(pathid, pointid);
 native FCNPC_IsValidMovePoint(pathid, pointid);
 native FCNPC_GetMovePoint(pathid, pointid, &Float:x, &Float:y, &Float:z);
 native FCNPC_GetNumberMovePoint(pathid);
-native FCNPC_GoByMovePath(npcid, pathid, pointid = 0, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true, Float:dist_offset = 0.0);
+native FCNPC_GoByMovePath(npcid, pathid, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true, Float:dist_offset = 0.0);
 
 native FCNPC_ToggleMapAndreasUsage(npcid, bool:enabled);
 native FCNPC_IsMapAndreasUsed(npcid);

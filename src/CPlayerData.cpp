@@ -1586,12 +1586,12 @@ bool CPlayerData::GoToPlayer(WORD wPlayerId, int iType, bool bUseMapAndreas, flo
 	return false;
 }
 
-bool CPlayerData::GoByMovePath(int iPathId, int iPointId, int iType, bool bUseMapAndreas, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset)
+bool CPlayerData::GoByMovePath(int iPathId, int iType, bool bUseMapAndreas, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset)
 {
 	CVector *vecPos = pServer->GetMovePath()->GetPoint(iPathId, 0);
 	if (GoTo(*vecPos, iType, bUseMapAndreas, fRadius, bSetAngle, fSpeed, fDistOffset)) {
 		m_iMovePath = iPathId;
-		m_iMovePoint = iPointId;
+		m_iMovePoint = 0;
 		return true;
 	}
 	return false;

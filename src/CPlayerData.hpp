@@ -133,7 +133,7 @@ public:
 
 	bool GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f, DWORD dwStopDelay = 250);
 	bool GoToPlayer(WORD wPlayerId, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f, float fDistCheck = 1.5f, DWORD dwStopDelay = 250);
-	bool GoByMovePath(int iPathId, int iPointId, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f);
+	bool GoByMovePath(int iPathId, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f);
 	void UpdateMovingData(CVector vecDestination, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset);
 	void GetDestination(CVector *pvecDestination);
 	void StopMoving();
