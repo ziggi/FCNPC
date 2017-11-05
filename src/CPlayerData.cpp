@@ -915,10 +915,10 @@ void CPlayerData::Process()
 				}
 			}
 		} else if (m_bMeleeAttack) {
-			if ((dwThisTick - m_dwShootTickCount) >= m_dwMeleeDelay) {
+			if ((m_dwUpdateTick - m_dwShootTickCount) >= m_dwMeleeDelay) {
 				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys | (m_bMeleeFightstyle ? KEY_AIM | KEY_SECONDARY_ATTACK : KEY_FIRE));
-				m_dwShootTickCount = dwThisTick;
-			} else {
+				m_dwShootTickCount = m_dwUpdateTick;
+			} else if (m_dwUpdateTick > m_dwShootTickCount) {
 				SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys & ~(m_bMeleeFightstyle ? KEY_SECONDARY_ATTACK : KEY_FIRE));
 			}
 		}
