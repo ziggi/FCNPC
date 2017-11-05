@@ -3451,20 +3451,21 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetNumberMovePoint(AMX *amx, cell *params)
 	return pServer->GetMovePath()->GetPoints(iPathId)->size();
 }
 
-// native FCNPC_GoByMovePath(npcid, pathid, type = MOVE_TYPE_AUTO, Float:speed = MOVE_SPEED_AUTO, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true, Float:dist_offset = 0.0);
+// native FCNPC_GoByMovePath(npcid, pathid, pointid = 0, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, bool : UseMapAndreas = false, Float : radius = 0.0, bool : setangle = true, Float : dist_offset = 0.0);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GoByMovePath(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(8, "FCNPC_GoByMovePath");
+	CHECK_PARAMS(9, "FCNPC_GoByMovePath");
 
 	// get params
 	WORD wNpcId = static_cast<WORD>(params[1]);
 	int iPathId = static_cast<int>(params[2]);
-	int iType = static_cast<int>(params[3]);
-	float fSpeed = amx_ctof(params[4]);
-	bool bZMap = static_cast<int>(params[5]) != 0;
-	float fRadius = amx_ctof(params[6]);
-	bool bSetAngle = static_cast<int>(params[7]) != 0;
-	float fDistOffset = amx_ctof(params[8]);
+	int iPointId = static_cast<int>(params[3]);
+	int iType = static_cast<int>(params[4]);
+	float fSpeed = amx_ctof(params[5]);
+	bool bZMap = static_cast<int>(params[6]) != 0;
+	float fRadius = amx_ctof(params[7]);
+	bool bSetAngle = static_cast<int>(params[8]) != 0;
+	float fDistOffset = amx_ctof(params[9]);
 
 	// validation
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
@@ -3473,7 +3474,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GoByMovePath(AMX *amx, cell *params)
 	}
 
 	// move the player
-	return pPlayerData->GoByMovePath(iPathId, iType, bZMap, fRadius, bSetAngle, fSpeed, fDistOffset);
+	return pPlayerData->GoByMovePath(iPathId, iPointId, iType, bZMap, fRadius, bSetAngle, fSpeed, fDistOffset);
 }
 
 // native FCNPC_ToggleMapAndreasUsage(npcid, bool:enabled);
