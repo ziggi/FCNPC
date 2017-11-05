@@ -53,6 +53,10 @@ extern logprintf_t          logprintf;
 #define MOVE_TYPE_RUN       1
 #define MOVE_TYPE_SPRINT    2
 #define MOVE_TYPE_DRIVE     3
+// Movement mode
+#define MOVE_MODE_AUTO       -1
+#define MOVE_MODE_NONE       0
+#define MOVE_MODE_MAPANDREAS 1
 // Moving velocity
 #define MOVE_SPEED_AUTO     -1.0f
 #define MOVE_SPEED_WALK     0.1552086f

@@ -30,7 +30,6 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_bSetup = false;
 	m_bSpawned = false;
 	m_bMoving = false;
-	m_bUseMapAndreas = false;
 	m_fMinHeightPos = -1.0f;
 	m_bAiming = false;
 	m_bReloading = false;
@@ -64,13 +63,14 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_iMovePath = INVALID_MOVEPATH_ID;
 	m_iMovePoint = 0;
 	m_iMoveType = MOVE_TYPE_AUTO;
+	m_iMoveMode = MOVE_MODE_AUTO;
 	m_fMoveRadius = 0.0f;
 	m_bMoveSetAngle = false;
 	m_fMoveSpeed = MOVE_SPEED_AUTO;
 	m_dwMoveStopDelay = 0;
 	m_fDistOffset = 0.0f;
 	m_iNodeMoveType = MOVE_TYPE_AUTO;
-	m_bNodeUseMapAndreas = false;
+	m_iNodeMoveMode = MOVE_MODE_AUTO;
 	m_fNodeMoveRadius = 0.0f;
 	m_bNodeMoveSetAngle = false;
 	m_fNodeMoveSpeed = MOVE_SPEED_AUTO;
@@ -962,7 +962,7 @@ void CPlayerData::GetPosition(CVector *pvecPosition)
 
 void CPlayerData::UpdateHeightPos(CVector *pvecPosition)
 {
-	if (m_bUseMapAndreas && pServer->IsMapAndreasInited() && pvecPosition->fZ >= 0.0f) {
+	if (m_iMoveMode == MOVE_MODE_MAPANDREAS && pServer->IsMapAndreasInited() && pvecPosition->fZ >= 0.0f) {
 		float fNewZ = pServer->GetMapAndreas()->FindZ_For2DCoord(pvecPosition->fX, pvecPosition->fY) + 0.5f;
 		if (m_fMinHeightPos < 0.0f) {
 			pvecPosition->fZ = fNewZ;
@@ -1497,7 +1497,7 @@ void CPlayerData::GetKeys(WORD *pwUDAnalog, WORD *pwLRAnalog, DWORD *pdwKeys)
 	*pdwKeys = m_pPlayer->dwKeys;
 }
 
-bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset, DWORD dwStopDelay)
+bool CPlayerData::GoTo(CVector vecPoint, int iType, int iMode, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset, DWORD dwStopDelay)
 {
 	// Validate the movement
 	if (iType == MOVE_TYPE_AUTO && GetState() == PLAYER_STATE_DRIVER) {
@@ -1567,16 +1567,16 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float f
 	// Mark as moving
 	m_bMoving = true;
 	// Save the data
-	m_bUseMapAndreas = bUseMapAndreas;
+	SetMoveMode(iMode);
 	m_iMoveType = iType;
 	m_dwMoveStopDelay = dwStopDelay;
 	return true;
 }
 
-bool CPlayerData::GoToPlayer(WORD wPlayerId, int iType, bool bUseMapAndreas, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset, float fDistCheck, DWORD dwStopDelay)
+bool CPlayerData::GoToPlayer(WORD wPlayerId, int iType, int iMode, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset, float fDistCheck, DWORD dwStopDelay)
 {
 	CVector vecPos = pNetGame->pPlayerPool->pPlayer[wPlayerId]->vecPosition;
-	if (GoTo(vecPos, iType, bUseMapAndreas, fRadius, bSetAngle, fSpeed, fDistOffset)) {
+	if (GoTo(vecPos, iType, iMode, fRadius, bSetAngle, fSpeed, fDistOffset)) {
 		m_wMoveId = wPlayerId;
 		m_vecMovePlayerPosition = vecPos;
 		m_fDistCheck = fDistCheck;
@@ -1586,10 +1586,10 @@ bool CPlayerData::GoToPlayer(WORD wPlayerId, int iType, bool bUseMapAndreas, flo
 	return false;
 }
 
-bool CPlayerData::GoByMovePath(int iPathId, int iPointId, int iType, bool bUseMapAndreas, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset)
+bool CPlayerData::GoByMovePath(int iPathId, int iPointId, int iType, int iMode, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset)
 {
 	CVector *vecPos = pServer->GetMovePath()->GetPoint(iPathId, 0);
-	if (GoTo(*vecPos, iType, bUseMapAndreas, fRadius, bSetAngle, fSpeed, fDistOffset)) {
+	if (GoTo(*vecPos, iType, iMode, fRadius, bSetAngle, fSpeed, fDistOffset)) {
 		m_iMovePath = iPathId;
 		m_iMovePoint = iPointId;
 		return true;
@@ -1665,6 +1665,7 @@ void CPlayerData::StopMoving()
 	m_wMoveId = INVALID_PLAYER_ID;
 	m_iMovePath = INVALID_MOVEPATH_ID;
 	m_iMovePoint = 0;
+	m_iMoveMode = MOVE_MODE_AUTO;
 	// Reset the player data
 	SetVelocity(CVector(0.0f, 0.0f, 0.0f));
 	SetTrainSpeed(0.0f);
@@ -1677,8 +1678,6 @@ void CPlayerData::StopMoving()
 	m_dwMoveTime = 0;
 	m_dwMoveStartTime = 0;
 	memset(&m_vecDestination, 0, sizeof(CVector));
-	// Reset the MapAndreas usage
-	m_bUseMapAndreas = false;
 }
 
 bool CPlayerData::IsMoving()
@@ -2363,7 +2362,7 @@ void CPlayerData::GetPlayingPlaybackPath(char *szFile, size_t size)
 	strlcpy(szFile, m_szPlayingPath, size);
 }
 
-bool CPlayerData::PlayNode(int iNodeId, int iMoveType, bool bUseMapAndreas, float fRadius, bool bSetAngle, float fSpeed)
+bool CPlayerData::PlayNode(int iNodeId, int iMoveType, int iMode, float fRadius, bool bSetAngle, float fSpeed)
 {
 	// Stop the player playback if he's playing one
 	if (m_bPlaying) {
@@ -2377,7 +2376,7 @@ bool CPlayerData::PlayNode(int iNodeId, int iMoveType, bool bUseMapAndreas, floa
 
 	// save data
 	m_iNodeMoveType = iMoveType;
-	m_bNodeUseMapAndreas = bUseMapAndreas;
+	m_iNodeMoveMode = iMode;
 	m_fNodeMoveRadius = fRadius;
 	m_bNodeMoveSetAngle = bSetAngle;
 	m_fNodeMoveSpeed = fSpeed;
@@ -2397,7 +2396,7 @@ bool CPlayerData::PlayNode(int iNodeId, int iMoveType, bool bUseMapAndreas, floa
 	UpdateNodePoint(m_wNodePoint);
 
 	m_pNode->GetPosition(&vecPos);
-	GoTo(vecPos, iMoveType, bUseMapAndreas, fRadius, bSetAngle, fSpeed);
+	GoTo(vecPos, iMoveType, iMode, fRadius, bSetAngle, fSpeed);
 	return true;
 }
 
@@ -2419,7 +2418,7 @@ void CPlayerData::StopPlayingNode()
 	m_wNodePoint = 0;
 	m_wNodeLastPoint = 0;
 	m_iNodeMoveType = MOVE_TYPE_AUTO;
-	m_bNodeUseMapAndreas = false;
+	m_iNodeMoveMode = MOVE_MODE_AUTO;
 	m_fNodeMoveRadius = 0.0f;
 	m_bNodeMoveSetAngle = true;
 	m_fNodeMoveSpeed = MOVE_SPEED_AUTO;
@@ -2447,7 +2446,7 @@ void CPlayerData::ResumePlayingNode()
 	}
 
 	m_bIsPlayingNodePaused = false;
-	GoTo(m_vecNodeLastPos, m_iNodeMoveType, m_bNodeUseMapAndreas, m_fNodeMoveRadius, m_bNodeMoveSetAngle, m_fNodeMoveSpeed);
+	GoTo(m_vecNodeLastPos, m_iNodeMoveType, m_iNodeMoveMode, m_fNodeMoveRadius, m_bNodeMoveSetAngle, m_fNodeMoveSpeed);
 }
 
 bool CPlayerData::IsPlayingNodePaused()
@@ -2488,15 +2487,22 @@ bool CPlayerData::UpdateNodePoint(WORD wPointId)
 	return true;
 }
 
-void CPlayerData::ToggleMapAndreasUsage(bool bIsEnabled)
+void CPlayerData::SetMoveMode(int iMoveMode)
 {
-	m_bUseMapAndreas = bIsEnabled;
-	m_bNodeUseMapAndreas = bIsEnabled;
+	if (iMoveMode == MOVE_MODE_AUTO) {
+		if (pServer->IsMapAndreasInited()) {
+			m_iMoveMode = MOVE_MODE_MAPANDREAS;
+			m_iNodeMoveMode = MOVE_MODE_MAPANDREAS;
+		} else {
+			m_iMoveMode = MOVE_MODE_NONE;
+			m_iNodeMoveMode = MOVE_MODE_NONE;
+		}
+	}
 }
 
-bool CPlayerData::IsMapAndreasUsed()
+int CPlayerData::GetMoveMode()
 {
-	return m_bUseMapAndreas || m_bNodeUseMapAndreas;
+	return m_iMoveMode;
 }
 
 void CPlayerData::SetMinHeightPosCall(float fHeight)

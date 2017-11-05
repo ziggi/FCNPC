@@ -131,9 +131,9 @@ public:
 	void ApplyAnimation(char *szAnimationLib, char *szAnimationName, float fDelta, bool bLoop, bool bLockX, bool bLockY, bool bFreeze, int iTime);
 	void ClearAnimations();
 
-	bool GoTo(CVector vecPoint, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f, DWORD dwStopDelay = 250);
-	bool GoToPlayer(WORD wPlayerId, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f, float fDistCheck = 1.5f, DWORD dwStopDelay = 250);
-	bool GoByMovePath(int iPathId, int iPointId, int iType, bool bUseMapAndreas, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f);
+	bool GoTo(CVector vecPoint, int iType, int iMode, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f, DWORD dwStopDelay = 250);
+	bool GoToPlayer(WORD wPlayerId, int iType, int iMode, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f, float fDistCheck = 1.5f, DWORD dwStopDelay = 250);
+	bool GoByMovePath(int iPathId, int iPointId, int iType, int iMode, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f);
 	void UpdateMovingData(CVector vecDestination, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset);
 	void GetDestination(CVector *pvecDestination);
 	void StopMoving();
@@ -200,7 +200,7 @@ public:
 	void SetPlayingPlaybackPath(char *szFile);
 	void GetPlayingPlaybackPath(char *szFile, size_t size);
 
-	bool PlayNode(int iNodeId, int iMoveType, bool bUseMapAndreas, float fRadius, bool bSetAngle, float fSpeed);
+	bool PlayNode(int iNodeId, int iMoveType, int iMode, float fRadius, bool bSetAngle, float fSpeed);
 	void StopPlayingNode();
 	void PausePlayingNode();
 	void ResumePlayingNode();
@@ -209,8 +209,8 @@ public:
 	WORD ChangeNode(int iNodeId, WORD wLinkId);
 	bool UpdateNodePoint(WORD wPointId);
 
-	void ToggleMapAndreasUsage(bool bIsEnabled);
-	bool IsMapAndreasUsed();
+	void SetMoveMode(int iMoveMode);
+	int GetMoveMode();
 	void SetMinHeightPosCall(float fHeight);
 	float GetMinHeightPosCall();
 
@@ -222,7 +222,6 @@ private:
 	char m_szName[MAX_PLAYER_NAME];
 	bool m_bSpawned;
 	bool m_bMoving;
-	bool m_bUseMapAndreas;
 	float m_fMinHeightPos;
 	bool m_bAiming;
 	bool m_bReloading;
@@ -277,12 +276,13 @@ private:
 	int m_iMovePath;
 	int m_iMovePoint;
 	int m_iMoveType;
+	int m_iMoveMode;
 	float m_fMoveRadius;
 	bool m_bMoveSetAngle;
 	float m_fMoveSpeed;
 	float m_fDistOffset;
 	int m_iNodeMoveType;
-	bool m_bNodeUseMapAndreas;
+	int m_iNodeMoveMode;
 	float m_fNodeMoveRadius;
 	bool m_bNodeMoveSetAngle;
 	float m_fNodeMoveSpeed;

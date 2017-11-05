@@ -19,21 +19,25 @@ public FCNPC_IncludeVersion = FCNPC_INCLUDE_VERSION;
 #pragma unused FCNPC_IncludeVersion
 
 // Definitions
-#define FCNPC_MOVE_TYPE_AUTO      (-1)
-#define FCNPC_MOVE_TYPE_WALK      (0)
-#define FCNPC_MOVE_TYPE_RUN       (1)
-#define FCNPC_MOVE_TYPE_SPRINT    (2)
-#define FCNPC_MOVE_TYPE_DRIVE     (3)
+#define FCNPC_MOVE_TYPE_AUTO       (-1)
+#define FCNPC_MOVE_TYPE_WALK       (0)
+#define FCNPC_MOVE_TYPE_RUN        (1)
+#define FCNPC_MOVE_TYPE_SPRINT     (2)
+#define FCNPC_MOVE_TYPE_DRIVE      (3)
 
-#define FCNPC_MOVE_SPEED_AUTO     (-1.0)
-#define FCNPC_MOVE_SPEED_WALK     (0.1552086)
-#define FCNPC_MOVE_SPEED_RUN      (0.56444)
-#define FCNPC_MOVE_SPEED_SPRINT   (0.926784)
+#define FCNPC_MOVE_MODE_AUTO       (-1)
+#define FCNPC_MOVE_MODE_NONE       (0)
+#define FCNPC_MOVE_MODE_MAPANDREAS (1)
 
-#define FCNPC_MAX_NODES           (64)
+#define FCNPC_MOVE_SPEED_AUTO      (-1.0)
+#define FCNPC_MOVE_SPEED_WALK      (0.1552086)
+#define FCNPC_MOVE_SPEED_RUN       (0.56444)
+#define FCNPC_MOVE_SPEED_SPRINT    (0.926784)
 
-#define FCNPC_INVALID_MOVEPATH_ID (-1)
-#define FCNPC_INVALID_RECORD_ID   (-1)
+#define FCNPC_MAX_NODES            (64)
+
+#define FCNPC_INVALID_MOVEPATH_ID  (-1)
+#define FCNPC_INVALID_RECORD_ID    (-1)
 
 // Compatibility with older versions
 #if !defined MOVE_TYPE_AUTO
@@ -224,8 +228,8 @@ native FCNPC_GetFightingStyle(npcid);
 native FCNPC_ToggleReloading(npcid, bool:toggle);
 native FCNPC_ToggleInfiniteAmmo(npcid, bool:toggle);
 
-native FCNPC_GoTo(npcid, Float:x, Float:y, Float:z, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true, Float:dist_offset = 0.0, stopdelay = 250);
-native FCNPC_GoToPlayer(npcid, playerid, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true, Float:dist_offset = 0.0, Float:dist_check = 1.5, stopdelay = 250);
+native FCNPC_GoTo(npcid, Float:x, Float:y, Float:z, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, Float:radius = 0.0, bool:setangle = true, Float:dist_offset = 0.0, stopdelay = 250);
+native FCNPC_GoToPlayer(npcid, playerid, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, Float:radius = 0.0, bool:setangle = true, Float:dist_offset = 0.0, Float:dist_check = 1.5, stopdelay = 250);
 native FCNPC_Stop(npcid);
 native FCNPC_IsMoving(npcid);
 native FCNPC_IsMovingAtPlayer(npcid, playerid);
@@ -288,7 +292,7 @@ native FCNPC_SetNodePoint(nodeid, point);
 native FCNPC_GetNodePointPosition(nodeid, &Float:x, &Float:y, &Float:z);
 native FCNPC_GetNodePointCount(nodeid);
 native FCNPC_GetNodeInfo(nodeid, &vehnodes, &pednodes, &navinode);
-native FCNPC_PlayNode(npcid, nodeid, move_type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true);
+native FCNPC_PlayNode(npcid, nodeid, move_type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, Float:radius = 0.0, bool:setangle = true);
 native FCNPC_StopPlayingNode(npcid);
 native FCNPC_PausePlayingNode(npcid);
 native FCNPC_ResumePlayingNode(npcid);
@@ -305,10 +309,10 @@ native FCNPC_RemovePointFromPath(pathid, pointid);
 native FCNPC_IsValidMovePoint(pathid, pointid);
 native FCNPC_GetMovePoint(pathid, pointid, &Float:x, &Float:y, &Float:z);
 native FCNPC_GetNumberMovePoint(pathid);
-native FCNPC_GoByMovePath(npcid, pathid, pointid = 0, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true, Float:dist_offset = 0.0);
+native FCNPC_GoByMovePath(npcid, pathid, pointid = 0, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, Float:radius = 0.0, bool:setangle = true, Float:dist_offset = 0.0);
 
-native FCNPC_ToggleMapAndreasUsage(npcid, bool:enabled);
-native FCNPC_IsMapAndreasUsed(npcid);
+native FCNPC_SetMoveMode(npcid, mode);
+native FCNPC_GetMoveMode(npcid);
 native FCNPC_SetMinHeightPosCall(npcid, Float:height);
 native Float:FCNPC_GetMinHeightPosCall(npcid);
 
