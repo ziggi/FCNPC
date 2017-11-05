@@ -140,6 +140,7 @@ native FCNPC_IsDead(npcid);
 native FCNPC_IsValid(npcid);
 native FCNPC_IsStreamedIn(npcid, forplayerid);
 native FCNPC_IsStreamedForAnyone(npcid);
+native FCNPC_GetValidArray(npcs[], const size = sizeof(npcs));
 
 native FCNPC_SetPosition(npcid, Float:x, Float:y, Float:z);
 native FCNPC_GivePosition(npcid, Float:x, Float:y, Float:z);

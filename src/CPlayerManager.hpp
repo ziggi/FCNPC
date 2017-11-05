@@ -33,10 +33,10 @@ public:
 	void Process();
 
 	bool IsNPC(WORD wPlayerId);
+	std::vector<WORD> m_vNpcID;
 
 private:
 	CPlayerData *m_pNpcArray[MAX_PLAYERS];
-	std::vector<WORD> m_vNpcID;
 };
 
 #endif

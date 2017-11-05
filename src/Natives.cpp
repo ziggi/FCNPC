@@ -182,6 +182,32 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsStreamedForAnyone(AMX *amx, cell *params)
 	return 0;
 }
 
+// native FCNPC_GetValidArray(npcs[], const size = sizeof(npcs));
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetValidArray(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_GetValidArray");
+
+	// get the params
+	int iSize = static_cast<int>(params[2]);
+
+	// fill the array with ids
+	cell *pAddress = NULL;
+	amx_GetAddr(amx, params[1], &pAddress);
+
+	int iCount = 0;
+	for (auto &id : pServer->GetPlayerManager()->m_vNpcID) {
+		*(pAddress + iCount) = id;
+
+		iCount++;
+		if (iCount >= iSize) {
+			break;
+		}
+	}
+
+	// Return the count of players
+	return iCount;
+}
+
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetPosition(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(4, "FCNPC_SetPosition");
