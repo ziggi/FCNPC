@@ -1515,7 +1515,7 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, int iMode, float fRadius, bo
 	// Get the moving type key and speed
 	WORD wUDKey = m_pPlayer->wUDAnalog;
 	WORD wLRKey = m_pPlayer->wLRAnalog;
-	DWORD dwMoveKey = m_pPlayer->dwKeys;
+	DWORD dwMoveKey = m_pPlayer->dwKeys & ~(KEY_WALK | KEY_SPRINT);
 
 	if (iType == MOVE_TYPE_AUTO || iType == MOVE_TYPE_WALK || iType == MOVE_TYPE_RUN || iType == MOVE_TYPE_SPRINT) {
 		wUDKey |= static_cast<WORD>(KEY_UP);
