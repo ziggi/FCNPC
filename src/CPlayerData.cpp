@@ -962,7 +962,7 @@ void CPlayerData::GetPosition(CVector *pvecPosition)
 
 void CPlayerData::UpdateHeightPos(CVector *pvecPosition)
 {
-	if (m_iMoveMode == MOVE_MODE_MAPANDREAS && pServer->IsMapAndreasInited() && pvecPosition->fZ >= 0.0f) {
+	if (m_iMoveMode == MOVE_MODE_MAPANDREAS && pServer->IsMapAndreasInited() && pvecPosition->fZ >= 0.0f && m_pPlayer->iInteriorId == 0) {
 		float fNewZ = pServer->GetMapAndreas()->FindZ_For2DCoord(pvecPosition->fX, pvecPosition->fY) + 0.5f;
 		if (m_fMinHeightPos < 0.0f) {
 			pvecPosition->fZ = fNewZ;
