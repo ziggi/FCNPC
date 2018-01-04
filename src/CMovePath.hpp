@@ -26,6 +26,8 @@ public:
 
 private:
 	std::vector<std::vector<CVector>> m_vPath;
+	std::vector<std::vector<int>> m_vPointsID;
+	std::vector<int> m_vPathID;
 };
 
 #endif
