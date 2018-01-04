@@ -2503,7 +2503,7 @@ bool CPlayerData::AddForPlayer(WORD wForPlayerId, bool bIsNPC)
 	BYTE len = static_cast<BYTE>(strlen(m_szName));
 
 	RakNet::BitStream bs;
-	bs.Write(wForPlayerId);
+	bs.Write(m_wPlayerId);
 	bs.Write((DWORD)0);
 	bs.Write((BYTE)bIsNPC);
 	bs.Write(len);
@@ -2515,7 +2515,7 @@ bool CPlayerData::AddForPlayer(WORD wForPlayerId, bool bIsNPC)
 bool CPlayerData::RemoveForPlayer(WORD wForPlayerId)
 {
 	RakNet::BitStream bs;
-	bs.Write(wForPlayerId);
+	bs.Write(m_wPlayerId);
 	bs.Write((BYTE)0);
 	CFunctions::PlayerRPC(&RPC_ServerQuit, &bs, wForPlayerId);
 	return 1;
