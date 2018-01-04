@@ -204,6 +204,9 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_GetMoveMode(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetMinHeightPosCall(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetMinHeightPosCall(AMX *amx, cell *params);
+
+	static cell AMX_NATIVE_CALL FCNPC_ShowInTabListForPlayer(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_HideInTabListForPlayer(AMX *amx, cell *params);
 };
 
 #endif

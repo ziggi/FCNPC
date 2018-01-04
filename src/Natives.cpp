@@ -3624,3 +3624,49 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetCrashLogCreation(AMX *amx, cell *params)
 	// get the state
 	return static_cast<int>(pServer->GetCrashLogCreation());
 }
+
+// native FCNPC_ShowInTabListForPlayer(npcid, forplayerid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_ShowInTabListForPlayer(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_ShowInTabListForPlayer");
+
+	// Get params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+	WORD wForPlayerId = static_cast<WORD>(params[2]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	if (!pServer->GetPlayerManager()->IsPlayerConnected(wForPlayerId) || wForPlayerId == wNpcId) {
+		return 0;
+	}
+
+	pPlayerData->RemoveForPlayer(wForPlayerId);
+	return static_cast<int>(pPlayerData->AddForPlayer(wForPlayerId, false));
+}
+
+// native FCNPC_HideInTabListForPlayer(npcid, forplayerid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_HideInTabListForPlayer(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_HideInTabListForPlayer");
+
+	// Get params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+	WORD wForPlayerId = static_cast<WORD>(params[2]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	if (!pServer->GetPlayerManager()->IsPlayerConnected(wForPlayerId) || wForPlayerId == wNpcId) {
+		return 0;
+	}
+
+	pPlayerData->RemoveForPlayer(wForPlayerId);
+	return static_cast<int>(pPlayerData->AddForPlayer(wForPlayerId, true));
+}

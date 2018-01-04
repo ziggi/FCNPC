@@ -316,6 +316,9 @@ native FCNPC_GetMoveMode(npcid);
 native FCNPC_SetMinHeightPosCall(npcid, Float:height);
 native Float:FCNPC_GetMinHeightPosCall(npcid);
 
+native FCNPC_ShowInTabListForPlayer(npcid, forplayerid);
+native FCNPC_HideInTabListForPlayer(npcid, forplayerid);
+
 // ALS for some callbacks
 public OnPlayerGiveDamage(playerid, damagedid, Float:amount, weaponid, bodypart)
 {

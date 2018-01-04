@@ -38,6 +38,8 @@ extern int RPC_SetPlayerSkillLevel;
 extern int RPC_ApplyAnimation;
 extern int RPC_ClearAnimations;
 extern int RPC_SetPlayerFightingStyle;
+extern int RPC_ServerJoin;
+extern int RPC_ServerQuit;
 extern int RPC_SetPlayerSkin;
 extern int RPC_HidePlayerForPlayer;
 extern int RPC_WorldPlayerDeath;

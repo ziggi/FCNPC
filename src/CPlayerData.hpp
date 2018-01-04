@@ -214,6 +214,9 @@ public:
 	void SetMinHeightPosCall(float fHeight);
 	float GetMinHeightPosCall();
 
+	bool AddForPlayer(WORD wForPlayerId, bool bIsNPC);
+	bool RemoveForPlayer(WORD wForPlayerId);
+
 	CPlayer *GetInterface();
 
 private:

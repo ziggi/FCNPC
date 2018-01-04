@@ -286,6 +286,9 @@ AMX_NATIVE_INFO PluginNatives[] = {
 	{ "FCNPC_SetMinHeightPosCall", CNatives::FCNPC_SetMinHeightPosCall },
 	{ "FCNPC_GetMinHeightPosCall", CNatives::FCNPC_GetMinHeightPosCall },
 
+	{ "FCNPC_ShowInTabListForPlayer", CNatives::FCNPC_ShowInTabListForPlayer },
+	{ "FCNPC_HideInTabListForPlayer", CNatives::FCNPC_HideInTabListForPlayer },
+
 	{ 0, 0 }
 };
 

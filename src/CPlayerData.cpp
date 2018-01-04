@@ -2515,6 +2515,29 @@ float CPlayerData::GetMinHeightPosCall()
 	return m_fMinHeightPos;
 }
 
+bool CPlayerData::AddForPlayer(WORD wForPlayerId, bool bIsNPC)
+{
+	BYTE len = static_cast<BYTE>(strlen(m_szName));
+
+	RakNet::BitStream bs;
+	bs.Write(wForPlayerId);
+	bs.Write((DWORD)0);
+	bs.Write((BYTE)bIsNPC);
+	bs.Write(len);
+	bs.Write(m_szName, len);
+	CFunctions::PlayerRPC(&RPC_ServerJoin, &bs, wForPlayerId);
+	return 1;
+}
+
+bool CPlayerData::RemoveForPlayer(WORD wForPlayerId)
+{
+	RakNet::BitStream bs;
+	bs.Write(wForPlayerId);
+	bs.Write((BYTE)0);
+	CFunctions::PlayerRPC(&RPC_ServerQuit, &bs, wForPlayerId);
+	return 1;
+}
+
 CPlayer *CPlayerData::GetInterface()
 {
 	return m_pPlayer;
