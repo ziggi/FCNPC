@@ -75,7 +75,41 @@ bool CPlayback::Initialize(CVector vecPoint, float *fQuaternion)
 			}
 		}
 	}
-	
+
+	if (fQuaternion) {
+		int iSize = static_cast<int>(m_recordData.v_dwTime.size());
+
+		if (m_recordData.iPlaybackType == PLAYBACK_TYPE_DRIVER) {
+			float fQuaternionOffset[4] = {
+				m_recordData.v_vehicleSyncData[0].fQuaternion[0] - fQuaternion[0],
+				m_recordData.v_vehicleSyncData[0].fQuaternion[1] - fQuaternion[1],
+				m_recordData.v_vehicleSyncData[0].fQuaternion[2] - fQuaternion[2],
+				m_recordData.v_vehicleSyncData[0].fQuaternion[3] - fQuaternion[3],
+			};
+
+			for (int i = 0; i < iSize; i++) {
+				m_recordData.v_vehicleSyncData[i].fQuaternion[0] -= fQuaternionOffset[0];
+				m_recordData.v_vehicleSyncData[i].fQuaternion[1] -= fQuaternionOffset[1];
+				m_recordData.v_vehicleSyncData[i].fQuaternion[2] -= fQuaternionOffset[2];
+				m_recordData.v_vehicleSyncData[i].fQuaternion[3] -= fQuaternionOffset[3];
+			}
+		} else if (m_recordData.iPlaybackType == PLAYBACK_TYPE_ONFOOT) {
+			float fQuaternionOffset[4] = {
+				m_recordData.v_playerSyncData[0].fQuaternion[0] - fQuaternion[0],
+				m_recordData.v_playerSyncData[0].fQuaternion[1] - fQuaternion[1],
+				m_recordData.v_playerSyncData[0].fQuaternion[2] - fQuaternion[2],
+				m_recordData.v_playerSyncData[0].fQuaternion[3] - fQuaternion[3],
+			};
+
+			for (int i = 0; i < iSize; i++) {
+				m_recordData.v_playerSyncData[i].fQuaternion[0] -= fQuaternionOffset[0];
+				m_recordData.v_playerSyncData[i].fQuaternion[1] -= fQuaternionOffset[1];
+				m_recordData.v_playerSyncData[i].fQuaternion[2] -= fQuaternionOffset[2];
+				m_recordData.v_playerSyncData[i].fQuaternion[3] -= fQuaternionOffset[3];
+			}
+		}
+	}
+
 	m_dwStartTime = GetTickCount();
 	return true;
 }
