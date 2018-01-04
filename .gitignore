@@ -5,6 +5,7 @@
 *.dll
 *.so
 *.a
+*.pc
 
 # CMake
 CMakeCache.txt

@@ -5,9 +5,6 @@
 //
 //----------------------------------------------------------
 
-#ifndef MAPANDREAS_H
-#define MAPANDREAS_H
-
 #define MAP_ANDREAS_MODE_NONE			0
 #define MAP_ANDREAS_MODE_MINIMAL		1
 #define MAP_ANDREAS_MODE_MEDIUM			2	// currently unused
@@ -31,7 +28,6 @@
 #define MAP_ANDREAS_ERROR_MEMORY		2
 #define MAP_ANDREAS_ERROR_DATA_FILES	3
 
-#define MAP_ANDREAS_MAX_NAME            128
 //----------------------------------------------------------
 
 class CMapAndreas
@@ -57,4 +53,5 @@ public:
 	int		GetOperatingMode();
 };
 
-#endif
+
+//----------------------------------------------------------

@@ -14,7 +14,6 @@ add_definitions (-DPLUGIN_VERSION="${PLUGIN_VERSION}" -DINCLUDE_VERSION=${INCLUD
 set (CMAKE_SHARED_LIBRARY_PREFIX "")
 
 set (LIBRARY_GROUP "lib\\")
-set (VENDOR_GROUP "vendor\\")
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	add_definitions (-DWIN32 -D_WIN32 -D__STDC__ -DSYSTEM_NAME="Windows")
@@ -56,7 +55,6 @@ endif ()
 
 include_directories (
 	${CMAKE_CURRENT_SOURCE_DIR}/src
-	${CMAKE_CURRENT_SOURCE_DIR}/src/vendor
 	${CMAKE_CURRENT_SOURCE_DIR}/lib
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/sdk/amx
 )
@@ -77,12 +75,12 @@ file (GLOB FCNPC_SRC
 )
 source_group("" FILES ${FCNPC_SRC})
 
-# MapAndreas
-file (GLOB MAPANDREAS_SRC
-	${CMAKE_CURRENT_SOURCE_DIR}/src/vendor/MapAndreas/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/vendor/MapAndreas/*.h
-)
-source_group("${VENDOR_GROUP}MapAndreas" FILES ${MAPANDREAS_SRC})
+# MapAndreas 
+file (GLOB MAPANDREAS_SRC 
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/mapandreas/*.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/mapandreas/*.h 
+) 
+source_group("${LIBRARY_GROUP}MapAndreas" FILES ${MAPANDREAS_SRC}) 
 
 # SDK
 file (GLOB SDK_SRC

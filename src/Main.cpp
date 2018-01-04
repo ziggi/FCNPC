@@ -286,15 +286,6 @@ AMX_NATIVE_INFO PluginNatives[] = {
 	{ "FCNPC_SetMinHeightPosCall", CNatives::FCNPC_SetMinHeightPosCall },
 	{ "FCNPC_GetMinHeightPosCall", CNatives::FCNPC_GetMinHeightPosCall },
 
-	// Map Andreas 
-	{ "MapAndreas_Init", CMapAndreasNatives::Init },
-	{ "MapAndreas_FindZ_For2DCoord", CMapAndreasNatives::FindZ_For2DCoord },
-	{ "MapAndreas_FindAverageZ", CMapAndreasNatives::FindAverageZ },
-	{ "MapAndreas_Unload", CMapAndreasNatives::Unload },
-	{ "MapAndreas_SetZ_For2DCoord", CMapAndreasNatives::SetZ_For2DCoord },
-	{ "MapAndreas_SaveCurrentHMap", CMapAndreasNatives::SaveCurrentHMap },
-	{ "MapAndreas_GetAddress", CMapAndreasNatives::GetAddress },
-
 	{ 0, 0 }
 };
 
