@@ -169,6 +169,10 @@ bool CServer::GetCrashLogCreation()
 
 bool CServer::IsValidNickName(char *szName)
 {
+	if (!szName) {
+		return false;
+	}
+
 	int iLength = strlen(szName);
 	if (iLength < 1 || iLength > MAX_PLAYER_NAME) {
 		return false;

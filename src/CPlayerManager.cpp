@@ -30,16 +30,16 @@ CPlayerManager::~CPlayerManager()
 
 WORD CPlayerManager::AddPlayer(char *szName)
 {
-	// Check name for already connected NPCs
-	WORD wPlayerId = GetId(szName);
-	if (wPlayerId != INVALID_PLAYER_ID) {
-		return wPlayerId;
-	}
-
 	// Make sure the name is valid
 	if (!pServer->IsValidNickName(szName)) {
 		logprintf("[FCNPC] Error: NPC '%s' not created. Name '%s' is invalid.", szName, szName);
 		return INVALID_PLAYER_ID;
+	}
+
+	// Check name for already connected NPCs
+	WORD wPlayerId = GetId(szName);
+	if (wPlayerId != INVALID_PLAYER_ID) {
+		return wPlayerId;
 	}
 
 	// Make sure the name is not exists
