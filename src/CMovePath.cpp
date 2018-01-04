@@ -23,7 +23,7 @@ int CMovePath::Create()
 	}
 
 	try {
-		if (id == m_vPath.size()) {
+		if (static_cast<size_t>(id) == m_vPath.size()) {
 			m_vPath.push_back(std::vector<CVector>());
 			m_vPointsID.push_back(std::vector<int>());
 			m_vPathID.push_back(id);
@@ -76,7 +76,7 @@ int CMovePath::AddPoint(int iPathId, CVector vecPoint)
 	}
 
 	try {
-		if (id == m_vPath.size()) {
+		if (static_cast<size_t>(id) == m_vPath.size()) {
 			m_vPath[iPathId].push_back(vecPoint);
 			m_vPointsID[iPathId].push_back(id);
 		} else {
