@@ -2685,49 +2685,6 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetSurfingObject(AMX *amx, cell *params)
 	return pPlayerData->GetSurfingObject();
 }
 
-// native FCNPC_SetSurfingPlayerObject(npcid, objectid);
-cell AMX_NATIVE_CALL CNatives::FCNPC_SetSurfingPlayerObject(AMX *amx, cell *params)
-{
-	CHECK_PARAMS(2, "FCNPC_SetSurfingPlayerObject");
-
-	// Get params
-	WORD wNpcId = static_cast<WORD>(params[1]);
-	WORD wObjectId = static_cast<WORD>(params[2]);
-
-	// Make sure the player is valid
-	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
-	if (!pPlayerData) {
-		return 0;
-	}
-
-	// Validate the object
-	if (wObjectId < 1 || wObjectId >= MAX_OBJECTS) {
-		return 0;
-	}
-
-	// Set the surfing object
-	pPlayerData->SetSurfingPlayerObject(wObjectId);
-	return 1;
-}
-
-// native FCNPC_GetSurfingPlayerObject(npcid);
-cell AMX_NATIVE_CALL CNatives::FCNPC_GetSurfingPlayerObject(AMX *amx, cell *params)
-{
-	CHECK_PARAMS(1, "FCNPC_GetSurfingPlayerObject");
-
-	// Get params
-	WORD wNpcId = static_cast<WORD>(params[1]);
-
-	// Make sure the player is valid
-	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
-	if (!pPlayerData) {
-		return INVALID_OBJECT_ID;
-	}
-
-	// Get the surfing object
-	return pPlayerData->GetSurfingPlayerObject();
-}
-
 // native FCNPC_StopSurfing(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_StopSurfing(AMX *amx, cell *params)
 {

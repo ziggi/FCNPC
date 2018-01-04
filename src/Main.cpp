@@ -241,8 +241,6 @@ AMX_NATIVE_INFO PluginNatives[] = {
 	{ "FCNPC_GetSurfingVehicle", CNatives::FCNPC_GetSurfingVehicle },
 	{ "FCNPC_SetSurfingObject", CNatives::FCNPC_SetSurfingObject },
 	{ "FCNPC_GetSurfingObject", CNatives::FCNPC_GetSurfingObject },
-	{ "FCNPC_SetSurfingPlayerObject", CNatives::FCNPC_SetSurfingPlayerObject },
-	{ "FCNPC_GetSurfingPlayerObject", CNatives::FCNPC_GetSurfingPlayerObject },
 	{ "FCNPC_StopSurfing", CNatives::FCNPC_StopSurfing },
 
 	{ "FCNPC_StartPlayingPlayback", CNatives::FCNPC_StartPlayingPlayback },
