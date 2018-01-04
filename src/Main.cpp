@@ -281,8 +281,8 @@ AMX_NATIVE_INFO PluginNatives[] = {
 	{ "FCNPC_GetNumberMovePoint", CNatives::FCNPC_GetNumberMovePoint },
 	{ "FCNPC_GoByMovePath", CNatives::FCNPC_GoByMovePath },
 
-	{ "FCNPC_SetMoveMode", CNatives::FCNPC_SetMoveMode },
-	{ "FCNPC_GetMoveMode", CNatives::FCNPC_GetMoveMode },
+	{ "FCNPC_ToggleMapAndreasUsage", CNatives::FCNPC_ToggleMapAndreasUsage },
+	{ "FCNPC_IsMapAndreasUsed", CNatives::FCNPC_IsMapAndreasUsed },
 	{ "FCNPC_SetMinHeightPosCall", CNatives::FCNPC_SetMinHeightPosCall },
 	{ "FCNPC_GetMinHeightPosCall", CNatives::FCNPC_GetMinHeightPosCall },
 
