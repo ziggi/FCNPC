@@ -13,7 +13,7 @@
 #pragma library FCNPC
 
 // Version
-#define FCNPC_INCLUDE_VERSION 174
+#define FCNPC_INCLUDE_VERSION 180
 
 public FCNPC_IncludeVersion = FCNPC_INCLUDE_VERSION;
 #pragma unused FCNPC_IncludeVersion
