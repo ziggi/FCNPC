@@ -2509,6 +2509,15 @@ bool CPlayerData::AddForPlayer(WORD wForPlayerId, bool bIsNPC)
 	bs.Write(len);
 	bs.Write(m_szName, len);
 	CFunctions::PlayerRPC(&RPC_ServerJoin, &bs, wForPlayerId);
+
+	for (WORD i = 0; i <= pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
+		if (pNetGame->pPlayerPool->bIsPlayerConnectedEx[i] && i != m_wPlayerId) {
+			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[i];
+			if (pPlayer && pPlayer->byteStreamedIn[m_wPlayerId] == 1) {
+				pPlayer->byteStreamedIn[m_wPlayerId] = 0;
+			}
+		}
+	}
 	return 1;
 }
 
