@@ -19,7 +19,8 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_GetUpdateRate(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetTickRate(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetTickRate(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_InitMapAndreas(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_IsMoveModeEnabled(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_ToggleMoveMode(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_TriggerWeaponShot(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_ToggleCrashLogCreation(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetCrashLogCreation(AMX *amx, cell *params);

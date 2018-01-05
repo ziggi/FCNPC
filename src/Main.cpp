@@ -81,6 +81,8 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 		logprintf("Failed. (Cant create server instance)");
 		return false;
 	}
+	//
+	g_Invoke = new Invoke;
 	return true;
 }
 
@@ -100,7 +102,8 @@ AMX_NATIVE_INFO PluginNatives[] = {
 	{ "FCNPC_GetUpdateRate", CNatives::FCNPC_GetUpdateRate },
 	{ "FCNPC_SetTickRate", CNatives::FCNPC_SetTickRate },
 	{ "FCNPC_GetTickRate", CNatives::FCNPC_GetTickRate },
-	{ "FCNPC_InitMapAndreas", CNatives::FCNPC_InitMapAndreas },
+	{ "FCNPC_IsMoveModeEnabled", CNatives::FCNPC_IsMoveModeEnabled },
+	{ "FCNPC_ToggleMoveMode", CNatives::FCNPC_ToggleMoveMode },
 	{ "FCNPC_TriggerWeaponShot", CNatives::FCNPC_TriggerWeaponShot },
 	{ "FCNPC_ToggleCrashLogCreation", CNatives::FCNPC_ToggleCrashLogCreation },
 	{ "FCNPC_GetCrashLogCreation", CNatives::FCNPC_GetCrashLogCreation },
@@ -309,6 +312,8 @@ PLUGIN_EXPORT int PLUGIN_CALL AmxLoad(AMX *pAMX)
 	}
 	// Register the AMX
 	CCallbackManager::RegisterAMX(pAMX);
+	g_Invoke->amx_list.push_back(pAMX);
+	g_Invoke->getAddresses();
 	// Register the plugin natives for the amx instance
 	return amx_Register(pAMX, PluginNatives, -1);
 }
@@ -317,6 +322,7 @@ PLUGIN_EXPORT int PLUGIN_CALL AmxUnload(AMX *pAMX)
 {
 	// Unregister the AMX
 	CCallbackManager::UnregisterAMX(pAMX);
+	g_Invoke->amx_list.remove(pAMX);
 	return AMX_ERR_NONE;
 }
 

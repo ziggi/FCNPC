@@ -75,13 +75,6 @@ file (GLOB FCNPC_SRC
 )
 source_group("" FILES ${FCNPC_SRC})
 
-# MapAndreas 
-file (GLOB MAPANDREAS_SRC 
-	${CMAKE_CURRENT_SOURCE_DIR}/lib/mapandreas/*.cpp 
-	${CMAKE_CURRENT_SOURCE_DIR}/lib/mapandreas/*.h 
-) 
-source_group("${LIBRARY_GROUP}MapAndreas" FILES ${MAPANDREAS_SRC}) 
-
 # SDK
 file (GLOB SDK_SRC
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/sdk/*.cpp
@@ -98,6 +91,13 @@ file (GLOB STRLCPY_SRC
 )
 source_group("${LIBRARY_GROUP}strlcpy" FILES ${STRLCPY_SRC})
 
+# invoke
+file (GLOB INVOKE_SRC
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/Invoke/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/Invoke/*.h
+)
+source_group("${LIBRARY_GROUP}Invoke" FILES ${INVOKE_SRC})
+
 # RakNet
 file (GLOB RAKNET_SRC
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/raknet/*.cpp
@@ -107,9 +107,9 @@ source_group("${LIBRARY_GROUP}RakNet" FILES ${RAKNET_SRC})
 
 # Library
 add_library (${PROJECT_NAME} SHARED ${FCNPC_SRC}
-                                    ${MAPANDREAS_SRC}
                                     ${SDK_SRC}
                                     ${STRLCPY_SRC}
+                                    ${INVOKE_SRC}
                                     ${RAKNET_SRC}
                                     ${PLATFORM_SRC})
 

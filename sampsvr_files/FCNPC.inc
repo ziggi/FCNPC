@@ -28,6 +28,7 @@ public FCNPC_IncludeVersion = FCNPC_INCLUDE_VERSION;
 #define FCNPC_MOVE_MODE_AUTO       (-1)
 #define FCNPC_MOVE_MODE_NONE       (0)
 #define FCNPC_MOVE_MODE_MAPANDREAS (1)
+#define FCNPC_MOVE_MODE_COLANDREAS (2)
 
 #define FCNPC_MOVE_SPEED_AUTO      (-1.0)
 #define FCNPC_MOVE_SPEED_WALK      (0.1552086)
@@ -130,7 +131,8 @@ native FCNPC_SetUpdateRate(rate);
 native FCNPC_GetUpdateRate();
 native FCNPC_SetTickRate(rate);
 native FCNPC_GetTickRate();
-native FCNPC_InitMapAndreas(address);
+native FCNPC_IsMoveModeEnabled(mode);
+native FCNPC_ToggleMoveModeEnabled(mode, bool:toggle);
 native FCNPC_ToggleCrashLogCreation(bool:toggle);
 native FCNPC_GetCrashLogCreation();
 

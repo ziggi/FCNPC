@@ -207,7 +207,7 @@ public:
 	WORD ChangeNode(int iNodeId, WORD wLinkId);
 	bool UpdateNodePoint(WORD wPointId);
 
-	void SetMoveMode(int iMoveMode);
+	bool SetMoveMode(int iMoveMode);
 	int GetMoveMode();
 	void SetMinHeightPosCall(float fHeight);
 	float GetMinHeightPosCall();

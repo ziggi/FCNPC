@@ -962,8 +962,24 @@ void CPlayerData::GetPosition(CVector *pvecPosition)
 
 void CPlayerData::UpdateHeightPos(CVector *pvecPosition)
 {
-	if (m_iMoveMode == MOVE_MODE_MAPANDREAS && pServer->IsMapAndreasInited() && pvecPosition->fZ >= 0.0f && m_pPlayer->iInteriorId == 0) {
-		float fNewZ = pServer->GetMapAndreas()->FindZ_For2DCoord(pvecPosition->fX, pvecPosition->fY) + 0.5f;
+	if (m_pPlayer->iInteriorId != 0) {
+		return;
+	}
+
+	float fNewZ = pvecPosition->fZ;
+
+	if (m_iMoveMode == MOVE_MODE_MAPANDREAS) {
+		if (pvecPosition->fZ < 0.0f) {
+			return;
+		}
+		g_Invoke->MapAndreas_FindZ_For2DCoord(pvecPosition->fX, pvecPosition->fY, &fNewZ);
+		fNewZ += 1.0f;
+	} else if (m_iMoveMode == MOVE_MODE_COLANDREAS) {
+		g_Invoke->CA_RayCastLine(pvecPosition->fX, pvecPosition->fY, pvecPosition->fZ, pvecPosition->fX, pvecPosition->fY, pvecPosition->fZ - 1000.0f, &pvecPosition->fX, &pvecPosition->fY, &fNewZ);
+		fNewZ += 1.0f;
+	}
+
+	if (m_iMoveMode != MOVE_MODE_NONE) {
 		if (m_fMinHeightPos < 0.0f) {
 			pvecPosition->fZ = fNewZ;
 		} else if (m_fMinHeightPos <= std::abs(fNewZ - pvecPosition->fZ)) {
@@ -2470,17 +2486,30 @@ bool CPlayerData::UpdateNodePoint(WORD wPointId)
 	return true;
 }
 
-void CPlayerData::SetMoveMode(int iMoveMode)
+bool CPlayerData::SetMoveMode(int iMoveMode)
 {
 	if (iMoveMode == MOVE_MODE_AUTO) {
-		if (pServer->IsMapAndreasInited()) {
+		if (pServer->IsMoveModeEnabled(MOVE_MODE_COLANDREAS)) {
+			m_iMoveMode = MOVE_MODE_COLANDREAS;
+			m_iNodeMoveMode = MOVE_MODE_COLANDREAS;
+		}  else if (pServer->IsMoveModeEnabled(MOVE_MODE_MAPANDREAS)) {
 			m_iMoveMode = MOVE_MODE_MAPANDREAS;
 			m_iNodeMoveMode = MOVE_MODE_MAPANDREAS;
 		} else {
 			m_iMoveMode = MOVE_MODE_NONE;
 			m_iNodeMoveMode = MOVE_MODE_NONE;
 		}
+	} else {
+		if (!pServer->IsMoveModeEnabled(iMoveMode)) {
+			m_iMoveMode = MOVE_MODE_NONE;
+			m_iNodeMoveMode = MOVE_MODE_NONE;
+			return false;
+		}
+
+		m_iMoveMode = iMoveMode;
+		m_iNodeMoveMode = iMoveMode;
 	}
+	return true;
 }
 
 int CPlayerData::GetMoveMode()

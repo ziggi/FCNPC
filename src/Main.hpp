@@ -45,10 +45,13 @@
 #include <ctime>
 #include <vector>
 #include <algorithm>
+#include <bitset>
+#include <list>
+#include <map>
 // Library includes
 #include <sdk/plugin.h>
+#include <Invoke/Invoke.h>
 #include <raknet/BitStream.h>
-#include <mapandreas/MapAndreas.h>
 #include <subhook/subhook.h>
 #include <strlcpy/strlcpy.h>
 // ExceptionHandler includes

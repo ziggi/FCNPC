@@ -23,8 +23,6 @@ class CGangZonePool;
 #include "CRecordManager.hpp"
 #include "CMovePath.hpp"
 
-class CMapAndreas;
-
 class CServer
 {
 public:
@@ -50,9 +48,8 @@ public:
 	void ToggleCrashLogCreation(bool enabled);
 	bool GetCrashLogCreation();
 
-	void SetMapAndreas(CMapAndreas *pMapAndreas);
-	CMapAndreas *GetMapAndreas();
-	bool IsMapAndreasInited();
+	void ToggleMoveMode(int iMoveMode, bool bIsEnabled);
+	bool IsMoveModeEnabled(int iMoveMode);
 
 	bool IsVehicleSeatOccupied(WORD wPlayerId, WORD wVehicleId, BYTE byteSeatId);
 	WORD GetVehicleSeatPlayerId(WORD wVehicleId, BYTE byteSeatId);
@@ -68,9 +65,9 @@ private:
 	CNodeManager *m_pNodeManager;
 	CRecordManager *m_pRecordManager;
 	CMovePath *m_pMovePath;
-	CMapAndreas *m_pMapAndreas;
 	DWORD m_dwUpdateRate;
 	bool m_bCrashLogCreation;
+	bool m_bMoveModeEnabled[MOVE_MODE_SIZE];
 
 	int m_iTicks;
 	int m_iTickRate;

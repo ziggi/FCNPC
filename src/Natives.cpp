@@ -1217,7 +1217,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetFightingStyle(AMX *amx, cell *params)
 	return pPlayerData->GetFightingStyle();
 }
 
-// native FCNPC_GoTo(npcid, Float:x, Float : y, Float : z, type = FCNPC_MOVE_TYPE_AUTO, Float : speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, Float : radius = 0.0, bool : setangle = true, Float : dist_offset = 0.0, stopdelay = 250);
+// native FCNPC_GoTo(npcid, Float:x, Float : y, Float : z, type = FCNPC_MOVE_TYPE_AUTO, Float: speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, Float : radius = 0.0, bool : setangle = true, Float : dist_offset = 0.0, stopdelay = 250);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GoTo(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(11, "FCNPC_GoTo");
@@ -1243,7 +1243,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GoTo(AMX *amx, cell *params)
 	return pPlayerData->GoTo(vecPoint, iType, iMode, fRadius, bSetAngle, fSpeed, fDistOffset, dwStopDelay);
 }
 
-// native FCNPC_GoToPlayer(npcid, playereid, type, Float:speed, bool:UseZMap = false, Float:radius = 0.0, bool:setangle = true, Float:dist_offset = 0.0, Float:dist_check = 1.5, stopdelay = 250);
+// native FCNPC_GoToPlayer(npcid, playereid, type, Float:speed, mode = MOVE_MODE_AUTO, Float:radius = 0.0, bool:setangle = true, Float:dist_offset = 0.0, Float:dist_check = 1.5, stopdelay = 250);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GoToPlayer(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(10, "FCNPC_GoToPlayer");
@@ -1253,7 +1253,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GoToPlayer(AMX *amx, cell *params)
 	WORD wPlayerId = static_cast<WORD>(params[2]);
 	int iType = static_cast<int>(params[3]);
 	float fSpeed = amx_ctof(params[4]);
-	bool bZMap = static_cast<int>(params[5]) != 0;
+	int iMode = static_cast<int>(params[5]);
 	float fRadius = amx_ctof(params[6]);
 	bool bSetAngle = static_cast<int>(params[7]) != 0;
 	float fDistOffset = amx_ctof(params[8]);
@@ -1271,7 +1271,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GoToPlayer(AMX *amx, cell *params)
 	}
 
 	// move the player
-	return pPlayerData->GoToPlayer(wPlayerId, iType, bZMap, fRadius, bSetAngle, fSpeed, fDistOffset, fDistCheck, dwStopDelay);
+	return pPlayerData->GoToPlayer(wPlayerId, iType, iMode, fRadius, bSetAngle, fSpeed, fDistOffset, fDistCheck, dwStopDelay);
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_Stop(AMX *amx, cell *params)
@@ -3127,7 +3127,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetNodeInfo(AMX *amx, cell *params)
 	return 1;
 }
 
-// native FCNPC_PlayNode(npcid, nodeid, move_type = MOVE_TYPE_AUTO, Float:speed = MOVE_SPEED_AUTO, bool:UseMapAndreas = false, Float:radius = 0.0, bool:setangle = true);
+// native FCNPC_PlayNode(npcid, nodeid, move_type = MOVE_TYPE_AUTO, Float:speed = MOVE_SPEED_AUTO, mode = MOVE_MODE_AUTO, Float:radius = 0.0, bool:setangle = true);
 cell AMX_NATIVE_CALL CNatives::FCNPC_PlayNode(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(7, "FCNPC_PlayNode");
@@ -3137,7 +3137,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_PlayNode(AMX *amx, cell *params)
 	int iNodeId = static_cast<int>(params[2]);
 	int iMoveType = static_cast<int>(params[3]);
 	float fSpeed = amx_ctof(params[4]);
-	bool bZMap = static_cast<int>(params[5]) != 0;
+	int iMode = static_cast<int>(params[5]);
 	float fRadius = amx_ctof(params[6]);
 	bool bSetAngle = static_cast<int>(params[7]) != 0;
 
@@ -3153,7 +3153,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_PlayNode(AMX *amx, cell *params)
 	}
 
 	// Play the node
-	return pPlayerData->PlayNode(iNodeId, iMoveType, bZMap, fRadius, bSetAngle, fSpeed);
+	return pPlayerData->PlayNode(iNodeId, iMoveType, iMode, fRadius, bSetAngle, fSpeed);
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_StopPlayingNode(AMX *amx, cell *params)
@@ -3246,18 +3246,33 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsPlayingNodePaused(AMX *amx, cell *params)
 	return pPlayerData->IsPlayingNodePaused();
 }
 
-cell AMX_NATIVE_CALL CNatives::FCNPC_InitMapAndreas(AMX *amx, cell *params)
+// native FCNPC_IsMoveModeEnabled(mode)
+cell AMX_NATIVE_CALL CNatives::FCNPC_IsMoveModeEnabled(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "FCNPC_InitMapAndreas");
+	CHECK_PARAMS(1, "FCNPC_IsMoveModeEnabled");
 
 	// Get the params
-	CMapAndreas *pAddress = (CMapAndreas*)params[1];
+	WORD iMoveMode = static_cast<WORD>(params[1]);
 
-	// Set the address
-	if (pAddress != NULL) {
-		pServer->SetMapAndreas(new CMapAndreas(pAddress));
+	// Return status
+	return static_cast<int>(pServer->IsMoveModeEnabled(iMoveMode));
+}
+
+// native FCNPC_ToggleMoveMode(mode, bool:toggle)
+cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleMoveMode(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_ToggleMoveMode");
+
+	// Get the params
+	WORD iMoveMode = static_cast<WORD>(params[1]);
+	bool bIsEnabled = static_cast<int>(params[2]) != 0;
+
+	// Toggle move mode
+	if (iMoveMode > MOVE_MODE_NONE && iMoveMode < MOVE_MODE_SIZE) {
+		pServer->ToggleMoveMode(iMoveMode, bIsEnabled);
 		return 1;
 	}
+
 	return 0;
 }
 
@@ -3457,7 +3472,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetNumberMovePoint(AMX *amx, cell *params)
 	return pServer->GetMovePath()->GetPoints(iPathId)->size();
 }
 
-// native FCNPC_GoByMovePath(npcid, pathid, pointid = 0, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, bool : UseMapAndreas = false, Float : radius = 0.0, bool : setangle = true, Float : dist_offset = 0.0);
+// native FCNPC_GoByMovePath(npcid, pathid, pointid = 0, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = MOVE_MODE_AUTO, Float : radius = 0.0, bool : setangle = true, Float : dist_offset = 0.0);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GoByMovePath(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(9, "FCNPC_GoByMovePath");
@@ -3468,7 +3483,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GoByMovePath(AMX *amx, cell *params)
 	int iPointId = static_cast<int>(params[3]);
 	int iType = static_cast<int>(params[4]);
 	float fSpeed = amx_ctof(params[5]);
-	bool bZMap = static_cast<int>(params[6]) != 0;
+	int iMode = static_cast<int>(params[6]);
 	float fRadius = amx_ctof(params[7]);
 	bool bSetAngle = static_cast<int>(params[8]) != 0;
 	float fDistOffset = amx_ctof(params[9]);
@@ -3480,17 +3495,17 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GoByMovePath(AMX *amx, cell *params)
 	}
 
 	// move the player
-	return pPlayerData->GoByMovePath(iPathId, iPointId, iType, bZMap, fRadius, bSetAngle, fSpeed, fDistOffset);
+	return pPlayerData->GoByMovePath(iPathId, iPointId, iType, iMode, fRadius, bSetAngle, fSpeed, fDistOffset);
 }
 
-// native FCNPC_SetMoveMode(npcid, bool:enabled);
+// native FCNPC_SetMoveMode(npcid, mode);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetMoveMode(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_SetMoveMode");
 
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);
-	bool bIsEnabled = static_cast<int>(params[2]) != 0;
+	int iMoveMode = static_cast<int>(params[2]);
 
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
@@ -3499,8 +3514,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetMoveMode(AMX *amx, cell *params)
 	}
 
 	// Change move mode
-	pPlayerData->SetMoveMode(bIsEnabled);
-	return 1;
+	return static_cast<int>(pPlayerData->SetMoveMode(iMoveMode));
 }
 
 // native FCNPC_GetMoveMode(npcid);

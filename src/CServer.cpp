@@ -24,7 +24,6 @@ CServer::CServer(eSAMPVersion version)
 	m_pNodeManager = NULL;
 	m_pMovePath = NULL;
 	m_pRecordManager = NULL;
-	m_pMapAndreas = NULL;
 	// Initialize the update rate
 	m_dwUpdateRate = DEFAULT_UPDATE_RATE;
 	// enable crashlog by default
@@ -40,7 +39,6 @@ CServer::~CServer()
 	SAFE_DELETE(m_pNodeManager);
 	SAFE_DELETE(m_pMovePath);
 	SAFE_DELETE(m_pRecordManager);
-	SAFE_DELETE(m_pMapAndreas);
 }
 
 BYTE CServer::Initialize(AMX *pAMX)
@@ -225,19 +223,14 @@ DWORD CServer::GetUpdateRate()
 	return m_dwUpdateRate;
 }
 
-void CServer::SetMapAndreas(CMapAndreas *pMapAndreas)
+void CServer::ToggleMoveMode(int iMoveMode, bool bIsEnabled)
 {
-	m_pMapAndreas = pMapAndreas;
+	m_bMoveModeEnabled[iMoveMode] = bIsEnabled;
 }
 
-CMapAndreas *CServer::GetMapAndreas()
+bool CServer::IsMoveModeEnabled(int iMoveMode)
 {
-	return m_pMapAndreas;
-}
-
-bool CServer::IsMapAndreasInited()
-{
-	return m_pMapAndreas != NULL && m_pMapAndreas->IsInited();
+	return m_bMoveModeEnabled[iMoveMode];
 }
 
 bool CServer::IsVehicleSeatOccupied(WORD wPlayerId, WORD wVehicleId, BYTE byteSeatId)
