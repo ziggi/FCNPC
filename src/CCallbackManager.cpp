@@ -43,7 +43,6 @@ std::array<char *, CCallbackManager::Callbacks::CallbacksCount> CCallbackManager
 void CCallbackManager::Init()
 {
 	while (!m_vAmxLoadQueue.empty()) {
-		logprintf("CCallbackManager init");
 		int iIndex;
 		AMX *pAmx = m_vAmxLoadQueue.front();
 
@@ -52,7 +51,6 @@ void CCallbackManager::Init()
 				iIndex = 0;
 			}
 			m_mapCallbacks.insert(std::make_pair(pAmx, iIndex));
-			logprintf("   %s - %d", m_aCallbackNames[i], iIndex);
 		}
 
 		m_vAmxLoadQueue.pop();
