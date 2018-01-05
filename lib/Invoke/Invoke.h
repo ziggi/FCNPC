@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <list>
 #include <map>
 #include <stdarg.h>
+#include <cstring>
+#include <limits>
 
 #define HAVE_STDINT_H
 #include <sdk/plugin.h>

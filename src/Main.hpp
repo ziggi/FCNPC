@@ -45,9 +45,6 @@
 #include <ctime>
 #include <vector>
 #include <algorithm>
-#include <bitset>
-#include <list>
-#include <map>
 // Library includes
 #include <sdk/plugin.h>
 #include <Invoke/Invoke.h>
