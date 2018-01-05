@@ -15,29 +15,29 @@ std::vector<AMX *> CCallbackManager::m_vAmx;
 std::map<AMX *, std::vector<int>> CCallbackManager::m_mapCallbacks;
 std::queue<AMX *> CCallbackManager::m_vAmxLoadQueue;
 std::array<char *, CCallbackManager::Callbacks::CallbacksCount> CCallbackManager::m_aCallbackNames = {
-	"FCNPC_OnCreate",
-	"FCNPC_OnDestroy",
-	"FCNPC_OnSpawn",
-	"FCNPC_OnRespawn",
-	"FCNPC_OnDeath",
-	"FCNPC_OnReachDestination",
-	"FCNPC_OnVehicleEntryComplete",
-	"FCNPC_OnVehicleExitComplete",
-	"FCNPC_OnTakeDamage",
-	"FCNPC_OnGiveDamage",
-	"FCNPC_OnWeaponShot",
-	"FCNPC_OnWeaponStateChange",
-	"FCNPC_OnVehicleTakeDamage",
-	"FCNPC_OnFinishPlayback",
-	"FCNPC_OnChangeNode",
-	"FCNPC_OnFinishNodePoint",
-	"FCNPC_OnFinishNode",
-	"FCNPC_OnStreamIn",
-	"FCNPC_OnStreamOut",
-	"FCNPC_OnUpdate",
-	"FCNPC_OnFinishMovePath",
-	"FCNPC_OnFinishMovePathPoint",
-	"FCNPC_OnChangeHeightPos",
+	(char *)"FCNPC_OnCreate",
+	(char *)"FCNPC_OnDestroy",
+	(char *)"FCNPC_OnSpawn",
+	(char *)"FCNPC_OnRespawn",
+	(char *)"FCNPC_OnDeath",
+	(char *)"FCNPC_OnReachDestination",
+	(char *)"FCNPC_OnVehicleEntryComplete",
+	(char *)"FCNPC_OnVehicleExitComplete",
+	(char *)"FCNPC_OnTakeDamage",
+	(char *)"FCNPC_OnGiveDamage",
+	(char *)"FCNPC_OnWeaponShot",
+	(char *)"FCNPC_OnWeaponStateChange",
+	(char *)"FCNPC_OnVehicleTakeDamage",
+	(char *)"FCNPC_OnFinishPlayback",
+	(char *)"FCNPC_OnChangeNode",
+	(char *)"FCNPC_OnFinishNodePoint",
+	(char *)"FCNPC_OnFinishNode",
+	(char *)"FCNPC_OnStreamIn",
+	(char *)"FCNPC_OnStreamOut",
+	(char *)"FCNPC_OnUpdate",
+	(char *)"FCNPC_OnFinishMovePath",
+	(char *)"FCNPC_OnFinishMovePathPoint",
+	(char *)"FCNPC_OnChangeHeightPos",
 };
 
 void CCallbackManager::Init()
@@ -45,14 +45,16 @@ void CCallbackManager::Init()
 	while (!m_vAmxLoadQueue.empty()) {
 		int iIndex;
 		AMX *pAmx = m_vAmxLoadQueue.front();
+		std::vector<int> vIndexes;
 
 		for (int i = 0; i < Callbacks::CallbacksCount; i++) {
 			if (amx_FindPublic(pAmx, m_aCallbackNames[i], &iIndex) != AMX_ERR_NONE || iIndex < 0) {
 				iIndex = 0;
 			}
-			m_mapCallbacks.insert(std::make_pair(pAmx, iIndex));
+			vIndexes.push_back(iIndex);
 		}
 
+		m_mapCallbacks.insert(std::make_pair(pAmx, vIndexes));
 		m_vAmxLoadQueue.pop();
 	}
 }
