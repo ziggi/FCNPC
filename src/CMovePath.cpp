@@ -51,7 +51,7 @@ bool CMovePath::Destroy(int iPathId)
 
 bool CMovePath::IsPathValid(int iPathId)
 {
-	return iPathId >= 0 && m_vPathID.at(iPathId) == iPathId;
+	return iPathId >= 0 && iPathId < static_cast<int>(m_vPathID.size()) && m_vPathID.at(iPathId) == iPathId;
 }
 
 std::vector<CVector> *CMovePath::GetPoints(int iPathId)
@@ -104,7 +104,7 @@ bool CMovePath::IsPointValid(int iPathId, int iPointId)
 	if (!IsPathValid(iPathId)) {
 		return false;
 	}
-	return iPointId >= 0 && m_vPointsID[iPathId].at(iPointId) == iPointId;
+	return iPointId >= 0 && iPointId < static_cast<int>(m_vPointsID[iPathId].size()) && m_vPointsID[iPathId].at(iPointId) == iPointId;
 }
 
 CVector *CMovePath::GetPoint(int iPathId, int iPointId)
