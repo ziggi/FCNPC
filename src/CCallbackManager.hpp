@@ -16,8 +16,10 @@ class CCallbackManager
 {
 public:
 
-	static void RegisterAMX(AMX *pAMX);
-	static void UnregisterAMX(AMX *pAMX);
+	static bool IsInited();
+	static void Init();
+	static void RegisterAMX(AMX *pAmx);
+	static void UnregisterAMX(AMX *pAmx);
 	// Callbacks
 	static void OnCreate(WORD wPlayerId);
 	static void OnDestroy(WORD wPlayerId);
@@ -43,7 +45,38 @@ public:
 	static void OnFinishMovePathPoint(WORD wPlayerId, int iMovePath, int iMovePoint);
 	static int OnChangeHeightPos(WORD wPlayerId, float fNewZ, float fOldZ);
 
-	static std::vector<AMX *> m_vAMX;
+	static std::vector<AMX *> m_vAmx;
+	static std::queue<AMX *> m_vAmxLoadQueue;
+
+	enum Callbacks {
+		FCNPC_OnCreate,
+		FCNPC_OnDestroy,
+		FCNPC_OnSpawn,
+		FCNPC_OnRespawn,
+		FCNPC_OnDeath,
+		FCNPC_OnReachDestination,
+		FCNPC_OnVehicleEntryComplete,
+		FCNPC_OnVehicleExitComplete,
+		FCNPC_OnTakeDamage,
+		FCNPC_OnGiveDamage,
+		FCNPC_OnWeaponShot,
+		FCNPC_OnWeaponStateChange,
+		FCNPC_OnVehicleTakeDamage,
+		FCNPC_OnFinishPlayback,
+		FCNPC_OnChangeNode,
+		FCNPC_OnFinishNodePoint,
+		FCNPC_OnFinishNode,
+		FCNPC_OnStreamIn,
+		FCNPC_OnStreamOut,
+		FCNPC_OnUpdate,
+		FCNPC_OnFinishMovePath,
+		FCNPC_OnFinishMovePathPoint,
+		FCNPC_OnChangeHeightPos,
+		CallbacksCount,
+	};
+
+	static std::map<AMX *, std::vector<int>> m_mapCallbacks;
+	static std::array<char *, Callbacks::CallbacksCount> m_aCallbackNames;
 };
 
 #endif

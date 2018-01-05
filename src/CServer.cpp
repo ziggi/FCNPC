@@ -120,6 +120,10 @@ void CServer::Process()
 
 	if (++m_iTicks >= m_iTickRate) {
 		m_iTicks = 0;
+
+		// Process the callback manager
+		CCallbackManager::Init();
+
 		// Process the player manager
 		pServer->GetPlayerManager()->Process();
 	}

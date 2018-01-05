@@ -45,6 +45,8 @@
 #include <ctime>
 #include <vector>
 #include <algorithm>
+#include <array>
+#include <queue>
 // Library includes
 #include <sdk/plugin.h>
 #include <Invoke/Invoke.h>
