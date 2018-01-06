@@ -7,20 +7,8 @@ If you found a bug or get crash, create issue in [issues section](https://github
 
 Discussion in [forum thread](http://forum.sa-mp.com/showthread.php?t=428066). Or in [Russian forum thread](http://forum.sa-mp.com/showthread.php?t=602965).
 
-# MapAndreas usage
-Download MapAndreas 1.2.1 from [here](http://forum.sa-mp.com/showpost.php?p=3130004&postcount=153).
-
-Init MapAndreas in your script:
-```Pawn
-public OnFilterScriptInit()
-{
-	// ...
-	MapAndreas_Init(MAP_ANDREAS_MODE_FULL);
-	FCNPC_InitMapAndreas(MapAndreas_GetAddress());
-	// ...
-	return 1;
-}
-```
+# MapAndreas and ColAndreas support
+FCNPC supports working with [MapAndreas](http://forum.sa-mp.com/showpost.php?p=3130004&postcount=153) and [ColAndreas](http://forum.sa-mp.com/showthread.php?t=586068) plugins. Just add these plugins before FCNPC in `plugins` string of `server.cfg`.
 
 # How to download all sources
 This repo contains submodules, this means that you should clone this with `--recursive` argument:
@@ -47,6 +35,18 @@ cd build
 cmake ..
 make
 ```
+
+# Thanks
+
+- SA-MP Team: SA-MP
+- OrMisicL: Developer
+- Zeex: Subhook library
+- kurta999: YSF plugin
+- Lorenc_, kurta999, therainycat: Contributors
+- urShadow, Incognito: Code samples in their plugins
+- Admigo: Testing
+- iJumbo: Linux testing
+
 
 # Definitions
 ```Pawn
