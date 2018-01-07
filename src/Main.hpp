@@ -93,6 +93,6 @@ extern CServer      *pServer;
 extern void         **ppPluginData;
 extern CNetGame     *pNetGame;
 extern void         *pConsole;
-extern RakServer    *pRakServer;
+extern void         *pRakServer;
 extern char         szSampVersion[64];
 extern char         szSampClient[64];

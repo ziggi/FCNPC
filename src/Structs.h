@@ -1,53 +1,198 @@
 /*
- *  Version: MPL 1.1
- *
- *  The contents of this file are subject to the Mozilla Public License Version
- *  1.1 (the "License"); you may not use this file except in compliance with
- *  the License. You may obtain a copy of the License at
- *  http://www.mozilla.org/MPL/
- *
- *  Software distributed under the License is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- *  for the specific language governing rights and limitations under the
- *  License.
- *
- *  The Original Code is the YSI 2.0 SA:MP plugin.
- *
- *  The Initial Developer of the Original Code is Alex "Y_Less" Cole.
- *  Portions created by the Initial Developer are Copyright (C) 2008
- *  the Initial Developer. All Rights Reserved.
- *
- *  Contributor(s):
- *
- *  Peter Beverloo
- *  Marcus Bauer
- *  MaVe;
- *  Sammy91
- *  Incognito
- *
- *  Special Thanks to:
- *
- *  SA:MP Team past, present and future
- */
+*  Version: MPL 1.1
+*
+*  The contents of this file are subject to the Mozilla Public License Version
+*  1.1 (the "License"); you may not use this file except in compliance with
+*  the License. You may obtain a copy of the License at
+*  http://www.mozilla.org/MPL/
+*
+*  Software distributed under the License is distributed on an "AS IS" basis,
+*  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+*  for the specific language governing rights and limitations under the
+*  License.
+*
+*  The Original Code is the YSI 2.0 SA:MP plugin.
+*
+*  The Initial Developer of the Original Code is Alex "Y_Less" Cole.
+*  Portions created by the Initial Developer are Copyright (C) 2008
+*  the Initial Developer. All Rights Reserved. The development was abandobed
+*  around 2010, afterwards kurta999 has continued it.
+*
+*  Contributor(s):
+*
+*	0x688, balika011, Gamer_Z, iFarbod, karimcambridge, Mellnik, P3ti, Riddick94
+*	Slice, sprtik, uint32, Whitetigerswt, Y_Less, ziggi and complete SA-MP community
+*
+*  Special Thanks to:
+*
+*	SA:MP Team past, present and future
+*	Incognito, maddinat0r, OrMisicL, Zeex
+*
+*/
 
 #ifndef YSF_STRUCTS_H
 #define YSF_STRUCTS_H
 
 #include "CServer.hpp"
 #include "CVector.h"
-#include "CGangZonePool.h"
-#include "CPickupPool.h"
+#include "CVector2D.h"
 #include <map>
 
 #include <raknet/BitStream.h>
-//#include <sampgdk/sampgdk.h>
+#include <raknet/NetworkTypes.h>
+#include <sdk/amx/amx.h>
 
-class CGangZonePool;
+#if !defined PAD
+#define PAD(a, b) char a[b]
+#endif
+
+typedef unsigned long       DWORD;
+typedef int                 BOOL;
+typedef unsigned char       BYTE;
+typedef unsigned short      WORD;
+typedef float               FLOAT;
 
 /* -------------------------------------------------------- */
 
-// Defines
-#define	MAX_ATTACHED_OBJECTS		10
+// Defines from SAMPGDK
+#define MAX_PLAYER_NAME (24)
+#define MAX_CLIENT_MESSAGE (144)
+#define MAX_PLAYERS (1000)
+#define MAX_VEHICLES (2000)
+#define MAX_ACTORS (1000)
+#define INVALID_PLAYER_ID (0xFFFF)
+#define INVALID_VEHICLE_ID (0xFFFF)
+#define INVALID_ACTOR_ID (0xFFFF)
+#define NO_TEAM (255)
+#define MAX_OBJECTS (1000)
+#define INVALID_OBJECT_ID (0xFFFF)
+#define MAX_GANG_ZONES (1024)
+#define MAX_TEXT_DRAWS (2048)
+#define MAX_PLAYER_TEXT_DRAWS (256)
+#define MAX_MENUS (128)
+#define MAX_3DTEXT_GLOBAL (1024)
+#define MAX_3DTEXT_PLAYER (1024)
+#define MAX_PICKUPS (4096)
+#define INVALID_MENU (0xFF)
+#define INVALID_TEXT_DRAW (0xFFFF)
+#define INVALID_GANG_ZONE (-1)
+#define INVALID_3DTEXT_ID (0xFFFF)
+#define SERVER_VARTYPE_NONE (0)
+#define SERVER_VARTYPE_INT (1)
+#define SERVER_VARTYPE_STRING (2)
+#define SERVER_VARTYPE_FLOAT (3)
+#define TEXT_DRAW_FONT_SPRITE_DRAW (4)
+#define TEXT_DRAW_FONT_MODEL_PREVIEW (5)
+#define DIALOG_STYLE_MSGBOX (0)
+#define DIALOG_STYLE_INPUT (1)
+#define DIALOG_STYLE_LIST (2)
+#define DIALOG_STYLE_PASSWORD (3)
+#define DIALOG_STYLE_TABLIST (4)
+#define DIALOG_STYLE_TABLIST_HEADERS (5)
+#define PLAYER_STATE_NONE (0)
+#define PLAYER_STATE_ONFOOT (1)
+#define PLAYER_STATE_DRIVER (2)
+#define PLAYER_STATE_PASSENGER (3)
+#define PLAYER_STATE_EXIT_VEHICLE (4)
+#define PLAYER_STATE_ENTER_VEHICLE_DRIVER (5)
+#define PLAYER_STATE_ENTER_VEHICLE_PASSENGER (6)
+#define PLAYER_STATE_WASTED (7)
+#define PLAYER_STATE_SPAWNED (8)
+#define PLAYER_STATE_SPECTATING (9)
+#define PLAYER_MARKERS_MODE_OFF (0)
+#define PLAYER_MARKERS_MODE_GLOBAL (1)
+#define PLAYER_MARKERS_MODE_STREAMED (2)
+#define WEAPON_BRASSKNUCKLE (1)
+#define WEAPON_GOLFCLUB (2)
+#define WEAPON_NITESTICK (3)
+#define WEAPON_KNIFE (4)
+#define WEAPON_BAT (5)
+#define WEAPON_SHOVEL (6)
+#define WEAPON_POOLSTICK (7)
+#define WEAPON_KATANA (8)
+#define WEAPON_CHAINSAW (9)
+#define WEAPON_DILDO (10)
+#define WEAPON_DILDO2 (11)
+#define WEAPON_VIBRATOR (12)
+#define WEAPON_VIBRATOR2 (13)
+#define WEAPON_FLOWER (14)
+#define WEAPON_CANE (15)
+#define WEAPON_GRENADE (16)
+#define WEAPON_TEARGAS (17)
+#define WEAPON_MOLTOV (18)
+#define WEAPON_COLT45 (22)
+#define WEAPON_SILENCED (23)
+#define WEAPON_DEAGLE (24)
+#define WEAPON_SHOTGUN (25)
+#define WEAPON_SAWEDOFF (26)
+#define WEAPON_SHOTGSPA (27)
+#define WEAPON_UZI (28)
+#define WEAPON_MP5 (29)
+#define WEAPON_AK47 (30)
+#define WEAPON_M4 (31)
+#define WEAPON_TEC9 (32)
+#define WEAPON_RIFLE (33)
+#define WEAPON_SNIPER (34)
+#define WEAPON_ROCKETLAUNCHER (35)
+#define WEAPON_HEATSEEKER (36)
+#define WEAPON_FLAMETHROWER (37)
+#define WEAPON_MINIGUN (38)
+#define WEAPON_SATCHEL (39)
+#define WEAPON_BOMB (40)
+#define WEAPON_SPRAYCAN (41)
+#define WEAPON_FIREEXTINGUISHER (42)
+#define WEAPON_CAMERA (43)
+#define WEAPON_NIGHTVISION (44)
+#define WEAPON_INFRARED (45)
+#define WEAPON_PARACHUTE (46)
+#define WEAPON_VEHICLE (49)
+#define WEAPON_DROWN (53)
+#define WEAPON_COLLISION (54)
+#define KEY_ACTION (1)
+#define KEY_CROUCH (2)
+#define KEY_FIRE (4)
+#define KEY_SPRINT (8)
+#define KEY_SECONDARY_ATTACK (16)
+#define KEY_JUMP (32)
+#define KEY_LOOK_RIGHT (64)
+#define KEY_HANDBRAKE (128)
+#define KEY_LOOK_LEFT (256)
+#define KEY_SUBMISSION (512)
+#define KEY_LOOK_BEHIND (512)
+#define KEY_WALK (1024)
+#define KEY_ANALOG_UP (2048)
+#define KEY_ANALOG_DOWN (4096)
+#define KEY_ANALOG_LEFT (8192)
+#define KEY_ANALOG_RIGHT (16384)
+#define KEY_YES (65536)
+#define KEY_NO (131072)
+#define KEY_CTRL_BACK (262144)
+#define KEY_UP (-128)
+#define KEY_DOWN (128)
+#define KEY_LEFT (-128)
+#define KEY_RIGHT (128)
+#define BODY_PART_TORSO (3)
+#define BODY_PART_GROIN (4)
+#define BODY_PART_LEFT_ARM (5)
+#define BODY_PART_RIGHT_ARM (6)
+#define BODY_PART_LEFT_LEG (7)
+#define BODY_PART_RIGHT_LEG (8)
+#define BODY_PART_HEAD (9)
+#define CLICK_SOURCE_SCOREBOARD (0)
+#define EDIT_RESPONSE_CANCEL (0)
+#define EDIT_RESPONSE_FINAL (1)
+#define EDIT_RESPONSE_UPDATE (2)
+#define SELECT_OBJECT_GLOBAL_OBJECT (1)
+#define SELECT_OBJECT_PLAYER_OBJECT (2)
+#define BULLET_HIT_TYPE_NONE (0)
+#define BULLET_HIT_TYPE_PLAYER (1)
+#define BULLET_HIT_TYPE_VEHICLE (2)
+#define BULLET_HIT_TYPE_OBJECT (3)
+#define BULLET_HIT_TYPE_PLAYER_OBJECT (4)
+
+// Additional Defines
+#define MAX_OBJECT_MATERIAL			16
+#define MAX_PLAYER_ATTACHED_OBJECTS 10
 #define	MAX_FILTER_SCRIPTS			16
 
 #define MAX_PVARS					800
@@ -57,29 +202,78 @@ class CGangZonePool;
 #define MAX_ITEMS					12
 #define MAX_COLUMNS					2
 
+#define GAMESTATE_STOPPED			0
+#define GAMESTATE_RUNNING			1
+#define GAMESTATE_RESTARTING		2
 /* -------------------------------------------------------- */
 
 // Server rules special
 enum CON_VARTYPE { CON_VARTYPE_FLOAT, CON_VARTYPE_INT, CON_VARTYPE_BOOL, CON_VARTYPE_STRING };
 
-#define CON_VARFLAG_DEBUG		1
-#define CON_VARFLAG_READONLY	2
-#define CON_VARFLAG_RULE		4	// Gets sent with a RULES query responce
+#define CON_VARFLAG_DEBUG			1
+#define CON_VARFLAG_READONLY		2
+#define CON_VARFLAG_RULE			4	// Gets sent with a RULES query responce
 
 typedef void(*VARCHANGEFUNC)();
 
 /* -------------------------------------------------------- */
+
+// RakNet Remote system
+struct PingAndClockDifferential
+{
+	unsigned short pingTime;
+	unsigned int clockDifferential;
+};
+
+struct RemoteSystemStruct
+{
+	bool isActive;
+	PlayerID playerId;  // The remote system associated with this reliability layer
+	PlayerID myExternalPlayerId;  // Your own IP, as reported by the remote system
+	BYTE gapD[1895];
+	DWORD dword774;
+	WORD word778;
+	BYTE gap77A[2];
+	DWORD dword77C;
+	DWORD dword780;
+	BYTE gap784[276];
+	DWORD dword898;
+	BYTE gap89C[16];
+	BYTE byte8AC;
+	BYTE gap8AD[1023];
+	unsigned int connectionTime;
+	enum ConnectMode
+	{
+		NO_ACTION,
+		DISCONNECT_ASAP,
+		DISCONNECT_ASAP_SILENTLY,
+		DISCONNECT_ON_NO_ACK,
+		REQUESTED_CONNECTION,
+		HANDLING_CONNECTION_REQUEST,
+		UNVERIFIED_SENDER,
+		SET_ENCRYPTION_ON_MULTIPLE_16_BYTE_PACKET,
+		CONNECTED
+	} connectMode;
+	BYTE byteAuthTableIndex; // https://github.com/kurta999/YSF/pull/64
+	BYTE byteAuthType;
+	BYTE byteIsLogon;
+};
+
+static_assert(sizeof(RemoteSystemStruct) == 3255, "Invalid RemoteSystemStruct size");
+
+/* -------------------------------------------------------- */
 typedef struct _MATRIX4X4
 {
-	CVector right;	// 0 - 12
-	DWORD  flags;	// 12 - 16
-	CVector up;		// 16 - 28
-	float  pad_u;	// 28 - 32
-	CVector at;		// 32 - 44
-	float  pad_a;	// 44 - 48
-	CVector pos;	// 48 - 60
-	float  pad_p;	// 60 - 64
+	CVector right;
+	DWORD  flags;
+	CVector up;
+	float  pad_u;
+	CVector at;
+	float  pad_a;
+	CVector pos;
+	float  pad_p;
 } MATRIX4X4, *PMATRIX4X4;
+static_assert(sizeof(_MATRIX4X4) == 64, "Invalid _MATRIX4X4 size");
 
 struct ConsoleVariable_s
 {
@@ -88,18 +282,15 @@ struct ConsoleVariable_s
 	void*			VarPtr;
 	VARCHANGEFUNC	VarChangeFunc;
 };
+static_assert(sizeof(ConsoleVariable_s) == 16, "Invalid ConsoleVariable_s size");
 
-struct C3DText  // size 0x21
+struct ConsoleCommand_s
 {
-	char*			szText;                                     // + 0x00
-    DWORD			dwColor;                         // + 0x04
-	CVector			vecPos;
-	float			fDrawDistance;                     // + 0x14
-    bool			bLineOfSight;            // + 0x18
-    int				iWorld;                  // + 0x19
-    WORD			attachedToPlayerID;    // + 0x1D
-	WORD			attachedToVehicleID;   // + 0x1F
+	char			szName[255];
+	DWORD			dwFlags;
+	void(*fptrFunc)();
 };
+static_assert(sizeof(ConsoleCommand_s) == 263, "Invalid ConsoleCommand_s size");
 
 /* -------------------------------------------------------- */
 // CPlayer
@@ -113,39 +304,35 @@ struct CAimSyncData
 	CVector			vecPosition;			// 13 - 25
 	float			fZAim;					// 25 - 29
 	BYTE			byteCameraZoom : 6;		// 29
-	BYTE			byteWeaponState  : 2;	// 29
-	BYTE			unk;					// 30 - 31
-	WORD			wCameraObject;			// 31 - 33
-	WORD			wCameraVehicle;			// 33 - 35
-	WORD			wCameraPlayer;			// 35 - 37
-	WORD			wCameraActor;			// 37 - 39
-	// Size = 39
+	BYTE			byteWeaponState : 2;	// 29
+	BYTE			byteAspectRatio;					// 30 - 31
 };
+static_assert(sizeof(CAimSyncData) == 31, "Invalid CAimSyncData size");
 
 struct CVehicleSyncData
 {
-	WORD			wVehicleId;				// 39 - 41 | 0 - 2
-	WORD			wLRAnalog;				// 41 - 43 | 2 - 4
-	WORD			wUDAnalog;				// 43 - 45 | 4 - 6
-	WORD			wKeys;					// 45 - 47 | 6 - 8
-	float			fQuaternion[4];			// 47 - 63 | 8 - 24
-	CVector			vecPosition;			// 63 - 75 | 24 - 36
-	CVector			vecVelocity;			// 75 - 87 | 36 - 48
-	float			fHealth;				// 87 - 91 | 48 - 52
-	BYTE			bytePlayerHealth;		// 91 - 92 | 52 - 53
-	BYTE			bytePlayerArmour;		// 92 - 93 | 53 - 54
-	BYTE			bytePlayerWeapon : 6;	// 93 - 94 | 54 - 55
-	BYTE			unk_2 : 2;				// 93 - 94 |
-	BYTE			byteSirenState;			// 94 - 95 | 55 - 56
-	BYTE			byteGearState;			// 95 - 96 | 56 - 57
-	WORD			wTrailerID;				// 96 - 98 | 57 - 59
-	union                                   // 98 - 104 | 59 - 63
+	WORD			wVehicleId;				// 0x001F - 0x0021
+	WORD			wLRAnalog;				// 0x0021 - 0x0023
+	WORD			wUDAnalog;				// 0x0023 - 0x0025
+	WORD			wKeys;					// 0x0025 - 0x0027
+	float			fQuaternion[4];			// 0x002B - 0x0037
+	CVector			vecPosition;			// 0x0037 - 0x0043
+	CVector			vecVelocity;			// 0x0043 - 0x004F
+	float			fHealth;				// 0x004F - 0x0053
+	BYTE			bytePlayerHealth;		// 0x0053 - 0x0054
+	BYTE			bytePlayerArmour;		// 0x0054 - 0x0055
+	BYTE			bytePlayerWeapon : 6;	// 0x0055 - 0x0056
+	BYTE			unk_2 : 2;				// 0x0055 - 0x0056
+	BYTE			byteSirenState;			// 0x0056 - 0x0057
+	BYTE			byteGearState;			// 0x0057 -	0x0058
+	WORD			wTrailerID;				// 0x0058 - 0x005A
+	union									// 
 	{
 		WORD			wHydraReactorAngle[2];
 		float           fTrainSpeed;
 	};
-	// Size = 63
 };
+static_assert(sizeof(CVehicleSyncData) == 63, "Invalid CVehicleSyncData size");
 
 struct CPassengerSyncData
 {
@@ -159,8 +346,8 @@ struct CPassengerSyncData
 	WORD			wUDAnalog;				// 0x0066 - 0x0068
 	WORD			wKeys;					// 0x0068 - 0x006A
 	CVector			vecPosition;			// 0x006A - 0x0076
-	// Size = 24
 };
+static_assert(sizeof(CPassengerSyncData) == 24, "Invalid CPassengerSyncData size");
 
 struct CSyncData
 {
@@ -186,10 +373,10 @@ struct CSyncData
 			WORD	wAnimFlags;
 		};
 	};
-	// Size = 68
 };
+static_assert(sizeof(CSyncData) == 68, "Invalid CSyncData size");
 
-struct CUnoccupiedSyncData // size 0x43
+struct CUnoccupiedSyncData
 {
 	WORD			wVehicleID;				// + 0x0000
 	BYTE			bytePassengerSlot;			// + 0x0002
@@ -200,24 +387,26 @@ struct CUnoccupiedSyncData // size 0x43
 	CVector			vecTurnVelocity;		// + 0x0033
 	float			fHealth;					// + 0x003F
 };
+static_assert(sizeof(CUnoccupiedSyncData) == 67, "Invalid CUnoccupiedSyncData size");
 
-struct CSpectatingSyncData		// size 0x12
+struct CSpectatingSyncData
 {
 	WORD			wLeftRightKeysOnSpectating;				// + 0x0000
 	WORD			wUpDownKeysOnSpectating;				// + 0x0002
 	WORD			wKeysOnSpectating;						// + 0x0004
 	CVector			vecPosition;							// + 0x0006
 };
+static_assert(sizeof(CSpectatingSyncData) == 18, "Invalid CSpectatingSyncData size");
 
-struct CTrailerSyncData // size 0x36 = 54
+struct CTrailerSyncData
 {
-	WORD			wTrailerID;				// + 0x0000
-	CVector			vecRoll;				// + 0x0002
-	CVector			vecDirection;			// + 0x000E
-	CVector			vecPosition;			// + 0x001A
-	CVector			vecVelocity;			// + 0x0026
-	DWORD			pad;
+	WORD			wTrailerID;			// + 0x0000
+	CVector			vecPosition;			// + 0x0002
+	float			fQuaternion[4];			// + 0x000E
+	CVector			vecVelocity;			// + 0x001E
+	CVector			vecTurnVelocity;		// + 0x002A
 };
+static_assert(sizeof(CTrailerSyncData) == 54, "Invalid CTrailerSyncData size");
 
 typedef struct CTextdraw
 {
@@ -234,25 +423,23 @@ typedef struct CTextdraw
 			BYTE bytePadding : 3;
 		};
 	};
-	float			fLetterWidth;			// 1
-	float			fLetterHeight;		// 5
+	CVector2D		vecLetter;	// 1 - 9
 	DWORD			dwLetterColor;		// 9
-	float			fLineWidth;			// 13
-	float			fLineHeight;			// 17
+	CVector2D		vecLine;
 	DWORD			dwBoxColor;			// 21
 	BYTE			byteShadow; // 26
 	BYTE			byteOutline; // 27
 	DWORD			dwBackgroundColor; // 31
 	BYTE			byteStyle; // 32
 	BYTE			byteSelectable; // 32
-	float			fX; // 33
-	float			fY; // 37
+	CVector2D		vecPos;
 	WORD			dwModelIndex; // 41 - 43
 	CVector			vecRot;  // 43 - 55
 	float			fZoom; // 55 - 59
 	WORD			color1; // 59 - 61
 	WORD			color2; // 61 - 63
 } _CTextdraw;
+static_assert(sizeof(CTextdraw) == 63, "Invalid CTextdraw size");
 
 struct CPlayerTextDraw
 {
@@ -261,27 +448,43 @@ struct CPlayerTextDraw
 	char			*szFontText[MAX_PLAYER_TEXT_DRAWS];
 	bool			bHasText[MAX_PLAYER_TEXT_DRAWS];
 };
+static_assert(sizeof(CPlayerTextDraw) == 2048 + 1024 + 256, "Invalid CPlayerTextDraw size");
 
-struct CPlayerText3DLabels // size 0x9802
+struct C3DText
 {
-	C3DText			TextLabels[ MAX_3DTEXT_PLAYER ];	// + 0x0000
-	BOOL			isCreated[ MAX_3DTEXT_PLAYER ];	// + 0x8400
+	char*			szText;					// + 0x00
+	DWORD			dwColor;				// + 0x04
+	CVector			vecPos;
+	float			fDrawDistance;			// + 0x14
+	bool			bLineOfSight;           // + 0x18
+	int				iWorld;                 // + 0x19
+	WORD			wAttachedToPlayerID;    // + 0x1D
+	WORD			wAttachedToVehicleID;   // + 0x1F
+};
+static_assert(sizeof(C3DText) == 33, "Invalid C3DText size");
+
+struct CPlayerText3DLabels
+{
+	C3DText			TextLabels[MAX_3DTEXT_PLAYER];	// + 0x0000
+	BOOL			isCreated[MAX_3DTEXT_PLAYER];	// + 0x8400
 	BYTE			unknown9800[MAX_3DTEXT_PLAYER];				// + 0x9400
 	WORD			wOwnerID;
 };
+static_assert(sizeof(CPlayerText3DLabels) == 38914, "Invalid CPlayerText3DLabels size");
 
-struct CAttachedObject // sizeof = 52 - 0x34
+struct CAttachedObject
 {
-    int				iModelID;
-    int				iBoneiD;
-    CVector         vecPos;
-    CVector         vecRot;
-    CVector         vecScale;
+	int				iModelID;
+	int				iBoneiD;
+	CVector         vecPos;
+	CVector         vecRot;
+	CVector         vecScale;
 	DWORD			dwMaterialColor1;
 	DWORD			dwMaterialColor2;
 };
+static_assert(sizeof(CAttachedObject) == 52, "Invalid CAttachedObject size");
 
-struct CPlayerSpawnInfo // size  46
+struct CPlayerSpawnInfo
 {
 	BYTE			byteTeam;				// 0 - 1
 	int				iSkin;					// 1 - 5
@@ -291,8 +494,9 @@ struct CPlayerSpawnInfo // size  46
 	int				iSpawnWeapons[3];		// 22 - 34
 	int				iSpawnWeaponsAmmo[3];	// 34 - 46
 };
+static_assert(sizeof(CPlayerSpawnInfo) == 46, "Invalid CPlayerSpawnInfo size");
 
-struct CBulletSyncData // sizeof = 40
+struct CBulletSyncData
 {
 	BYTE			byteHitType;
 	WORD			wHitID;
@@ -301,27 +505,34 @@ struct CBulletSyncData // sizeof = 40
 	CVector			vecCenterOfHit;
 	BYTE			byteWeaponID;
 };
+static_assert(sizeof(CBulletSyncData) == 40, "Invalid CBulletSyncData size");
 
 struct CPVar
 {
-    char			szVarName[MAX_PVAR_NAME + 1];
-    BOOL			bIsReadOnly;
-    int				iVarType;
-    int				iValue;
-    float			fValue;
-    char*			szValue;
+	char			szVarName[MAX_PVAR_NAME + 1];
+	BOOL			bIsReadOnly;
+	int				iVarType;
+	int				iValue;
+	float			fValue;
+	char*			szValue;
 };
+static_assert(sizeof(CPVar) == 61, "Invalid CPVar size");
 
 struct CPlayerVar
 {
-    CPVar			Vars[MAX_PVARS];
+	CPVar			Vars[MAX_PVARS];
 	BOOL			bIsPVarActive[MAX_PVARS];
-    int				iUpperIndex;
+	int				iUpperIndex;
 };
+static_assert(sizeof(CPlayerVar) == 48800 + 3200 + 4, "Invalid CPlayerVar size");
 
 struct CPlayer
 {
-	CAimSyncData			aimSyncData;			// 0 - 39
+	CAimSyncData			aimSyncData;			// 0 - 31
+	WORD				wCameraObject;			// 31 - 33
+	WORD				wCameraVehicle;			// 33 - 35
+	WORD				wCameraPlayer;			// 35 - 37
+	WORD				wCameraActor;			// 37 - 39
 	CVehicleSyncData		vehicleSyncData;		// 39 -
 	CPassengerSyncData		passengerSyncData;		//
 	CSyncData				syncData;				// 126 - 194
@@ -365,9 +576,9 @@ struct CPlayer
 	CPlayerText3DLabels*	p3DText;			// 10595 - 10599
 	WORD					wPlayerId;			// 10599 - 10601
 	int						iUpdateState;		// 10601 - 10605
-	//DWORD					dwLastSyncTick;		// 10605 - 10609
-	CAttachedObject			attachedObject[MAX_ATTACHED_OBJECTS]; // 10605 - 11125
-	BOOL					attachedObjectSlot[MAX_ATTACHED_OBJECTS]; // 11125 - 11165
+												//DWORD					dwLastSyncTick;		// 10605 - 10609
+	CAttachedObject			attachedObject[MAX_PLAYER_ATTACHED_OBJECTS]; // 10605 - 11125
+	BOOL					attachedObjectSlot[MAX_PLAYER_ATTACHED_OBJECTS]; // 11125 - 11165
 	BOOL					bHasAimSync;		// 11165 - 11169
 	BOOL					bHasTrailerSync;	// 11169 - 11173
 	BOOL					bHasUnoccupiedSync;	// 11173 - 11177
@@ -376,7 +587,7 @@ struct CPlayer
 	float					fCPSize;			// 11190 - 11194
 	BOOL					bIsInCP;			// 11194 - 11198
 	CVector					vecRaceCPPos;		// 11198 - 11210
-	CVector					vecRaceCPNextPos;	// 11210 - 11222
+	CVector					vecRaceCPNextPos;	// 11210 - 11222 
 	BYTE					byteRaceCPType;		// 11222 - 11223 // TODO -> replace
 	float					fRaceCPSize;		// 11223 - 11227
 	BOOL					bIsInRaceCP;		// 11227 - 11231
@@ -402,7 +613,7 @@ struct CPlayer
 	WORD					wTargetActorId;		// 11400 - 11402
 	DWORD					dwLastShotTick;		// 11402 - 11406
 	BYTE					dwLastShotWeapon;	// 11406 - 11407
-	CBulletSyncData			bulletSyncData;		// 11407 - 11447
+	CBulletSyncData			bulletSyncData;		// 11407 - 11447	
 	BYTE					m_byteTime;			// 11447 - 11448
 	float					m_fGameTime;		// 11448 - 11452
 	BYTE					byteSpectateType;	// 11452 - 11453
@@ -410,76 +621,82 @@ struct CPlayer
 	DWORD					dwLastStreaming;	// 11457 - 11461
 	DWORD					dwNPCRecordingType;	// 11461 - 11465
 	FILE					*pRecordingFile;	// 11465 - 11469
-	DWORD					dwFirstNPCWritingTime; // 11469 - 11473
+	DWORD					dwFirstNPCWritingTime; // 11469 - 11473 
 	PAD(unused, 9);								// 11473 - 11482
 	CPlayerVar*				pPlayerVars;		// 11482 - 11486
-	// Size = 9963
 };
+static_assert(sizeof(CPlayer) == 11486, "Invalid CPlayer size");
 
-struct CPlayerPool // sizeof = 99520
+struct CPlayerPool
 {
-	DWORD			dwVirtualWorld[MAX_PLAYERS];			// 0 - 4000
-	DWORD			dwPlayersCount;							// 4000 - 4004
-	DWORD			dwlastMarkerUpdate;						// 4004 - 4008
-	float			fUpdatePlayerGameTimers;				// 4008 - 4012
-	DWORD			dwScore[MAX_PLAYERS];					// 4012 - 8012
-	DWORD			dwMoney[MAX_PLAYERS];					// 8012 - 12012
-	DWORD			dwDrunkLevel[MAX_PLAYERS];				// 12012 - 16012
-	DWORD			dwLastScoreUpdate[MAX_PLAYERS];			// 16012 - 20012
-	char			szSerial[MAX_PLAYERS][101];				// 20012 - 121012
-	char			szVersion[MAX_PLAYERS][29];				// 121012 - 150012
-	BOOL			bIsPlayerConnectedEx[MAX_PLAYERS];		// 150012 - 154012
-	CPlayer			*pPlayer[MAX_PLAYERS];					// 154012 - 158012
-	char			szName[MAX_PLAYERS][25];				// 158012 - 183012
-	BOOL			bIsAnAdmin[MAX_PLAYERS];				// 183012 - 187012
-	BOOL			bIsNPC[MAX_PLAYERS];					// 187012 - 191012
-	PAD(pad0, 8000);											// 191012 - 199012
-	DWORD			dwConnectedPlayers;						// 199012 - 199016
-	DWORD			dwPlayerPoolSize;						// 199016 - 199020
+	DWORD					dwVirtualWorld[MAX_PLAYERS];				// 0 - 4000
+	DWORD					dwPlayersCount;								// 4000 - 4004
+	DWORD					dwlastMarkerUpdate;							// 4004 - 4008
+	float					fUpdatePlayerGameTimers;					// 4008 - 4012
+	DWORD					dwScore[MAX_PLAYERS];						// 4012 - 8012
+	DWORD					dwMoney[MAX_PLAYERS];						// 8012 - 12012
+	DWORD					dwDrunkLevel[MAX_PLAYERS];					// 12012 - 16012
+	DWORD					dwLastScoreUpdate[MAX_PLAYERS];				// 16012 - 20012
+	char					szSerial[MAX_PLAYERS][101];					// 20012 - 121012				
+	char					szVersion[MAX_PLAYERS][25];					// 121012 - 146012
+	RemoteSystemStruct		*pRemoteSystem[MAX_PLAYERS];				// 146012 - 150012
+	BOOL					bIsPlayerConnected[MAX_PLAYERS];			// 150012 - 154012
+	CPlayer					*pPlayer[MAX_PLAYERS];						// 154012 - 158012
+	char					szName[MAX_PLAYERS][MAX_PLAYER_NAME + 1];	// 158012 - 183012
+	BOOL					bIsAnAdmin[MAX_PLAYERS];					// 183012 - 187012
+	BOOL					bIsNPC[MAX_PLAYERS];						// 187012 - 191012
+	PAD(pad0, 8000);													// 191012 - 199012
+	DWORD					dwConnectedPlayers;							// 199012 - 199016
+	DWORD					dwPlayerPoolSize;							// 199016 - 199020
+	DWORD					dwUnk;										// 199020 - 199024
 };
+static_assert(sizeof(CPlayerPool) == 199024, "Invalid CPlayerPool size");
 
 /* -------------------------------------------------------- */
 // CVehicle
 /* -------------------------------------------------------- */
 
-struct CVehicleSpawn // size 36
+struct CVehicleSpawn
 {
-	DWORD			dwModelID;
-    CVector			vecPos;
-    float			fRot;
-	DWORD			dwColor1;
-	DWORD			dwColor2;
-	DWORD			dwRespawnTime;
-	DWORD			dwInterior;
+	int				iModelID;
+	CVector			vecPos;
+	float			fRot;
+	int				iColor1;
+	int				iColor2;
+	int				iRespawnTime;
+	int				iInterior;
 };
+static_assert(sizeof(CVehicleSpawn) == 36, "Invalid CVehicleSpawn size");
 
-struct CVehicleModInfo // sizeof = 26
+struct CVehicleModInfo
 {
 	BYTE			byteModSlots[14];                // + 0x0000
-    BYTE			bytePaintJob;                    // + 0x000E
-    int				iColor1;                             // + 0x000F
-    int				iColor2;                             // + 0x0010
+	BYTE			bytePaintJob;                    // + 0x000E
+	int				iColor1;                             // + 0x000F
+	int				iColor2;                             // + 0x0010
 };
+static_assert(sizeof(CVehicleModInfo) == 23, "Invalid CVehicleModInfo size");
 
-struct CVehicleParams // sizeof = 16
+struct CVehicleParams
 {
-	BYTE engine;
-	BYTE lights;
-	BYTE alarm;
-	BYTE doors;
-	BYTE bonnet;
-	BYTE boot;
-	BYTE objective; // 6
-	BYTE siren; // 7
-	BYTE door_driver; // 8
-	BYTE door_passenger;
-	BYTE door_backleft;
-	BYTE door_backright; // 11
-	BYTE window_driver; // 12
-	BYTE window_passenger;
-	BYTE window_backleft;
-	BYTE window_backright; // 15 - 16
+	char engine;
+	char lights;
+	char alarm;
+	char doors;
+	char bonnet;
+	char boot;
+	char objective; // 6
+	char siren; // 7
+	char door_driver; // 8
+	char door_passenger;
+	char door_backleft;
+	char door_backright; // 11
+	char window_driver; // 12
+	char window_passenger;
+	char window_backleft;
+	char window_backright; // 15 - 16
 };
+static_assert(sizeof(CVehicleParams) == 16, "Invalid CVehicleParams size");
 
 struct CVehicle
 {
@@ -493,7 +710,7 @@ struct CVehicle
 	WORD			wLastDriverID;		// 106 - 108
 	WORD			vehPassengers[7];	// 108 - 122
 	DWORD			vehActive;			// 122 - 126
-	DWORD			vehWasted;			// 126 - 130
+	DWORD			vehWasted;			// 126 - 130	
 	CVehicleSpawn	customSpawn;		// 130 - 166
 	float			fHealth;			// 166 - 170
 	DWORD			vehDoorStatus;		// 170 - 174
@@ -505,13 +722,14 @@ struct CVehicle
 	CVehicleModInfo vehModInfo;			// 183 - 206
 	char			szNumberplate[32 + 1]; // 206 - 239
 	CVehicleParams	vehParamEx;			// 239 - 255
-    BYTE			bDeathNotification; // 255 - 256
-    BYTE			bOccupied;			// 256 - 257
-    DWORD			vehOccupiedTick;	// 257 - 261
-    DWORD			vehRespawnTick;		// 261 - 265
-	BYTE			sirenEnabled;		// 265 - 266
-	BYTE			newSirenState;		// 266 - 267 passed to OnVehicleSirenStateChange
+	BYTE			bDeathNotification; // 255 - 256
+	BYTE			bOccupied;			// 256 - 257
+	DWORD			vehOccupiedTick;	// 257 - 261
+	DWORD			vehRespawnTick;		// 261 - 265
+	BYTE			byteSirenEnabled;	// 265 - 266
+	BYTE			byteNewSirenState;	// 266 - 267 : passed to OnVehicleSirenStateChange
 };
+static_assert(sizeof(CVehicle) == 267, "Invalid CVehicle size");
 
 struct CVehiclePool
 {
@@ -519,8 +737,9 @@ struct CVehiclePool
 	int				iVirtualWorld[MAX_VEHICLES];		// 212 - 8212
 	BOOL			bVehicleSlotState[MAX_VEHICLES];	// 8212 - 16212
 	CVehicle		*pVehicle[MAX_VEHICLES];			// 16212 - 24212
-	DWORD			dwVehiclePoolSize;					// 24212
+	DWORD			dwVehiclePoolSize;					// 24212 - 24216
 };
+static_assert(sizeof(CVehiclePool) == 24216, "Invalid CVehiclePool size");
 
 /* -------------------------------------------------------- */
 // CPickup
@@ -545,7 +764,7 @@ struct CPickupPool
 // CObject
 /* -------------------------------------------------------- */
 
-struct CObjectMaterial // sizeof = 215
+struct CObjectMaterial
 {
 	BYTE			byteUsed;				// 197 - 198
 	BYTE			byteSlot;				// 198 - 199
@@ -561,19 +780,20 @@ struct CObjectMaterial // sizeof = 215
 	DWORD			dwBackgroundColor;		// 407 - 411
 	BYTE			byteAlignment;			// 411 - 412
 };
+static_assert(sizeof(CObjectMaterial) == 215, "Invalid CObjectMaterial size");
 
-struct CObject // sizeof = 3712
+struct CObject
 {
 	WORD			wObjectID;			// 0 - 2
 	int				iModel;				// 2 - 6
 	BOOL			bActive;			// 6 - 10
 	MATRIX4X4		matWorld;			// 10 - 74 - pos - Object position
 	CVector			vecRot; 			// 74 - 86 - Object rotation
-	MATRIX4X4		matTarget;			// 86 - 150	-
+	MATRIX4X4		matTarget;			// 86 - 150	- 
 	BYTE			bIsMoving;			// 150 - 151
 	BYTE			bNoCameraCol;		// 151 - 152
 	float			fMoveSpeed;			// 152 - 156
-	DWORD			unk_4;				// 156 - 160
+	DWORD			unk_4;				// 156 -160
 	float			fDrawDistance;		// 160 - 164
 	WORD			wAttachedVehicleID;	// 164 - 166
 	WORD			wAttachedObjectID;	// 166 - 168
@@ -581,13 +801,14 @@ struct CObject // sizeof = 3712
 	CVector			vecAttachedRotation;// 180 - 192
 	BYTE			byteSyncRot;		// 192 - 193
 	DWORD			dwMaterialCount;	// 193 - 197
-	CObjectMaterial	Material[16];		// 197 - 3637
-	char			*szMaterialText[16];// 3637 - 3653
+	CObjectMaterial	Material[MAX_OBJECT_MATERIAL];		// 197 - 3637
+	char			*szMaterialText[MAX_OBJECT_MATERIAL];// 3637 - 3653
 };
+static_assert(sizeof(CObject) == 3701, "Invalid CObject size");
 
 struct CObjectPool
 {
-	BOOL			bPlayerObjectSlotState[MAX_PLAYERS][MAX_OBJECTS];	// 0
+	BOOL			bPlayerObjectSlotState[MAX_PLAYERS][MAX_OBJECTS];	// 0 
 	BOOL			bPlayersObject[MAX_OBJECTS];							// 4.000.000
 	CObject			*pPlayerObjects[MAX_PLAYERS][MAX_OBJECTS];		// 4.004.000
 	BOOL			bObjectSlotState[MAX_OBJECTS];						// 8.004.000
@@ -608,23 +829,22 @@ struct MenuInteraction
 struct CMenu	// size 0xB84
 {
 	BYTE			menuID;														// + 0x0000
-	char			szTitle[ MAX_MENU_TEXT_SIZE ];								// + 0x0001
-	char			szItems[ MAX_ITEMS ][ MAX_COLUMNS ][ MAX_MENU_TEXT_SIZE ];	// + 0x0021
+	char			szTitle[MAX_MENU_TEXT_SIZE];								// + 0x0001
+	char			szItems[MAX_ITEMS][MAX_COLUMNS][MAX_MENU_TEXT_SIZE];	// + 0x0021
 	char			szHeaders[MAX_COLUMNS][MAX_MENU_TEXT_SIZE];					// + 0x0321
 	BOOL			bIsInitiedForPlayer[MAX_PLAYERS];							// + 0x0361
 	MenuInteraction interaction;												// + 0x0B31
-	float			fPosX;														// + 0x0B71
-	float			fPosY;														// + 0x0B75
+	CVector2D		vecPos;
 	float			fColumn1Width;												// + 0x0B79
 	float			fColumn2Width;												// + 0x0B7D
 	BYTE			byteColumnsNumber;											// + 0x0B81
-	BYTE			byteItemsCount[ MAX_COLUMNS ];								// + 0x0B82
+	BYTE			byteItemsCount[MAX_COLUMNS];								// + 0x0B82
 };
 
 struct CMenuPool
 {
-	CMenu*			pMenu[ MAX_MENUS ];			//	+ 0x0000
-	BOOL			bIsCreated[ MAX_MENUS ];		//	+ 0x0200
+	CMenu*			pMenu[MAX_MENUS];			//	+ 0x0000
+	BOOL			bIsCreated[MAX_MENUS];		//	+ 0x0200
 	BOOL			bPlayerMenu[MAX_PLAYERS];	//	+ 0x0400
 };
 
@@ -666,8 +886,8 @@ struct CSAMPGangZonePool
 
 struct CActorAnim // 140
 {
-	char			szAnimLib[64]; // 0 - 64
-	char			szAnimName[64]; // 64 - 128
+	char			szAnimLib[64 + 1]; // 0 - 64
+	char			szAnimName[64 + 1]; // 64 - 128
 	float			fDelta;		// 128 - 132
 	BYTE			byteLoop;		// 132 - 133
 	BYTE			byteLockX;			// 133 - 134
@@ -675,26 +895,27 @@ struct CActorAnim // 140
 	BYTE			byteFreeze;		// 135 - 136
 	int				iTime;				//  136 - 140
 };
+static_assert(sizeof(CActorAnim) == 142, "Invalid CActorAnim size");
 
 struct CActor
 {
-	BYTE			pad0;				// 0
-	int				iSkinID;			// 1 - 5
-	CVector			vecSpawnPos;	// 5 - 17
-	float			fSpawnAngle;		// 17 - 21
-	DWORD			pad4;				// 21 - 25
-	DWORD			pad5;				// 25 - 29
-	BYTE			byteLoopAnim;		// 29 - 30
+	BYTE			pad0;
+	int				iSkinID;
+	CVector			vecSpawnPos;
+	float			fSpawnAngle;
+	DWORD			pad4;
+	DWORD			pad5;
+	BYTE			byteLoopAnim;
 	CActorAnim		anim;
-	WORD			wTime;				// 170 - 171
-	float			fHealth;			// 172 - 176
-	DWORD			pad;				// 176 - 180
-	float			fAngle;			// 180 - 184
-	CVector			vecPos;			// 184 - 196
-	DWORD			pad8[3];			// 196 - 208
-	BYTE			byteInvulnerable;	// 208 - 209
-	WORD			wActorID;			// 209 - 211
+	float			fHealth;
+	DWORD			pad;
+	float			fAngle;
+	CVector			vecPos;
+	BYTE			pad8[12];
+	BYTE			byteInvulnerable;
+	WORD			wActorID;
 };
+//static_assert(sizeof(CActor) == 211, "Invalid CActor size");
 
 struct CActorPool
 {
@@ -751,29 +972,29 @@ struct CNetGame
 	CMenuPool				*pMenuPool;				// 24
 	CTextDrawPool			*pTextDrawPool;			// 28
 	C3DTextPool				*p3DTextPool;			// 32
-	CGangZonePool			*pGangZonePool;			// 36
-	CActorPool				*pActorPool;			// 40
+	CSAMPGangZonePool		*pGangZonePool;			// 36 
+	CActorPool				*pActorPool;			// 40 
 	int						iCurrentGameModeIndex;	// 44
 	int						iCurrentGameModeRepeat;	// 48
 	BOOL					bFirstGameModeLoaded;	// 52
-	BOOL					unkasdasd;				// 56
+	void					*pHttpClient;					// 56
 	CScriptTimers			*pScriptTimers;			// 60
-	RakServer				*pRak;					// 64
+	void					*pRak;					// 64
 	DWORD					dwSomethingTick;
 	DWORD					dwUnk;
 	DWORD					dwUnk1;
-	BOOL					bLanMode;				//
+	BOOL					bLanMode;				// 
 	BOOL					bShowPlayerMarkers;		// 84
-	BYTE					byteShowNameTags;		//
-	BYTE					bTirePopping;			//
-	BYTE					byteAllowWeapons;		//
+	BYTE					byteShowNameTags;		// 
+	BYTE					byteWorldTimeHour;		// 
+	BYTE					byteAllowWeapons;		// 
 	BYTE					byteStuntBonus;			// 91 - 92
 	BYTE					byteDefaultCameraCollision; // 92 - 93
 	BYTE					byteWeather;			// 93 - 94
 	int						iGameState;				// 94 - 98
 	float					fGravity;				// 98 - 102
 	int						iDeathDropMoney;		// 102 - 106
-	BYTE					unklofasz;				// 106 - 107
+	BYTE					byteEnableZoneNames;				// 106 - 107
 	BYTE					byteMode;				// 107 - 108
 	BYTE					bLimitGlobalChatRadius;	// 108 - 109
 	BYTE					bUseCJWalk;				// 109 - 110
@@ -783,368 +1004,12 @@ struct CNetGame
 	BYTE					byteNameTagLOS;			// 119 - 120
 	BYTE					bManulVehicleEngineAndLights; // 120 - 121
 	BYTE					bLimitPlayerMarkers;	// 121 - 122
-	float					fPlayerMarkesLimit;		// 122 - 126
+	float					fPlayerMarkesLimit;		// 122 - 126 
 	BOOL					bVehicleFriendlyFire;	// 126 - 130
 #ifndef _WIN32
 	double					dElapsedTime;			// size = 8
 #endif
 	int						iSpawnsAvailable;		// 130 - 134
-	CPlayerSpawnInfo		AvailableSpawns[300];	// 129 - 13929
+	CPlayerSpawnInfo		AvailableSpawns[319];	// 129 - 14803
 };
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-struct PlayerID
-{
-	unsigned int binaryAddress;
-	unsigned short port;
-};
-
-const PlayerID UNASSIGNED_PLAYER_ID =
-{
-	0xFFFFFFFF, 0xFFFF
-};
-
-/// All RPC functions have the same parameter list - this structure.
-struct RPCParameters
-{
-	/// The data from the remote system
-	unsigned char *input;
-
-	/// How many bits long \a input is
-	unsigned int numberOfBitsOfData;
-
-	/// Which system called this RPC
-	PlayerID sender;
-
-	/// Which instance of RakPeer (or a derived RakServer or RakClient) got this call
-	void *recipient;
-
-	/// You can return values from RPC calls by writing them to this BitStream.
-	/// This is only sent back if the RPC call originally passed a BitStream to receive the reply.
-	/// If you do so and your send is reliable, it will block until you get a reply or you get disconnected from the system you are sending to, whichever is first.
-	/// If your send is not reliable, it will block for triple the ping time, or until you are disconnected, or you get a reply, whichever is first.
-	RakNet::BitStream *replyToSender;
-};
-
-/// These enumerations are used to describe when packets are delivered.
-enum PacketPriority
-{
-	SYSTEM_PRIORITY,   /// \internal Used by RakNet to send above-high priority messages.
-	HIGH_PRIORITY,   /// High priority messages are send before medium priority messages.
-	MEDIUM_PRIORITY,   /// Medium priority messages are send before low priority messages.
-	LOW_PRIORITY,   /// Low priority messages are only sent when no other messages are waiting.
-	NUMBER_OF_PRIORITIES
-};
-
-/// These enumerations are used to describe how packets are delivered.
-/// \note  Note to self: I write this with 3 bits in the stream.  If I add more remember to change that
-enum PacketReliability
-{
-	UNRELIABLE = 6,   /// Same as regular UDP, except that it will also discard duplicate datagrams.  RakNet adds (6 to 17) + 21 bits of overhead, 16 of which is used to detect duplicate packets and 6 to 17 of which is used for message length.
-	UNRELIABLE_SEQUENCED,  /// Regular UDP with a sequence counter.  Out of order messages will be discarded.  This adds an additional 13 bits on top what is used for UNRELIABLE.
-	RELIABLE,   /// The message is sent reliably, but not necessarily in any order.  Same overhead as UNRELIABLE.
-	RELIABLE_ORDERED,   /// This message is reliable and will arrive in the order you sent it.  Messages will be delayed while waiting for out of order messages.  Same overhead as UNRELIABLE_SEQUENCED.
-	RELIABLE_SEQUENCED /// This message is reliable and will arrive in the sequence you sent it.  Out or order messages will be dropped.  Same overhead as UNRELIABLE_SEQUENCED.
-};
-
-/// \sa NetworkIDGenerator.h
-typedef unsigned char UniqueIDType;
-typedef unsigned short PlayerIndex;
-typedef unsigned char RPCIndex;
-const int MAX_RPC_MAP_SIZE=((RPCIndex)-1)-1;
-const int UNDEFINED_RPC_INDEX=((RPCIndex)-1);
-
-/// First byte of a network message
-typedef unsigned char MessageID;
-
-typedef unsigned int RakNetTime;
-typedef long long RakNetTimeNS;
-
-struct RakNetStatisticsStruct
-{
-	///  Number of Messages in the send Buffer (high, medium, low priority)
-	unsigned messageSendBuffer[ NUMBER_OF_PRIORITIES ];
-	///  Number of messages sent (high, medium, low priority)
-	unsigned messagesSent[ NUMBER_OF_PRIORITIES ];
-	///  Number of data bits used for user messages
-	unsigned messageDataBitsSent[ NUMBER_OF_PRIORITIES ];
-	///  Number of total bits used for user messages, including headers
-	unsigned messageTotalBitsSent[ NUMBER_OF_PRIORITIES ];
-
-	///  Number of packets sent containing only acknowledgements
-	unsigned packetsContainingOnlyAcknowlegements;
-	///  Number of acknowledgements sent
-	unsigned acknowlegementsSent;
-	///  Number of acknowledgements waiting to be sent
-	unsigned acknowlegementsPending;
-	///  Number of acknowledgements bits sent
-	unsigned acknowlegementBitsSent;
-
-	///  Number of packets containing only acknowledgements and resends
-	unsigned packetsContainingOnlyAcknowlegementsAndResends;
-
-	///  Number of messages resent
-	unsigned messageResends;
-	///  Number of bits resent of actual data
-	unsigned messageDataBitsResent;
-	///  Total number of bits resent, including headers
-	unsigned messagesTotalBitsResent;
-	///  Number of messages waiting for ack (// TODO - rename this)
-	unsigned messagesOnResendQueue;
-
-	///  Number of messages not split for sending
-	unsigned numberOfUnsplitMessages;
-	///  Number of messages split for sending
-	unsigned numberOfSplitMessages;
-	///  Total number of splits done for sending
-	unsigned totalSplits;
-
-	///  Total packets sent
-	unsigned packetsSent;
-
-	///  Number of bits added by encryption
-	unsigned encryptionBitsSent;
-	///  total bits sent
-	unsigned totalBitsSent;
-
-	///  Number of sequenced messages arrived out of order
-	unsigned sequencedMessagesOutOfOrder;
-	///  Number of sequenced messages arrived in order
-	unsigned sequencedMessagesInOrder;
-
-	///  Number of ordered messages arrived out of order
-	unsigned orderedMessagesOutOfOrder;
-	///  Number of ordered messages arrived in order
-	unsigned orderedMessagesInOrder;
-
-	///  Packets with a good CRC received
-	unsigned packetsReceived;
-	///  Packets with a bad CRC received
-	unsigned packetsWithBadCRCReceived;
-	///  Bits with a good CRC received
-	unsigned bitsReceived;
-	///  Bits with a bad CRC received
-	unsigned bitsWithBadCRCReceived;
-	///  Number of acknowledgement messages received for packets we are resending
-	unsigned acknowlegementsReceived;
-	///  Number of acknowledgement messages received for packets we are not resending
-	unsigned duplicateAcknowlegementsReceived;
-	///  Number of data messages (anything other than an ack) received that are valid and not duplicate
-	unsigned messagesReceived;
-	///  Number of data messages (anything other than an ack) received that are invalid
-	unsigned invalidMessagesReceived;
-	///  Number of data messages (anything other than an ack) received that are duplicate
-	unsigned duplicateMessagesReceived;
-	///  Number of messages waiting for reassembly
-	unsigned messagesWaitingForReassembly;
-	///  Number of messages in reliability output queue
-	unsigned internalOutputQueueSize;
-	///  Current bits per second
-	double bitsPerSecond;
-	///  connection start time
-	RakNetTime connectionStartTime;
-};
-
-/// This represents a user message from another system.
-struct Packet
-{
-	/// Server only - this is the index into the player array that this playerId maps to
-	PlayerIndex playerIndex; // 0 - 2
-
-	/// The system that send this packet.
-	PlayerID playerId; // 2  - 8
-
-	/// The length of the data in bytes
-	/// \deprecated You should use bitSize.
-	unsigned int length; // 8 - 12
-
-	/// The length of the data in bits
-	unsigned int bitSize; // 12 - 16
-
-	/// The data from the sender
-	unsigned char* data; // 16 - 20
-
-	/// @internal
-	/// Indicates whether to delete the data, or to simply delete the packet.
-	bool deleteData;
-};
-
-#ifdef _WIN32
-class RakServer
-{
-public:
-	~RakServer(); // THIS NOT
-	virtual void _0();
-	virtual bool Start(unsigned short AllowedPlayers, unsigned int depreciated, int threadSleepTimer, unsigned short port, const char *forceHostAddress = 0) = 0; // 4
-	virtual void DisableSecurity( void ); // 8
-	virtual void SetPassword( const char *_password );	// 12
-	virtual bool HasPassword( void );	// 16 these two may be switched
-	virtual void Disconnect( unsigned int blockDuration, unsigned char orderingChannel=0 );	// 20
-	virtual bool Send_ASD(const char *data, const int length, int priority, int reliability, char orderingChannel, PlayerID playerId, bool broadcast); // 24
-	virtual bool Send(RakNet::BitStream* parameters, int priority, int reliability, unsigned orderingChannel, PlayerID playerId, bool broadcast);	// 28
-	virtual void _20(); //
-	virtual void _24();
-	virtual Packet* ReceiveEx( void );
-	virtual void Kick( const PlayerID playerId ); // 0x2C
-	virtual void DeallocatePacket(Packet* asd);
-	virtual void SetAllowedPlayers(unsigned short numberAllowed); // 0x34
-	virtual unsigned short GetAllowedPlayers( void ) const;
-	virtual unsigned short GetConnectedPlayers( void );
-	virtual void GetPlayerIPFromID( const PlayerID playerId, char returnValue[ 22 ], unsigned short *port );
-	virtual void PingPlayer( const PlayerID playerId );
-	virtual int GetAveragePing( const PlayerID playerId );
-	virtual int GetLastPing( const PlayerID playerId ); // 4C
-	virtual int GetLowestPing( const PlayerID playerId );
-	virtual void _54();
-	virtual void _58();
-	virtual void _5C();
-	virtual void _60();
-	virtual void _64();
-	virtual void _68();
-	virtual void _6C();
-	virtual void _70();
-	virtual void RegisterAsRemoteProcedureCall( int* uniqueID, void ( *functionPointer ) ( RPCParameters *rpcParms ) );	// 74
-	virtual void RegisterClassMemberRPC( int* uniqueID, void *functionPointer );	// 78
-	virtual void UnregisterAsRemoteProcedureCall( int* uniqueID );	// 7C
-	virtual bool RPC(int* uniqueID, RakNet::BitStream* parameters, PacketPriority priority, PacketReliability reliability, unsigned orderingChannel, PlayerID playerId, bool broadcast, bool shiftTimestamp); // 80
-	virtual void _84();
-	virtual void _88();
-	virtual void _8C();
-	virtual void _90();
-	virtual void _94();
-	virtual void _98();
-	virtual void _9C();
-	virtual void _A0();
-	virtual void _A4();
-	virtual void _A8();
-	virtual void _AC();
-	virtual void _B0();
-	virtual void _B4();
-	virtual void _B8();
-	virtual void _BC();
-	virtual void _C0();
-	virtual void _C4();
-	virtual void _C8();
-	virtual void _CC();
-	virtual const char* GetLocalIP( unsigned int index ); // 208
-	virtual PlayerID GetInternalID( void ) const; // 212
-	virtual void PushBackPacket( Packet *packet, bool pushAtHead ); // 216
-	virtual void SetRouterInterface( void *routerInterface ); // 220
-	virtual void RemoveRouterInterface( void *routerInterface ); // 224
-	virtual int GetIndexFromPlayerID( PlayerID playerId ); // E4 - 228
-	virtual PlayerID GetPlayerIDFromIndex( int index ); // E8 - 232 - 236
-	virtual void UNKNOWN(void); // 236 - 240 ; possibly GetPlayerIPFromIndex(struct in_addr *, _DWORD)
-	virtual void AddToBanList( const char *IP, unsigned int milliseconds=0 ); // 240 - 244
-	virtual void RemoveFromBanList( const char *IP ); // 244
-	virtual void ClearBanList( void ); // 248
-	virtual bool _IsBanned( const char *IP ); // 252
-	virtual bool IsActivePlayerID( const PlayerID playerId ); // 256
-	virtual void SetTimeoutTime( RakNetTime timeMS, const PlayerID target ); // 260
-	virtual bool SetMTUSize( int size ); // 264
-	virtual int GetMTUSize( void ) const; // 268
-	virtual void AdvertiseSystem( const char *host, unsigned short remotePort, const char *data, int dataLength ); // 272
-	virtual RakNetStatisticsStruct * const GetStatistics( const PlayerID playerId ); // 276
-	virtual void ApplyNetworkSimulator( double maxSendBPS, unsigned short minExtraPing, unsigned short extraPingVariance); // 280
-};
-
-#else
-
-struct RakBanStruct
-{
-	char *IP;
-	unsigned int timeout;
-};
-
-struct RakBanList
-{
-	RakBanStruct* *listArray;
-	unsigned int list_size;
-	unsigned int allocation_size;
-};
-
-class RakServer
-{
-public:
-	~RakServer();
-	virtual bool _0();
-	virtual void _4();
-	virtual bool Start(unsigned short AllowedPlayers, unsigned int depreciated, int threadSleepTimer, unsigned short port, const char *forceHostAddress = 0) = 0;
-	virtual void _C();
-	virtual void _10();
-	virtual void _14();
-	virtual void _18();
-	virtual void _1C();
-	virtual bool SendGECI(RakNet::BitStream* parameters, int priority, int reliability, unsigned orderingChannel, PlayerID playerId, bool broadcast);
-	virtual bool Send(RakNet::BitStream* parameters, int priority, int reliability, unsigned orderingChannel, PlayerID playerId, bool broadcast);
-	virtual void _28();
-	virtual void _2C();
-	virtual void _30();
-	virtual void _34();
-	virtual void SetAllowedPlayers(unsigned short numberAllowed);
-	virtual void _3C();
-	virtual void _40();
-	virtual void _44();
-	virtual void _48();
-	virtual void _4C();
-	virtual int GetLastPing( const PlayerID playerId ); // 0x50
-	virtual void _54();
-	virtual void _58();
-	virtual void _5C();
-	virtual const char* GetLocalIP( unsigned int index );
-	virtual PlayerID GetInternalID( void ) const;
-	virtual void PushBackPacket( Packet *packet, bool pushAtHead );
-	virtual void SetRouterInterface( void *routerInterface );
-	virtual void RemoveRouterInterface( void *routerInterface );
-	virtual void UnregisterAsRemoteProcedureCall_BAD( int* uniqueID );
-	virtual void RegisterAsRemoteProcedureCall( int* uniqueID, void ( *functionPointer ) ( RPCParameters *rpcParms ) ); // 120
-	virtual void RegisterClassMemberRPC( int* uniqueID, void *functionPointer ); // 124
-	virtual void UnregisterAsRemoteProcedureCall( int* uniqueID ); // 128
-	virtual void UnregisterAsRemoteProcedureCall_4( int* uniqueID );
-	virtual void UnregisterAsRemoteProcedureCall_5( int* uniqueID );
-	virtual bool RPC(int* uniqueID, RakNet::BitStream* parameters, int priority, int reliability, unsigned orderingChannel, PlayerID playerId, bool broadcast, bool shiftTimestamp);
-	virtual void _90();
-	virtual void _94();
-	virtual void _98();
-	virtual void _9C();
-	virtual void _A0();
-	virtual void _A4();
-	virtual void _A8();
-	virtual void _AC();
-	virtual void _B0();
-	virtual void _B4();
-	virtual void _B8();
-	virtual void _BC();
-	virtual void _C0();
-	virtual void _C4();
-	virtual void _C8();
-	virtual void _CC();
-	virtual void _D0();
-	virtual void _D4();
-	virtual void _D8();
-	virtual void _DC();
-	virtual void _E0();
-	virtual void _E8();
-	virtual int GetIndexFromPlayerID( PlayerID playerId ); // EC
-	virtual PlayerID GetPlayerIDFromIndex( int index ); // F0 - 240 - 244
-	virtual void AddToBanList( const char *IP, unsigned int milliseconds=0 ); // 244 - 248
-	virtual void RemoveFromBanList( const char *IP ); // 248 - 252
-	virtual void ClearBanList( void ); // 252
-private:
-	virtual bool _IsBanned( const char *IP ); // 256
-public:
-	virtual bool IsActivePlayerID( const PlayerID playerId );
-	virtual void SetTimeoutTime( RakNetTime timeMS, const PlayerID target );
-	virtual bool SetMTUSize( int size );
-	virtual int GetMTUSize( void ) const;
-	virtual void AdvertiseSystem( const char *host, unsigned short remotePort, const char *data, int dataLength );
-	virtual RakNetStatisticsStruct * const GetStatistics( const PlayerID playerId );
-	virtual void ApplyNetworkSimulator( double maxSendBPS, unsigned short minExtraPing, unsigned short extraPingVariance);
-
-	RakBanList* GetBanList()
-	{
-		return reinterpret_cast<RakBanList*>(((char*)this)+4+929);
-	}
-};
-#endif
-
 #endif

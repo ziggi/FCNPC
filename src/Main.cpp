@@ -20,7 +20,7 @@ bool         bServerInit = false;
 DWORD        dwStartTick;
 CNetGame     *pNetGame;
 void         *pConsole = NULL;
-RakServer    *pRakServer = NULL;
+void         *pRakServer = NULL;
 char         szSampClient[64];
 char         szSampVersion[64];
 

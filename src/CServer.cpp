@@ -191,7 +191,7 @@ bool CServer::DoesNameExist(char *szName)
 	// Loop through all the players
 	for (WORD i = 0; i <= pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
 		// Ignore non connected players
-		if (!pNetGame->pPlayerPool->bIsPlayerConnectedEx[i]) {
+		if (!pNetGame->pPlayerPool->bIsPlayerConnected[i]) {
 			continue;
 		}
 
@@ -284,7 +284,7 @@ float CServer::GetVehicleAngle(CVehicle *pVehicle)
 	float fAngle;
 
 	bool bIsBadMatrix = pVehicle->vehMatrix.up.fX == 0.0f && pVehicle->vehMatrix.up.fY == 0.0f;
-	bool bIsTrain = pVehicle->customSpawn.dwModelID == 537 || pVehicle->customSpawn.dwModelID == 538;
+	bool bIsTrain = pVehicle->customSpawn.iModelID == 537 || pVehicle->customSpawn.iModelID == 538;
 
 	if (bIsBadMatrix || bIsTrain) {
 		fAngle = pVehicle->customSpawn.fRot;
@@ -310,9 +310,9 @@ CVector CServer::GetVehicleSeatPos(CVehicle *pVehicle, BYTE byteSeatId)
 	CVector *pvecSeat;
 
 	if (byteSeatId == 0 || byteSeatId == 1) {
-		pvecSeat = CFunctions::GetVehicleModelInfoEx(pVehicle->customSpawn.dwModelID, VEHICLE_MODEL_INFO_FRONTSEAT);
+		pvecSeat = CFunctions::GetVehicleModelInfoEx(pVehicle->customSpawn.iModelID, VEHICLE_MODEL_INFO_FRONTSEAT);
 	} else {
-		pvecSeat = CFunctions::GetVehicleModelInfoEx(pVehicle->customSpawn.dwModelID, VEHICLE_MODEL_INFO_REARSEAT);
+		pvecSeat = CFunctions::GetVehicleModelInfoEx(pVehicle->customSpawn.iModelID, VEHICLE_MODEL_INFO_REARSEAT);
 	}
 
 	// Adjust the seat vector

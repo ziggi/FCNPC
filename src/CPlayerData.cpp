@@ -352,10 +352,10 @@ void CPlayerData::Update(int iState)
 		m_pPlayer->vehicleSyncData.bytePlayerWeapon = m_byteWeaponId;
 		m_pPlayer->vehicleSyncData.byteGearState = m_byteGearState;
 
-		if (CVehicleInfo::IsAHydra(static_cast<WORD>(pVehicle->customSpawn.dwModelID))) {
+		if (CVehicleInfo::IsAHydra(static_cast<WORD>(pVehicle->customSpawn.iModelID))) {
 			m_pPlayer->vehicleSyncData.wHydraReactorAngle[0] = m_wHydraThrustAngle[0];
 			m_pPlayer->vehicleSyncData.wHydraReactorAngle[1] = m_wHydraThrustAngle[1];
-		} else if (CVehicleInfo::IsATrainPart(static_cast<WORD>(pVehicle->customSpawn.dwModelID))) {
+		} else if (CVehicleInfo::IsATrainPart(static_cast<WORD>(pVehicle->customSpawn.iModelID))) {
 			m_pPlayer->vehicleSyncData.fTrainSpeed = m_fTrainSpeed;
 		}
 
@@ -2009,7 +2009,7 @@ bool CPlayerData::EnterVehicle(WORD wVehicleId, BYTE byteSeatId, int iType)
 	}
 
 	// Validate the seat id
-	if (!CVehicleInfo::IsValidPassengerSeat(byteSeatId, static_cast<WORD>(pVehicle->customSpawn.dwModelID))) {
+	if (!CVehicleInfo::IsValidPassengerSeat(byteSeatId, static_cast<WORD>(pVehicle->customSpawn.iModelID))) {
 		return false;
 	}
 
@@ -2081,7 +2081,7 @@ bool CPlayerData::PutInVehicle(WORD wVehicleId, BYTE byteSeatId)
 	}
 
 	// Validate the seat id
-	if (!CVehicleInfo::IsValidPassengerSeat(byteSeatId, static_cast<WORD>(pVehicle->customSpawn.dwModelID))) {
+	if (!CVehicleInfo::IsValidPassengerSeat(byteSeatId, static_cast<WORD>(pVehicle->customSpawn.iModelID))) {
 		return false;
 	}
 
@@ -2540,7 +2540,7 @@ bool CPlayerData::AddForPlayer(WORD wForPlayerId, bool bIsNPC)
 	CFunctions::PlayerRPC(&RPC_ServerJoin, &bs, wForPlayerId);
 
 	for (WORD i = 0; i <= pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
-		if (pNetGame->pPlayerPool->bIsPlayerConnectedEx[i] && i != m_wPlayerId) {
+		if (pNetGame->pPlayerPool->bIsPlayerConnected[i] && i != m_wPlayerId) {
 			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[i];
 			if (pPlayer && pPlayer->byteStreamedIn[m_wPlayerId] == 1) {
 				pPlayer->byteStreamedIn[m_wPlayerId] = 0;
