@@ -27,7 +27,6 @@ extern logprintf_t          logprintf;
 #define MAX_FILTERSCRIPTS   16
 #define SAFE_DELETE(ptr)    if (ptr) { delete ptr; ptr = NULL; }
 #define SAFE_RELEASE(ptr)   if (ptr) { ptr->Release(); ptr = NULL; }
-#define PAD(a, b)           char a[b]
 #ifndef CHECK_PARAMS
 #define CHECK_PARAMS(m,n) \
 	if (params[0] != (m * 4)) { \
