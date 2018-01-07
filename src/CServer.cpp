@@ -28,6 +28,10 @@ CServer::CServer(eSAMPVersion version)
 	m_dwUpdateRate = DEFAULT_UPDATE_RATE;
 	// enable crashlog by default
 	m_bCrashLogCreation = true;
+	// init move mode
+	for (int i = MOVE_MODE_NONE + 1; i < MOVE_MODE_SIZE; i++) {
+		m_bMoveModeEnabled[i] = false;
+	}
 	// Initialize random seed
 	srand(static_cast<unsigned int>(time(NULL)));
 }
