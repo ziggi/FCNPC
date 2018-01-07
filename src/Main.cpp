@@ -60,12 +60,13 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	logprintf("");
 	logprintf("-------------------------------------------------");
 	logprintf("     FCNPC - Fully Controllable NPC v" PLUGIN_VERSION "");
-	logprintf("         " SYSTEM_NAME " %s %s", szSampClient, szSampVersion);
-	logprintf("          " __DATE__" at " __TIME__);
+	logprintf("            " SYSTEM_NAME " %s %s", szSampClient, szSampVersion);
+	logprintf("           " __DATE__" at " __TIME__);
 	logprintf("");
 	logprintf("  Author:       OrMisicL (2013 - 2015)");
-	logprintf("  Continued by: ziggi (2016 - present)");
-	logprintf("  Contributors: kurta999, Neutralneu");
+	logprintf("  Continued by: ziggi    (2016 - present)");
+	logprintf("");
+	logprintf("  See full credits in the README.md file");
 	logprintf("-------------------------------------------------");
 	logprintf("");
 	logprintf("Loading...");

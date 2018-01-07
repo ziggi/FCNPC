@@ -39,14 +39,13 @@ make
 # Thanks
 
 - SA-MP Team: SA-MP
-- OrMisicL: Developer
+- OrMisicL: FCNPC creator
 - Zeex: Subhook library
 - kurta999: YSF plugin
-- Lorenc_, kurta999, therainycat: Contributors
+- Lorenc_, kurta999, Neutralneu, therainycat, WoutProvost, karimcambridge: Contributors
 - urShadow, Incognito: Code samples in their plugins
-- Admigo: Testing
-- iJumbo: Linux testing
-
+- WoutProvost: Creating and updating wiki
+- And the whole community for testing
 
 # Definitions
 ```Pawn
