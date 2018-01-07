@@ -42,9 +42,9 @@ make
 - OrMisicL: FCNPC creator
 - Zeex: Subhook library
 - kurta999: YSF plugin
-- Lorenc_, kurta999, Neutralneu, therainycat, WoutProvost, karimcambridge: Contributors
+- Lorenc_, kurta999, Neutralneu, therainycat, Freaksken, karimcambridge: Contributors
 - urShadow, Incognito: Code samples in their plugins
-- WoutProvost: Creating and updating wiki
+- Freaksken: Creating and updating wiki
 - And the whole community for testing
 
 # Definitions
