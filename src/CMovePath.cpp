@@ -59,7 +59,7 @@ std::vector<CVector> *CMovePath::GetPoints(int iPathId)
 	return &m_vPath[iPathId];
 }
 
-int CMovePath::AddPoint(int iPathId, CVector vecPoint)
+int CMovePath::AddPoint(int iPathId, const CVector &vecPoint)
 {
 	if (!IsPathValid(iPathId)) {
 		return -1;

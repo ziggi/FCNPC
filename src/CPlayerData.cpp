@@ -88,6 +88,16 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_dwReloadTickCount = 0;
 	m_dwShootTickCount = 0;
 	m_dwShootDelay = 0;
+	m_dwEnterExitTickCount = 0;
+	m_dwMoveStartTime = 0;
+	m_dwMoveTime = 0;
+	m_dwMeleeDelay = 0;
+	m_dwKillVehicleTickCount = 0;
+	m_dwVehicleDeadTick = 0;
+	m_bAimSetAngle = false;
+	m_pPlayback = NULL;
+	m_pNode = NULL;
+	m_pPlayer = NULL;
 	SetPlayingPlaybackPath((char *)"npcmodes/recordings/");
 }
 
@@ -233,7 +243,7 @@ bool CPlayerData::Respawn()
 	return true;
 }
 
-void CPlayerData::SetSpawnPosition(CVector vecPosition)
+void CPlayerData::SetSpawnPosition(const CVector &vecPosition)
 {
 	// Set the player position
 	m_pPlayer->spawn.vecPos = vecPosition;
@@ -649,8 +659,9 @@ void CPlayerData::Process()
 		return;
 	}
 
-	if (!pServer->GetPlayerManager()->IsPlayerConnected(m_wPlayerId)) {
-		pServer->GetPlayerManager()->DeletePlayer(m_wPlayerId);
+	CPlayerManager *pPlayerManager = pServer->GetPlayerManager();
+	if (!pPlayerManager->IsPlayerConnected(m_wPlayerId)) {
+		pPlayerManager->DeletePlayer(m_wPlayerId);
 		return;
 	}
 
@@ -943,7 +954,7 @@ void CPlayerData::Process()
 	}
 }
 
-void CPlayerData::SetPosition(CVector vecPosition)
+void CPlayerData::SetPosition(const CVector &vecPosition)
 {
 	// Check the player state
 	if (GetState() == PLAYER_STATE_DRIVER && m_pPlayer->wVehicleId != INVALID_VEHICLE_ID) {
@@ -1352,7 +1363,7 @@ float CPlayerData::GetWeaponAccuracy(BYTE byteWeaponId)
 	return m_pWeaponInfo->GetAccuracy(byteWeaponId);
 }
 
-bool CPlayerData::SetWeaponInfo(BYTE byteWeaponId, SWeaponInfo sWeaponInfo)
+bool CPlayerData::SetWeaponInfo(BYTE byteWeaponId, const SWeaponInfo &sWeaponInfo)
 {
 	bool bSuccess = m_pWeaponInfo->SetInfo(byteWeaponId, sWeaponInfo);
 
@@ -1467,7 +1478,7 @@ void CPlayerData::ClearAnimations()
 	CFunctions::AddedPlayersRPC(&RPC_ClearAnimations, &bsData, m_wPlayerId);
 }
 
-void CPlayerData::SetVelocity(CVector vecVelocity, bool bUpdatePos)
+void CPlayerData::SetVelocity(const CVector &vecVelocity, bool bUpdatePos)
 {
 	CVehicle *pVehicle = GetVehicle();
 	if (pVehicle) {
@@ -1520,7 +1531,7 @@ void CPlayerData::GetKeys(WORD *pwUDAnalog, WORD *pwLRAnalog, DWORD *pdwKeys)
 	*pdwKeys = m_pPlayer->dwKeys;
 }
 
-bool CPlayerData::GoTo(CVector vecPoint, int iType, int iMode, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset, DWORD dwStopDelay)
+bool CPlayerData::GoTo(const CVector &vecPoint, int iType, int iMode, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset, DWORD dwStopDelay)
 {
 	// Validate the movement
 	if (iType == MOVE_TYPE_AUTO && GetState() == PLAYER_STATE_DRIVER) {
@@ -1733,7 +1744,7 @@ void CPlayerData::ToggleInfiniteAmmo(bool bToggle)
 	m_bHasInfiniteAmmo = bToggle;
 }
 
-void CPlayerData::AimAt(CVector vecPoint, bool bShoot, int iShootDelay, bool bSetAngle, CVector vecOffsetFrom)
+void CPlayerData::AimAt(const CVector &vecPoint, bool bShoot, int iShootDelay, bool bSetAngle, const CVector &vecOffsetFrom)
 {
 	if (m_bMoving && m_iMoveType == MOVE_TYPE_SPRINT) {
 		return;
@@ -1768,7 +1779,7 @@ void CPlayerData::AimAt(CVector vecPoint, bool bShoot, int iShootDelay, bool bSe
 	m_bShooting = bShoot;
 }
 
-void CPlayerData::AimAtPlayer(WORD wHitId, bool bShoot, int iShootDelay, bool bSetAngle, CVector vecOffset, CVector vecOffsetFrom)
+void CPlayerData::AimAtPlayer(WORD wHitId, bool bShoot, int iShootDelay, bool bSetAngle, const CVector &vecOffset, const CVector &vecOffsetFrom)
 {
 	CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[wHitId];
 	AimAt(pPlayer->vecPosition + vecOffset, bShoot, iShootDelay, bSetAngle, vecOffsetFrom);
@@ -1777,7 +1788,7 @@ void CPlayerData::AimAtPlayer(WORD wHitId, bool bShoot, int iShootDelay, bool bS
 	m_vecAimOffset = vecOffset;
 }
 
-void CPlayerData::UpdateAimingData(CVector vecPoint, bool bSetAngle)
+void CPlayerData::UpdateAimingData(const CVector &vecPoint, bool bSetAngle)
 {
 	// Adjust the player position
 	CVector vecPosition = m_pPlayer->vecPosition + m_vecAimOffsetFrom;
@@ -1951,7 +1962,7 @@ void CPlayerData::ProcessDamage(WORD wDamagerId, float fHealthLoss, BYTE byteWea
 	m_byteLastDamagerWeapon = byteWeaponId;
 }
 
-void CPlayerData::ProcessVehicleDamage(WORD wDamagerId, WORD wVehicleId, BYTE byteWeaponId, CVector vecHit)
+void CPlayerData::ProcessVehicleDamage(WORD wDamagerId, WORD wVehicleId, BYTE byteWeaponId, const CVector &vecHit)
 {
 	int iReturn = CCallbackManager::OnVehicleTakeDamage(m_wPlayerId, wDamagerId, wVehicleId, byteWeaponId, vecHit);
 
@@ -1963,10 +1974,9 @@ void CPlayerData::ProcessVehicleDamage(WORD wDamagerId, WORD wVehicleId, BYTE by
 		}
 
 		float fHealth = GetVehicleHealth();
-		SWeaponInfo sWeaponInfo = CWeaponInfo::GetDefaultInfo(byteWeaponId);
 
 		if (fHealth > 0.0f) {
-			fHealth -= sWeaponInfo.fDamage;
+			fHealth -= CWeaponInfo::GetDefaultInfo(byteWeaponId).fDamage;
 
 			if (fHealth < 0.0f) {
 				fHealth = 0.0f;
@@ -2239,7 +2249,7 @@ BYTE CPlayerData::GetVehicleGearState()
 	return m_byteGearState;
 }
 
-void CPlayerData::SetSurfingOffsets(CVector vecOffsets)
+void CPlayerData::SetSurfingOffsets(const CVector &vecOffsets)
 {
 	m_vecSurfing = vecOffsets;
 }
@@ -2288,7 +2298,7 @@ void CPlayerData::StopSurfing()
 	m_vecSurfing = CVector(0.0f, 0.0f, 0.0f);
 }
 
-bool CPlayerData::StartPlayingPlayback(char *szFile, int iRecordId, bool bAutoUnload, CVector vecPoint, float *fQuaternion)
+bool CPlayerData::StartPlayingPlayback(char *szFile, int iRecordId, bool bAutoUnload, const CVector &vecPoint, float *fQuaternion)
 {
 	// Make sure the player is not already Playing
 	if (m_bPlaying) {

@@ -11,7 +11,7 @@
 #include "Main.hpp"
 #include "CUtils.hpp"
 
-float CMath::GetDistanceBetween3DPoints(CVector vecPosition, CVector _vecPosition)
+float CMath::GetDistanceBetween3DPoints(const CVector &vecPosition, const CVector &_vecPosition)
 {
 	// Get the distance between the two vectors
 	float fSX = (_vecPosition.fX - vecPosition.fX) * (_vecPosition.fX - vecPosition.fX);
@@ -20,12 +20,12 @@ float CMath::GetDistanceBetween3DPoints(CVector vecPosition, CVector _vecPositio
 	return ((float)sqrt(fSX + fSY + fSZ));
 }
 
-float CMath::GetDistanceFromRayToPoint(CVector vecStartPosition, CVector vecEndPosition, CVector vecPoint)
+float CMath::GetDistanceFromRayToPoint(const CVector &vecStartPosition, const CVector &vecEndPosition, const CVector &vecPoint)
 {
 	return GetDistanceBetween3DPoints(GetNearestPointToRay(vecStartPosition, vecEndPosition, vecPoint), vecPoint);
 }
 
-CVector CMath::GetNearestPointToRay(CVector vecStartPosition, CVector vecEndPosition, CVector vecPoint)
+CVector CMath::GetNearestPointToRay(const CVector &vecStartPosition, const CVector &vecEndPosition, const CVector &vecPoint)
 {
 	CVector vecDirection = (vecEndPosition - vecStartPosition) / GetDistanceBetween3DPoints(vecStartPosition, vecEndPosition);
 	return vecDirection * GetDistanceBetween3DPoints(vecStartPosition, vecPoint) + vecStartPosition;
@@ -37,7 +37,7 @@ float CMath::Max(const float a, const float b)
 }
 
 // based on Quat function from MTA SA
-void CMath::GetQuaternionFromMatrix(MATRIX4X4 m, float *fQuaternion)
+void CMath::GetQuaternionFromMatrix(const MATRIX4X4 &m, float *fQuaternion)
 {
 	fQuaternion[0] = sqrt(Max((float)0, 1.0f + m.right.fX + m.up.fY + m.at.fZ)) * 0.5f;
 	fQuaternion[1] = sqrt(Max((float)0, 1.0f + m.right.fX - m.up.fY - m.at.fZ)) * 0.5f;

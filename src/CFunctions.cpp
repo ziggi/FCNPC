@@ -155,15 +155,16 @@ WORD CFunctions::GetMaxNPC()
 	return static_cast<WORD>(pfn__CConsole__GetIntVariable(pConsole, "maxnpc"));
 }
 
-void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE byteWeaponId, CVector vecPoint, CVector vecOffsetFrom, bool bIsHit)
+void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE byteWeaponId, const CVector &vecPoint, const CVector &vecOffsetFrom, bool bIsHit)
 {
 	// Validate the player
-	if (!pServer->GetPlayerManager()->IsNpcConnected(wPlayerId)) {
+	CPlayerManager *pPlayerManager = pServer->GetPlayerManager();
+	if (!pPlayerManager->IsNpcConnected(wPlayerId)) {
 		return;
 	}
 
 	// Get the player
-	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wPlayerId);
+	CPlayerData *pPlayerData = pPlayerManager->GetAt(wPlayerId);
 
 	// Get the origin hit vector position
 	CVector vecOrigin;

@@ -19,7 +19,7 @@ public:
 	bool IsPathValid(int iPathId);
 	std::vector<CVector> *GetPoints(int iPathId);
 
-	int AddPoint(int iPathId, CVector vecPoint);
+	int AddPoint(int iPathId, const CVector &vecPoint);
 	bool RemovePoint(int iPathId, int iPointId);
 	bool IsPointValid(int iPathId, int iPointId);
 	CVector *GetPoint(int iPathId, int iPointId);

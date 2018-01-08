@@ -47,7 +47,7 @@ public:
 	static CVector *GetVehicleModelInfoEx(int iModelID, int iInfoType);
 	static WORD GetMaxPlayers();
 	static WORD GetMaxNPC();
-	static void PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE byteWeaponId, CVector vecPoint, CVector vecOffsetFrom, bool bIsHit);
+	static void PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE byteWeaponId, const CVector &vecPoint, const CVector &vecOffsetFrom, bool bIsHit);
 
 	static void GlobalRPC(int* szUniqueID, RakNet::BitStream* bsParams, WORD wExcludePlayerId = INVALID_PLAYER_ID, char PacketStream = 2);
 	static void AddedPlayersRPC(int* szUniqueID, RakNet::BitStream* bsParams, WORD wPlayerId, char PacketStream = 2);

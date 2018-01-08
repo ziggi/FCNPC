@@ -403,7 +403,7 @@ struct CTrailerSyncData
 static_assert(sizeof(CTrailerSyncData) == 54, "Invalid CTrailerSyncData size");
 
 typedef struct CTextdraw
-{
+{ //-V802
 	union
 	{
 		BYTE byteFlags;			// 25
@@ -479,7 +479,7 @@ struct CAttachedObject
 static_assert(sizeof(CAttachedObject) == 52, "Invalid CAttachedObject size");
 
 struct CPlayerSpawnInfo
-{
+{ //-V802
 	BYTE			byteTeam;				// 0 - 1
 	int				iSkin;					// 1 - 5
 	BYTE			unk;					// 5 - 6
@@ -491,7 +491,7 @@ struct CPlayerSpawnInfo
 static_assert(sizeof(CPlayerSpawnInfo) == 46, "Invalid CPlayerSpawnInfo size");
 
 struct CBulletSyncData
-{
+{ //-V802
 	BYTE			byteHitType;
 	WORD			wHitID;
 	CVector			vecHitOrigin;

@@ -73,7 +73,7 @@ const PlayerID UNASSIGNED_PLAYER_ID =
 };
 
 struct Packet
-{
+{ //-V802
 	PlayerIndex playerIndex;
 	PlayerID playerId;
 	unsigned int length;

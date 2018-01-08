@@ -39,10 +39,10 @@ public:
 	CWeaponInfo();
 	~CWeaponInfo();
 
-	static bool SetDefaultInfo(BYTE byteWeaponId, SWeaponInfo sWeaponInfo);
+	static bool SetDefaultInfo(BYTE byteWeaponId, const SWeaponInfo &sWeaponInfo);
 	static SWeaponInfo GetDefaultInfo(BYTE byteWeaponId);
 
-	bool SetInfo(BYTE byteWeaponId, SWeaponInfo sWeaponInfo);
+	bool SetInfo(BYTE byteWeaponId, const SWeaponInfo &sWeaponInfo);
 	SWeaponInfo GetInfo(BYTE byteWeaponId);
 
 	int GetType(BYTE byteWeaponId);

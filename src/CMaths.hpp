@@ -21,13 +21,13 @@
 class CMath
 {
 public:
-	static float GetDistanceBetween3DPoints(CVector vecPosition, CVector _vecPosition);
-	static float GetDistanceFromRayToPoint(CVector vecStartPosition, CVector vecEndPosition, CVector vecPoint);
-	static CVector GetNearestPointToRay(CVector vecStartPosition, CVector vecEndPosition, CVector vecPoint);
+	static float GetDistanceBetween3DPoints(const CVector &vecPosition, const CVector &_vecPosition);
+	static float GetDistanceFromRayToPoint(const CVector &vecStartPosition, const CVector &vecEndPosition, const CVector &vecPoint);
+	static CVector GetNearestPointToRay(const CVector &vecStartPosition, const CVector &vecEndPosition, const CVector &vecPoint);
 
 	static float Max(const float a, const float b);
 
-	static void GetQuaternionFromMatrix(MATRIX4X4 matrix, float *fQuaternion);
+	static void GetQuaternionFromMatrix(const MATRIX4X4 &matrix, float *fQuaternion);
 	static void GetMatrixFromQuaternion(float *fQuaternion, MATRIX4X4 *matrix);
 	static void QuaternionRotateZ(MATRIX4X4 *m, float angle);
 

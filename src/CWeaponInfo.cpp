@@ -74,7 +74,7 @@ CWeaponInfo::~CWeaponInfo()
 	}
 }
 
-bool CWeaponInfo::SetDefaultInfo(BYTE byteWeaponId, SWeaponInfo sWeaponInfo)
+bool CWeaponInfo::SetDefaultInfo(BYTE byteWeaponId, const SWeaponInfo &sWeaponInfo)
 {
 	if (!CWeaponInfo::IsValid(byteWeaponId)) {
 		return false;
@@ -93,7 +93,7 @@ SWeaponInfo CWeaponInfo::GetDefaultInfo(BYTE byteWeaponId)
 	return g_sDefaultWeaponInfo[byteWeaponId];
 }
 
-bool CWeaponInfo::SetInfo(BYTE byteWeaponId, SWeaponInfo sWeaponInfo)
+bool CWeaponInfo::SetInfo(BYTE byteWeaponId, const SWeaponInfo &sWeaponInfo)
 {
 	if (!IsValid(byteWeaponId)) {
 		return false;

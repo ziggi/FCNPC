@@ -39,7 +39,7 @@ public:
 	void Process();
 	bool Spawn(int iSkinId);
 	bool Respawn();
-	void SetSpawnPosition(CVector vecPosition);
+	void SetSpawnPosition(const CVector &vecPosition);
 	bool Kill(WORD wKillerId, BYTE byteReason);
 	void Update(int iState);
 	void UpdateSync(int iState);
@@ -61,14 +61,14 @@ public:
 	bool SetState(BYTE byteState);
 	BYTE GetState();
 
-	void SetPosition(CVector vecPosition);
+	void SetPosition(const CVector &vecPosition);
 	void GetPosition(CVector *pvecPosition);
 	void UpdateHeightPos(CVector *pvecPosition);
 	void SetQuaternion(float *fQuaternion);
 	void GetQuaternion(float *fQuaternion);
 	void SetAngle(float fAngle);
 	float GetAngle();
-	void SetVelocity(CVector vecVelocity, bool bUpdatePos = false);
+	void SetVelocity(const CVector &vecVelocity, bool bUpdatePos = false);
 	void GetVelocity(CVector *pvecVelocity);
 	void SetSpeed(float fSpeed);
 	float GetSpeed();
@@ -105,7 +105,7 @@ public:
 	bool IsWeaponDoubleHanded(BYTE byteWeaponId);
 	bool SetWeaponAccuracy(BYTE byteWeaponId, float fAccuracy);
 	float GetWeaponAccuracy(BYTE byteWeaponId);
-	bool SetWeaponInfo(BYTE byteWeaponId, SWeaponInfo sWeaponInfo);
+	bool SetWeaponInfo(BYTE byteWeaponId, const SWeaponInfo &sWeaponInfo);
 	SWeaponInfo GetWeaponInfo(BYTE byteWeaponId);
 
 	void SetSkin(int iSkin);
@@ -131,7 +131,7 @@ public:
 	void ApplyAnimation(char *szAnimationLib, char *szAnimationName, float fDelta, bool bLoop, bool bLockX, bool bLockY, bool bFreeze, int iTime);
 	void ClearAnimations();
 
-	bool GoTo(CVector vecPoint, int iType, int iMode, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f, DWORD dwStopDelay = 250);
+	bool GoTo(const CVector &vecPoint, int iType, int iMode, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f, DWORD dwStopDelay = 250);
 	bool GoToPlayer(WORD wPlayerId, int iType, int iMode, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f, float fDistCheck = 1.5f, DWORD dwStopDelay = 250);
 	bool GoByMovePath(int iPathId, int iPointId, int iType, int iMode, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f);
 	void UpdateMovingData(CVector vecDestination, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset);
@@ -145,9 +145,9 @@ public:
 	void ToggleReloading(bool bToggle);
 	void ToggleInfiniteAmmo(bool bToggle);
 
-	void AimAt(CVector vecPoint, bool bShoot, int iShootDelay, bool bSetAngle, CVector vecOffsetFrom);
-	void AimAtPlayer(WORD wHitId, bool bShoot, int iShootDelay, bool bSetAngle, CVector vecOffset, CVector vecOffsetFrom);
-	void UpdateAimingData(CVector vecPoint, bool bSetAngle);
+	void AimAt(const CVector &vecPoint, bool bShoot, int iShootDelay, bool bSetAngle, const CVector &vecOffsetFrom);
+	void AimAtPlayer(WORD wHitId, bool bShoot, int iShootDelay, bool bSetAngle, const CVector &vecOffset, const CVector &vecOffsetFrom);
+	void UpdateAimingData(const CVector &vecPoint, bool bSetAngle);
 	void StopAim();
 	bool MeleeAttack(int iTime, bool bUseFightstyle);
 	void StopAttack();
@@ -159,7 +159,7 @@ public:
 	bool IsReloading();
 
 	void ProcessDamage(WORD wDamagerId, float fHealthLoss, BYTE byteWeaponId, int iBodypart);
-	void ProcessVehicleDamage(WORD wDamagerId, WORD wVehicleId, BYTE byteWeaponId, CVector vecHit);
+	void ProcessVehicleDamage(WORD wDamagerId, WORD wVehicleId, BYTE byteWeaponId, const CVector &vecHit);
 	void ProcessStreamIn(WORD wForPlayerId);
 	void ProcessStreamOut(WORD wForPlayerId);
 
@@ -183,7 +183,7 @@ public:
 	void SetVehicleGearState(BYTE byteGearState);
 	BYTE GetVehicleGearState();
 
-	void SetSurfingOffsets(CVector vecOffsets);
+	void SetSurfingOffsets(const CVector &vecOffsets);
 	void GetSurfingOffsets(CVector *vecOffsets);
 	void SetSurfingVehicle(WORD wVehicleId);
 	int GetSurfingVehicle();
@@ -191,7 +191,7 @@ public:
 	int GetSurfingObject();
 	void StopSurfing();
 
-	bool StartPlayingPlayback(char *szFile, int iRecordId, bool bAutoUnload, CVector vecPoint, float *fQuaternion);
+	bool StartPlayingPlayback(char *szFile, int iRecordId, bool bAutoUnload, const CVector &vecPoint, float *fQuaternion);
 	void StopPlayingPlayback();
 	void PausePlayingPlayback();
 	void ResumePlayingPlayback();

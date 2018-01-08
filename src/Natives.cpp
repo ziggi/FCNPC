@@ -2770,7 +2770,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StartPlayingPlayback(AMX *amx, cell *params
 	}
 
 	// Make sure the playback is valid
-	if (szFile && strlen(szFile) == 0 && !pServer->GetRecordManager()->IsValid(iRecordId)) {
+	if (szFile && szFile[0] == '\0' && !pServer->GetRecordManager()->IsValid(iRecordId)) {
 		delete[] fQuaternion;
 		return 0;
 	}
@@ -2845,7 +2845,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_LoadPlayingPlayback(AMX *amx, cell *params)
 	amx_StrParam(amx, params[1], szFile);
 
 	// Make sure the filename is valid
-	if (szFile && strlen(szFile) == 0) {
+	if (szFile && szFile[0] == '\0') {
 		return 0;
 	}
 
@@ -2887,7 +2887,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetPlayingPlaybackPath(AMX *amx, cell *para
 	}
 
 	// Make sure the path is valid
-	if (szFile && strlen(szFile) == 0) {
+	if (szFile && szFile[0] == '\0') {
 		return 0;
 	}
 
