@@ -39,6 +39,8 @@ public:
 
 	static float GetAngle(float fRotationX, float fRotationY);
 	static void GetCoordsInFront(float fX, float fY, float fA, float fDistance, float &fResX, float &fResY);
+
+	static bool IsEqual(float a, float b);
 };
 
 #endif

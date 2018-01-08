@@ -27,7 +27,8 @@ CNodeManager::~CNodeManager()
 	// Reset player values
 	for (WORD i = 0; i < MAX_NODES; i++) {
 		if (m_pNode[i]) {
-			SAFE_DELETE(m_pNode[i]);
+			delete m_pNode[i];
+			m_pNode[i] = NULL;
 		}
 	}
 }

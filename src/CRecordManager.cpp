@@ -65,7 +65,7 @@ int CRecordManager::Load(char *szFile)
 			recordNew.v_dwTime.push_back(dwTime);
 			recordNew.v_vehicleSyncData.push_back(vehicleSyncData);
 		}
-	} else if (iPlaybackType == PLAYBACK_TYPE_ONFOOT) {
+	} else if (iPlaybackType == PLAYBACK_TYPE_ONFOOT) { //-V547
 		CSyncData playerSyncData;
 
 		while (!feof(pFile)) {

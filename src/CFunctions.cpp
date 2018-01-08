@@ -68,10 +68,11 @@ void CFunctions::PreInitialize()
 WORD CFunctions::GetFreePlayerSlot()
 {
 	// Loop through all the players
-	for (WORD i = GetMaxPlayers() - 1; i >= 0; i--) {
+	int iMaxPlayers = static_cast<int>(GetMaxPlayers());
+	for (int i = iMaxPlayers - 1; i != -1; i--) {
 		// Is he not connected ?
 		if (!pNetGame->pPlayerPool->bIsPlayerConnected[i]) {
-			return i;
+			return static_cast<WORD>(i);
 		}
 	}
 	return INVALID_PLAYER_ID;
@@ -213,7 +214,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 			bulletSyncData.vecCenterOfHit = bulletSyncData.vecHitTarget;
 			break;
 		case BULLET_HIT_TYPE_PLAYER:
-			if (bulletSyncData.wHitID >= 0 && bulletSyncData.wHitID < MAX_PLAYERS) {
+			if (bulletSyncData.wHitID < MAX_PLAYERS) {
 				CPlayer *pHitPlayerData = pNetGame->pPlayerPool->pPlayer[bulletSyncData.wHitID];
 				if (pHitPlayerData) {
 					bulletSyncData.vecCenterOfHit = bulletSyncData.vecHitTarget - pHitPlayerData->vecPosition;

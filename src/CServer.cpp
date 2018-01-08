@@ -87,16 +87,10 @@ BYTE CServer::Initialize(AMX *pAMX)
 	// Install hooks
 	CHooks::InstallHooks();
 	// Create the player manager instance
-	m_pPlayerDataManager = new CPlayerManager();
-	if (!m_pPlayerDataManager) {
-		return ERROR_PLAYER_MANAGER_FAIL;
-	}
+	m_pPlayerDataManager = new CPlayerManager;
 
 	// Create the node manager instance
-	m_pNodeManager = new CNodeManager();
-	if (!m_pNodeManager) {
-		return ERROR_NODE_MANAGER_FAIL;
-	}
+	m_pNodeManager = new CNodeManager;
 
 	// Create the move path instance
 	m_pMovePath = new CMovePath;
@@ -219,9 +213,6 @@ int CServer::GetTickRate()
 
 bool CServer::SetUpdateRate(DWORD dwRate)
 {
-	if (dwRate < 0) {
-		return false;
-	}
 	m_dwUpdateRate = dwRate;
 	return true;
 }
@@ -283,7 +274,7 @@ float CServer::GetVehicleAngle(CVehicle *pVehicle)
 {
 	float fAngle;
 
-	bool bIsBadMatrix = pVehicle->vehMatrix.up.fX == 0.0f && pVehicle->vehMatrix.up.fY == 0.0f;
+	bool bIsBadMatrix = CMath::IsEqual(pVehicle->vehMatrix.up.fX, 0.0f) && CMath::IsEqual(pVehicle->vehMatrix.up.fY, 0.0f);
 	bool bIsTrain = pVehicle->customSpawn.iModelID == 537 || pVehicle->customSpawn.iModelID == 538;
 
 	if (bIsBadMatrix || bIsTrain) {
@@ -297,7 +288,7 @@ float CServer::GetVehicleAngle(CVehicle *pVehicle)
 
 CVector CServer::GetVehiclePos(CVehicle *pVehicle)
 {
-	if (pVehicle->vehMatrix.up.fX == 0.0f && pVehicle->vehMatrix.up.fY == 0.0f) {
+	if (CMath::IsEqual(pVehicle->vehMatrix.up.fX, 0.0f) && CMath::IsEqual(pVehicle->vehMatrix.up.fY, 0.0f)) {
 		return pVehicle->customSpawn.vecPos;
 	}
 

@@ -48,6 +48,7 @@ public:
 	Invoke()
 	{
 		gotAddresses = false;
+		amx_idx = 0;
 	}
 
 	int CA_RayCastLine(float fStartX, float fStartY, float fStartZ, float fEndX, float fEndY, float fEndZ, float *fX, float *fY, float *fZ) {

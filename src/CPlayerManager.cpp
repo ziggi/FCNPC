@@ -16,8 +16,8 @@ bool					bCreated = false;
 
 CPlayerManager::CPlayerManager()
 {
-	for (auto &pPlayer : m_pNpcArray) {
-		pPlayer = NULL;
+	for (int i = 0; i < MAX_PLAYERS; i++) {
+		m_pNpcArray[i] = NULL;
 	}
 }
 
@@ -138,11 +138,10 @@ bool CPlayerManager::IsNpcConnected(WORD wPlayerId)
 
 bool CPlayerManager::IsPlayerConnected(WORD wPlayerId)
 {
-	if (wPlayerId >= MAX_PLAYERS || wPlayerId < 0) {
+	if (wPlayerId >= MAX_PLAYERS) {
 		return false;
-	} else {
-		return pNetGame->pPlayerPool->bIsPlayerConnected[wPlayerId] != 0;
 	}
+	return pNetGame->pPlayerPool->bIsPlayerConnected[wPlayerId] != 0;
 }
 
 WORD CPlayerManager::GetId(char *szName)

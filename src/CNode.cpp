@@ -18,6 +18,9 @@ CNode::CNode(int iNodeId)
 	m_iNodeId = iNodeId;
 	// Reset file pointer
 	m_pFile = NULL;
+	m_nodeHeader = CNodeHeader();
+	m_nodeLink = CLinkNode();
+	m_nodePath = CPathNode();
 }
 
 CNode::~CNode()

@@ -138,3 +138,8 @@ void CMath::GetCoordsInFront(float fX, float fY, float fA, float fDistance, floa
 	fResX = fX + (fDistance * sin(fAngleRadian));
 	fResY = fY + (fDistance * cos(fAngleRadian));
 }
+
+bool CMath::IsEqual(float a, float b)
+{
+	return fabs(a - b) < DBL_EPSILON;
+}

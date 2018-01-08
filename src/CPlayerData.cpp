@@ -82,12 +82,19 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_fTrainSpeed = 0.0f;
 	m_byteGearState = 0;
 	m_bVelocityUpdatePos = false;
+	m_fLastDistance = 0.0f;
+	m_dwUpdateTick = 0;
+	m_dwMoveTickCount = 0;
+	m_dwReloadTickCount = 0;
+	m_dwShootTickCount = 0;
+	m_dwShootDelay = 0;
 	SetPlayingPlaybackPath((char *)"npcmodes/recordings/");
 }
 
 CPlayerData::~CPlayerData()
 {
 	SAFE_DELETE(m_pWeaponInfo);
+	SAFE_DELETE(m_pPlayback);
 }
 
 WORD CPlayerData::GetId()
@@ -199,7 +206,7 @@ bool CPlayerData::Respawn()
 	// Reset vehicle and seat id
 	SetVehicle(INVALID_VEHICLE_ID, 0);
 	// Set the player stats back
-	if (fHealth == 0.0f) {
+	if (CMath::IsEqual(fHealth, 0.0f)) {
 		SetHealth(100.0f);
 		SetArmour(0.0f);
 	} else {
@@ -776,7 +783,7 @@ void CPlayerData::Process()
 		// Process the player surfing
 		if (m_wSurfingInfo != 0) {
 			WORD wVehicleId = m_wSurfingInfo;
-			if (wVehicleId > 0 && wVehicleId < MAX_VEHICLES) {
+			if (wVehicleId > 0 && wVehicleId < MAX_VEHICLES) { //-V560
 				m_pPlayer->vecPosition = pNetGame->pVehiclePool->pVehicle[wVehicleId]->vecPosition + m_vecSurfing;
 			} else {
 				WORD wObjectId = m_wSurfingInfo - MAX_VEHICLES;
@@ -1032,7 +1039,7 @@ void CPlayerData::SetAngle(float fAngle)
 	// Update quaternion
 	SetQuaternion(fQuaternion);
 
-	SAFE_DELETE(fQuaternion);
+	delete[] fQuaternion;
 }
 
 float CPlayerData::GetAngle()
@@ -1134,7 +1141,7 @@ int CPlayerData::GetVirtualWorld()
 
 void CPlayerData::SetWeapon(BYTE byteWeaponId)
 {
-	if (byteWeaponId < 0 || byteWeaponId > 46) {
+	if (byteWeaponId > 46) {
 		return;
 	}
 
@@ -1364,7 +1371,7 @@ SWeaponInfo CPlayerData::GetWeaponInfo(BYTE byteWeaponId)
 void CPlayerData::SetSpecialAction(BYTE byteActionId)
 {
 	// Validate the action id
-	if (byteActionId < 0 || (byteActionId > 13 && byteActionId < 20) || (byteActionId > 25 && byteActionId != 68)) {
+	if ((byteActionId > 13 && byteActionId < 20) || (byteActionId > 25 && byteActionId != 68)) {
 		return;
 	}
 
@@ -1536,11 +1543,11 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, int iMode, float fRadius, bo
 	if (iType == MOVE_TYPE_AUTO || iType == MOVE_TYPE_WALK || iType == MOVE_TYPE_RUN || iType == MOVE_TYPE_SPRINT) {
 		wUDKey |= static_cast<WORD>(KEY_UP);
 
-		if (iType == MOVE_TYPE_AUTO && fSpeed == MOVE_SPEED_AUTO) {
+		if (iType == MOVE_TYPE_AUTO && CMath::IsEqual(fSpeed, MOVE_SPEED_AUTO)) {
 			iType = MOVE_TYPE_RUN;
 		}
 
-		if (fSpeed == MOVE_SPEED_AUTO) {
+		if (CMath::IsEqual(fSpeed, MOVE_SPEED_AUTO)) {
 			if (iType == MOVE_TYPE_RUN) {
 				fSpeed = MOVE_SPEED_RUN;
 			} else if (iType == MOVE_TYPE_WALK) {
@@ -1552,11 +1559,11 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, int iMode, float fRadius, bo
 			float fSpeedValues[] = {MOVE_SPEED_WALK, MOVE_SPEED_RUN, MOVE_SPEED_SPRINT};
 			float fNearestSpeed = CUtils::GetNearestFloatValue(fSpeed, fSpeedValues, sizeof(fSpeedValues) / sizeof(float));
 
-			if (fNearestSpeed == MOVE_SPEED_SPRINT) {
+			if (CMath::IsEqual(fNearestSpeed, MOVE_SPEED_SPRINT)) {
 				iType = MOVE_TYPE_SPRINT;
-			} else if (fNearestSpeed == MOVE_SPEED_RUN) {
+			} else if (CMath::IsEqual(fNearestSpeed, MOVE_SPEED_RUN)) {
 				iType = MOVE_TYPE_RUN;
-			} else if (fNearestSpeed == MOVE_SPEED_WALK) {
+			} else if (CMath::IsEqual(fNearestSpeed, MOVE_SPEED_WALK)) {
 				iType = MOVE_TYPE_WALK;
 			}
 		}
@@ -1568,10 +1575,10 @@ bool CPlayerData::GoTo(CVector vecPoint, int iType, int iMode, float fRadius, bo
 		} else if (iType == MOVE_TYPE_SPRINT) {
 			dwMoveKey |= KEY_SPRINT;
 		}
-	} else if (iType == MOVE_TYPE_DRIVE) {
+	} else if (iType == MOVE_TYPE_DRIVE) { //-V547
 		dwMoveKey |= KEY_SPRINT;
 
-		if (fSpeed == MOVE_SPEED_AUTO) {
+		if (CMath::IsEqual(fSpeed, MOVE_SPEED_AUTO)) {
 			fSpeed = 1.0f;
 		}
 	}
@@ -1615,7 +1622,7 @@ bool CPlayerData::GoByMovePath(int iPathId, int iPointId, int iType, int iMode, 
 
 void CPlayerData::UpdateMovingData(CVector vecDestination, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset)
 {
-	if (fRadius != 0.0f) {
+	if (!CMath::IsEqual(fRadius, 0.0f)) {
 		vecDestination -= CVector(CUtils::RandomFloat(-fRadius, fRadius), CUtils::RandomFloat(-fRadius, fRadius), 0.0);
 	}
 
@@ -1625,17 +1632,17 @@ void CPlayerData::UpdateMovingData(CVector vecDestination, float fRadius, bool b
 	float fDistance = CMath::GetDistanceBetween3DPoints(vecPosition, vecDestination);
 
 	CVector vecFront = CVector();
-	if (fDistance != 0.0f) {
+	if (!CMath::IsEqual(fDistance, 0.0f)) {
 		vecFront = (vecDestination - vecPosition) / fDistance;
 	}
 
 	float fAngle = CMath::GetAngle(vecFront.fX, vecFront.fY);
 
-	if (fDistOffset != 0.0f) {
+	if (!CMath::IsEqual(fDistOffset, 0.0f)) {
 		fDistance += fDistOffset;
 		CMath::GetCoordsInFront(vecPosition.fX, vecPosition.fY, fAngle, fDistance, vecDestination.fX, vecDestination.fY);
 
-		if (fDistance != 0.0f) {
+		if (!CMath::IsEqual(fDistance, 0.0f)) {
 			vecFront = (vecDestination - vecPosition) / fDistance;
 		}
 	}
@@ -1648,7 +1655,7 @@ void CPlayerData::UpdateMovingData(CVector vecDestination, float fRadius, bool b
 	vecFront *= (fSpeed / 100.0f); // Step per 1ms
 	SetVelocity(vecFront);
 	// Calculate the moving time
-	if (vecFront.Length() != 0.0f) {
+	if (!CMath::IsEqual(vecFront.Length(), 0.0f)) {
 		m_dwMoveTime = static_cast<DWORD>(fDistance / vecFront.Length());
 	} else {
 		m_dwMoveTime = 0;
@@ -2040,7 +2047,7 @@ bool CPlayerData::EnterVehicle(WORD wVehicleId, BYTE byteSeatId, int iType)
 		CFunctions::PlayerEnterVehicle(m_pPlayer, m_wVehicleToEnter, m_byteSeatToEnter);
 	} else {
 		// Go to the vehicle
-		GoTo(vecDestination, iType, true);
+		GoTo(vecDestination, iType, GetMoveMode());
 	}
 
 	return true;
@@ -2141,8 +2148,8 @@ void CPlayerData::SetVehicle(WORD wVehicleId, BYTE byteSeatId)
 
 	if (wVehicleId == INVALID_VEHICLE_ID && m_pPlayer->wVehicleId != INVALID_VEHICLE_ID) {
 		CVehicle *pVehicle = GetVehicle();
-		pVehicle->bOccupied = false;
-		pVehicle->vehActive = false;
+		pVehicle->bOccupied = 0;
+		pVehicle->vehActive = 0;
 	}
 
 	CVehicle *pVehicle = GetVehicle();
@@ -2152,14 +2159,14 @@ void CPlayerData::SetVehicle(WORD wVehicleId, BYTE byteSeatId)
 
 	// set the vehicle params
 	pVehicle->wLastDriverID = m_wPlayerId;
-	pVehicle->bOccupied = true;
+	pVehicle->bOccupied = 1;
 	pVehicle->vehOccupiedTick = GetTickCount();
-	pVehicle->vehActive = true;
+	pVehicle->vehActive = 1;
 }
 
 CVehicle *CPlayerData::GetVehicle()
 {
-	if (m_pPlayer->wVehicleId < 1 || m_pPlayer->wVehicleId > MAX_VEHICLES) {
+	if (m_pPlayer->wVehicleId < 1 || m_pPlayer->wVehicleId >= MAX_VEHICLES) {
 		return NULL;
 	}
 

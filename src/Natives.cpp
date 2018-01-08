@@ -492,12 +492,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetQuaternion(AMX *amx, cell *params)
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
+		delete[] fQuaternion;
 		return 0;
 	}
 
 	// Set the player quaternion
 	pPlayerData->SetQuaternion(fQuaternion);
-	SAFE_DELETE(fQuaternion);
+	delete[] fQuaternion;
 	return 1;
 }
 
@@ -516,6 +517,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GiveQuaternion(AMX *amx, cell *params)
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
+		delete[] fQuaternion;
 		return 0;
 	}
 
@@ -530,9 +532,9 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GiveQuaternion(AMX *amx, cell *params)
 	fNewQuaternion[3] = fOldQuaternion[3] + fQuaternion[3];
 
 	pPlayerData->SetQuaternion(fNewQuaternion);
-	SAFE_DELETE(fQuaternion);
-	SAFE_DELETE(fOldQuaternion);
-	SAFE_DELETE(fNewQuaternion);
+	delete[] fQuaternion;
+	delete[] fOldQuaternion;
+	delete[] fNewQuaternion;
 	return 1;
 }
 
@@ -581,7 +583,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetQuaternion(AMX *amx, cell *params)
 	amx_GetAddr(amx, params[5], &pAddress);
 	*pAddress = amx_ftoc(fQuaternion[3]);
 
-	SAFE_DELETE(fQuaternion);
+	delete[] fQuaternion;
 	return 1;
 }
 
@@ -1542,7 +1544,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponSkillLevel(AMX *amx, cell *params)
 		return 0;
 	}
 
-	if (dwSkill < 0 || dwSkill > 10) {
+	if (dwSkill > 10) {
 		return 0;
 	}
 
@@ -1566,7 +1568,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GiveWeaponSkillLevel(AMX *amx, cell *params
 		return 0;
 	}
 
-	if (dwSkill < 0 || dwSkill > 10) {
+	if (dwSkill > 10) {
 		return 0;
 	}
 
@@ -1867,8 +1869,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponInfo(AMX *amx, cell *params)
 	if (iShootTime != -1) {
 		sWeaponInfo.iShootTime = iShootTime;
 	}
-
-	if (fAccuracy != 1.0f) {
+	
+	if (!CMath::IsEqual(fAccuracy, 1.0f)) {
 		sWeaponInfo.fAccuracy = fAccuracy;
 	}
 
@@ -1942,7 +1944,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponDefaultInfo(AMX *amx, cell *params
 		sWeaponInfo.iShootTime = iShootTime;
 	}
 
-	if (fAccuracy != 1.0f) {
+	if (!CMath::IsEqual(fAccuracy, 1.0f)) {
 		sWeaponInfo.fAccuracy = fAccuracy;
 	}
 
@@ -2763,17 +2765,19 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StartPlayingPlayback(AMX *amx, cell *params
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
+		delete[] fQuaternion;
 		return 0;
 	}
 
 	// Make sure the playback is valid
 	if (szFile && strlen(szFile) == 0 && !pServer->GetRecordManager()->IsValid(iRecordId)) {
+		delete[] fQuaternion;
 		return 0;
 	}
 
 	// Start Playing the player playback
 	bool bSuccess = pPlayerData->StartPlayingPlayback(szFile, iRecordId, bAutoUnload, vecPoint, fQuaternion);
-	SAFE_DELETE(fQuaternion);
+	delete[] fQuaternion;
 	return bSuccess;
 }
 
@@ -2841,7 +2845,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_LoadPlayingPlayback(AMX *amx, cell *params)
 	amx_StrParam(amx, params[1], szFile);
 
 	// Make sure the filename is valid
-	if (strlen(szFile) == 0) {
+	if (szFile && strlen(szFile) == 0) {
 		return 0;
 	}
 
@@ -2883,7 +2887,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetPlayingPlaybackPath(AMX *amx, cell *para
 	}
 
 	// Make sure the path is valid
-	if (strlen(szFile) == 0) {
+	if (szFile && strlen(szFile) == 0) {
 		return 0;
 	}
 
@@ -2937,8 +2941,12 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetUpdateRate(AMX *amx, cell *params)
 	// Get the params
 	int iRate = static_cast<int>(params[1]);
 
+	if (iRate < 0) {
+		return 0;
+	}
+
 	// Set the update rate
-	return pServer->SetUpdateRate(iRate);
+	return pServer->SetUpdateRate(static_cast<DWORD>(iRate));
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetUpdateRate(AMX *amx, cell *params)

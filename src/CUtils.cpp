@@ -33,14 +33,6 @@
 void CUtils::GetPluginError(BYTE byteError, char *szError, size_t sSize)
 {
 	switch (byteError) {
-		case ERROR_PLAYER_MANAGER_FAIL:
-			strlcpy(szError, "Failed to create PlayerManager instance", sSize);
-			break;
-
-		case ERROR_NODE_MANAGER_FAIL:
-			strlcpy(szError, "Failed to create NodeManager instance", sSize);
-			break;
-
 		case ERROR_INCLUDE_VERSION:
 			strlcpy(szError, "Include file version does not match plugin version", sSize);
 			break;

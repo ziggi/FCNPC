@@ -36,7 +36,7 @@ bool CVehicleInfo::IsValidPassengerSeat(BYTE byteSeatId, WORD wModelId)
 
 	WORD maxPassengers = GetMaxPassengers(wModelId);
 
-	if (byteSeatId < 0 || byteSeatId > maxPassengers || maxPassengers == 0xFF) {
+	if (byteSeatId > maxPassengers || maxPassengers == 0xFF) {
 		return false;
 	}
 

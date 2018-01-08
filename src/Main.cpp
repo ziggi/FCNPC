@@ -78,10 +78,6 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 #endif
 	// Create the server instance
 	pServer = new CServer(version);
-	if (!pServer) {
-		logprintf("Failed. (Cant create server instance)");
-		return false;
-	}
 	//
 	g_Invoke = new Invoke;
 	return true;

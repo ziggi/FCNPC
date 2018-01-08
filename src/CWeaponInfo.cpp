@@ -229,7 +229,7 @@ bool CWeaponInfo::SetAccuracy(BYTE byteWeaponId, float fAccuracy)
 
 bool CWeaponInfo::IsValid(BYTE byteWeaponId)
 {
-	return byteWeaponId >= 0 && byteWeaponId < MAX_WEAPONS;
+	return byteWeaponId < MAX_WEAPONS;
 }
 
 bool CWeaponInfo::IsDoubleHanded(BYTE byteWeaponId)
