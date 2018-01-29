@@ -333,6 +333,7 @@ struct CPlayer
 	BYTE					byteStreamedIn[MAX_PLAYERS];				// 341 - 1341
 	BYTE					byteVehicleStreamedIn[MAX_VEHICLES];		// 1341 - 3341
 	BYTE					byteSomethingUnused[1000];					// 3341 - 4341
+	BYTE					byteSomethingUnused2[1000];					// 3341 - 4341
 	BYTE					byte3DTextLabelStreamedIn[1024];			// 4341  - 5365
 	BYTE					bPickupStreamedIn[MAX_PICKUPS];				// 5365 - 9461
 	BYTE					byteActorStreamedIn[MAX_PLAYERS];			// 9461 - 10461
@@ -420,6 +421,7 @@ struct CPlayerPool // sizeof = 99520
 {
 	DWORD			dwVirtualWorld[MAX_PLAYERS];			// 0 - 4000
 	DWORD			dwPlayersCount;							// 4000 - 4004
+	PAD(pad1, 1000);
 	DWORD			dwlastMarkerUpdate;						// 4004 - 4008
 	float			fUpdatePlayerGameTimers;				// 4008 - 4012
 	DWORD			dwScore[MAX_PLAYERS];					// 4012 - 8012
