@@ -286,6 +286,7 @@ struct CPlayerSpawnInfo // size  46
 	BYTE			byteTeam;				// 0 - 1
 	int				iSkin;					// 1 - 5
 	BYTE			unk;					// 5 - 6
+	DWORD			dwUnknown2;
 	CVector			vecPos;				// 6 - 18
 	float			fRotation;			// 18 - 22
 	int				iSpawnWeapons[3];		// 22 - 34
@@ -359,6 +360,7 @@ struct CPlayer
 	WORD					wUDAnalog;			// 10571
 	DWORD					dwKeys;				// 10573 - 10577
 	DWORD					dwOldKeys;			// 10577 - 10581
+	DWORD					dwUnknown1;
 	BOOL					bEditObject;		// 10581 - 10585
 	BOOL					bEditAttachedObject;// 10585 - 10589
 	WORD					wDialogID;			// 10589 - 10591
