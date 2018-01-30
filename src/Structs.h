@@ -281,7 +281,7 @@ struct CAttachedObject // sizeof = 52 - 0x34
 	DWORD			dwMaterialColor2;
 };
 
-struct CPlayerSpawnInfo // size  46
+struct CPlayerSpawnInfo // size  50
 {
 	BYTE			byteTeam;				// 0 - 1
 	int				iSkin;					// 1 - 5

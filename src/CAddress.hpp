@@ -24,9 +24,7 @@
 
 enum eSAMPVersion {
 	SAMP_VERSION_UNKNOWN,
-	SAMP_VERSION_037,
-	SAMP_VERSION_037_R2,
-	CRMP_VERSION_037_R2,
+	SAMP_VERSION_03DL_R1,
 };
 
 class CAddress
@@ -35,8 +33,7 @@ public:
 	static void	Initialize(eSAMPVersion sampVersion);
 	static DWORD FindNetVersion();
 
-	static DWORD           FUNC_Logprintf_037;
-	static DWORD           FUNC_Logprintf_037_R2;
+	static DWORD           FUNC_Logprintf_03DL_R1;
 
 	// Functions
 	static DWORD           FUNC_ClientJoin_RPC;
