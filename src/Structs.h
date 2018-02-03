@@ -631,7 +631,7 @@ struct CPlayer
 	DWORD					wSpectateID;		// 11453 - 11457
 	DWORD					dwLastStreaming;	// 11457 - 11461
 #ifdef SAMP_03DL
-	BYTE					bUnknown2;			// 12469 - 12470
+	BYTE					byteDownloadingStatus; // 12469 - 12470
 #endif
 	DWORD					dwNPCRecordingType;	// 11461 - 11465
 	FILE					*pRecordingFile;	// 11465 - 11469

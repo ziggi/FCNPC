@@ -22,17 +22,15 @@ DWORD CAddress::FUNC_Logprintf_03DL_R1 = 0x080b1ca0;
 #endif
 
 // Functions
-DWORD CAddress::FUNC_ClientJoin_RPC = 0;
-DWORD CAddress::FUNC_CPlayerPool__DeletePlayer = 0;
 
-DWORD CAddress::FUNC_CPlayer__SpawnForWorld = 0;
+DWORD CAddress::FUNC_CPlayerPool__DeletePlayer = 0;
 DWORD CAddress::FUNC_CPlayer__Kill = 0;
 DWORD CAddress::FUNC_CPlayer__EnterVehicle = 0;
 DWORD CAddress::FUNC_CPlayer__ExitVehicle = 0;
-
-DWORD CAddress::FUNC_CConsole__GetIntVariable = 0;
-
+DWORD CAddress::FUNC_CPlayer__SpawnForWorld = 0;
 DWORD CAddress::FUNC_GetVehicleModelInfo = 0;
+DWORD CAddress::FUNC_CConsole__GetIntVariable = 0;
+DWORD CAddress::FUNC_ClientJoin_RPC = 0;
 
 // Variables
 DWORD CAddress::VAR_ServerAuthentication = 0;
@@ -117,6 +115,12 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 
 			VAR_ServerAuthentication = 0x4fc470;
 			VAR_NetVersion = 0xfde;
+
+			OFFSET_RemoteSystemManager = 0x33c;
+			OFFSET_RemoteSystemSize = 0xcb8;
+			OFFSET_RemoteSystem__ConnectMode = 0xcb0;
+			OFFSET_RemoteSystem__Unknown = 0xcb5;
+			break;
 
 		case SAMP_VERSION_UNKNOWN:
 			// Functions
@@ -213,6 +217,12 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 
 			VAR_ServerAuthentication = 0x81b7d2c;
 			VAR_NetVersion = 0xfde;
+
+			OFFSET_RemoteSystemManager = 0x334;
+			OFFSET_RemoteSystemSize = 0xc69;
+			OFFSET_RemoteSystem__ConnectMode = 0xc62;
+			OFFSET_RemoteSystem__Unknown = 0xc67;
+			break;
 
 		case SAMP_VERSION_UNKNOWN:
 			// Functions

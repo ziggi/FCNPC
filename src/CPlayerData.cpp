@@ -1074,20 +1074,38 @@ void CPlayerData::SetSkin(int iSkin)
 	}
 
 	// Validate the skin
-	if ((iSkin > 311 || iSkin < 0 || iSkin == 74) && (iSkin < 20000 || iSkin > 30000)) {
+	if (iSkin <= 20000 || iSkin > 30000) {
+
+	}
+	if (iSkin > 311 || iSkin < 0 || iSkin == 74) {
 		return;
 	}
+
+#ifdef SAMP_03DL
+	if (iSkin > 20000 && iSkin <= 30000) {
+		m_pPlayer->spawn.iSkin = 0; // TODO get base id
+		m_pPlayer->spawn.dwCustomSkin = iSkin;
+	} else {
+		m_pPlayer->spawn.iSkin = iSkin;
+		m_pPlayer->spawn.dwCustomSkin = 0;
+	}
+#endif
 
 	// Send RPC
 	if (m_pPlayer->bReadyToSpawn) {
 		RakNet::BitStream bsData;
 		bsData.Write(static_cast<DWORD>(m_pPlayer->wPlayerId));
 		bsData.Write(iSkin);
+#ifdef SAMP_03DL
+		bsData.Write(m_pPlayer->spawn.dwCustomSkin);
+#endif
 		CFunctions::AddedPlayersRPC(&RPC_SetPlayerSkin, &bsData, m_wPlayerId);
 	}
 
 	// Set the player skin
+#ifndef SAMP_03DL
 	m_pPlayer->spawn.iSkin = iSkin;
+#endif
 }
 
 int CPlayerData::GetSkin()
