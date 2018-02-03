@@ -1075,7 +1075,13 @@ void CPlayerData::SetSkin(int iSkin)
 
 	// Validate the skin
 	if (iSkin > 311 || iSkin < 0 || iSkin == 74) {
+#ifdef SAMP_03DL
+		if (iSkin <= 20000 || iSkin > 30000) {
+			return;
+		}
+#else
 		return;
+#endif
 	}
 
 #ifdef SAMP_03DL
