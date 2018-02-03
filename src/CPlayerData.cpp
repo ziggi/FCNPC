@@ -1074,7 +1074,7 @@ void CPlayerData::SetSkin(int iSkin)
 	}
 
 	// Validate the skin
-	if (iSkin > 311 || iSkin < 0 || iSkin == 74) {
+	if ((iSkin > 311 || iSkin < 0 || iSkin == 74) && (iSkin < 20000 || iSkin > 30000)) {
 		return;
 	}
 
@@ -1094,6 +1094,13 @@ int CPlayerData::GetSkin()
 {
 	return m_pPlayer->spawn.iSkin;
 }
+
+#ifdef SAMP_03DL
+int CPlayerData::GetCustomSkin()
+{
+	return m_pPlayer->spawn.dwCustomSkin;
+}
+#endif
 
 void CPlayerData::SetInterior(int iInterior)
 {

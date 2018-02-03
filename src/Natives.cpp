@@ -903,6 +903,25 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetSkin(AMX *amx, cell *params)
 	return pPlayerData->GetSkin();
 }
 
+#ifdef SAMP_03DL
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetCustomSkin(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_GetCustomSkin");
+
+	// Get the params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// Get the player skin
+	return pPlayerData->GetCustomSkin();
+}
+#endif
+
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetKeys(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(4, "FCNPC_SetKeys");

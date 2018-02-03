@@ -110,6 +110,7 @@ public:
 
 	void SetSkin(int iSkin);
 	int GetSkin();
+	int GetCustomSkin();
 	void SetInterior(int iInterior);
 	int GetInterior();
 	void SetVirtualWorld(int iVirtualWorld);
