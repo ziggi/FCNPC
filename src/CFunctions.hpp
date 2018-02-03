@@ -17,9 +17,6 @@ struct PlayerId;
 
 // Functions definitions
 typedef void (*ClientJoin_RPC_t)(RPCParameters *parameters);
-typedef int (*GetNetGame_t)();
-typedef int (*GetConsole_t)();
-typedef int (*GetRakServer_t)();
 
 typedef void (THISCALL *CPlayerPool__DeletePlayer_t)(void *pPlayerPool, WORD wPlayerId, BYTE byteReason);
 typedef void (THISCALL *CPlayer__SpawnForWorld_t)(void *pPlayer);
@@ -30,18 +27,15 @@ typedef int (THISCALL *CConsole__GetIntVariable_t)(void *pConfig, const char *sz
 typedef bool (THISCALL *RakNet__Send_t)(void* ppRakServer, RakNet::BitStream* parameters, PacketPriority priority, PacketReliability reliability, unsigned orderingChannel, PlayerID playerId, bool broadcast);
 typedef bool (THISCALL *RakNet__RPC_t)(void* ppRakServer, int* uniqueID, RakNet::BitStream* parameters, PacketPriority priority, PacketReliability reliability, unsigned orderingChannel, PlayerID playerId, bool broadcast, bool shiftTimestamp);
 typedef Packet* (THISCALL *RakNet__Receive_t)(void* ppRakServer);
+typedef PlayerID(THISCALL *RakNet__GetPlayerIDFromIndex_t)(void* ppRakServer, int index);
 
-typedef CVector *( *GetVehicleModelInfo_t)(DWORD dwModelID, int iInfoType);
+typedef CVector *( *GetVehicleModelInfo_t)(int iModelID, int iInfoType);
 
 class CFunctions
 {
 public:
 	static void Initialize();
 	static void PreInitialize();
-
-	static int GetNetGame();
-	static int GetConsole();
-	static int GetRakServer();
 
 	static WORD GetFreePlayerSlot();
 	static WORD NewPlayer(char *szName);
@@ -50,7 +44,7 @@ public:
 	static void KillPlayer(CPlayer *pPlayer, BYTE byteReason, WORD wKillerId);
 	static void PlayerEnterVehicle(CPlayer *pPlayer, WORD wVehicleId, BYTE byteSeatId);
 	static void PlayerExitVehicle(CPlayer *pPlayer, WORD wVehicleId);
-	static CVector *GetVehicleModelInfoEx(DWORD dwModelID, int iInfoType);
+	static CVector *GetVehicleModelInfoEx(int iModelID, int iInfoType);
 	static WORD GetMaxPlayers();
 	static WORD GetMaxNPC();
 	static void PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE byteWeaponId, CVector vecPoint, CVector vecOffsetFrom, bool bIsHit);
@@ -62,6 +56,8 @@ public:
 
 	static void GlobalPacket(RakNet::BitStream* bsParams);
 	static void PlayerPacket(RakNet::BitStream* bsParams, WORD wPlayerId);
+
+	static PlayerID GetPlayerIDFromIndex(int index);
 
 	// Functions
 	static ClientJoin_RPC_t                 pfn__ClientJoin_RPC;
@@ -75,9 +71,7 @@ public:
 	static RakNet__Send_t                   pfn__RakNet__Send;
 	static RakNet__RPC_t                    pfn__RakNet__RPC;
 	static RakNet__Receive_t                pfn__RakNet__Receive;
-	static GetNetGame_t                     pfn__GetNetGame;
-	static GetConsole_t                     pfn__GetConsole;
-	static GetRakServer_t                   pfn__GetRakServer;
+	static RakNet__GetPlayerIDFromIndex_t   pfn__RakNet__GetPlayerIDFromIndex;
 
 };
 

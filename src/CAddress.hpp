@@ -16,10 +16,12 @@
 	#define RAKNET_SEND_OFFSET          7
 	#define RAKNET_RPC_OFFSET           32
 	#define RAKNET_RECEIVE_OFFSET       10
+	#define RAKNET_GET_PLAYERID_FROM_INDEX_OFFSET 58
 #elif defined(LINUX)
 	#define RAKNET_SEND_OFFSET          9
 	#define RAKNET_RPC_OFFSET           35
 	#define RAKNET_RECEIVE_OFFSET       11
+	#define RAKNET_GET_PLAYERID_FROM_INDEX_OFFSET 59
 #endif
 
 enum eSAMPVersion {

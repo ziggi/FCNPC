@@ -11,8 +11,6 @@
 
 #include "Main.hpp"
 
-extern logprintf_t logprintf;
-
 // Functions
 ClientJoin_RPC_t                CFunctions::pfn__ClientJoin_RPC = NULL;
 CPlayerPool__DeletePlayer_t     CFunctions::pfn__CPlayerPool__DeletePlayer = NULL;
@@ -25,9 +23,7 @@ GetVehicleModelInfo_t           CFunctions::pfn__GetVehicleModelInfo = NULL;
 RakNet__Send_t                  CFunctions::pfn__RakNet__Send = NULL;
 RakNet__RPC_t                   CFunctions::pfn__RakNet__RPC = NULL;
 RakNet__Receive_t               CFunctions::pfn__RakNet__Receive = NULL;
-GetNetGame_t                    CFunctions::pfn__GetNetGame = NULL;
-GetConsole_t                    CFunctions::pfn__GetConsole = NULL;
-GetRakServer_t                  CFunctions::pfn__GetRakServer = NULL;
+RakNet__GetPlayerIDFromIndex_t  CFunctions::pfn__RakNet__GetPlayerIDFromIndex = NULL;
 
 void CFunctions::Initialize()
 {
@@ -47,39 +43,26 @@ void CFunctions::Initialize()
 
 void CFunctions::PreInitialize()
 {
-	pfn__GetNetGame = reinterpret_cast<GetNetGame_t>(ppPluginData[PLUGIN_DATA_NETGAME]);
-	pNetGame = reinterpret_cast<CNetGame*>(pfn__GetNetGame());
+	int(*pfn_GetNetGame)(void) = reinterpret_cast<int(*)(void)>(ppPluginData[PLUGIN_DATA_NETGAME]);
+	pNetGame = reinterpret_cast<CNetGame*>(pfn_GetNetGame());
 
-	pfn__GetConsole = reinterpret_cast<GetConsole_t>(ppPluginData[PLUGIN_DATA_CONSOLE]);
+	int(*pfn__GetConsole)(void) = reinterpret_cast<int(*)(void)>(ppPluginData[PLUGIN_DATA_CONSOLE]);
 	pConsole = reinterpret_cast<void*>(pfn__GetConsole());
 
-	pfn__GetRakServer = reinterpret_cast<GetRakServer_t>(ppPluginData[PLUGIN_DATA_RAKSERVER]);
-	pRakServer = reinterpret_cast<RakServer*>(pfn__GetRakServer());
+	int(*pfn__GetRakServer)(void) = reinterpret_cast<int(*)(void)>(ppPluginData[PLUGIN_DATA_RAKSERVER]);
+	pRakServer = reinterpret_cast<void*>(pfn__GetRakServer());
 
 	int *pRakServer_VTBL = reinterpret_cast<int*>(*reinterpret_cast<void**>(pRakServer));
 
 	CUtils::UnProtect(pRakServer_VTBL[RAKNET_SEND_OFFSET], 4);
 	CUtils::UnProtect(pRakServer_VTBL[RAKNET_RPC_OFFSET], 4);
 	CUtils::UnProtect(pRakServer_VTBL[RAKNET_RECEIVE_OFFSET], 4);
+	CUtils::UnProtect(pRakServer_VTBL[RAKNET_GET_PLAYERID_FROM_INDEX_OFFSET], 4);
 
 	pfn__RakNet__Send = reinterpret_cast<RakNet__Send_t>(pRakServer_VTBL[RAKNET_SEND_OFFSET]);
 	pfn__RakNet__RPC = reinterpret_cast<RakNet__RPC_t>(pRakServer_VTBL[RAKNET_RPC_OFFSET]);
 	pfn__RakNet__Receive = reinterpret_cast<RakNet__Receive_t>(pRakServer_VTBL[RAKNET_RECEIVE_OFFSET]);
-}
-
-int CFunctions::GetNetGame()
-{
-	return pfn__GetNetGame();
-}
-
-int CFunctions::GetConsole()
-{
-	return pfn__GetConsole();
-}
-
-int CFunctions::GetRakServer()
-{
-	return pfn__GetRakServer();
+	pfn__RakNet__GetPlayerIDFromIndex = reinterpret_cast<RakNet__GetPlayerIDFromIndex_t>(pRakServer_VTBL[RAKNET_GET_PLAYERID_FROM_INDEX_OFFSET]);
 }
 
 WORD CFunctions::GetFreePlayerSlot()
@@ -87,7 +70,7 @@ WORD CFunctions::GetFreePlayerSlot()
 	// Loop through all the players
 	for (WORD i = GetMaxPlayers() - 1; i >= 0; i--) {
 		// Is he not connected ?
-		if (!pNetGame->pPlayerPool->bIsPlayerConnectedEx[i]) {
+		if (!pNetGame->pPlayerPool->bIsPlayerConnected[i]) {
 			return i;
 		}
 	}
@@ -156,9 +139,9 @@ void CFunctions::PlayerExitVehicle(CPlayer *pPlayer, WORD wVehicleId)
 	pfn__CPlayer__ExitVehicle(pPlayer, wVehicleId);
 }
 
-CVector *CFunctions::GetVehicleModelInfoEx(DWORD dwModelID, int iInfoType)
+CVector *CFunctions::GetVehicleModelInfoEx(int iModelID, int iInfoType)
 {
-	return pfn__GetVehicleModelInfo(dwModelID, iInfoType);
+	return pfn__GetVehicleModelInfo(iModelID, iInfoType);
 }
 
 WORD CFunctions::GetMaxPlayers()
@@ -301,9 +284,9 @@ void CFunctions::GlobalRPC(int* szUniqueID, RakNet::BitStream* bsParams, WORD wE
 	}
 
 	if (wExcludePlayerId == INVALID_PLAYER_ID) {
-		pRakServer->RPC(szUniqueID, bsParams, HIGH_PRIORITY, reliable, PacketStream, UNASSIGNED_PLAYER_ID, true, false);
+		pfn__RakNet__RPC(pRakServer, szUniqueID, bsParams, HIGH_PRIORITY, reliable, PacketStream, UNASSIGNED_PLAYER_ID, true, false);
 	} else {
-		pRakServer->RPC(szUniqueID, bsParams, HIGH_PRIORITY, reliable, PacketStream, pRakServer->GetPlayerIDFromIndex(wExcludePlayerId), true, false);
+		pfn__RakNet__RPC(pRakServer, szUniqueID, bsParams, HIGH_PRIORITY, reliable, PacketStream, GetPlayerIDFromIndex(wExcludePlayerId), true, false);
 	}
 
 }
@@ -313,11 +296,11 @@ void CFunctions::AddedPlayersRPC(int* szUniqueID, RakNet::BitStream* bsParams, W
 	CPlayer *pPlayer;
 
 	for (WORD i = 0; i <= pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
-		if (pNetGame->pPlayerPool->bIsPlayerConnectedEx[i] && i != wPlayerId) {
+		if (pNetGame->pPlayerPool->bIsPlayerConnected[i] && i != wPlayerId) {
 			pPlayer = pNetGame->pPlayerPool->pPlayer[i];
 
 			if (pPlayer && pPlayer->byteStreamedIn[wPlayerId]) {
-				pRakServer->RPC(szUniqueID, bsParams, HIGH_PRIORITY, RELIABLE_ORDERED, PacketStream, pRakServer->GetPlayerIDFromIndex(i), false, false);
+				pfn__RakNet__RPC(pRakServer, szUniqueID, bsParams, HIGH_PRIORITY, RELIABLE_ORDERED, PacketStream, GetPlayerIDFromIndex(i), false, false);
 			}
 		}
 	}
@@ -328,11 +311,11 @@ void CFunctions::AddedVehicleRPC(int* szUniqueID, RakNet::BitStream* bsParams, W
 	CPlayer *pPlayer;
 
 	for (WORD i = 0; i <= pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
-		if (pNetGame->pPlayerPool->bIsPlayerConnectedEx[i] && i != wExcludePlayerId) {
+		if (pNetGame->pPlayerPool->bIsPlayerConnected[i] && i != wExcludePlayerId) {
 			pPlayer = pNetGame->pPlayerPool->pPlayer[i];
 
 			if (pPlayer && pPlayer->byteVehicleStreamedIn[wVehicleId]) {
-				pRakServer->RPC(szUniqueID, bsParams, HIGH_PRIORITY, RELIABLE_ORDERED, PacketStream, pRakServer->GetPlayerIDFromIndex(i), false, false);
+				pfn__RakNet__RPC(pRakServer, szUniqueID, bsParams, HIGH_PRIORITY, RELIABLE_ORDERED, PacketStream, GetPlayerIDFromIndex(i), false, false);
 			}
 		}
 	}
@@ -346,15 +329,20 @@ void CFunctions::PlayerRPC(int* szUniqueID, RakNet::BitStream* bsParams, WORD wP
 		reliable = RELIABLE;
 	}
 
-	pRakServer->RPC(szUniqueID, bsParams, HIGH_PRIORITY, reliable, PacketStream, pRakServer->GetPlayerIDFromIndex(wPlayerId), false, false);
+	pfn__RakNet__RPC(pRakServer, szUniqueID, bsParams, HIGH_PRIORITY, reliable, PacketStream, GetPlayerIDFromIndex(wPlayerId), false, false);
 }
 
 void CFunctions::GlobalPacket(RakNet::BitStream* bsParams)
 {
-	pRakServer->Send(bsParams, HIGH_PRIORITY, UNRELIABLE_SEQUENCED, 1, UNASSIGNED_PLAYER_ID, true);
+	pfn__RakNet__Send(pRakServer, bsParams, HIGH_PRIORITY, UNRELIABLE_SEQUENCED, 1, UNASSIGNED_PLAYER_ID, true);
 }
 
 void CFunctions::PlayerPacket(RakNet::BitStream* bsParams, WORD wPlayerId)
 {
-	pRakServer->Send(bsParams, HIGH_PRIORITY, UNRELIABLE_SEQUENCED, 1, pRakServer->GetPlayerIDFromIndex(wPlayerId), false);
+	pfn__RakNet__Send(pRakServer, bsParams, HIGH_PRIORITY, UNRELIABLE_SEQUENCED, 1, GetPlayerIDFromIndex(wPlayerId), false);
+}
+
+PlayerID CFunctions::GetPlayerIDFromIndex(int index)
+{
+	return pfn__RakNet__GetPlayerIDFromIndex(pRakServer, index);
 }
