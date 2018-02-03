@@ -1074,9 +1074,6 @@ void CPlayerData::SetSkin(int iSkin)
 	}
 
 	// Validate the skin
-	if (iSkin <= 20000 || iSkin > 30000) {
-
-	}
 	if (iSkin > 311 || iSkin < 0 || iSkin == 74) {
 		return;
 	}
