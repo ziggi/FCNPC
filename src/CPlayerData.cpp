@@ -1671,7 +1671,7 @@ void CPlayerData::StopMoving()
 	if (GetState() == PLAYER_STATE_DRIVER) {
 		SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys & ~KEY_SPRINT);
 	} else {
-		SetKeys(m_pPlayer->wUDAnalog & ~KEY_UP, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys);
+		SetKeys(m_pPlayer->wUDAnalog & ~KEY_UP, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys & ~(KEY_WALK | KEY_SPRINT));
 	}
 	// Reset other moving variables
 	m_dwMoveTime = 0;
