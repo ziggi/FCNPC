@@ -1,7 +1,7 @@
 /* ---------------------------------
-	 FCNPC Plugin Sample FS
+	 FCNPC Plugin citizens FS
 
-- File: FCNPC.pwn
+- File: citizens.pwn
 - Author: OrMisicL
 - Contributor: ziggi
 ---------------------------------*/
