@@ -1,7 +1,7 @@
 /* ---------------------------------
-	 FCNPC Plugin traindrivers&pilots FS
+	 FCNPC Plugin traindrivers_pilots FS
 
-- File: traindrivers&pilots.pwn
+- File: traindrivers_pilots.pwn
 - Author: Freaksken
 - Description: converts the 3 traindriver NPCs and 3 pilot NPCs from the gl_npcs script to FCNPCs
 
