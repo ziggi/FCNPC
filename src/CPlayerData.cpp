@@ -740,7 +740,7 @@ void CPlayerData::Process()
 
 				CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[m_wVehicleToEnter];
 				CVector vecDestination;
-				float fDistance;
+				float fDistance = 0.0f;
 
 				if (pVehicle) {
 					vecDestination = pServer->GetVehicleSeatPos(pVehicle, m_byteSeatToEnter);
