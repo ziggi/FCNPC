@@ -739,8 +739,13 @@ void CPlayerData::Process()
 				StopMoving();
 
 				CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[m_wVehicleToEnter];
-				CVector vecDestination = pServer->GetVehicleSeatPos(pVehicle, m_byteSeatToEnter);
-				float fDistance = CMath::GetDistanceBetween3DPoints(m_pPlayer->vecPosition, vecDestination);
+				CVector vecDestination;
+				float fDistance;
+
+				if (pVehicle) {
+					vecDestination = pServer->GetVehicleSeatPos(pVehicle, m_byteSeatToEnter);
+					fDistance = CMath::GetDistanceBetween3DPoints(m_pPlayer->vecPosition, vecDestination);
+				}
 
 				// Validate the vehicle and check distance
 				if (pVehicle && fDistance < MIN_VEHICLE_GO_TO_DISTANCE) {
