@@ -79,17 +79,17 @@ int __attribute__((__cdecl__)) HOOK_CGameMode__OnPlayerTakeDamage(CGameMode *thi
 
 //----------------------------------------------------
 
-typedef int(THISCALL* FUNC_CGameMode__OnPlayerWeaponShot)(CGameMode *thisptr, cell playerid, cell weaponid, cell hittype, cell hitid, cell fX, cell fY, cell fZ);
+typedef int(THISCALL* FUNC_CGameMode__OnPlayerWeaponShot)(CGameMode *thisptr, cell playerid, cell weaponid, cell hittype, cell hitid, cell *pPosition);
 #ifdef _WIN32
-int FASTCALL HOOK_CGameMode__OnPlayerWeaponShot(CGameMode *thisptr, void *padding, cell playerid, cell weaponid, cell hittype, cell hitid, cell fX, cell fY, cell fZ)
+int FASTCALL HOOK_CGameMode__OnPlayerWeaponShot(CGameMode *thisptr, void *padding, cell playerid, cell weaponid, cell hittype, cell hitid, cell *pPosition)
 #else
-int __attribute__((__cdecl__)) HOOK_CGameMode__OnPlayerWeaponShot(CGameMode *thisptr, cell playerid, cell weaponid, cell hittype, cell hitid, cell fX, cell fY, cell fZ)
+int __attribute__((__cdecl__)) HOOK_CGameMode__OnPlayerWeaponShot(CGameMode *thisptr, cell playerid, cell weaponid, cell hittype, cell hitid, cell *pPosition)
 #endif
 {
 	subhook_remove(CGameMode__OnPlayerWeaponShot_hook);
 
 	// call hooked callback
-	int ret = ((FUNC_CGameMode__OnPlayerWeaponShot)CAddress::FUNC_CGameMode__OnPlayerWeaponShot)(thisptr, playerid, weaponid, hittype, hitid, fX, fY, fZ);
+	int ret = ((FUNC_CGameMode__OnPlayerWeaponShot)CAddress::FUNC_CGameMode__OnPlayerWeaponShot)(thisptr, playerid, weaponid, hittype, hitid, pPosition);
 
 	// call custom callback 
 	if (hittype == BULLET_HIT_TYPE_VEHICLE) {
@@ -97,7 +97,8 @@ int __attribute__((__cdecl__)) HOOK_CGameMode__OnPlayerWeaponShot(CGameMode *thi
 
 		CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wPlayerId);
 		if (pPlayerData) {
-			pPlayerData->ProcessVehicleDamage(static_cast<WORD>(playerid), static_cast<WORD>(hitid), static_cast<BYTE>(weaponid), CVector(amx_ctof(fX), amx_ctof(fY), amx_ctof(fZ)));
+			CVector vecPos = CVector(amx_ctof(pPosition[0]), amx_ctof(pPosition[1]), amx_ctof(pPosition[2]));
+			pPlayerData->ProcessVehicleDamage(static_cast<WORD>(playerid), static_cast<WORD>(hitid), static_cast<BYTE>(weaponid), vecPos);
 		}
 	}
 
