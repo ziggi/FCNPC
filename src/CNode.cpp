@@ -107,7 +107,7 @@ WORD CNode::Process(CPlayerData *pPlayerData, WORD wPointId, WORD wLastPoint)
 			wLinkId = wStartLink + (rand() % wLinkCount);
 			// Set the node to the next random link
 			bLinkRead = SetLink(wLinkId);
-		} while (!bLinkRead || m_nodeLink.wNodeId == wLastPoint && wLinkCount > 1);
+		} while (!bLinkRead || (m_nodeLink.wNodeId == wLastPoint && wLinkCount > 1));
 
 		// Check if we need to change the node id
 		if (m_nodeLink.wAreaId != m_iNodeId) {
