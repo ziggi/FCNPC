@@ -1140,6 +1140,8 @@ void CPlayerData::SetSkin(int iSkin)
 		m_pPlayer->spawn.iSkin = iSkin;
 		m_pPlayer->spawn.dwCustomSkin = 0;
 	}
+#else
+	m_pPlayer->spawn.iSkin = iSkin;
 #endif
 
 	// Send RPC
@@ -1152,11 +1154,6 @@ void CPlayerData::SetSkin(int iSkin)
 #endif
 		CFunctions::AddedPlayersRPC(&RPC_SetPlayerSkin, &bsData, m_wPlayerId);
 	}
-
-	// Set the player skin
-#ifndef SAMP_03DL
-	m_pPlayer->spawn.iSkin = iSkin;
-#endif
 }
 
 int CPlayerData::GetSkin()
