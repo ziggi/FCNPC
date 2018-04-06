@@ -738,16 +738,30 @@ void CPlayerData::Process()
 			} else if (dwMoveTick > m_dwMoveTime + m_dwMoveStopDelay) {
 				StopMoving();
 
-				if (m_wVehicleToEnter != INVALID_VEHICLE_ID) {
+				CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[m_wVehicleToEnter];
+				CVector vecDestination;
+				float fDistance = 0.0f;
+
+				if (pVehicle) {
+					vecDestination = pServer->GetVehicleSeatPos(pVehicle, m_byteSeatToEnter);
+					fDistance = CMath::GetDistanceBetween3DPoints(m_pPlayer->vecPosition, vecDestination);
+				}
+
+				// Validate the vehicle and check distance
+				if (pVehicle && fDistance < MIN_VEHICLE_GO_TO_DISTANCE) {
+					// Wait until the entry animation is finished
 					m_dwEnterExitTickCount = dwThisTick;
 					m_bEntering = true;
 
+					// Check whether the player is jacking the vehicle or not
 					if (pServer->IsVehicleSeatOccupied(m_wPlayerId, m_wVehicleToEnter, m_byteSeatToEnter)) {
 						m_bJacking = true;
 					}
 
+					// Call the SAMP enter vehicle function
 					CFunctions::PlayerEnterVehicle(m_pPlayer, m_wVehicleToEnter, m_byteSeatToEnter);
 				} else {
+					// Go to the vehicle stopped
 					CCallbackManager::OnReachDestination(m_wPlayerId);
 				}
 			}
@@ -2011,7 +2025,7 @@ bool CPlayerData::EnterVehicle(WORD wVehicleId, BYTE byteSeatId, int iType)
 	m_byteSeatToEnter = byteSeatId;
 
 	// Check distance
-	if (fDistance < 0.5f) {
+	if (fDistance < MIN_VEHICLE_GO_TO_DISTANCE) {
 		// Wait until the entry animation is finished
 		m_dwEnterExitTickCount = GetTickCount();
 		m_bEntering = true;
