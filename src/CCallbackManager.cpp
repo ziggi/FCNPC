@@ -248,7 +248,7 @@ void CCallbackManager::OnGiveDamage(WORD wPlayerId, WORD wDamagedId, BYTE byteWe
 	}
 }
 
-int CCallbackManager::OnWeaponShot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE byteWeaponId, CVector vecPoint)
+int CCallbackManager::OnWeaponShot(WORD wPlayerId, BYTE byteWeaponId, BYTE byteHitType, WORD wHitId, CVector vecPoint)
 {
 	cell cReturn = 1;
 	int iIndex = 0;
@@ -261,9 +261,9 @@ int CCallbackManager::OnWeaponShot(WORD wPlayerId, WORD wHitId, BYTE byteHitType
 			amx_Push(amx, amx_ftoc(vecPoint.fZ));
 			amx_Push(amx, amx_ftoc(vecPoint.fY));
 			amx_Push(amx, amx_ftoc(vecPoint.fX));
-			amx_Push(amx, byteWeaponId);
-			amx_Push(amx, byteHitType);
 			amx_Push(amx, wHitId);
+			amx_Push(amx, byteHitType);
+			amx_Push(amx, byteWeaponId);
 			amx_Push(amx, wPlayerId);
 
 			amx_Exec(amx, &cReturn, iIndex);

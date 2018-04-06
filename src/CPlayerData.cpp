@@ -756,17 +756,28 @@ void CPlayerData::Process()
 			} else if (dwMoveTick > m_dwMoveTime + m_dwMoveStopDelay) {
 				StopMoving();
 
-				if (m_wVehicleToEnter != INVALID_VEHICLE_ID) {
-					m_dwEnterExitTickCount = dwThisTick;
-					m_bEntering = true;
+				CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[m_wVehicleToEnter];
+				if (pVehicle) {
+					CVector vecDestination = pServer->GetVehicleSeatPos(pVehicle, m_byteSeatToEnter);
+					float fDistance = CMath::GetDistanceBetween3DPoints(m_pPlayer->vecPosition, vecDestination);
 
-					if (pServer->IsVehicleSeatOccupied(m_wPlayerId, m_wVehicleToEnter, m_byteSeatToEnter)) {
-						m_bJacking = true;
+					// Validate the vehicle and check distance
+					if (fDistance < MIN_VEHICLE_GO_TO_DISTANCE) {
+						// Wait until the entry animation is finished
+						m_dwEnterExitTickCount = dwThisTick;
+						m_bEntering = true;
+
+						// Check whether the player is jacking the vehicle or not
+						if (pServer->IsVehicleSeatOccupied(m_wPlayerId, m_wVehicleToEnter, m_byteSeatToEnter)) {
+							m_bJacking = true;
+						}
+
+						// Call the SAMP enter vehicle function
+						CFunctions::PlayerEnterVehicle(m_pPlayer, m_wVehicleToEnter, m_byteSeatToEnter);
+					} else {
+						// Go to the vehicle stopped
+						CCallbackManager::OnReachDestination(m_wPlayerId);
 					}
-
-					CFunctions::PlayerEnterVehicle(m_pPlayer, m_wVehicleToEnter, m_byteSeatToEnter);
-				} else {
-					CCallbackManager::OnReachDestination(m_wPlayerId);
 				}
 			}
 		}
@@ -1706,7 +1717,7 @@ void CPlayerData::StopMoving()
 	if (GetState() == PLAYER_STATE_DRIVER) {
 		SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys & ~KEY_SPRINT);
 	} else {
-		SetKeys(m_pPlayer->wUDAnalog & ~KEY_UP, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys);
+		SetKeys(m_pPlayer->wUDAnalog & ~KEY_UP, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys & ~(KEY_WALK | KEY_SPRINT));
 	}
 	// Reset other moving variables
 	m_dwMoveTime = 0;
@@ -2043,7 +2054,7 @@ bool CPlayerData::EnterVehicle(WORD wVehicleId, BYTE byteSeatId, int iType)
 	m_byteSeatToEnter = byteSeatId;
 
 	// Check distance
-	if (fDistance < 0.5f) {
+	if (fDistance < MIN_VEHICLE_GO_TO_DISTANCE) {
 		// Wait until the entry animation is finished
 		m_dwEnterExitTickCount = GetTickCount();
 		m_bEntering = true;

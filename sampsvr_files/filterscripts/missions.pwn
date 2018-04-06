@@ -1,7 +1,7 @@
 /* ---------------------------------
 	 FCNPC Plugin missions FS
 
-- File: FCNPC.pwn
+- File: missions.pwn
 - Author: OrMisicL
 - Contributor: ziggi
 ---------------------------------*/

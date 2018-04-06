@@ -1,9 +1,9 @@
-/*
+/* ---------------------------------
+	 FCNPC Plugin bodyguards FS
 
-	About: FCNPC Bodyguard System
-	Author: ziggi
-
-*/
+- File: bodyguards.pwn
+- Author: ziggi
+---------------------------------*/
 
 #define FILTERSCRIPT
 

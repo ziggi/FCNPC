@@ -252,7 +252,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	pPlayerData->SetBulletSync(&bulletSyncData);
 
 	// call FCNPC_OnWeaponShot
-	int send = CCallbackManager::OnWeaponShot(wPlayerId, bulletSyncData.wHitID, bulletSyncData.byteHitType, bulletSyncData.byteWeaponID, bulletSyncData.vecCenterOfHit);
+	int send = CCallbackManager::OnWeaponShot(wPlayerId, bulletSyncData.byteWeaponID, bulletSyncData.byteHitType, bulletSyncData.wHitID, bulletSyncData.vecCenterOfHit);
 	if (send != 0) {
 		// if it is a NPC
 		if (bIsHit && bulletSyncData.byteHitType == BULLET_HIT_TYPE_PLAYER && pServer->GetPlayerManager()->IsNpcConnected(bulletSyncData.wHitID)) {
