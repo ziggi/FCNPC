@@ -55,10 +55,17 @@ bool CNode::Initialize()
 		fclose(m_pFile);
 		return false;
 	}
+	size_t sBytesRead = 0;
 	// Read the node header
-	fread(&m_nodeHeader, sizeof(CNodeHeader), 1, m_pFile);
+	sBytesRead = fread(&m_nodeHeader, sizeof(CNodeHeader), 1, m_pFile);
+	if (sBytesRead != sizeof(CNodeHeader)) {
+		logprintf("[FCNPC] Error: was not able to copy CNodeHeader data to memory.");
+	}
 	// Read the first path node
-	fread(&m_nodePath, sizeof(CPathNode), 1, m_pFile);
+	sBytesRead = fread(&m_nodePath, sizeof(CPathNode), 1, m_pFile);
+	if (sBytesRead != sizeof(CPathNode)) {
+		logprintf("[FCNPC] Error: was not able to copy CPathNode data to memory.");
+	}
 
 	return true;
 }
@@ -179,7 +186,10 @@ void CNode::SetLink(WORD wLinkId)
 	             , SEEK_SET);
 
 	// Read the node link
-	fread(&m_nodeLink, sizeof(CLinkNode), 1, m_pFile);
+	size_t sBytesRead = fread(&m_nodeLink, sizeof(CLinkNode), 1, m_pFile);
+	if (sBytesRead != sizeof(CLinkNode)) {
+		logprintf("[FCNPC] Error: was not able to copy CLinkNode data to memory.");
+	}
 }
 
 void CNode::SetPoint(WORD wPointId)
@@ -192,5 +202,8 @@ void CNode::SetPoint(WORD wPointId)
 	// Set the file pointer to the point position
 	fseek(m_pFile, sizeof(CNodeHeader) + (wPointId * sizeof(CPathNode)), SEEK_SET);
 	// Read the node link
-	fread(&m_nodePath, sizeof(CPathNode), 1, m_pFile);
+	size_t sBytesRead = fread(&m_nodePath, sizeof(CPathNode), 1, m_pFile);
+	if (sBytesRead != sizeof(CPathNode)) {
+		logprintf("[FCNPC] Error: was not able to copy CPathNode data to memory.");
+	}
 }

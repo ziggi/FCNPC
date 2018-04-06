@@ -35,7 +35,6 @@
 	#define STDCALL
 	#define THISCALL
 	#define FASTCALL
-	#define CDECL
 	#define MAX_PATH 260
 #endif
 
