@@ -51,11 +51,16 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 		version = SAMP_VERSION_037_R2;
 		strlcpy(szSampVersion, "0.3.7 R2", sizeof(szSampVersion));
 		strlcpy(szSampClient, "SA-MP", sizeof(szSampClient));
+	} else if ((DWORD)logprintf == CAddress::FUNC_Logprintf_03DL_R1) {
+		version = SAMP_VERSION_03DL_R1;
+		strlcpy(szSampVersion, "0.3.DL R1", sizeof(szSampVersion));
+		strlcpy(szSampClient, "SA-MP", sizeof(szSampClient));
 	} else {
 		version = SAMP_VERSION_UNKNOWN;
 		strlcpy(szSampVersion, "Unknown", sizeof(szSampVersion));
 		strlcpy(szSampClient, "SA-MP", sizeof(szSampClient));
 	}
+
 	// Print the loading message
 	logprintf("");
 	logprintf("-------------------------------------------------");
@@ -70,6 +75,17 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	logprintf("-------------------------------------------------");
 	logprintf("");
 	logprintf("Loading...");
+#ifdef SAMP_03DL
+	if (version != SAMP_VERSION_03DL_R1 && version != SAMP_VERSION_UNKNOWN) {
+		logprintf("Failed. (Use FCNPC-DL for this version of the server)");
+		return false;
+	}
+#else
+	if (version == SAMP_VERSION_03DL_R1) {
+		logprintf("Failed. (Use FCNPC for this version of the server (now you are using FCNPC-DL))");
+		return false;
+	}
+#endif
 	// Install the exception handler
 	CExceptionHandler::Install();
 	// Initialize linux tick count

@@ -157,6 +157,9 @@ native FCNPC_IsInvulnerable(npcid);
 
 native FCNPC_SetSkin(npcid, skinid);
 native FCNPC_GetSkin(npcid);
+#if SAMP_03DL
+	native FCNPC_GetCustomSkin(npcid);
+#endif
 
 native FCNPC_SetWeapon(npcid, weaponid);
 native FCNPC_GetWeapon(npcid);

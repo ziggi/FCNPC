@@ -18,6 +18,12 @@
 public FCNPC_IncludeVersion = FCNPC_INCLUDE_VERSION;
 #pragma unused FCNPC_IncludeVersion
 
+#if defined GetPlayerCustomSkin
+	#define SAMP_03DL 1
+#else
+	#define SAMP_03DL 0
+#endif
+
 // Definitions
 #define FCNPC_MOVE_TYPE_AUTO       (-1)
 #define FCNPC_MOVE_TYPE_WALK       (0)
@@ -181,6 +187,9 @@ native FCNPC_IsInvulnerable(npcid);
 
 native FCNPC_SetSkin(npcid, skinid);
 native FCNPC_GetSkin(npcid);
+#if SAMP_03DL
+	native FCNPC_GetCustomSkin(npcid);
+#endif
 
 native FCNPC_SetWeapon(npcid, weaponid);
 native FCNPC_GetWeapon(npcid);

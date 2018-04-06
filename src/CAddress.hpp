@@ -29,6 +29,7 @@ enum eSAMPVersion {
 	SAMP_VERSION_037,
 	SAMP_VERSION_037_R2,
 	CRMP_VERSION_037_R2,
+	SAMP_VERSION_03DL_R1,
 };
 
 class CAddress
@@ -39,19 +40,17 @@ public:
 
 	static DWORD           FUNC_Logprintf_037;
 	static DWORD           FUNC_Logprintf_037_R2;
+	static DWORD           FUNC_Logprintf_03DL_R1;
 
 	// Functions
-	static DWORD           FUNC_ClientJoin_RPC;
 	static DWORD           FUNC_CPlayerPool__DeletePlayer;
-
-	static DWORD           FUNC_CPlayer__SpawnForWorld;
 	static DWORD           FUNC_CPlayer__Kill;
 	static DWORD           FUNC_CPlayer__EnterVehicle;
 	static DWORD           FUNC_CPlayer__ExitVehicle;
-
-	static DWORD           FUNC_CConsole__GetIntVariable;
-
+	static DWORD           FUNC_CPlayer__SpawnForWorld;
 	static DWORD           FUNC_GetVehicleModelInfo;
+	static DWORD           FUNC_CConsole__GetIntVariable;
+	static DWORD           FUNC_ClientJoin_RPC;
 
 	// Variables
 	static DWORD           VAR_ServerAuthentication;

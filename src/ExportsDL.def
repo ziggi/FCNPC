@@ -1,0 +1,9 @@
+LIBRARY	"FCNPC-DL"
+EXPORTS
+	Supports
+	Load
+	Unload
+	AmxLoad
+	AmxUnload
+	ProcessTick
+
