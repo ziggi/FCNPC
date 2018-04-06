@@ -18,6 +18,7 @@
 	#pragma warning(disable : 4127)
 	#define STDCALL __stdcall
 	#define THISCALL __thiscall
+	#define FASTCALL __fastcall
 	#define SN_TARGET_PS2
 #elif defined(LINUX)
 	#include <pthread.h>
@@ -33,6 +34,8 @@
 	#define FALSE   (0)
 	#define STDCALL
 	#define THISCALL
+	#define FASTCALL
+	#define CDECL
 	#define MAX_PATH 260
 #endif
 

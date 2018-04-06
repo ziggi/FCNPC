@@ -110,6 +110,7 @@ source_group("${LIBRARY_GROUP}RakNet" FILES ${RAKNET_SRC})
 
 # Library
 add_library (${PROJECT_NAME} SHARED ${FCNPC_SRC}
+                                    ${EXPORTS_SRC}
                                     ${SDK_SRC}
                                     ${STRLCPY_SRC}
                                     ${INVOKE_SRC}
@@ -122,11 +123,12 @@ target_link_libraries (${PROJECT_NAME}
 
 # add_definitions(-DSAMP_03DL)
 add_library (${PROJECT_NAME}-DL SHARED ${FCNPC_SRC}
-                             ${SDK_SRC}
-                             ${STRLCPY_SRC}
-                             ${INVOKE_SRC}
-                             ${RAKNET_SRC}
-                             ${PLATFORM_SRC})
+                                       ${EXPORTS_DL_SRC}
+                                       ${SDK_SRC}
+                                       ${STRLCPY_SRC}
+                                       ${INVOKE_SRC}
+                                       ${RAKNET_SRC}
+                                       ${PLATFORM_SRC})
 set_target_properties (${PROJECT_NAME}-DL PROPERTIES COMPILE_FLAGS -DSAMP_03DL)
 
 target_link_libraries (${PROJECT_NAME}-DL

@@ -25,6 +25,7 @@ RakNet__Send_t                  CFunctions::pfn__RakNet__Send = NULL;
 RakNet__RPC_t                   CFunctions::pfn__RakNet__RPC = NULL;
 RakNet__Receive_t               CFunctions::pfn__RakNet__Receive = NULL;
 RakNet__GetPlayerIDFromIndex_t  CFunctions::pfn__RakNet__GetPlayerIDFromIndex = NULL;
+RakNet__GetIndexFromPlayerID_t  CFunctions::pfn__RakNet__GetIndexFromPlayerID = NULL;
 
 void CFunctions::Initialize()
 {
@@ -56,11 +57,13 @@ void CFunctions::PreInitialize()
 	CUtils::UnProtect(pRakServer_VTBL[RAKNET_RPC_OFFSET], 4);
 	CUtils::UnProtect(pRakServer_VTBL[RAKNET_RECEIVE_OFFSET], 4);
 	CUtils::UnProtect(pRakServer_VTBL[RAKNET_GET_PLAYERID_FROM_INDEX_OFFSET], 4);
+	CUtils::UnProtect(pRakServer_VTBL[RAKNET_GET_INDEX_FROM_PLAYERID_OFFSET], 4);
 
 	pfn__RakNet__Send = reinterpret_cast<RakNet__Send_t>(pRakServer_VTBL[RAKNET_SEND_OFFSET]);
 	pfn__RakNet__RPC = reinterpret_cast<RakNet__RPC_t>(pRakServer_VTBL[RAKNET_RPC_OFFSET]);
 	pfn__RakNet__Receive = reinterpret_cast<RakNet__Receive_t>(pRakServer_VTBL[RAKNET_RECEIVE_OFFSET]);
 	pfn__RakNet__GetPlayerIDFromIndex = reinterpret_cast<RakNet__GetPlayerIDFromIndex_t>(pRakServer_VTBL[RAKNET_GET_PLAYERID_FROM_INDEX_OFFSET]);
+	pfn__RakNet__GetIndexFromPlayerID = reinterpret_cast<RakNet__GetIndexFromPlayerID_t>(pRakServer_VTBL[RAKNET_GET_INDEX_FROM_PLAYERID_OFFSET]);
 }
 
 WORD CFunctions::GetFreePlayerSlot()
@@ -345,4 +348,9 @@ void CFunctions::PlayerPacket(RakNet::BitStream* bsParams, WORD wPlayerId)
 PlayerID CFunctions::GetPlayerIDFromIndex(int index)
 {
 	return pfn__RakNet__GetPlayerIDFromIndex(pRakServer, index);
+}
+
+int CFunctions::GetIndexFromPlayerID(PlayerID playerId)
+{
+	return pfn__RakNet__GetIndexFromPlayerID(pRakServer, playerId);
 }

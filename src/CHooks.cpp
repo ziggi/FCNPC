@@ -1,361 +1,193 @@
 /* =========================================
 
-		FCNPC - Fully Controllable NPC
-			----------------------
+FCNPC - Fully Controllable NPC
+----------------------
 
-	- File: Hooks.cpp
-	- Author(s): OrMisicL
+- File: Hooks.cpp
+- Author(s): OrMisicL
 
-  =========================================*/
+=========================================*/
 
 #include "Main.hpp"
 
 extern CServer      *pServer;
 extern logprintf_t  logprintf;
-extern void         *pAMXFunctions;
 
-BYTE bytePushCount;
-bool bHookIsExecStart;
-bool bHookIsExecEnd;
-bool bHookIsPush;
-bool bIsPublicFound;
+subhook_t CGameMode__OnPlayerGiveDamage_hook;
+subhook_t CGameMode__OnPlayerTakeDamage_hook;
+subhook_t CGameMode__OnPlayerWeaponShot_hook;
+subhook_t CGameMode__OnPlayerStreamIn_hook;
+subhook_t CGameMode__OnPlayerStreamOut_hook;
+subhook_t CGameMode__OnGameModeExit_hook;
 
-// damage
-struct t_OnPlayerDamage
+//----------------------------------------------------
+
+typedef int(THISCALL* FUNC_CGameMode__OnPlayerGiveDamage)(CGameMode *thisptr, cell playerid, cell damagedid, cell amount, cell weaponid, cell bodypart);
+#ifdef _WIN32
+int FASTCALL HOOK_CGameMode__OnPlayerGiveDamage(CGameMode *thisptr, void *padding, cell playerid, cell damagedid, cell amount, cell weaponid, cell bodypart)
+#else
+int __attribute__((__cdecl__)) HOOK_CGameMode__OnPlayerGiveDamage(CGameMode *thisptr, cell playerid, cell damagedid, cell amount, cell weaponid, cell bodypart)
+#endif
 {
-	WORD wPlayerId;
-	WORD wSecondPlayerId;
-	float fHealthLoss;
-	BYTE byteWeaponId;
-	int iBodypart;
-};
-
-bool bTakeDamage;
-bool bGiveDamage;
-
-t_OnPlayerDamage pDamage;
-
-// weapon shoot
-bool bWeaponShot;
-
-struct t_OnPlayerWeaponShot
-{
-	WORD wPlayerId;
-	BYTE byteWeaponId;
-	int iHitType;
-	WORD wHitId;
-	CVector vecHit;
-};
-
-t_OnPlayerWeaponShot pWeaponShot;
-
-// stream in/out
-struct t_OnPlayerStream
-{
-	WORD wPlayerId;
-	WORD wForPlayerId;
-};
-
-t_OnPlayerStream pStream;
-
-bool bStreamIn;
-bool bStreamOut;
-
-// gamemode exit
-bool bOnGameModeExit;
-
-// subhook
-subhook_t hookFindPublic;
-subhook_t hookPush;
-subhook_t hookExec;
-
-// amx_FindPublic function definition
-typedef int(*amx_FindPublic_t)(AMX *amx, const char *funcname, int *index);
-amx_FindPublic_t pfn_amx_FindPublic = NULL;
-
-// amx_Push function definition
-typedef int(*amx_Push_t)(AMX *amx, cell value);
-amx_Push_t pfn_amx_Push = NULL;
-
-// amx_Exec function definition
-typedef int(*amx_Exec_t)(AMX *amx, long *retval, int index);
-amx_Exec_t pfn_amx_Exec = NULL;
-
-int amx_FindPublic_Hook(AMX *amx, const char *funcname, int *index)
-{
-	pfn_amx_FindPublic = (amx_FindPublic_t)(subhook_get_trampoline(hookFindPublic));
-
-	if (bHookIsExecStart) {
-		if (!bHookIsExecEnd) {
-			return pfn_amx_FindPublic(amx, funcname, index);
-		}
-
-		// exec is complete
-		CHooks::CleanUp();
-	}
-
-	if (!strcmp(funcname, "OnPlayerGiveDamage")) {
-		bIsPublicFound = true;
-		bGiveDamage = true;
-	} else if (!strcmp(funcname, "OnPlayerTakeDamage")) {
-		bIsPublicFound = true;
-		bTakeDamage = true;
-	} else if (!strcmp(funcname, "OnPlayerWeaponShot")) {
-		bIsPublicFound = true;
-		bWeaponShot = true;
-	} else if (!strcmp(funcname, "OnPlayerStreamIn")) {
-		bIsPublicFound = true;
-		bStreamIn = true;
-	} else if (!strcmp(funcname, "OnPlayerStreamOut")) {
-		bIsPublicFound = true;
-		bStreamOut = true;
-	} else if (!strcmp(funcname, "OnGameModeExit")) {
-		bIsPublicFound = true;
-		bOnGameModeExit = true;
-	}
-
-	return pfn_amx_FindPublic(amx, funcname, index);
-}
-
-int amx_Push_Hook(AMX *amx, cell value)
-{
-	pfn_amx_Push = (amx_Push_t)(subhook_get_trampoline(hookPush));
-
-	if (bHookIsExecStart && !bHookIsExecEnd) {
-		return pfn_amx_Push(amx, value);
-	}
-
-	// Are we retrieving parameters ?
-	if (bGiveDamage || bTakeDamage) {
-		bHookIsPush = true;
-
-		switch (bytePushCount) {
-			case 4:
-				pDamage.wPlayerId = static_cast<WORD>(value);
-				break;
-
-			case 3:
-				pDamage.wSecondPlayerId = static_cast<WORD>(value);
-				break;
-
-			case 2:
-				pDamage.fHealthLoss = amx_ctof(value);
-				break;
-
-			case 1:
-				pDamage.byteWeaponId = static_cast<BYTE>(value);
-				break;
-
-			case 0:
-				pDamage.iBodypart = static_cast<int>(value);
-				break;
-		}
-
-		// Increase the parameters count
-		bytePushCount++;
-	} else if (bWeaponShot) {
-		bHookIsPush = true;
-
-		switch (bytePushCount) {
-			case 6:
-				pWeaponShot.wPlayerId = static_cast<WORD>(value);
-				break;
-
-			case 5:
-				pWeaponShot.byteWeaponId = static_cast<BYTE>(value);
-				break;
-
-			case 4:
-				pWeaponShot.iHitType = static_cast<int>(value);
-				break;
-
-			case 3:
-				pWeaponShot.wHitId = static_cast<WORD>(value);
-				break;
-
-			case 2:
-				pWeaponShot.vecHit.fX = amx_ctof(value);
-				break;
-
-			case 1:
-				pWeaponShot.vecHit.fY = amx_ctof(value);
-				break;
-
-			case 0:
-				pWeaponShot.vecHit.fZ = amx_ctof(value);
-				break;
-		}
-
-		// Increase the parameters count
-		bytePushCount++;
-	} else if (bStreamIn) {
-		bHookIsPush = true;
-
-		switch (bytePushCount) {
-			case 1:
-				pStream.wPlayerId = static_cast<WORD>(value);
-				break;
-
-			case 0:
-				pStream.wForPlayerId = static_cast<WORD>(value);
-				break;
-		}
-
-		// Increase the parameters count
-		bytePushCount++;
-	} else if (bStreamOut) {
-		bHookIsPush = true;
-
-		switch (bytePushCount) {
-			case 1:
-				pStream.wPlayerId = static_cast<WORD>(value);
-				break;
-
-			case 0:
-				pStream.wForPlayerId = static_cast<WORD>(value);
-				break;
-		}
-
-		// Increase the parameters count
-		bytePushCount++;
-	}
-
-	return pfn_amx_Push(amx, value);
-}
-
-int amx_Exec_Hook(AMX *amx, long *retval, int index)
-{
-	pfn_amx_Exec = (amx_Exec_t)(subhook_get_trampoline(hookExec));
-
-	if (bHookIsExecStart && !bHookIsExecEnd) {
-		return pfn_amx_Exec(amx, retval, index);
-	}
+	subhook_remove(CGameMode__OnPlayerGiveDamage_hook);
 
 	int ret = 0;
 
-	if (bGiveDamage) {
-		bHookIsExecStart = true;
+	// get the npc data
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(static_cast<WORD>(damagedid));
 
-		// get the npc data
-		CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(pDamage.wSecondPlayerId);
-
-		// check on invulnerable
-		if (!pPlayerData || !pPlayerData->IsInvulnerable()) {
-			// call hooked callback
-			ret = pfn_amx_Exec(amx, retval, index);
-
-			// call custom callback
-			if (pPlayerData) {
-				pPlayerData->ProcessDamage(pDamage.wPlayerId, pDamage.fHealthLoss, pDamage.byteWeaponId, pDamage.iBodypart);
-			}
-		}
-
-		bHookIsExecEnd = true;
-	} else if (bTakeDamage) {
-		bHookIsExecStart = true;
-
+	// check on invulnerable
+	if (!pPlayerData || !pPlayerData->IsInvulnerable()) {
 		// call hooked callback
-		ret = pfn_amx_Exec(amx, retval, index);
-
-		// get the player data
-		CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(pDamage.wSecondPlayerId);
+		ret = ((FUNC_CGameMode__OnPlayerGiveDamage)CAddress::FUNC_CGameMode__OnPlayerGiveDamage)(thisptr, playerid, damagedid, amount, weaponid, bodypart);
 
 		// call custom callback
 		if (pPlayerData) {
-			CCallbackManager::OnGiveDamage(pDamage.wSecondPlayerId, pDamage.wPlayerId, pDamage.byteWeaponId, pDamage.iBodypart, pDamage.fHealthLoss);
+			pPlayerData->ProcessDamage(static_cast<WORD>(playerid), amx_ctof(amount), static_cast<BYTE>(weaponid), static_cast<int>(bodypart));
 		}
-
-		bHookIsExecEnd = true;
-	} else if (bWeaponShot) {
-		bHookIsExecStart = true;
-
-		// call hooked callback
-		ret = pfn_amx_Exec(amx, retval, index);
-
-		// call custom callback
-		if (pWeaponShot.iHitType == BULLET_HIT_TYPE_VEHICLE) {
-			WORD wPlayerId = pServer->GetVehicleSeatPlayerId(pWeaponShot.wHitId, 0);
-
-			CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wPlayerId);
-			if (pPlayerData) {
-				pPlayerData->ProcessVehicleDamage(pWeaponShot.wPlayerId, pWeaponShot.wHitId, pWeaponShot.byteWeaponId, pWeaponShot.vecHit);
-			}
-		}
-
-		bHookIsExecEnd = true;
-	} else if (bStreamIn) {
-		bHookIsExecStart = true;
-
-		CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(pStream.wPlayerId);
-		if (pPlayerData) {
-			pPlayerData->ProcessStreamIn(pStream.wForPlayerId);
-		} else {
-			ret = pfn_amx_Exec(amx, retval, index);
-		}
-
-		bHookIsExecEnd = true;
-	} else if (bStreamOut) {
-		bHookIsExecStart = true;
-
-		CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(pStream.wPlayerId);
-		if (pPlayerData) {
-			pPlayerData->ProcessStreamOut(pStream.wForPlayerId);
-		} else {
-			ret = pfn_amx_Exec(amx, retval, index);
-		}
-
-		bHookIsExecEnd = true;
-	} else if (bOnGameModeExit) {
-		bHookIsExecStart = true;
-
-		// reset all NPCs
-		pServer->GetPlayerManager()->ResetAllPlayers();
-
-		// call hooked callback
-		ret = pfn_amx_Exec(amx, retval, index);
-
-		bHookIsExecEnd = true;
-	} else {
-		ret = pfn_amx_Exec(amx, retval, index);
 	}
 
+	subhook_install(CGameMode__OnPlayerGiveDamage_hook);
 	return ret;
 }
 
-void CHooks::InstallHooks()
+//----------------------------------------------------
+
+typedef int(THISCALL* FUNC_CGameMode__OnPlayerTakeDamage)(CGameMode *thisptr, cell playerid, cell damagedid, cell amount, cell weaponid, cell bodypart);
+#ifdef _WIN32
+int FASTCALL HOOK_CGameMode__OnPlayerTakeDamage(CGameMode *thisptr, void *padding, cell playerid, cell damagedid, cell amount, cell weaponid, cell bodypart)
+#else
+int __attribute__((__cdecl__)) HOOK_CGameMode__OnPlayerTakeDamage(CGameMode *thisptr, cell playerid, cell damagedid, cell amount, cell weaponid, cell bodypart)
+#endif
 {
-	// Reset public flag
-	CleanUp();
+	subhook_remove(CGameMode__OnPlayerTakeDamage_hook);
 
-	// Find the function pointers
-	BYTE *pFindPublic = *(BYTE **)((DWORD)pAMXFunctions + PLUGIN_AMX_EXPORT_FindPublic * 4);
-	BYTE *pPush = *(BYTE **)((DWORD)pAMXFunctions + PLUGIN_AMX_EXPORT_Push * 4);
-	BYTE *pExec = *(BYTE **)((DWORD)pAMXFunctions + PLUGIN_AMX_EXPORT_Exec * 4);
+	// call hooked callback
+	int ret = ((FUNC_CGameMode__OnPlayerTakeDamage)CAddress::FUNC_CGameMode__OnPlayerTakeDamage)(thisptr, playerid, damagedid, amount, weaponid, bodypart);
 
-	// Hook for amx_FindPublic
-	hookFindPublic = subhook_new(pFindPublic, (BYTE *)&amx_FindPublic_Hook, (subhook_options_t)0);
-	subhook_install(hookFindPublic);
+	// get the player data
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(static_cast<WORD>(damagedid));
 
-	// Hook for amx_Push
-	hookPush = subhook_new(pPush, (BYTE *)&amx_Push_Hook, (subhook_options_t)0);
-	subhook_install(hookPush);
+	// call custom callback
+	if (pPlayerData) {
+		CCallbackManager::OnGiveDamage(static_cast<WORD>(damagedid), static_cast<WORD>(playerid), static_cast<BYTE>(weaponid), static_cast<int>(bodypart), amx_ctof(amount));
+	}
 
-	// Hook for amx_Exec
-	hookExec = subhook_new(pExec, (BYTE *)&amx_Exec_Hook, (subhook_options_t)0);
-	subhook_install(hookExec);
+	subhook_install(CGameMode__OnPlayerTakeDamage_hook);
+	return ret;
 }
 
-void CHooks::CleanUp()
+//----------------------------------------------------
+
+typedef int(THISCALL* FUNC_CGameMode__OnPlayerWeaponShot)(CGameMode *thisptr, cell playerid, cell weaponid, cell hittype, cell hitid, cell fX, cell fY, cell fZ);
+#ifdef _WIN32
+int FASTCALL HOOK_CGameMode__OnPlayerWeaponShot(CGameMode *thisptr, void *padding, cell playerid, cell weaponid, cell hittype, cell hitid, cell fX, cell fY, cell fZ)
+#else
+int __attribute__((__cdecl__)) HOOK_CGameMode__OnPlayerWeaponShot(CGameMode *thisptr, cell playerid, cell weaponid, cell hittype, cell hitid, cell fX, cell fY, cell fZ)
+#endif
 {
-	bytePushCount = 0;
-	bHookIsExecStart = false;
-	bHookIsExecEnd = false;
-	bHookIsPush = false;
-	bIsPublicFound = false;
-	bGiveDamage = false;
-	bTakeDamage = false;
-	bWeaponShot = false;
-	bStreamIn = false;
-	bStreamOut = false;
-	bOnGameModeExit = false;
+	subhook_remove(CGameMode__OnPlayerWeaponShot_hook);
+
+	// call hooked callback
+	int ret = ((FUNC_CGameMode__OnPlayerWeaponShot)CAddress::FUNC_CGameMode__OnPlayerWeaponShot)(thisptr, playerid, weaponid, hittype, hitid, fX, fY, fZ);
+
+	// call custom callback 
+	if (hittype == BULLET_HIT_TYPE_VEHICLE) {
+		WORD wPlayerId = pServer->GetVehicleSeatPlayerId(static_cast<WORD>(hitid), 0);
+
+		CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wPlayerId);
+		if (pPlayerData) {
+			pPlayerData->ProcessVehicleDamage(static_cast<WORD>(playerid), static_cast<WORD>(hitid), static_cast<BYTE>(weaponid), CVector(amx_ctof(fX), amx_ctof(fY), amx_ctof(fZ)));
+		}
+	}
+
+	subhook_install(CGameMode__OnPlayerWeaponShot_hook);
+	return ret;
+}
+
+//----------------------------------------------------
+
+typedef int(THISCALL* FUNC_CGameMode__OnPlayerStreamIn)(CGameMode *thisptr, cell playerid, cell forplayerid);
+#ifdef _WIN32
+int FASTCALL HOOK_CGameMode__OnPlayerStreamIn(CGameMode *thisptr, void *padding, cell playerid, cell forplayerid)
+#else
+int __attribute__((__cdecl__)) HOOK_CGameMode__OnPlayerStreamIn(CGameMode *thisptr, cell playerid, cell forplayerid)
+#endif
+{
+	subhook_remove(CGameMode__OnPlayerStreamIn_hook);
+
+	int ret = 0;
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(static_cast<WORD>(playerid));
+	if (pPlayerData) {
+		pPlayerData->ProcessStreamIn(static_cast<WORD>(forplayerid));
+	} else {
+		ret = ((FUNC_CGameMode__OnPlayerStreamIn)CAddress::FUNC_CGameMode__OnPlayerStreamIn)(thisptr, playerid, forplayerid);
+	}
+
+	subhook_install(CGameMode__OnPlayerStreamIn_hook);
+	return ret;
+}
+
+//----------------------------------------------------
+
+typedef int(THISCALL* FUNC_CGameMode__OnPlayerStreamOut)(CGameMode *thisptr, cell playerid, cell forplayerid);
+#ifdef _WIN32
+int FASTCALL HOOK_CGameMode__OnPlayerStreamOut(CGameMode *thisptr, void *padding, cell playerid, cell forplayerid)
+#else
+int __attribute__((__cdecl__)) HOOK_CGameMode__OnPlayerStreamOut(CGameMode *thisptr, cell playerid, cell forplayerid)
+#endif
+{
+	subhook_remove(CGameMode__OnPlayerStreamOut_hook);
+
+	int ret = 0;
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(static_cast<WORD>(playerid));
+	if (pPlayerData) {
+		pPlayerData->ProcessStreamOut(static_cast<WORD>(forplayerid));
+	} else {
+		ret = ((FUNC_CGameMode__OnPlayerStreamOut)CAddress::FUNC_CGameMode__OnPlayerStreamOut)(thisptr, playerid, forplayerid);
+	}
+
+	subhook_install(CGameMode__OnPlayerStreamOut_hook);
+	return ret;
+}
+
+//----------------------------------------------------
+
+typedef int(THISCALL* FUNC_CGameMode__OnGameModeExit)(CGameMode *thisptr);
+#ifdef _WIN32
+int FASTCALL HOOK_CGameMode__OnGameModeExit(CGameMode *thisptr, void *padding)
+#else
+int __attribute__((__cdecl__)) HOOK_CGameMode__OnGameModeExit(CGameMode *thisptr)
+#endif
+{
+	subhook_remove(CGameMode__OnGameModeExit_hook);
+
+	pServer->GetPlayerManager()->ResetAllPlayers();
+
+	int ret = ((FUNC_CGameMode__OnGameModeExit)CAddress::FUNC_CGameMode__OnGameModeExit)(thisptr);
+	subhook_install(CGameMode__OnGameModeExit_hook);
+	return ret;
+}
+
+//----------------------------------------------------
+
+void CHooks::InstallHooks()
+{
+	CGameMode__OnPlayerGiveDamage_hook = subhook_new(reinterpret_cast<void*>(CAddress::FUNC_CGameMode__OnPlayerGiveDamage), reinterpret_cast<void*>(HOOK_CGameMode__OnPlayerGiveDamage), static_cast<subhook_options_t>(NULL));
+	subhook_install(CGameMode__OnPlayerGiveDamage_hook);
+
+	CGameMode__OnPlayerTakeDamage_hook = subhook_new(reinterpret_cast<void*>(CAddress::FUNC_CGameMode__OnPlayerTakeDamage), reinterpret_cast<void*>(HOOK_CGameMode__OnPlayerTakeDamage), static_cast<subhook_options_t>(NULL));
+	subhook_install(CGameMode__OnPlayerTakeDamage_hook);
+
+	CGameMode__OnPlayerWeaponShot_hook = subhook_new(reinterpret_cast<void*>(CAddress::FUNC_CGameMode__OnPlayerWeaponShot), reinterpret_cast<void*>(HOOK_CGameMode__OnPlayerWeaponShot), static_cast<subhook_options_t>(NULL));
+	subhook_install(CGameMode__OnPlayerWeaponShot_hook);
+
+	CGameMode__OnPlayerStreamIn_hook = subhook_new(reinterpret_cast<void*>(CAddress::FUNC_CGameMode__OnPlayerStreamIn), reinterpret_cast<void*>(HOOK_CGameMode__OnPlayerStreamIn), static_cast<subhook_options_t>(NULL));
+	subhook_install(CGameMode__OnPlayerStreamIn_hook);
+
+	CGameMode__OnPlayerStreamOut_hook = subhook_new(reinterpret_cast<void*>(CAddress::FUNC_CGameMode__OnPlayerStreamOut), reinterpret_cast<void*>(HOOK_CGameMode__OnPlayerStreamOut), static_cast<subhook_options_t>(NULL));
+	subhook_install(CGameMode__OnPlayerStreamOut_hook);
+
+	CGameMode__OnGameModeExit_hook = subhook_new(reinterpret_cast<void*>(CAddress::FUNC_CGameMode__OnGameModeExit), reinterpret_cast<void*>(HOOK_CGameMode__OnGameModeExit), static_cast<subhook_options_t>(NULL));
+	subhook_install(CGameMode__OnGameModeExit_hook);
 }

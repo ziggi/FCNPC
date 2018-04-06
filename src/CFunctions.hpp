@@ -28,6 +28,7 @@ typedef bool (THISCALL *RakNet__Send_t)(void* ppRakServer, RakNet::BitStream* pa
 typedef bool (THISCALL *RakNet__RPC_t)(void* ppRakServer, int* uniqueID, RakNet::BitStream* parameters, PacketPriority priority, PacketReliability reliability, unsigned orderingChannel, PlayerID playerId, bool broadcast, bool shiftTimestamp);
 typedef Packet* (THISCALL *RakNet__Receive_t)(void* ppRakServer);
 typedef PlayerID(THISCALL *RakNet__GetPlayerIDFromIndex_t)(void* ppRakServer, int index);
+typedef int (THISCALL *RakNet__GetIndexFromPlayerID_t)(void* ppRakServer, PlayerID playerId);
 
 typedef CVector *( *GetVehicleModelInfo_t)(int iModelID, int iInfoType);
 
@@ -58,6 +59,7 @@ public:
 	static void PlayerPacket(RakNet::BitStream* bsParams, WORD wPlayerId);
 
 	static PlayerID GetPlayerIDFromIndex(int index);
+	static int GetIndexFromPlayerID(PlayerID playerId);
 
 	// Functions
 	static ClientJoin_RPC_t                 pfn__ClientJoin_RPC;
@@ -72,7 +74,7 @@ public:
 	static RakNet__RPC_t                    pfn__RakNet__RPC;
 	static RakNet__Receive_t                pfn__RakNet__Receive;
 	static RakNet__GetPlayerIDFromIndex_t   pfn__RakNet__GetPlayerIDFromIndex;
-
+	static RakNet__GetIndexFromPlayerID_t   pfn__RakNet__GetIndexFromPlayerID;
 };
 
 #endif

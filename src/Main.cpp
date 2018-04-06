@@ -43,10 +43,6 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 		version = CRMP_VERSION_037_R2;
 		strlcpy(szSampVersion, "0.3.7 R2", sizeof(szSampVersion));
 		strlcpy(szSampClient, "CR-MP", sizeof(szSampClient));
-	} else if ((DWORD)logprintf == CAddress::FUNC_Logprintf_037) {
-		version = SAMP_VERSION_037;
-		strlcpy(szSampVersion, "0.3.7", sizeof(szSampVersion));
-		strlcpy(szSampClient, "SA-MP", sizeof(szSampClient));
 	} else if ((DWORD)logprintf == CAddress::FUNC_Logprintf_037_R2) {
 		version = SAMP_VERSION_037_R2;
 		strlcpy(szSampVersion, "0.3.7 R2", sizeof(szSampVersion));

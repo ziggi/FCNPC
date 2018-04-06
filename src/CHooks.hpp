@@ -14,7 +14,6 @@ class CHooks
 {
 public:
 	static void InstallHooks();
-	static void CleanUp();
 };
 
 #endif
