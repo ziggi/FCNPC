@@ -87,8 +87,8 @@ public:
 
 	WORD GetLinkPoint();
 
-	void SetLink(WORD wLinkId);
-	void SetPoint(WORD wPointId);
+	bool SetLink(WORD wLinkId);
+	bool SetPoint(WORD wPointId);
 
 private:
 	int m_iNodeId;

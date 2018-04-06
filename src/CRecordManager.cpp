@@ -35,17 +35,17 @@ int CRecordManager::Load(char *szFile)
 		return INVALID_RECORD_ID;
 	}
 
-	size_t sBytesRead = 0;
+	size_t sElementsRead = 0;
 	// Read the playback type and file info ?
 	DWORD dwFile;
 	int iPlaybackType = 0;
-	sBytesRead = fread(&dwFile, sizeof(DWORD), 1, pFile);
-	if (sBytesRead != sizeof(DWORD)) {
+	sElementsRead = fread(&dwFile, sizeof(DWORD), 1, pFile);
+	if (sElementsRead != 1) {
 		logprintf("[FCNPC] Error: was not able to copy dwFile data to memory.");
 	}
 
-	sBytesRead = fread(&iPlaybackType, sizeof(int), 1, pFile);
-	if (sBytesRead != sizeof(int)) {
+	sElementsRead = fread(&iPlaybackType, sizeof(int), 1, pFile);
+	if (sElementsRead != 1) {
 		logprintf("[FCNPC] Error: was not able to copy iPlaybackType data to memory.");
 	}
 	// Check the playback type
