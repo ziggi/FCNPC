@@ -51,7 +51,17 @@ bool CMovePath::Destroy(int iPathId)
 
 bool CMovePath::IsPathValid(int iPathId)
 {
-	return iPathId >= 0 && iPathId < static_cast<int>(m_vPathID.size()) && m_vPathID.at(iPathId) == iPathId;
+	// is not in range
+	if (m_vPathID.size() == 0) {
+		return false;
+	}
+
+	if (iPathId < 0 || iPathId > m_vPathID.back()) {
+		return false;
+	}
+
+	// try to find the path
+	return std::find(m_vPathID.begin(), m_vPathID.end(), iPathId) != m_vPathID.end();
 }
 
 std::vector<CVector> *CMovePath::GetPoints(int iPathId)
@@ -104,7 +114,18 @@ bool CMovePath::IsPointValid(int iPathId, int iPointId)
 	if (!IsPathValid(iPathId)) {
 		return false;
 	}
-	return iPointId >= 0 && iPointId < static_cast<int>(m_vPointsID[iPathId].size()) && m_vPointsID[iPathId].at(iPointId) == iPointId;
+
+	// is not in range
+	if (m_vPointsID[iPathId].size() == 0) {
+		return false;
+	}
+
+	if (iPointId < 0 || iPointId > m_vPointsID[iPathId].back()) {
+		return false;
+	}
+
+	// try to find the path point
+	return std::find(m_vPointsID[iPathId].begin(), m_vPointsID[iPathId].end(), iPathId) != m_vPointsID[iPathId].end();
 }
 
 CVector *CMovePath::GetPoint(int iPathId, int iPointId)

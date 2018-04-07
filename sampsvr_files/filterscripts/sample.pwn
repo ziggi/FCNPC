@@ -1,17 +1,27 @@
 /* ---------------------------------
-	 FCNPC Plugin Sample FS
+	 FCNPC Plugin sample FS
 
-- File: FCNPC.pwn
-- Author: OrMisicL & ziggi
+- File: sample.pwn
+- Author: OrMisicL
+- Contributor: ziggi
 ---------------------------------*/
 
 #define FILTERSCRIPT
 
 #include <a_samp>
 
-#tryinclude <FCNPC>
-#tryinclude "FCNPC"
-#tryinclude "../FCNPC"
+#if !defined _FCNPC_included
+	#tryinclude <FCNPC>
+#endif
+
+#if !defined _FCNPC_included
+	#tryinclude "FCNPC"
+#endif
+
+#if !defined _FCNPC_included
+	#tryinclude "../FCNPC"
+#endif
+
 #if !defined _FCNPC_included
 	#error Add FCNPC.inc to your scripts directory
 #endif

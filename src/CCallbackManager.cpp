@@ -54,7 +54,9 @@ void CCallbackManager::Init()
 			vIndexes.push_back(iIndex);
 		}
 
-		m_mapCallbacks.insert(std::make_pair(pAmx, vIndexes));
+		if (vIndexes.size() > 0) {
+			m_mapCallbacks[pAmx] = vIndexes;
+		}
 		m_vAmxLoadQueue.pop();
 	}
 }
@@ -75,14 +77,14 @@ void CCallbackManager::OnCreate(WORD wPlayerId)
 {
 	int iIndex = 0;
 
-	for (auto &amx : m_vAmx) {
-		if (m_mapCallbacks[amx].size() > 0) {
-			iIndex = m_mapCallbacks[amx].at(FCNPC_OnCreate);
+	for (const auto &c : m_mapCallbacks) {
+		if (c.second.size() > 0) {
+			iIndex = c.second.at(FCNPC_OnCreate);
 		}
-		if (iIndex != 0 || !amx_FindPublic(amx, "FCNPC_OnCreate", &iIndex)) {
-			amx_Push(amx, wPlayerId);
+		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnCreate", &iIndex)) {
+			amx_Push(c.first, wPlayerId);
 
-			amx_Exec(amx, NULL, iIndex);
+			amx_Exec(c.first, NULL, iIndex);
 		}
 	}
 }
@@ -91,14 +93,14 @@ void CCallbackManager::OnDestroy(WORD wPlayerId)
 {
 	int iIndex = 0;
 
-	for (auto &amx : m_vAmx) {
-		if (m_mapCallbacks[amx].size() > 0) {
-			iIndex = m_mapCallbacks[amx].at(FCNPC_OnDestroy);
+	for (const auto &c : m_mapCallbacks) {
+		if (c.second.size() > 0) {
+			iIndex = c.second.at(FCNPC_OnDestroy);
 		}
-		if (iIndex != 0 || !amx_FindPublic(amx, "FCNPC_OnDestroy", &iIndex)) {
-			amx_Push(amx, wPlayerId);
+		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnDestroy", &iIndex)) {
+			amx_Push(c.first, wPlayerId);
 
-			amx_Exec(amx, NULL, iIndex);
+			amx_Exec(c.first, NULL, iIndex);
 		}
 	}
 }
@@ -107,14 +109,14 @@ void CCallbackManager::OnSpawn(WORD wPlayerId)
 {
 	int iIndex = 0;
 
-	for (auto &amx : m_vAmx) {
-		if (m_mapCallbacks[amx].size() > 0) {
-			iIndex = m_mapCallbacks[amx].at(FCNPC_OnSpawn);
+	for (const auto &c : m_mapCallbacks) {
+		if (c.second.size() > 0) {
+			iIndex = c.second.at(FCNPC_OnSpawn);
 		}
-		if (iIndex != 0 || !amx_FindPublic(amx, "FCNPC_OnSpawn", &iIndex)) {
-			amx_Push(amx, wPlayerId);
+		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnSpawn", &iIndex)) {
+			amx_Push(c.first, wPlayerId);
 
-			amx_Exec(amx, NULL, iIndex);
+			amx_Exec(c.first, NULL, iIndex);
 		}
 	}
 }
@@ -123,14 +125,14 @@ void CCallbackManager::OnRespawn(WORD wPlayerId)
 {
 	int iIndex = 0;
 
-	for (auto &amx : m_vAmx) {
-		if (m_mapCallbacks[amx].size() > 0) {
-			iIndex = m_mapCallbacks[amx].at(FCNPC_OnRespawn);
+	for (const auto &c : m_mapCallbacks) {
+		if (c.second.size() > 0) {
+			iIndex = c.second.at(FCNPC_OnRespawn);
 		}
-		if (iIndex != 0 || !amx_FindPublic(amx, "FCNPC_OnRespawn", &iIndex)) {
-			amx_Push(amx, wPlayerId);
+		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnRespawn", &iIndex)) {
+			amx_Push(c.first, wPlayerId);
 
-			amx_Exec(amx, NULL, iIndex);
+			amx_Exec(c.first, NULL, iIndex);
 		}
 	}
 }
@@ -139,16 +141,16 @@ void CCallbackManager::OnDeath(WORD wPlayerId, WORD wKillerId, BYTE byteWeaponId
 {
 	int iIndex = 0;
 
-	for (auto &amx : m_vAmx) {
-		if (m_mapCallbacks[amx].size() > 0) {
-			iIndex = m_mapCallbacks[amx].at(FCNPC_OnDeath);
+	for (const auto &c : m_mapCallbacks) {
+		if (c.second.size() > 0) {
+			iIndex = c.second.at(FCNPC_OnDeath);
 		}
-		if (iIndex != 0 || !amx_FindPublic(amx, "FCNPC_OnDeath", &iIndex)) {
-			amx_Push(amx, byteWeaponId);
-			amx_Push(amx, wKillerId);
-			amx_Push(amx, wPlayerId);
+		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnDeath", &iIndex)) {
+			amx_Push(c.first, byteWeaponId);
+			amx_Push(c.first, wKillerId);
+			amx_Push(c.first, wPlayerId);
 
-			amx_Exec(amx, NULL, iIndex);
+			amx_Exec(c.first, NULL, iIndex);
 		}
 	}
 }
@@ -157,14 +159,14 @@ void CCallbackManager::OnReachDestination(WORD wPlayerId)
 {
 	int iIndex = 0;
 
-	for (auto &amx : m_vAmx) {
-		if (m_mapCallbacks[amx].size() > 0) {
-			iIndex = m_mapCallbacks[amx].at(FCNPC_OnReachDestination);
+	for (const auto &c : m_mapCallbacks) {
+		if (c.second.size() > 0) {
+			iIndex = c.second.at(FCNPC_OnReachDestination);
 		}
-		if (iIndex != 0 || !amx_FindPublic(amx, "FCNPC_OnReachDestination", &iIndex)) {
-			amx_Push(amx, wPlayerId);
+		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnReachDestination", &iIndex)) {
+			amx_Push(c.first, wPlayerId);
 
-			amx_Exec(amx, NULL, iIndex);
+			amx_Exec(c.first, NULL, iIndex);
 		}
 	}
 }
@@ -173,16 +175,16 @@ void CCallbackManager::OnVehicleEntryComplete(WORD wPlayerId, WORD wVehicleId, i
 {
 	int iIndex = 0;
 
-	for (auto &amx : m_vAmx) {
-		if (m_mapCallbacks[amx].size() > 0) {
-			iIndex = m_mapCallbacks[amx].at(FCNPC_OnVehicleEntryComplete);
+	for (const auto &c : m_mapCallbacks) {
+		if (c.second.size() > 0) {
+			iIndex = c.second.at(FCNPC_OnVehicleEntryComplete);
 		}
-		if (iIndex != 0 || !amx_FindPublic(amx, "FCNPC_OnVehicleEntryComplete", &iIndex)) {
-			amx_Push(amx, iSeat);
-			amx_Push(amx, wVehicleId);
-			amx_Push(amx, wPlayerId);
+		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnVehicleEntryComplete", &iIndex)) {
+			amx_Push(c.first, iSeat);
+			amx_Push(c.first, wVehicleId);
+			amx_Push(c.first, wPlayerId);
 
-			amx_Exec(amx, NULL, iIndex);
+			amx_Exec(c.first, NULL, iIndex);
 		}
 	}
 }
@@ -191,14 +193,14 @@ void CCallbackManager::OnVehicleExitComplete(WORD wPlayerId)
 {
 	int iIndex = 0;
 
-	for (auto &amx : m_vAmx) {
-		if (m_mapCallbacks[amx].size() > 0) {
-			iIndex = m_mapCallbacks[amx].at(FCNPC_OnVehicleExitComplete);
+	for (const auto &c : m_mapCallbacks) {
+		if (c.second.size() > 0) {
+			iIndex = c.second.at(FCNPC_OnVehicleExitComplete);
 		}
-		if (iIndex != 0 || !amx_FindPublic(amx, "FCNPC_OnVehicleExitComplete", &iIndex)) {
-			amx_Push(amx, wPlayerId);
+		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnVehicleExitComplete", &iIndex)) {
+			amx_Push(c.first, wPlayerId);
 
-			amx_Exec(amx, NULL, iIndex);
+			amx_Exec(c.first, NULL, iIndex);
 		}
 	}
 }
@@ -208,18 +210,18 @@ int CCallbackManager::OnTakeDamage(WORD wPlayerId, WORD wDamagerId, BYTE byteWea
 	cell cReturn = 1;
 	int iIndex = 0;
 
-	for (auto &amx : m_vAmx) {
-		if (m_mapCallbacks[amx].size() > 0) {
-			iIndex = m_mapCallbacks[amx].at(FCNPC_OnTakeDamage);
+	for (const auto &c : m_mapCallbacks) {
+		if (c.second.size() > 0) {
+			iIndex = c.second.at(FCNPC_OnTakeDamage);
 		}
-		if (iIndex != 0 || !amx_FindPublic(amx, "FCNPC_OnTakeDamage", &iIndex)) {
-			amx_Push(amx, amx_ftoc(fHealthLoss));
-			amx_Push(amx, iBodyPart);
-			amx_Push(amx, byteWeaponId);
-			amx_Push(amx, wDamagerId);
-			amx_Push(amx, wPlayerId);
+		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnTakeDamage", &iIndex)) {
+			amx_Push(c.first, amx_ftoc(fHealthLoss));
+			amx_Push(c.first, iBodyPart);
+			amx_Push(c.first, byteWeaponId);
+			amx_Push(c.first, wDamagerId);
+			amx_Push(c.first, wPlayerId);
 
-			amx_Exec(amx, &cReturn, iIndex);
+			amx_Exec(c.first, &cReturn, iIndex);
 			if (!cReturn) {
 				return cReturn;
 			}
@@ -232,41 +234,41 @@ void CCallbackManager::OnGiveDamage(WORD wPlayerId, WORD wDamagedId, BYTE byteWe
 {
 	int iIndex = 0;
 
-	for (auto &amx : m_vAmx) {
-		if (m_mapCallbacks[amx].size() > 0) {
-			iIndex = m_mapCallbacks[amx].at(FCNPC_OnGiveDamage);
+	for (const auto &c : m_mapCallbacks) {
+		if (c.second.size() > 0) {
+			iIndex = c.second.at(FCNPC_OnGiveDamage);
 		}
-		if (iIndex != 0 || !amx_FindPublic(amx, "FCNPC_OnGiveDamage", &iIndex)) {
-			amx_Push(amx, amx_ftoc(fHealthLoss));
-			amx_Push(amx, iBodyPart);
-			amx_Push(amx, byteWeaponId);
-			amx_Push(amx, wDamagedId);
-			amx_Push(amx, wPlayerId);
+		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnGiveDamage", &iIndex)) {
+			amx_Push(c.first, amx_ftoc(fHealthLoss));
+			amx_Push(c.first, iBodyPart);
+			amx_Push(c.first, byteWeaponId);
+			amx_Push(c.first, wDamagedId);
+			amx_Push(c.first, wPlayerId);
 
-			amx_Exec(amx, NULL, iIndex);
+			amx_Exec(c.first, NULL, iIndex);
 		}
 	}
 }
 
-int CCallbackManager::OnWeaponShot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE byteWeaponId, CVector vecPoint)
+int CCallbackManager::OnWeaponShot(WORD wPlayerId, BYTE byteWeaponId, BYTE byteHitType, WORD wHitId, CVector vecPoint)
 {
 	cell cReturn = 1;
 	int iIndex = 0;
 
-	for (auto &amx : m_vAmx) {
-		if (m_mapCallbacks[amx].size() > 0) {
-			iIndex = m_mapCallbacks[amx].at(FCNPC_OnWeaponShot);
+	for (const auto &c : m_mapCallbacks) {
+		if (c.second.size() > 0) {
+			iIndex = c.second.at(FCNPC_OnWeaponShot);
 		}
-		if (iIndex != 0 || !amx_FindPublic(amx, "FCNPC_OnWeaponShot", &iIndex)) {
-			amx_Push(amx, amx_ftoc(vecPoint.fZ));
-			amx_Push(amx, amx_ftoc(vecPoint.fY));
-			amx_Push(amx, amx_ftoc(vecPoint.fX));
-			amx_Push(amx, byteWeaponId);
-			amx_Push(amx, byteHitType);
-			amx_Push(amx, wHitId);
-			amx_Push(amx, wPlayerId);
+		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnWeaponShot", &iIndex)) {
+			amx_Push(c.first, amx_ftoc(vecPoint.fZ));
+			amx_Push(c.first, amx_ftoc(vecPoint.fY));
+			amx_Push(c.first, amx_ftoc(vecPoint.fX));
+			amx_Push(c.first, wHitId);
+			amx_Push(c.first, byteHitType);
+			amx_Push(c.first, byteWeaponId);
+			amx_Push(c.first, wPlayerId);
 
-			amx_Exec(amx, &cReturn, iIndex);
+			amx_Exec(c.first, &cReturn, iIndex);
 			if (!cReturn) {
 				return cReturn;
 			}
@@ -280,15 +282,15 @@ void CCallbackManager::OnWeaponStateChange(WORD wPlayerId, int iWeaponState)
 {
 	int iIndex = 0;
 
-	for (auto &amx : m_vAmx) {
-		if (m_mapCallbacks[amx].size() > 0) {
-			iIndex = m_mapCallbacks[amx].at(FCNPC_OnWeaponStateChange);
+	for (const auto &c : m_mapCallbacks) {
+		if (c.second.size() > 0) {
+			iIndex = c.second.at(FCNPC_OnWeaponStateChange);
 		}
-		if (iIndex != 0 || !amx_FindPublic(amx, "FCNPC_OnWeaponStateChange", &iIndex)) {
-			amx_Push(amx, iWeaponState);
-			amx_Push(amx, wPlayerId);
+		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnWeaponStateChange", &iIndex)) {
+			amx_Push(c.first, iWeaponState);
+			amx_Push(c.first, wPlayerId);
 
-			amx_Exec(amx, NULL, iIndex);
+			amx_Exec(c.first, NULL, iIndex);
 		}
 	}
 }
@@ -298,20 +300,20 @@ int CCallbackManager::OnVehicleTakeDamage(WORD wPlayerId, WORD wDamagerId, WORD 
 	cell cReturn = 1;
 	int iIndex = 0;
 
-	for (auto &amx : m_vAmx) {
-		if (m_mapCallbacks[amx].size() > 0) {
-			iIndex = m_mapCallbacks[amx].at(FCNPC_OnVehicleTakeDamage);
+	for (const auto &c : m_mapCallbacks) {
+		if (c.second.size() > 0) {
+			iIndex = c.second.at(FCNPC_OnVehicleTakeDamage);
 		}
-		if (iIndex != 0 || !amx_FindPublic(amx, "FCNPC_OnVehicleTakeDamage", &iIndex)) {
-			amx_Push(amx, amx_ftoc(vecHit.fZ));
-			amx_Push(amx, amx_ftoc(vecHit.fY));
-			amx_Push(amx, amx_ftoc(vecHit.fX));
-			amx_Push(amx, byteWeaponId);
-			amx_Push(amx, wVehicleId);
-			amx_Push(amx, wDamagerId);
-			amx_Push(amx, wPlayerId);
+		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnVehicleTakeDamage", &iIndex)) {
+			amx_Push(c.first, amx_ftoc(vecHit.fZ));
+			amx_Push(c.first, amx_ftoc(vecHit.fY));
+			amx_Push(c.first, amx_ftoc(vecHit.fX));
+			amx_Push(c.first, byteWeaponId);
+			amx_Push(c.first, wVehicleId);
+			amx_Push(c.first, wDamagerId);
+			amx_Push(c.first, wPlayerId);
 
-			amx_Exec(amx, &cReturn, iIndex);
+			amx_Exec(c.first, &cReturn, iIndex);
 			if (!cReturn) {
 				return cReturn;
 			}
@@ -325,14 +327,14 @@ void CCallbackManager::OnFinishPlayback(WORD wPlayerId)
 {
 	int iIndex = 0;
 
-	for (auto &amx : m_vAmx) {
-		if (m_mapCallbacks[amx].size() > 0) {
-			iIndex = m_mapCallbacks[amx].at(FCNPC_OnFinishPlayback);
+	for (const auto &c : m_mapCallbacks) {
+		if (c.second.size() > 0) {
+			iIndex = c.second.at(FCNPC_OnFinishPlayback);
 		}
-		if (iIndex != 0 || !amx_FindPublic(amx, "FCNPC_OnFinishPlayback", &iIndex)) {
-			amx_Push(amx, wPlayerId);
+		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnFinishPlayback", &iIndex)) {
+			amx_Push(c.first, wPlayerId);
 
-			amx_Exec(amx, NULL, iIndex);
+			amx_Exec(c.first, NULL, iIndex);
 		}
 	}
 }
@@ -342,15 +344,15 @@ int CCallbackManager::OnChangeNode(WORD wPlayerId, WORD wNodeId)
 	cell cReturn = 1;
 	int iIndex = 0;
 
-	for (auto &amx : m_vAmx) {
-		if (m_mapCallbacks[amx].size() > 0) {
-			iIndex = m_mapCallbacks[amx].at(FCNPC_OnChangeNode);
+	for (const auto &c : m_mapCallbacks) {
+		if (c.second.size() > 0) {
+			iIndex = c.second.at(FCNPC_OnChangeNode);
 		}
-		if (iIndex != 0 || !amx_FindPublic(amx, "FCNPC_OnChangeNode", &iIndex)) {
-			amx_Push(amx, wNodeId);
-			amx_Push(amx, wPlayerId);
+		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnChangeNode", &iIndex)) {
+			amx_Push(c.first, wNodeId);
+			amx_Push(c.first, wPlayerId);
 
-			amx_Exec(amx, &cReturn, iIndex);
+			amx_Exec(c.first, &cReturn, iIndex);
 			if (!cReturn) {
 				return cReturn;
 			}
@@ -365,15 +367,15 @@ int CCallbackManager::OnFinishNodePoint(WORD wPlayerId, WORD wNodePoint)
 	cell cReturn = 1;
 	int iIndex = 0;
 
-	for (auto &amx : m_vAmx) {
-		if (m_mapCallbacks[amx].size() > 0) {
-			iIndex = m_mapCallbacks[amx].at(FCNPC_OnFinishNodePoint);
+	for (const auto &c : m_mapCallbacks) {
+		if (c.second.size() > 0) {
+			iIndex = c.second.at(FCNPC_OnFinishNodePoint);
 		}
-		if (iIndex != 0 || !amx_FindPublic(amx, "FCNPC_OnFinishNodePoint", &iIndex)) {
-			amx_Push(amx, wNodePoint);
-			amx_Push(amx, wPlayerId);
+		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnFinishNodePoint", &iIndex)) {
+			amx_Push(c.first, wNodePoint);
+			amx_Push(c.first, wPlayerId);
 
-			amx_Exec(amx, &cReturn, iIndex);
+			amx_Exec(c.first, &cReturn, iIndex);
 			if (!cReturn) {
 				return cReturn;
 			}
@@ -387,14 +389,14 @@ void CCallbackManager::OnFinishNode(WORD wPlayerId)
 {
 	int iIndex = 0;
 
-	for (auto &amx : m_vAmx) {
-		if (m_mapCallbacks[amx].size() > 0) {
-			iIndex = m_mapCallbacks[amx].at(FCNPC_OnFinishNode);
+	for (const auto &c : m_mapCallbacks) {
+		if (c.second.size() > 0) {
+			iIndex = c.second.at(FCNPC_OnFinishNode);
 		}
-		if (iIndex != 0 || !amx_FindPublic(amx, "FCNPC_OnFinishNode", &iIndex)) {
-			amx_Push(amx, wPlayerId);
+		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnFinishNode", &iIndex)) {
+			amx_Push(c.first, wPlayerId);
 
-			amx_Exec(amx, NULL, iIndex);
+			amx_Exec(c.first, NULL, iIndex);
 		}
 	}
 }
@@ -403,15 +405,15 @@ void CCallbackManager::OnStreamIn(WORD wPlayerId, WORD wForPlayerId)
 {
 	int iIndex = 0;
 
-	for (auto &amx : m_vAmx) {
-		if (m_mapCallbacks[amx].size() > 0) {
-			iIndex = m_mapCallbacks[amx].at(FCNPC_OnStreamIn);
+	for (const auto &c : m_mapCallbacks) {
+		if (c.second.size() > 0) {
+			iIndex = c.second.at(FCNPC_OnStreamIn);
 		}
-		if (iIndex != 0 || !amx_FindPublic(amx, "FCNPC_OnStreamIn", &iIndex)) {
-			amx_Push(amx, wForPlayerId);
-			amx_Push(amx, wPlayerId);
+		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnStreamIn", &iIndex)) {
+			amx_Push(c.first, wForPlayerId);
+			amx_Push(c.first, wPlayerId);
 
-			amx_Exec(amx, NULL, iIndex);
+			amx_Exec(c.first, NULL, iIndex);
 		}
 	}
 }
@@ -420,15 +422,15 @@ void CCallbackManager::OnStreamOut(WORD wPlayerId, WORD wForPlayerId)
 {
 	int iIndex = 0;
 
-	for (auto &amx : m_vAmx) {
-		if (m_mapCallbacks[amx].size() > 0) {
-			iIndex = m_mapCallbacks[amx].at(FCNPC_OnStreamOut);
+	for (const auto &c : m_mapCallbacks) {
+		if (c.second.size() > 0) {
+			iIndex = c.second.at(FCNPC_OnStreamOut);
 		}
-		if (iIndex != 0 || !amx_FindPublic(amx, "FCNPC_OnStreamOut", &iIndex)) {
-			amx_Push(amx, wForPlayerId);
-			amx_Push(amx, wPlayerId);
+		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnStreamOut", &iIndex)) {
+			amx_Push(c.first, wForPlayerId);
+			amx_Push(c.first, wPlayerId);
 
-			amx_Exec(amx, NULL, iIndex);
+			amx_Exec(c.first, NULL, iIndex);
 		}
 	}
 }
@@ -438,17 +440,17 @@ int CCallbackManager::OnUpdate(WORD wPlayerId)
 	cell cReturn = 1;
 	int iIndex = 0;
 
-	for (auto &amx : m_vAmx) {
-		if (m_mapCallbacks[amx].size() > 0) {
-			iIndex = m_mapCallbacks[amx].at(FCNPC_OnUpdate);
+	for (const auto &c : m_mapCallbacks) {
+		if (c.second.size() > 0) {
+			iIndex = c.second.at(FCNPC_OnUpdate);
 		}
-		if (iIndex != 0 || !amx_FindPublic(amx, "FCNPC_OnUpdate", &iIndex)) {
-			amx_Push(amx, wPlayerId);
+		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnUpdate", &iIndex)) {
+			amx_Push(c.first, wPlayerId);
 
 			if (cReturn) {
-				amx_Exec(amx, &cReturn, iIndex);
+				amx_Exec(c.first, &cReturn, iIndex);
 			} else {
-				amx_Exec(amx, NULL, iIndex);
+				amx_Exec(c.first, NULL, iIndex);
 			}
 		}
 	}
@@ -460,15 +462,15 @@ void CCallbackManager::OnFinishMovePath(WORD wPlayerId, int iMovePath)
 {
 	int iIndex = 0;
 
-	for (auto &amx : m_vAmx) {
-		if (m_mapCallbacks[amx].size() > 0) {
-			iIndex = m_mapCallbacks[amx].at(FCNPC_OnFinishMovePath);
+	for (const auto &c : m_mapCallbacks) {
+		if (c.second.size() > 0) {
+			iIndex = c.second.at(FCNPC_OnFinishMovePath);
 		}
-		if (iIndex != 0 || !amx_FindPublic(amx, "FCNPC_OnFinishMovePath", &iIndex)) {
-			amx_Push(amx, iMovePath);
-			amx_Push(amx, wPlayerId);
+		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnFinishMovePath", &iIndex)) {
+			amx_Push(c.first, iMovePath);
+			amx_Push(c.first, wPlayerId);
 
-			amx_Exec(amx, NULL, iIndex);
+			amx_Exec(c.first, NULL, iIndex);
 		}
 	}
 }
@@ -477,16 +479,16 @@ void CCallbackManager::OnFinishMovePathPoint(WORD wPlayerId, int iMovePath, int 
 {
 	int iIndex = 0;
 
-	for (auto &amx : m_vAmx) {
-		if (m_mapCallbacks[amx].size() > 0) {
-			iIndex = m_mapCallbacks[amx].at(FCNPC_OnFinishMovePathPoint);
+	for (const auto &c : m_mapCallbacks) {
+		if (c.second.size() > 0) {
+			iIndex = c.second.at(FCNPC_OnFinishMovePathPoint);
 		}
-		if (iIndex != 0 || !amx_FindPublic(amx, "FCNPC_OnFinishMovePathPoint", &iIndex)) {
-			amx_Push(amx, iMovePoint);
-			amx_Push(amx, iMovePath);
-			amx_Push(amx, wPlayerId);
+		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnFinishMovePathPoint", &iIndex)) {
+			amx_Push(c.first, iMovePoint);
+			amx_Push(c.first, iMovePath);
+			amx_Push(c.first, wPlayerId);
 
-			amx_Exec(amx, NULL, iIndex);
+			amx_Exec(c.first, NULL, iIndex);
 		}
 	}
 }
@@ -496,16 +498,16 @@ int CCallbackManager::OnChangeHeightPos(WORD wPlayerId, float fNewZ, float fOldZ
 	cell cReturn = 1;
 	int iIndex = 0;
 
-	for (auto &amx : m_vAmx) {
-		if (m_mapCallbacks[amx].size() > 0) {
-			iIndex = m_mapCallbacks[amx].at(FCNPC_OnChangeHeightPos);
+	for (const auto &c : m_mapCallbacks) {
+		if (c.second.size() > 0) {
+			iIndex = c.second.at(FCNPC_OnChangeHeightPos);
 		}
-		if (iIndex != 0 || !amx_FindPublic(amx, "FCNPC_OnChangeHeightPos", &iIndex)) {
-			amx_Push(amx, amx_ftoc(fOldZ));
-			amx_Push(amx, amx_ftoc(fNewZ));
-			amx_Push(amx, wPlayerId);
+		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnChangeHeightPos", &iIndex)) {
+			amx_Push(c.first, amx_ftoc(fOldZ));
+			amx_Push(c.first, amx_ftoc(fNewZ));
+			amx_Push(c.first, wPlayerId);
 
-			amx_Exec(amx, &cReturn, iIndex);
+			amx_Exec(c.first, &cReturn, iIndex);
 			if (!cReturn) {
 				return cReturn;
 			}

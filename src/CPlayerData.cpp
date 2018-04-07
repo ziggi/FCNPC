@@ -756,16 +756,30 @@ void CPlayerData::Process()
 			} else if (dwMoveTick > m_dwMoveTime + m_dwMoveStopDelay) {
 				StopMoving();
 
-				if (m_wVehicleToEnter != INVALID_VEHICLE_ID) {
+				CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[m_wVehicleToEnter];
+				CVector vecDestination;
+				float fDistance = 0.0f;
+
+				if (pVehicle) {
+					vecDestination = pServer->GetVehicleSeatPos(pVehicle, m_byteSeatToEnter);
+					fDistance = CMath::GetDistanceBetween3DPoints(m_pPlayer->vecPosition, vecDestination);
+				}
+
+				// Validate the vehicle and check distance
+				if (pVehicle && fDistance < MIN_VEHICLE_GO_TO_DISTANCE) {
+					// Wait until the entry animation is finished
 					m_dwEnterExitTickCount = dwThisTick;
 					m_bEntering = true;
 
+					// Check whether the player is jacking the vehicle or not
 					if (pServer->IsVehicleSeatOccupied(m_wPlayerId, m_wVehicleToEnter, m_byteSeatToEnter)) {
 						m_bJacking = true;
 					}
 
+					// Call the SAMP enter vehicle function
 					CFunctions::PlayerEnterVehicle(m_pPlayer, m_wVehicleToEnter, m_byteSeatToEnter);
 				} else {
+					// Go to the vehicle stopped
 					CCallbackManager::OnReachDestination(m_wPlayerId);
 				}
 			}
@@ -1109,25 +1123,50 @@ void CPlayerData::SetSkin(int iSkin)
 
 	// Validate the skin
 	if (iSkin > 311 || iSkin < 0 || iSkin == 74) {
+#ifdef SAMP_03DL
+		if (iSkin <= 20000 || iSkin > 30000) {
+			return;
+		}
+#else
 		return;
+#endif
 	}
+
+#ifdef SAMP_03DL
+	if (iSkin > 20000 && iSkin <= 30000) {
+		m_pPlayer->spawn.iSkin = 0; // TODO get base id
+		m_pPlayer->spawn.dwCustomSkin = iSkin;
+	} else {
+		m_pPlayer->spawn.iSkin = iSkin;
+		m_pPlayer->spawn.dwCustomSkin = 0;
+	}
+#else
+	m_pPlayer->spawn.iSkin = iSkin;
+#endif
 
 	// Send RPC
 	if (m_pPlayer->bReadyToSpawn) {
 		RakNet::BitStream bsData;
 		bsData.Write(static_cast<DWORD>(m_pPlayer->wPlayerId));
 		bsData.Write(iSkin);
+#ifdef SAMP_03DL
+		bsData.Write(m_pPlayer->spawn.dwCustomSkin);
+#endif
 		CFunctions::AddedPlayersRPC(&RPC_SetPlayerSkin, &bsData, m_wPlayerId);
 	}
-
-	// Set the player skin
-	m_pPlayer->spawn.iSkin = iSkin;
 }
 
 int CPlayerData::GetSkin()
 {
 	return m_pPlayer->spawn.iSkin;
 }
+
+#ifdef SAMP_03DL
+int CPlayerData::GetCustomSkin()
+{
+	return m_pPlayer->spawn.dwCustomSkin;
+}
+#endif
 
 void CPlayerData::SetInterior(int iInterior)
 {
@@ -1706,7 +1745,7 @@ void CPlayerData::StopMoving()
 	if (GetState() == PLAYER_STATE_DRIVER) {
 		SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys & ~KEY_SPRINT);
 	} else {
-		SetKeys(m_pPlayer->wUDAnalog & ~KEY_UP, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys);
+		SetKeys(m_pPlayer->wUDAnalog & ~KEY_UP, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys & ~(KEY_WALK | KEY_SPRINT));
 	}
 	// Reset other moving variables
 	m_dwMoveTime = 0;
@@ -2043,7 +2082,7 @@ bool CPlayerData::EnterVehicle(WORD wVehicleId, BYTE byteSeatId, int iType)
 	m_byteSeatToEnter = byteSeatId;
 
 	// Check distance
-	if (fDistance < 0.5f) {
+	if (fDistance < MIN_VEHICLE_GO_TO_DISTANCE) {
 		// Wait until the entry animation is finished
 		m_dwEnterExitTickCount = GetTickCount();
 		m_bEntering = true;

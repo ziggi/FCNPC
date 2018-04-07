@@ -55,10 +55,17 @@ bool CNode::Initialize()
 		fclose(m_pFile);
 		return false;
 	}
+	size_t sElementsRead = 0;
 	// Read the node header
-	fread(&m_nodeHeader, sizeof(CNodeHeader), 1, m_pFile);
+	sElementsRead = fread(&m_nodeHeader, sizeof(CNodeHeader), 1, m_pFile);
+	if (sElementsRead != 1) {
+		logprintf("[FCNPC] Error: was not able to copy CNodeHeader data to memory (%d != %d).", sElementsRead, sizeof(CNodeHeader));
+	}
 	// Read the first path node
-	fread(&m_nodePath, sizeof(CPathNode), 1, m_pFile);
+	sElementsRead = fread(&m_nodePath, sizeof(CPathNode), 1, m_pFile);
+	if (sElementsRead != 1) {
+		logprintf("[FCNPC] Error: was not able to copy CPathNode data to memory.");
+	}
 
 	return true;
 }
@@ -77,6 +84,7 @@ void CNode::GetHeaderInfo(DWORD *dwVehicleNodes, DWORD *dwPedNodes, DWORD *dwNav
 
 WORD CNode::Process(CPlayerData *pPlayerData, WORD wPointId, WORD wLastPoint)
 {
+	bool bLinkRead = false;
 	int iChangeNode = 0;
 	// Set the node to the player point
 	SetPoint(wPointId);
@@ -98,8 +106,8 @@ WORD CNode::Process(CPlayerData *pPlayerData, WORD wPointId, WORD wLastPoint)
 			// Generate a random link id
 			wLinkId = wStartLink + (rand() % wLinkCount);
 			// Set the node to the next random link
-			SetLink(wLinkId);
-		} while (m_nodeLink.wNodeId == wLastPoint && wLinkCount > 1);
+			bLinkRead = SetLink(wLinkId);
+		} while (!bLinkRead || (m_nodeLink.wNodeId == wLastPoint && wLinkCount > 1));
 
 		// Check if we need to change the node id
 		if (m_nodeLink.wAreaId != m_iNodeId) {
@@ -169,7 +177,7 @@ BYTE CNode::GetNodeType()
 	return m_nodePath.byteNodeType;
 }
 
-void CNode::SetLink(WORD wLinkId)
+bool CNode::SetLink(WORD wLinkId)
 {
 	// Set the file pointer to the link position
 	fseek(m_pFile, sizeof(CNodeHeader)
@@ -179,18 +187,18 @@ void CNode::SetLink(WORD wLinkId)
 	             , SEEK_SET);
 
 	// Read the node link
-	fread(&m_nodeLink, sizeof(CLinkNode), 1, m_pFile);
+	return fread(&m_nodeLink, sizeof(CLinkNode), 1, m_pFile) == 1;
 }
 
-void CNode::SetPoint(WORD wPointId)
+bool CNode::SetPoint(WORD wPointId)
 {
 	// Validate the point
 	if (wPointId > m_nodeHeader.dwNodesNumber) {
-		return;
+		return false;
 	}
 
 	// Set the file pointer to the point position
 	fseek(m_pFile, sizeof(CNodeHeader) + (wPointId * sizeof(CPathNode)), SEEK_SET);
 	// Read the node link
-	fread(&m_nodePath, sizeof(CPathNode), 1, m_pFile);
+	return fread(&m_nodePath, sizeof(CPathNode), 1, m_pFile) == 1;
 }

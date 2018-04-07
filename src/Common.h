@@ -19,6 +19,7 @@ extern logprintf_t          logprintf;
 #define MAX_HIT_RADIUS                  0.4f
 #define MAX_DAMAGE_DISTANCE             200.0f
 #define MAX_DISTANCE_TO_ENTER_VEHICLE   30.0f
+#define MIN_VEHICLE_GO_TO_DISTANCE      1.0f
 #define DEFAULT_UPDATE_RATE             50
 #define DEFAULT_TICK_RATE               5
 
@@ -151,7 +152,6 @@ enum MOVE_MODE {
 #define INVALID_VEHICLE_ID (0xFFFF)
 #define INVALID_ACTOR_ID (0xFFFF)
 #define NO_TEAM (255)
-#define MAX_OBJECTS (1000)
 #define INVALID_OBJECT_ID (0xFFFF)
 #define MAX_GANG_ZONES (1024)
 #define MAX_TEXT_DRAWS (2048)

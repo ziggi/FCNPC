@@ -99,6 +99,14 @@ long WINAPI CExceptionHandler::ExceptionHandlerCallback(_EXCEPTION_POINTERS *pEx
 	fprintf(pFile, "  OFFSET_RemoteSystemSize: 0x%x\n", CAddress::OFFSET_RemoteSystemSize);
 	fprintf(pFile, "  OFFSET_RemoteSystem__ConnectMode: 0x%x\n", CAddress::OFFSET_RemoteSystem__ConnectMode);
 	fprintf(pFile, "  OFFSET_RemoteSystem__Unknown: 0x%x\n", CAddress::OFFSET_RemoteSystem__Unknown);
+
+	fprintf(pFile, "\nCallbacks:\n");
+	fprintf(pFile, "  FUNC_CGameMode__OnPlayerGiveDamage: 0x%x\n", CAddress::FUNC_CGameMode__OnPlayerGiveDamage);
+	fprintf(pFile, "  FUNC_CGameMode__OnPlayerTakeDamage: 0x%x\n", CAddress::FUNC_CGameMode__OnPlayerTakeDamage);
+	fprintf(pFile, "  FUNC_CGameMode__OnPlayerWeaponShot: 0x%x\n", CAddress::FUNC_CGameMode__OnPlayerWeaponShot);
+	fprintf(pFile, "  FUNC_CGameMode__OnPlayerStreamIn: 0x%x\n", CAddress::FUNC_CGameMode__OnPlayerStreamIn);
+	fprintf(pFile, "  FUNC_CGameMode__OnPlayerStreamOut: 0x%x\n", CAddress::FUNC_CGameMode__OnPlayerStreamOut);
+	fprintf(pFile, "  FUNC_CGameMode__OnGameModeExit: 0x%x\n", CAddress::FUNC_CGameMode__OnGameModeExit);
 	fprintf(pFile, "=========================== FCNPC Exception Handler ============================");
 	// Close the file
 	fclose(pFile);

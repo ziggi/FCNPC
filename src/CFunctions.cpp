@@ -12,33 +12,32 @@
 #include "Main.hpp"
 
 // Functions
-ClientJoin_RPC_t                CFunctions::pfn__ClientJoin_RPC = NULL;
 CPlayerPool__DeletePlayer_t     CFunctions::pfn__CPlayerPool__DeletePlayer = NULL;
 CPlayer__SpawnForWorld_t        CFunctions::pfn__CPlayer__SpawnForWorld = NULL;
 CPlayer__Kill_t                 CFunctions::pfn__CPlayer__Kill = NULL;
 CPlayer__EnterVehicle_t         CFunctions::pfn__CPlayer__EnterVehicle = NULL;
 CPlayer__ExitVehicle_t          CFunctions::pfn__CPlayer__ExitVehicle = NULL;
-CConsole__GetIntVariable_t      CFunctions::pfn__CConsole__GetIntVariable = NULL;
 GetVehicleModelInfo_t           CFunctions::pfn__GetVehicleModelInfo = NULL;
+CConsole__GetIntVariable_t      CFunctions::pfn__CConsole__GetIntVariable = NULL;
+ClientJoin_RPC_t                CFunctions::pfn__ClientJoin_RPC = NULL;
+
 RakNet__Send_t                  CFunctions::pfn__RakNet__Send = NULL;
 RakNet__RPC_t                   CFunctions::pfn__RakNet__RPC = NULL;
 RakNet__Receive_t               CFunctions::pfn__RakNet__Receive = NULL;
 RakNet__GetPlayerIDFromIndex_t  CFunctions::pfn__RakNet__GetPlayerIDFromIndex = NULL;
+RakNet__GetIndexFromPlayerID_t  CFunctions::pfn__RakNet__GetIndexFromPlayerID = NULL;
 
 void CFunctions::Initialize()
 {
 	// Initialize function pointers
-	pfn__ClientJoin_RPC = (ClientJoin_RPC_t)(CAddress::FUNC_ClientJoin_RPC);
 	pfn__CPlayerPool__DeletePlayer = (CPlayerPool__DeletePlayer_t)(CAddress::FUNC_CPlayerPool__DeletePlayer);
-
 	pfn__CPlayer__SpawnForWorld = (CPlayer__SpawnForWorld_t)(CAddress::FUNC_CPlayer__SpawnForWorld);
 	pfn__CPlayer__Kill = (CPlayer__Kill_t)(CAddress::FUNC_CPlayer__Kill);
 	pfn__CPlayer__EnterVehicle = (CPlayer__EnterVehicle_t)(CAddress::FUNC_CPlayer__EnterVehicle);
 	pfn__CPlayer__ExitVehicle = (CPlayer__ExitVehicle_t)(CAddress::FUNC_CPlayer__ExitVehicle);
-
-	pfn__CConsole__GetIntVariable = (CConsole__GetIntVariable_t)(CAddress::FUNC_CConsole__GetIntVariable);
-
 	pfn__GetVehicleModelInfo = (GetVehicleModelInfo_t)(CAddress::FUNC_GetVehicleModelInfo);
+	pfn__CConsole__GetIntVariable = (CConsole__GetIntVariable_t)(CAddress::FUNC_CConsole__GetIntVariable);
+	pfn__ClientJoin_RPC = (ClientJoin_RPC_t)(CAddress::FUNC_ClientJoin_RPC);
 }
 
 void CFunctions::PreInitialize()
@@ -58,11 +57,13 @@ void CFunctions::PreInitialize()
 	CUtils::UnProtect(pRakServer_VTBL[RAKNET_RPC_OFFSET], 4);
 	CUtils::UnProtect(pRakServer_VTBL[RAKNET_RECEIVE_OFFSET], 4);
 	CUtils::UnProtect(pRakServer_VTBL[RAKNET_GET_PLAYERID_FROM_INDEX_OFFSET], 4);
+	CUtils::UnProtect(pRakServer_VTBL[RAKNET_GET_INDEX_FROM_PLAYERID_OFFSET], 4);
 
 	pfn__RakNet__Send = reinterpret_cast<RakNet__Send_t>(pRakServer_VTBL[RAKNET_SEND_OFFSET]);
 	pfn__RakNet__RPC = reinterpret_cast<RakNet__RPC_t>(pRakServer_VTBL[RAKNET_RPC_OFFSET]);
 	pfn__RakNet__Receive = reinterpret_cast<RakNet__Receive_t>(pRakServer_VTBL[RAKNET_RECEIVE_OFFSET]);
 	pfn__RakNet__GetPlayerIDFromIndex = reinterpret_cast<RakNet__GetPlayerIDFromIndex_t>(pRakServer_VTBL[RAKNET_GET_PLAYERID_FROM_INDEX_OFFSET]);
+	pfn__RakNet__GetIndexFromPlayerID = reinterpret_cast<RakNet__GetIndexFromPlayerID_t>(pRakServer_VTBL[RAKNET_GET_INDEX_FROM_PLAYERID_OFFSET]);
 }
 
 WORD CFunctions::GetFreePlayerSlot()
@@ -252,7 +253,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	pPlayerData->SetBulletSync(&bulletSyncData);
 
 	// call FCNPC_OnWeaponShot
-	int send = CCallbackManager::OnWeaponShot(wPlayerId, bulletSyncData.wHitID, bulletSyncData.byteHitType, bulletSyncData.byteWeaponID, bulletSyncData.vecCenterOfHit);
+	int send = CCallbackManager::OnWeaponShot(wPlayerId, bulletSyncData.byteWeaponID, bulletSyncData.byteHitType, bulletSyncData.wHitID, bulletSyncData.vecCenterOfHit);
 	if (send != 0) {
 		// if it is a NPC
 		if (bIsHit && bulletSyncData.byteHitType == BULLET_HIT_TYPE_PLAYER && pServer->GetPlayerManager()->IsNpcConnected(bulletSyncData.wHitID)) {
@@ -347,4 +348,9 @@ void CFunctions::PlayerPacket(RakNet::BitStream* bsParams, WORD wPlayerId)
 PlayerID CFunctions::GetPlayerIDFromIndex(int index)
 {
 	return pfn__RakNet__GetPlayerIDFromIndex(pRakServer, index);
+}
+
+int CFunctions::GetIndexFromPlayerID(PlayerID playerId)
+{
+	return pfn__RakNet__GetIndexFromPlayerID(pRakServer, playerId);
 }

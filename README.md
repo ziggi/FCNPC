@@ -1,5 +1,5 @@
 # FCNPC - Fully Controllable NPC
-[![GitHub version](https://badge.fury.io/gh/ziggi%2FFCNPC.svg)](https://badge.fury.io/gh/ziggi%2FFCNPC) [![Build Status](https://travis-ci.org/ziggi/FCNPC.svg?branch=master)](https://travis-ci.org/ziggi/FCNPC)
+[![GitHub version](https://badge.fury.io/gh/ziggi%2FFCNPC.svg)](https://badge.fury.io/gh/ziggi%2FFCNPC) [![Build Status](https://travis-ci.org/ziggi/FCNPC.svg?branch=master)](https://travis-ci.org/ziggi/FCNPC) [![Build status](https://ci.appveyor.com/api/projects/status/e4cbhqdflr97arti?svg=true)](https://ci.appveyor.com/project/ziggi/fcnpc)
 
 This is a fork of [original repository](https://github.com/OrMisicL/FCNPC) by [OrMisicL](https://github.com/OrMisicL/).
 
@@ -157,6 +157,9 @@ native FCNPC_IsInvulnerable(npcid);
 
 native FCNPC_SetSkin(npcid, skinid);
 native FCNPC_GetSkin(npcid);
+#if SAMP_03DL
+	native FCNPC_GetCustomSkin(npcid);
+#endif
 
 native FCNPC_SetWeapon(npcid, weaponid);
 native FCNPC_GetWeapon(npcid);

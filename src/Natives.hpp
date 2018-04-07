@@ -66,6 +66,9 @@ public:
 
 	static cell AMX_NATIVE_CALL FCNPC_SetSkin(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetSkin(AMX *amx, cell *params);
+#ifdef SAMP_03DL
+	static cell AMX_NATIVE_CALL FCNPC_GetCustomSkin(AMX *amx, cell *params);
+#endif
 	static cell AMX_NATIVE_CALL FCNPC_SetInterior(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetInterior(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetVirtualWorld(AMX *amx, cell *params);

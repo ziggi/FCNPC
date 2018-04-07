@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.8.4)
+cmake_minimum_required (VERSION 2.8.12)
 
 if (CMAKE_VERSION VERSION_GREATER 3.1.3)
 	cmake_policy(SET CMP0054 NEW)
@@ -19,8 +19,11 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	add_definitions (-DWIN32 -D_WIN32 -D__STDC__ -DSYSTEM_NAME="Windows")
 
 	# *.def
-	file (GLOB FCNPC_SRC
+	file (GLOB EXPORTS_SRC
 		${CMAKE_CURRENT_SOURCE_DIR}/src/Exports.def
+	)
+	file (GLOB EXPORTS_DL_SRC
+		${CMAKE_CURRENT_SOURCE_DIR}/src/ExportsDL.def
 	)
 
 	# snprintf
@@ -107,6 +110,7 @@ source_group("${LIBRARY_GROUP}RakNet" FILES ${RAKNET_SRC})
 
 # Library
 add_library (${PROJECT_NAME} SHARED ${FCNPC_SRC}
+                                    ${EXPORTS_SRC}
                                     ${SDK_SRC}
                                     ${STRLCPY_SRC}
                                     ${INVOKE_SRC}
@@ -116,4 +120,19 @@ add_library (${PROJECT_NAME} SHARED ${FCNPC_SRC}
 target_link_libraries (${PROJECT_NAME}
 	subhook
 	)
+
+# add_definitions(-DSAMP_03DL)
+add_library (${PROJECT_NAME}-DL SHARED ${FCNPC_SRC}
+                                       ${EXPORTS_DL_SRC}
+                                       ${SDK_SRC}
+                                       ${STRLCPY_SRC}
+                                       ${INVOKE_SRC}
+                                       ${RAKNET_SRC}
+                                       ${PLATFORM_SRC})
+set_target_properties (${PROJECT_NAME}-DL PROPERTIES COMPILE_FLAGS -DSAMP_03DL)
+
+target_link_libraries (${PROJECT_NAME}-DL
+	subhook
+	)
+
 configure_file(src/FCNPC.inc.in ${CMAKE_CURRENT_SOURCE_DIR}/sampsvr_files/FCNPC.inc NEWLINE_STYLE CRLF)

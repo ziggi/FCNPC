@@ -31,7 +31,7 @@ public:
 	static void OnVehicleExitComplete(WORD wPlayerId);
 	static int  OnTakeDamage(WORD wPlayerId, WORD wDamagerId, BYTE byteWeaponId, int iBodyPart, float fHealthLoss);
 	static void OnGiveDamage(WORD wPlayerId, WORD wDamagedId, BYTE byteWeaponId, int iBodyPart, float fHealthLoss);
-	static int  OnWeaponShot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE byteWeaponId, CVector vecPoint);
+	static int  OnWeaponShot(WORD wPlayerId, BYTE byteWeaponId, BYTE byteHitType, WORD wHitId, CVector vecPoint);
 	static void OnWeaponStateChange(WORD wPlayerId, int iWeaponState);
 	static int  OnVehicleTakeDamage(WORD wPlayerId, WORD wDamagerId, WORD wVehicleId, BYTE byteWeaponId, CVector vecHit);
 	static void OnFinishPlayback(WORD wPlayerId);
