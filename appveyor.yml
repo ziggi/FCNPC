@@ -25,5 +25,5 @@ build:
   parallel: true
 
 artifacts:
-  - path: FCNPC-*-windows.zip
+  - path: FCNPC*.dll
     name: Binary package
