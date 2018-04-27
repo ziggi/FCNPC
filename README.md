@@ -86,9 +86,9 @@ forward FCNPC_OnVehicleTakeDamage(npcid, damagerid, vehicleid, weaponid, Float:x
 forward FCNPC_OnWeaponShot(npcid, weaponid, hittype, hitid, Float:x, Float:y, Float:z);
 forward FCNPC_OnWeaponStateChange(npcid, weapon_state);
 
-forward FCNPC_OnFinishNodePoint(npcid, point);
-forward FCNPC_OnChangeNode(npcid, nodeid);
-forward FCNPC_OnFinishNode(npcid);
+forward FCNPC_OnFinishNodePoint(npcid, nodeid, pointid);
+forward FCNPC_OnChangeNode(npcid, newnodeid, oldnodeid);
+forward FCNPC_OnFinishNode(npcid, nodeid);
 
 forward FCNPC_OnStreamIn(npcid, forplayerid);
 forward FCNPC_OnStreamOut(npcid, forplayerid);
@@ -108,7 +108,8 @@ native FCNPC_SetUpdateRate(rate);
 native FCNPC_GetUpdateRate();
 native FCNPC_SetTickRate(rate);
 native FCNPC_GetTickRate();
-native FCNPC_InitMapAndreas(address);
+native FCNPC_IsMoveModeEnabled(mode);
+native FCNPC_ToggleMoveModeEnabled(mode, bool:toggle);
 native FCNPC_ToggleCrashLogCreation(bool:toggle);
 native FCNPC_GetCrashLogCreation();
 

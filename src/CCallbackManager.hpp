@@ -16,7 +16,6 @@ class CCallbackManager
 {
 public:
 
-	static bool IsInited();
 	static void Init();
 	static void RegisterAMX(AMX *pAmx);
 	static void UnregisterAMX(AMX *pAmx);
@@ -35,14 +34,14 @@ public:
 	static void OnWeaponStateChange(WORD wPlayerId, int iWeaponState);
 	static int  OnVehicleTakeDamage(WORD wPlayerId, WORD wDamagerId, WORD wVehicleId, BYTE byteWeaponId, CVector vecHit);
 	static void OnFinishPlayback(WORD wPlayerId);
-	static int  OnChangeNode(WORD wPlayerId, WORD wNodeId);
-	static int  OnFinishNodePoint(WORD wPlayerId, WORD wNodePoint);
-	static void OnFinishNode(WORD wPlayerId);
+	static int  OnChangeNode(WORD wPlayerId, WORD wNodeId, WORD wOldNodeId);
+	static int  OnFinishNodePoint(WORD wPlayerId, WORD wNodeId, WORD wNodePoint);
+	static void OnFinishNode(WORD wPlayerId, WORD wNodeId);
 	static void OnStreamIn(WORD wPlayerId, WORD wForPlayerId);
 	static void OnStreamOut(WORD wPlayerId, WORD wForPlayerId);
 	static int  OnUpdate(WORD wPlayerId);
 	static void OnFinishMovePath(WORD wPlayerId, int iMovePath);
-	static void OnFinishMovePathPoint(WORD wPlayerId, int iMovePath, int iMovePoint);
+	static int OnFinishMovePathPoint(WORD wPlayerId, int iMovePath, int iMovePoint);
 	static int OnChangeHeightPos(WORD wPlayerId, float fNewZ, float fOldZ);
 
 	static std::vector<AMX *> m_vAmx;

@@ -57,11 +57,6 @@ WORD CPlayerManager::AddPlayer(char *szName)
 
 	// Create the player instance
 	m_pNpcArray[wPlayerId] = new CPlayerData(wPlayerId, szName);
-	if (!m_pNpcArray[wPlayerId]) {
-		CFunctions::DeletePlayer(wPlayerId);
-		logprintf("[FCNPC] Error: NPC '%s' not created. The NPC instance could not be created.", szName);
-		return INVALID_PLAYER_ID;
-	}
 
 	// Try to setup the player
 	if (!SetupPlayer(wPlayerId)) {

@@ -339,7 +339,7 @@ void CCallbackManager::OnFinishPlayback(WORD wPlayerId)
 	}
 }
 
-int CCallbackManager::OnChangeNode(WORD wPlayerId, WORD wNodeId)
+int CCallbackManager::OnChangeNode(WORD wPlayerId, WORD wNodeId, WORD wOldNodeId)
 {
 	cell cReturn = 1;
 	int iIndex = 0;
@@ -349,6 +349,7 @@ int CCallbackManager::OnChangeNode(WORD wPlayerId, WORD wNodeId)
 			iIndex = c.second.at(FCNPC_OnChangeNode);
 		}
 		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnChangeNode", &iIndex)) {
+			amx_Push(c.first, wOldNodeId);
 			amx_Push(c.first, wNodeId);
 			amx_Push(c.first, wPlayerId);
 
@@ -362,7 +363,7 @@ int CCallbackManager::OnChangeNode(WORD wPlayerId, WORD wNodeId)
 	return cReturn;
 }
 
-int CCallbackManager::OnFinishNodePoint(WORD wPlayerId, WORD wNodePoint)
+int CCallbackManager::OnFinishNodePoint(WORD wPlayerId, WORD wNodeId, WORD wNodePoint)
 {
 	cell cReturn = 1;
 	int iIndex = 0;
@@ -373,6 +374,7 @@ int CCallbackManager::OnFinishNodePoint(WORD wPlayerId, WORD wNodePoint)
 		}
 		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnFinishNodePoint", &iIndex)) {
 			amx_Push(c.first, wNodePoint);
+			amx_Push(c.first, wNodeId);
 			amx_Push(c.first, wPlayerId);
 
 			amx_Exec(c.first, &cReturn, iIndex);
@@ -385,7 +387,7 @@ int CCallbackManager::OnFinishNodePoint(WORD wPlayerId, WORD wNodePoint)
 	return cReturn;
 }
 
-void CCallbackManager::OnFinishNode(WORD wPlayerId)
+void CCallbackManager::OnFinishNode(WORD wPlayerId, WORD wNodeId)
 {
 	int iIndex = 0;
 
@@ -394,6 +396,7 @@ void CCallbackManager::OnFinishNode(WORD wPlayerId)
 			iIndex = c.second.at(FCNPC_OnFinishNode);
 		}
 		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnFinishNode", &iIndex)) {
+			amx_Push(c.first, wNodeId);
 			amx_Push(c.first, wPlayerId);
 
 			amx_Exec(c.first, NULL, iIndex);
@@ -475,8 +478,9 @@ void CCallbackManager::OnFinishMovePath(WORD wPlayerId, int iMovePath)
 	}
 }
 
-void CCallbackManager::OnFinishMovePathPoint(WORD wPlayerId, int iMovePath, int iMovePoint)
+int CCallbackManager::OnFinishMovePathPoint(WORD wPlayerId, int iMovePath, int iMovePoint)
 {
+	cell cReturn = 1;
 	int iIndex = 0;
 
 	for (const auto &c : m_mapCallbacks) {
@@ -488,9 +492,14 @@ void CCallbackManager::OnFinishMovePathPoint(WORD wPlayerId, int iMovePath, int 
 			amx_Push(c.first, iMovePath);
 			amx_Push(c.first, wPlayerId);
 
-			amx_Exec(c.first, NULL, iIndex);
+			amx_Exec(c.first, &cReturn, iIndex);
+			if (!cReturn) {
+				return cReturn;
+			}
 		}
 	}
+
+	return cReturn;
 }
 
 int CCallbackManager::OnChangeHeightPos(WORD wPlayerId, float fNewZ, float fOldZ)

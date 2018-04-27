@@ -112,7 +112,7 @@ WORD CNode::Process(CPlayerData *pPlayerData, WORD wPointId, WORD wLastPoint)
 		// Check if we need to change the node id
 		if (m_nodeLink.wAreaId != m_iNodeId) {
 			if (m_nodeLink.wAreaId != 65535) {
-				iChangeNode = CCallbackManager::OnChangeNode(pPlayerData->GetId(), m_nodeLink.wAreaId);
+				iChangeNode = CCallbackManager::OnChangeNode(pPlayerData->GetId(), m_nodeLink.wAreaId, static_cast<WORD>(m_iNodeId));
 				if (iChangeNode) {
 					return pPlayerData->ChangeNode(m_nodeLink.wAreaId, wLinkId);
 				}
@@ -140,6 +140,11 @@ void CNode::GetPosition(CVector *pVecPosition)
 	*pVecPosition = CVector(static_cast<float>(m_nodePath.sPositionX / 8),
 	                        static_cast<float>(m_nodePath.sPositionY / 8),
 	                        static_cast<float>(m_nodePath.sPositionZ / 8) + 1.2f);
+}
+
+int CNode::GetNodeId()
+{
+	return m_iNodeId;
 }
 
 WORD CNode::GetLinkId()
