@@ -750,8 +750,14 @@ void CPlayerData::Process()
 					CCallbackManager::OnFinishMovePath(m_wPlayerId, iMovePath);
 				}
 			} else if (m_bPlayingNode && !m_bIsPlayingNodePaused) {
-				if (CCallbackManager::OnFinishNodePoint(m_wPlayerId, m_pNode->GetAreaId(), m_wNodePoint)) {
-					WORD wNewPoint = m_pNode->Process(this, m_wNodePoint, m_wNodeLastPoint);
+				int iChangeNode = CCallbackManager::OnFinishNodePoint(m_wPlayerId, m_pNode->GetAreaId(), m_wNodePoint);
+
+				WORD wNewPoint = NULL;
+				if (iChangeNode) {
+					wNewPoint = m_pNode->Process(this, m_wNodePoint, m_wNodeLastPoint);
+				}
+
+				if (wNewPoint && iChangeNode) {
 					m_wNodeLastPoint = m_wNodePoint;
 					m_wNodePoint = wNewPoint;
 				} else {
