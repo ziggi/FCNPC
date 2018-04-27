@@ -297,7 +297,7 @@ native FCNPC_OpenNode(nodeid);
 native FCNPC_CloseNode(nodeid);
 native FCNPC_IsNodeOpen(nodeid);
 native FCNPC_GetNodeType(nodeid);
-native FCNPC_SetNodePoint(nodeid, point);
+native FCNPC_SetNodePoint(nodeid, pointid);
 native FCNPC_GetNodePointPosition(nodeid, &Float:x, &Float:y, &Float:z);
 native FCNPC_GetNodePointCount(nodeid);
 native FCNPC_GetNodeInfo(nodeid, &vehnodes, &pednodes, &navinode);
