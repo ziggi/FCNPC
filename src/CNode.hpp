@@ -78,6 +78,7 @@ public:
 	int GetNodesNumber();
 	void GetHeaderInfo(DWORD *dwVehicleNodes, DWORD *dwPedNodes, DWORD *dwNaviNodes);
 
+	int GetNodeId();
 	WORD GetLinkId();
 	WORD GetAreaId();
 	WORD GetPointId();

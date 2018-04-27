@@ -734,11 +734,15 @@ void CPlayerData::Process()
 
 				m_dwMoveTickCount = dwThisTick;
 			} else if (IsMovingByMovePath(m_iMovePath)) {
-				CCallbackManager::OnFinishMovePathPoint(m_wPlayerId, m_iMovePath, m_iMovePoint);
+				int iChangePath = CCallbackManager::OnFinishMovePathPoint(m_wPlayerId, m_iMovePath, m_iMovePoint);
 
-				m_iMovePoint++;
-				CVector *vecPoint = pServer->GetMovePath()->GetPoint(m_iMovePath, m_iMovePoint);
-				if (vecPoint) {
+				CVector *vecPoint = NULL;
+				if (iChangePath) {
+					vecPoint = pServer->GetMovePath()->GetPoint(m_iMovePath, m_iMovePoint + 1);
+				}
+
+				if (vecPoint && iChangePath) {
+					m_iMovePoint++;
 					UpdateMovingData(*vecPoint, m_fMoveRadius, m_bMoveSetAngle, m_fMoveSpeed, m_fDistOffset);
 				} else {
 					int iMovePath = m_iMovePath;
@@ -746,8 +750,14 @@ void CPlayerData::Process()
 					CCallbackManager::OnFinishMovePath(m_wPlayerId, iMovePath);
 				}
 			} else if (m_bPlayingNode && !m_bIsPlayingNodePaused) {
-				if (CCallbackManager::OnFinishNodePoint(m_wPlayerId, m_wNodePoint)) {
-					WORD wNewPoint = m_pNode->Process(this, m_wNodePoint, m_wNodeLastPoint);
+				int iChangeNode = CCallbackManager::OnFinishNodePoint(m_wPlayerId, m_pNode->GetAreaId(), m_wNodePoint);
+
+				WORD wNewPoint = NULL;
+				if (iChangeNode) {
+					wNewPoint = m_pNode->Process(this, m_wNodePoint, m_wNodeLastPoint);
+				}
+
+				if (wNewPoint && iChangeNode) {
 					m_wNodeLastPoint = m_wNodePoint;
 					m_wNodePoint = wNewPoint;
 				} else {
@@ -1133,7 +1143,7 @@ void CPlayerData::SetSkin(int iSkin)
 	}
 
 #ifdef SAMP_03DL
-	if (iSkin > 20000 && iSkin <= 30000) {
+	if (iSkin > 20000) {
 		m_pPlayer->spawn.iSkin = 0; // TODO get base id
 		m_pPlayer->spawn.dwCustomSkin = iSkin;
 	} else {
@@ -2462,6 +2472,7 @@ void CPlayerData::StopPlayingNode()
 		return;
 	}
 
+	WORD wNodeId = static_cast<WORD>(m_pNode->GetNodeId());
 	// Reset the node instance
 	m_pNode = NULL;
 	// Reset the player data
@@ -2479,7 +2490,7 @@ void CPlayerData::StopPlayingNode()
 	m_fNodeMoveSpeed = MOVE_SPEED_AUTO;
 	m_vecNodeLastPos = CVector();
 	// Call the node finish callback
-	CCallbackManager::OnFinishNode(m_wPlayerId);
+	CCallbackManager::OnFinishNode(m_wPlayerId, wNodeId);
 }
 
 void CPlayerData::PausePlayingNode()

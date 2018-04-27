@@ -61,9 +61,6 @@ bool CNodeManager::OpenNode(int iNodeId)
 
 	// Create the node instance
 	m_pNode[iNodeId] = new CNode(iNodeId);
-	if (!m_pNode[iNodeId]) {
-		return false;
-	}
 
 	// Try to initialize the node
 	if (!m_pNode[iNodeId]->Initialize()) {
