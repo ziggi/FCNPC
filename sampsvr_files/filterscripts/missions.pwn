@@ -41,7 +41,7 @@
 // Same goes for vehicles (11 vehicles per mission = 110 vehicle slots used)
 
 forward StartMission(slotid, starterid);
-forward EndMission(missionid, reason[], bool:success);
+forward EndMission(mission, reason[], bool:success);
 forward JoinMission(playerid, mission, slot);
 forward LeaveMission(playerid);
 forward BeginMission(mission);
@@ -950,61 +950,61 @@ public StartMission(slotid, starterid)
 	return true;
 }
 
-public EndMission(missionid, reason[], bool:success)
+public EndMission(mission, reason[], bool:success)
 {
-	if (missionid == INVALID_MISSION)
+	if (mission == INVALID_MISSION)
 	{
 		return;
 	}
-	KillTimer(missiontimer[missionid]);
+	KillTimer(missiontimer[mission]);
 	FreeCamera(mission);
 	// Reset missions
-	Mission[missionid][started] = false;
+	Mission[mission][started] = false;
 	for (new j = 0; j < MAX_MISSION_PLAYERS; j++)
 	{
-		if (!IsPlayerConnected(Mission[missionid][players][j]))
+		if (!IsPlayerConnected(Mission[mission][players][j]))
 		{
 			continue;
 		}
 
-		TextDrawHideForPlayer(Mission[missionid][players][j], TextdrawBox);
-		TextDrawHideForPlayer(Mission[missionid][players][j], TextdrawBox2);
-		TextDrawHideForPlayer(Mission[missionid][players][j], TextdrawBoxText);
-		TextDrawHideForPlayer(Mission[missionid][players][j], TextdrawText);
-		TextDrawHideForPlayer(Mission[missionid][players][j], TextdrawFollow);
-		TogglePlayerSpectating(Mission[missionid][players][j], 0);
-		TogglePlayerControllable(Mission[missionid][players][j], 1);
-		SetPlayerVirtualWorld(Mission[missionid][players][j], 0);
+		TextDrawHideForPlayer(Mission[mission][players][j], TextdrawBox);
+		TextDrawHideForPlayer(Mission[mission][players][j], TextdrawBox2);
+		TextDrawHideForPlayer(Mission[mission][players][j], TextdrawBoxText);
+		TextDrawHideForPlayer(Mission[mission][players][j], TextdrawText);
+		TextDrawHideForPlayer(Mission[mission][players][j], TextdrawFollow);
+		TogglePlayerSpectating(Mission[mission][players][j], 0);
+		TogglePlayerControllable(Mission[mission][players][j], 1);
+		SetPlayerVirtualWorld(Mission[mission][players][j], 0);
 		if (!success)
 		{
 			new reas[164];
 			format(reas, sizeof(reas), "~r~Mission failed !~n~~w~%s", reason);
-			GameTextForPlayer(Mission[missionid][players][j], reas, 5000, 0);
+			GameTextForPlayer(Mission[mission][players][j], reas, 5000, 0);
 		}
 		else
 		{
-			GameTextForPlayer(Mission[missionid][players][j], reason, 5000, 0);
+			GameTextForPlayer(Mission[mission][players][j], reason, 5000, 0);
 		}
 
-		PlayerMission[Mission[missionid][players][j]] = INVALID_MISSION;
-		PlayerCreatedMission[Mission[missionid][players][j]] = INVALID_MISSION;
-		Mission[missionid][players][j] = INVALID_PLAYER_ID;
-		Mission[missionid][player_dead][j] = false;
+		PlayerMission[Mission[mission][players][j]] = INVALID_MISSION;
+		PlayerCreatedMission[Mission[mission][players][j]] = INVALID_MISSION;
+		Mission[mission][players][j] = INVALID_PLAYER_ID;
+		Mission[mission][player_dead][j] = false;
 	}
 	for (new j = 0; j < MAX_MISSION_NPCS; j++)
 	{
-		FCNPC_Destroy(Mission[missionid][npcs][j]);
-		Mission[missionid][npcs][j] = INVALID_PLAYER_ID;
-		Mission[missionid][npc_target][j] = INVALID_PLAYER_ID;
+		FCNPC_Destroy(Mission[mission][npcs][j]);
+		Mission[mission][npcs][j] = INVALID_PLAYER_ID;
+		Mission[mission][npc_target][j] = INVALID_PLAYER_ID;
 	}
 	for (new j = 0; j < MAX_MISSION_VEHICLES; j++)
 	{
-		DestroyVehicle(Mission[missionid][vehicles][j]);
+		DestroyVehicle(Mission[mission][vehicles][j]);
 	}
-	Mission[missionid][level] = 0;
-	Mission[missionid][cutscene] = false;
-	Mission[missionid][cutscene_process] = false;
-	Mission[missionid][cutscene_stage] = 0;
+	Mission[mission][level] = 0;
+	Mission[mission][cutscene] = false;
+	Mission[mission][cutscene_process] = false;
+	Mission[mission][cutscene_stage] = 0;
 	// Decrease missions count
 	MissionsStarted--;
 }
