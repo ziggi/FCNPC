@@ -752,7 +752,7 @@ void CPlayerData::Process()
 			} else if (m_bPlayingNode && !m_bIsPlayingNodePaused) {
 				int iChangeNode = CCallbackManager::OnFinishNodePoint(m_wPlayerId, m_pNode->GetAreaId(), m_wNodePoint);
 
-				WORD wNewPoint = NULL;
+				WORD wNewPoint = 0;
 				if (iChangeNode) {
 					wNewPoint = m_pNode->Process(this, m_wNodePoint, m_wNodeLastPoint);
 				}
