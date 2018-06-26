@@ -407,7 +407,7 @@ native FCNPC_HideInTabListForPlayer(npcid, forplayerid);
 			FCNPC_GetPluginVersion(plugin_version);
 
 			if (strcmp(version, plugin_version) != 0) {
-				printf("\n** Please update your FCNPC plugin to %s from here: https://github.com/ziggi/FCNPC/releases.\n", version);
+				printf("\n*** [FCNPC] Info: A newer version (v%s) is available at https://github.com/ziggi/FCNPC/releases ***\n", version);
 			}
 		}
 	}
