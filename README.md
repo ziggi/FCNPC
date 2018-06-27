@@ -1,33 +1,41 @@
-# FCNPC - Fully Controllable NPC
+FCNPC - Fully Controllable NPC
+==============================
 [![GitHub version](https://badge.fury.io/gh/ziggi%2FFCNPC.svg)](https://badge.fury.io/gh/ziggi%2FFCNPC) [![Build Status](https://travis-ci.org/ziggi/FCNPC.svg?branch=master)](https://travis-ci.org/ziggi/FCNPC) [![Build status](https://ci.appveyor.com/api/projects/status/e4cbhqdflr97arti?svg=true)](https://ci.appveyor.com/project/ziggi/fcnpc)
 
-This is a fork of [original repository](https://github.com/OrMisicL/FCNPC) by [OrMisicL](https://github.com/OrMisicL/).
+Fully Controllable NPC (FCNPC) is a plugin for SA-MP servers which adds a lot of capabilities to the existing standard NPCs.
 
-If you found a bug or get crash, create issue in [issues section](https://github.com/ziggi/FCNPC/issues) with your **crashlog** and your **Pawn script**.
+This is a fork of the [original repository](https://github.com/OrMisicL/FCNPC) by [OrMisicL](http://forum.sa-mp.com/member.php?u=197901).
 
-Discussion in [forum thread](http://forum.sa-mp.com/showthread.php?t=428066). Or in [Russian forum thread](http://forum.sa-mp.com/showthread.php?t=602965).
+If you encounter a bug or a crash, create an issue in the [issues section](https://github.com/ziggi/FCNPC/issues) with your **crashlog** and your **Pawn script**.
 
-# MapAndreas and ColAndreas support
-FCNPC supports working with [MapAndreas](http://forum.sa-mp.com/showpost.php?p=3130004&postcount=153) and [ColAndreas](http://forum.sa-mp.com/showthread.php?t=586068) plugins. Just add these plugins before FCNPC in `plugins` string of `server.cfg`.
+For more elaborate discussions see the [forum thread](http://forum.sa-mp.com/showthread.php?t=428066), or the [Russian forum thread](http://forum.sa-mp.com/showthread.php?t=602965).
 
-# How to download all sources
-This repo contains submodules, this means that you should clone this with `--recursive` argument:
+See the [wiki](../../wiki) for documentation.
+
+MapAndreas and ColAndreas support
+---------------------------------
+FCNPC supports working with [MapAndreas](http://forum.sa-mp.com/showpost.php?p=3130004&postcount=153) or [ColAndreas](http://forum.sa-mp.com/showthread.php?t=586068), for better NPC height positioning. Just add these plugins before FCNPC on the `plugins` line in the `server.cfg` file.
+
+Sources
+-------
+To download the sources, use the following git command:
 ```bash
 git clone --recursive https://github.com/ziggi/FCNPC.git
 ```
+Note the use of the `--recursive` argument, because this repository contains submodules.
 
-# Building (Windows)
-You can use Visual Studio for build. Just use CMake for generate VS project.
-
-Example for Visual Studio 12 2013:
+Building
+--------
+To build the project you can use [Visual Studio](https://www.visualstudio.com/). To generate the project you can use [CMake](https://cmake.org/).<br />
+On Windows, execute the following commands. This example is for Visual Studio 15 2017:
 ```bash
 cd FCNPC
 mkdir build
 cd build
-cmake .. -G "Visual Studio 12"
+cmake .. -G "Visual Studio 15 2017"
 ```
 
-# Building (Linux)
+On Linux, execute the following commands:
 ```bash
 cd FCNPC
 mkdir build
@@ -36,64 +44,75 @@ cmake ..
 make
 ```
 
-# Thanks
+Special thanks
+--------------
+- **SA-MP Team:** SA-MP
+- **OrMisicL:** FCNPC creator
+- **Zeex:** Subhook library
+- **kurta999:** YSF plugin
+- **Lorenc_, kurta999, Neutralneu, therainycat, Freaksken, karimcambridge:** Contributors
+- **urShadow, Incognito:** Code samples in their plugins
+- **Freaksken:** Creating and updating the wiki
+- **Whole SA-MP community:** testing
 
-- SA-MP Team: SA-MP
-- OrMisicL: FCNPC creator
-- Zeex: Subhook library
-- kurta999: YSF plugin
-- Lorenc_, kurta999, Neutralneu, therainycat, Freaksken, karimcambridge: Contributors
-- urShadow, Incognito: Code samples in their plugins
-- Freaksken: Creating and updating wiki
-- And the whole community for testing
-
-# Definitions
+Constants
+---------
 ```Pawn
-#define FCNPC_MOVE_TYPE_AUTO      (-1)
-#define FCNPC_MOVE_TYPE_WALK      (0)
-#define FCNPC_MOVE_TYPE_RUN       (1)
-#define FCNPC_MOVE_TYPE_SPRINT    (2)
-#define FCNPC_MOVE_TYPE_DRIVE     (3)
+#define FCNPC_INCLUDE_VERSION		The current FCNPC include version.
 
-#define FCNPC_MOVE_SPEED_AUTO     (-1.0)
-#define FCNPC_MOVE_SPEED_WALK     (0.1552086)
-#define FCNPC_MOVE_SPEED_RUN      (0.56444)
-#define FCNPC_MOVE_SPEED_SPRINT   (0.926784)
+#define FCNPC_MOVE_TYPE_AUTO		(-1)
+#define FCNPC_MOVE_TYPE_WALK		(0)
+#define FCNPC_MOVE_TYPE_RUN			(1)
+#define FCNPC_MOVE_TYPE_SPRINT		(2)
+#define FCNPC_MOVE_TYPE_DRIVE		(3)
 
-#define FCNPC_MAX_NODES           (64)
+#define FCNPC_MOVE_MODE_AUTO		(-1)
+#define FCNPC_MOVE_MODE_NONE		(0)
+#define FCNPC_MOVE_MODE_MAPANDREAS	(1)
 
-#define FCNPC_INVALID_MOVEPATH_ID (-1)
-#define FCNPC_INVALID_RECORD_ID   (-1)
+#define FCNPC_MOVE_SPEED_AUTO		(-1.0)
+#define FCNPC_MOVE_SPEED_WALK		(0.1552086)
+#define FCNPC_MOVE_SPEED_RUN		(0.56444)
+#define FCNPC_MOVE_SPEED_SPRINT		(0.926784)
+
+#define FCNPC_MAX_NODES				(64)
+
+#define FCNPC_INVALID_MOVEPATH_ID	(-1)
+#define FCNPC_INVALID_RECORD_ID		(-1)
+
+#undef FCNPC_DISABLE_VERSION_CHECK
 ```
 
-# Callbacks
+Callbacks
+---------
 ```Pawn
 forward FCNPC_OnCreate(npcid);
 forward FCNPC_OnDestroy(npcid);
 forward FCNPC_OnSpawn(npcid);
 forward FCNPC_OnRespawn(npcid);
 forward FCNPC_OnDeath(npcid, killerid, weaponid);
-
-forward FCNPC_OnVehicleEntryComplete(npcid, vehicleid, seat);
-forward FCNPC_OnVehicleExitComplete(npcid);
-
-forward FCNPC_OnReachDestination(npcid);
-forward FCNPC_OnFinishPlayback(npcid);
+forward FCNPC_OnUpdate(npcid);
 
 forward FCNPC_OnTakeDamage(npcid, damagerid, weaponid, bodypart, Float:health_loss);
 forward FCNPC_OnGiveDamage(npcid, damagedid, weaponid, bodypart, Float:health_loss);
-forward FCNPC_OnVehicleTakeDamage(npcid, damagerid, vehicleid, weaponid, Float:x, Float:y, Float:z);
+
+forward FCNPC_OnReachDestination(npcid);
+
 forward FCNPC_OnWeaponShot(npcid, weaponid, hittype, hitid, Float:x, Float:y, Float:z);
 forward FCNPC_OnWeaponStateChange(npcid, weapon_state);
-
-forward FCNPC_OnFinishNodePoint(npcid, nodeid, pointid);
-forward FCNPC_OnChangeNode(npcid, newnodeid, oldnodeid);
-forward FCNPC_OnFinishNode(npcid, nodeid);
 
 forward FCNPC_OnStreamIn(npcid, forplayerid);
 forward FCNPC_OnStreamOut(npcid, forplayerid);
 
-forward FCNPC_OnUpdate(npcid);
+forward FCNPC_OnVehicleEntryComplete(npcid, vehicleid, seat);
+forward FCNPC_OnVehicleExitComplete(npcid);
+forward FCNPC_OnVehicleTakeDamage(npcid, damagerid, vehicleid, weaponid, Float:x, Float:y, Float:z);
+
+forward FCNPC_OnFinishPlayback(npcid);
+
+forward FCNPC_OnFinishNode(npcid, nodeid);
+forward FCNPC_OnFinishNodePoint(npcid, nodeid, pointid);
+forward FCNPC_OnChangeNode(npcid, newnodeid, oldnodeid);
 
 forward FCNPC_OnFinishMovePath(npcid, pathid);
 forward FCNPC_OnFinishMovePathPoint(npcid, pathid, pointid);
@@ -101,7 +120,8 @@ forward FCNPC_OnFinishMovePathPoint(npcid, pathid, pointid);
 forward FCNPC_OnChangeHeightPos(npcid, Float:new_z, Float:old_z); // disabled by default, see FCNPC_SetMinHeightPosCall
 ```
 
-# Natives
+Natives
+-------
 ```Pawn
 native FCNPC_GetPluginVersion(version[], const size = sizeof(version));
 native FCNPC_SetUpdateRate(rate);
