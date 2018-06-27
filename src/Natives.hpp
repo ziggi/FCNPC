@@ -140,7 +140,9 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_IsReloading(AMX *amx, cell *params);
 
 	static cell AMX_NATIVE_CALL FCNPC_ToggleReloading(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_HasReloading(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_ToggleInfiniteAmmo(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_HasInfiniteAmmo(AMX *amx, cell *params);
 
 	static cell AMX_NATIVE_CALL FCNPC_EnterVehicle(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_ExitVehicle(AMX *amx, cell *params);

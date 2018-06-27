@@ -210,7 +210,9 @@ AMX_NATIVE_INFO PluginNatives[] = {
 	{ "FCNPC_GetFightingStyle", CNatives::FCNPC_GetFightingStyle },
 
 	{ "FCNPC_ToggleReloading", CNatives::FCNPC_ToggleReloading },
+	{ "FCNPC_HasReloading", CNatives::FCNPC_HasReloading },
 	{ "FCNPC_ToggleInfiniteAmmo", CNatives::FCNPC_ToggleInfiniteAmmo },
+	{ "FCNPC_HasInfiniteAmmo", CNatives::FCNPC_HasInfiniteAmmo },
 
 	{ "FCNPC_GoTo", CNatives::FCNPC_GoTo },
 	{ "FCNPC_GoToPlayer", CNatives::FCNPC_GoToPlayer },

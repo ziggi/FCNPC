@@ -144,7 +144,9 @@ public:
 	int GetMovingType();
 
 	void ToggleReloading(bool bToggle);
+	bool HasReloading();
 	void ToggleInfiniteAmmo(bool bToggle);
+	bool HasInfiniteAmmo();
 
 	void AimAt(const CVector &vecPoint, bool bShoot, int iShootDelay, bool bSetAngle, const CVector &vecOffsetFrom);
 	void AimAtPlayer(WORD wHitId, bool bShoot, int iShootDelay, bool bSetAngle, const CVector &vecOffset, const CVector &vecOffsetFrom);

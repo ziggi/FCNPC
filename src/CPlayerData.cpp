@@ -1788,9 +1788,19 @@ void CPlayerData::ToggleReloading(bool bToggle)
 	m_bHasReload = bToggle;
 }
 
+bool CPlayerData::HasReloading()
+{
+	return m_bHasReload;
+}
+
 void CPlayerData::ToggleInfiniteAmmo(bool bToggle)
 {
 	m_bHasInfiniteAmmo = bToggle;
+}
+
+bool CPlayerData::HasInfiniteAmmo()
+{
+	return m_bHasInfiniteAmmo;
 }
 
 void CPlayerData::AimAt(const CVector &vecPoint, bool bShoot, int iShootDelay, bool bSetAngle, const CVector &vecOffsetFrom)

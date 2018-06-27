@@ -2744,6 +2744,23 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleReloading(AMX *amx, cell *params)
 	return 1;
 }
 
+cell AMX_NATIVE_CALL CNatives::FCNPC_HasReloading(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_HasReloading");
+
+	// Get the NPC id
+	WORD wNpcId = static_cast<WORD>(params[1]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// Get the player reloading
+	return pPlayerData->HasReloading();
+}
+
 cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleInfiniteAmmo(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_ToggleInfiniteAmmo");
@@ -2761,6 +2778,23 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleInfiniteAmmo(AMX *amx, cell *params)
 	// Toggle it
 	pPlayerData->ToggleInfiniteAmmo(bToggle);
 	return 1;
+}
+
+cell AMX_NATIVE_CALL CNatives::FCNPC_HasInfiniteAmmo(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_HasInfiniteAmmo");
+
+	// Get the NPC id
+	WORD wNpcId = static_cast<WORD>(params[1]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// Get the player infinite ammo
+	return pPlayerData->HasInfiniteAmmo();
 }
 
 // native FCNPC_StartPlayingPlayback(npcid, file[] = "", recordid = FCNPC_INVALID_RECORD_ID, bool:auto_unload = false, Float : delta_x = 0.0, Float : delta_y = 0.0, Float : delta_z = 0.0, Float : delta_qw = 0.0, Float : delta_qx = 0.0, Float : delta_qy = 0.0, Float : delta_qz = 0.0);

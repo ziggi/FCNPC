@@ -228,7 +228,9 @@ native FCNPC_SetFightingStyle(npcid, style);
 native FCNPC_GetFightingStyle(npcid);
 
 native FCNPC_ToggleReloading(npcid, bool:toggle);
+native FCNPC_HasReloading(npcid);
 native FCNPC_ToggleInfiniteAmmo(npcid, bool:toggle);
+native FCNPC_HasInfiniteAmmo(npcid);
 
 native FCNPC_GoTo(npcid, Float:x, Float:y, Float:z, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, Float:radius = 0.0, bool:setangle = true, Float:min_distance = 0.0, stopdelay = 250);
 native FCNPC_GoToPlayer(npcid, playerid, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, Float:radius = 0.0, bool:setangle = true, Float:min_distance = 0.0, Float:dist_check = 1.5, stopdelay = 250);
