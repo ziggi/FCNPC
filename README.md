@@ -62,7 +62,7 @@ Constants
 
 #define FCNPC_MOVE_TYPE_AUTO		(-1)
 #define FCNPC_MOVE_TYPE_WALK		(0)
-#define FCNPC_MOVE_TYPE_RUN			(1)
+#define FCNPC_MOVE_TYPE_RUN		(1)
 #define FCNPC_MOVE_TYPE_SPRINT		(2)
 #define FCNPC_MOVE_TYPE_DRIVE		(3)
 
@@ -75,7 +75,7 @@ Constants
 #define FCNPC_MOVE_SPEED_RUN		(0.56444)
 #define FCNPC_MOVE_SPEED_SPRINT		(0.926784)
 
-#define FCNPC_MAX_NODES				(64)
+#define FCNPC_MAX_NODES			(64)
 
 #define FCNPC_INVALID_MOVEPATH_ID	(-1)
 #define FCNPC_INVALID_RECORD_ID		(-1)
