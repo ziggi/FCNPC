@@ -4,9 +4,11 @@ FCNPC - Fully Controllable NPC
 
 Fully Controllable NPC (FCNPC) is a plugin for SA-MP servers which adds a lot of capabilities to the existing standard NPCs.
 
+The latest version can be found in the [releases section](../../releases).
+
 This is a fork of the [original repository](https://github.com/OrMisicL/FCNPC) by [OrMisicL](http://forum.sa-mp.com/member.php?u=197901).
 
-If you encounter a bug or a crash, create an issue in the [issues section](https://github.com/ziggi/FCNPC/issues) with your **crashlog** and your **Pawn script**.
+If you encounter a bug or a crash, create an issue in the [issues section](../../issues) with your **crashlog** and your **Pawn script**.
 
 For more elaborate discussions see the [forum thread](http://forum.sa-mp.com/showthread.php?t=428066), or the [Russian forum thread](http://forum.sa-mp.com/showthread.php?t=602965).
 
