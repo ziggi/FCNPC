@@ -130,9 +130,9 @@ native FCNPC_SetUpdateRate(rate);
 native FCNPC_GetUpdateRate();
 native FCNPC_SetTickRate(rate);
 native FCNPC_GetTickRate();
+native FCNPC_ToggleMoveModeEnabled(mode, bool:toggle = true);
 native FCNPC_IsMoveModeEnabled(mode);
-native FCNPC_ToggleMoveModeEnabled(mode, bool:toggle);
-native FCNPC_ToggleCrashLogCreation(bool:toggle);
+native FCNPC_ToggleCrashLogCreation(bool:toggle = true);
 native FCNPC_GetCrashLogCreation();
 
 native FCNPC_Create(name[]);
@@ -180,7 +180,7 @@ native FCNPC_IsInvulnerable(npcid);
 
 native FCNPC_SetSkin(npcid, skinid);
 native FCNPC_GetSkin(npcid);
-#if SAMP_03DL
+#if FCNPC_SAMP_03DL
 	native FCNPC_GetCustomSkin(npcid);
 #endif
 
@@ -229,9 +229,9 @@ native FCNPC_ClearAnimations(npcid);
 native FCNPC_SetFightingStyle(npcid, style);
 native FCNPC_GetFightingStyle(npcid);
 
-native FCNPC_ToggleReloading(npcid, bool:toggle);
+native FCNPC_ToggleReloading(npcid, bool:toggle = true);
 native FCNPC_HasReloading(npcid);
-native FCNPC_ToggleInfiniteAmmo(npcid, bool:toggle);
+native FCNPC_ToggleInfiniteAmmo(npcid, bool:toggle = true);
 native FCNPC_HasInfiniteAmmo(npcid);
 
 native FCNPC_GoTo(npcid, Float:x, Float:y, Float:z, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, Float:radius = 0.0, bool:setangle = true, Float:min_distance = 0.0, stopdelay = 250);
@@ -261,7 +261,7 @@ native FCNPC_PutInVehicle(npcid, vehicleid, seatid);
 native FCNPC_RemoveFromVehicle(npcid);
 native FCNPC_GetVehicleID(npcid);
 native FCNPC_GetVehicleSeat(npcid);
-native FCNPC_SetVehicleSiren(npcid, bool:status);
+native FCNPC_SetVehicleSiren(npcid, bool:status = true);
 native FCNPC_IsVehicleSiren(npcid);
 native FCNPC_SetVehicleHealth(npcid, Float:health);
 native Float:FCNPC_GetVehicleHealth(npcid);
