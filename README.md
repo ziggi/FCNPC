@@ -55,7 +55,7 @@ Special thanks
 - **Lorenc_, kurta999, Neutralneu, therainycat, Freaksken, karimcambridge:** Contributors
 - **urShadow, Incognito:** Code samples in their plugins
 - **Freaksken:** Creating and updating the wiki
-- **Whole SA-MP community:** testing
+- **Whole SA-MP community:** Testing
 
 Constants
 ---------
