@@ -154,9 +154,9 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsStreamedIn(AMX *amx, cell *params)
 	return pPlayerData->IsStreamedIn(wForPlayerId);
 }
 
-cell AMX_NATIVE_CALL CNatives::FCNPC_IsStreamedForAnyone(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL CNatives::FCNPC_IsStreamedInForAnyone(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "FCNPC_IsStreamedForAnyone");
+	CHECK_PARAMS(1, "FCNPC_IsStreamedInForAnyone");
 
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);

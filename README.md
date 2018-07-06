@@ -144,7 +144,7 @@ native FCNPC_Kill(npcid);
 native bool:FCNPC_IsDead(npcid);
 native bool:FCNPC_IsValid(npcid);
 native bool:FCNPC_IsStreamedIn(npcid, forplayerid);
-native bool:FCNPC_IsStreamedForAnyone(npcid);
+native bool:FCNPC_IsStreamedInForAnyone(npcid);
 native FCNPC_GetValidArray(npcs[], const size = sizeof(npcs));
 
 native FCNPC_SetPosition(npcid, Float:x, Float:y, Float:z);

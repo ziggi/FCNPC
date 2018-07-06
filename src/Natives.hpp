@@ -34,7 +34,7 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_IsDead(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_IsValid(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_IsStreamedIn(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_IsStreamedForAnyone(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_IsStreamedInForAnyone(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetValidArray(AMX *amx, cell *params);
 
 	static cell AMX_NATIVE_CALL FCNPC_SetPosition(AMX *amx, cell *params);

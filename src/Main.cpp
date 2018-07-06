@@ -126,7 +126,7 @@ AMX_NATIVE_INFO PluginNatives[] = {
 	{ "FCNPC_IsDead", CNatives::FCNPC_IsDead },
 	{ "FCNPC_IsValid", CNatives::FCNPC_IsValid },
 	{ "FCNPC_IsStreamedIn", CNatives::FCNPC_IsStreamedIn },
-	{ "FCNPC_IsStreamedForAnyone", CNatives::FCNPC_IsStreamedForAnyone },
+	{ "FCNPC_IsStreamedInForAnyone", CNatives::FCNPC_IsStreamedInForAnyone },
 	{ "FCNPC_GetValidArray", CNatives::FCNPC_GetValidArray },
 
 	{ "FCNPC_SetPosition", CNatives::FCNPC_SetPosition },
