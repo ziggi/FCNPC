@@ -107,8 +107,8 @@ forward FCNPC_OnStreamIn(npcid, forplayerid);
 forward FCNPC_OnStreamOut(npcid, forplayerid);
 
 forward FCNPC_OnVehicleEntryComplete(npcid, vehicleid, seatid);
-forward FCNPC_OnVehicleExitComplete(npcid);
-forward FCNPC_OnVehicleTakeDamage(npcid, issuerid, vehicleid, weaponid, Float:fX, Float:fY, Float:fZ);
+forward FCNPC_OnVehicleExitComplete(npcid, vehicleid);
+forward FCNPC_OnVehicleTakeDamage(npcid, issuerid, vehicleid, Float:amount, weaponid, Float:fX, Float:fY, Float:fZ);
 
 forward FCNPC_OnFinishPlayback(npcid);
 

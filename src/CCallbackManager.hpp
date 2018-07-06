@@ -27,12 +27,12 @@ public:
 	static void OnDeath(WORD wPlayerId, WORD wKillerId, BYTE byteWeaponId);
 	static void OnReachDestination(WORD wPlayerId);
 	static void OnVehicleEntryComplete(WORD wPlayerId, WORD wVehicleId, int iSeat);
-	static void OnVehicleExitComplete(WORD wPlayerId);
+	static void OnVehicleExitComplete(WORD wPlayerId, WORD wVehicleId);
 	static int  OnTakeDamage(WORD wPlayerId, WORD wDamagerId, BYTE byteWeaponId, int iBodyPart, float fHealthLoss);
 	static void OnGiveDamage(WORD wPlayerId, WORD wDamagedId, BYTE byteWeaponId, int iBodyPart, float fHealthLoss);
 	static int  OnWeaponShot(WORD wPlayerId, BYTE byteWeaponId, BYTE byteHitType, WORD wHitId, CVector vecPoint);
 	static void OnWeaponStateChange(WORD wPlayerId, int iWeaponState);
-	static int  OnVehicleTakeDamage(WORD wPlayerId, WORD wDamagerId, WORD wVehicleId, BYTE byteWeaponId, CVector vecHit);
+	static int  OnVehicleTakeDamage(WORD wPlayerId, WORD wDamagerId, WORD wVehicleId, BYTE byteWeaponId, CVector vecHit, float fHealthLoss);
 	static void OnFinishPlayback(WORD wPlayerId);
 	static int  OnChangeNode(WORD wPlayerId, WORD wNodeId, WORD wOldNodeId);
 	static int  OnFinishNodePoint(WORD wPlayerId, WORD wNodeId, WORD wNodePoint);
