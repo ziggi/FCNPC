@@ -92,23 +92,23 @@ forward FCNPC_OnCreate(npcid);
 forward FCNPC_OnDestroy(npcid);
 forward FCNPC_OnSpawn(npcid);
 forward FCNPC_OnRespawn(npcid);
-forward FCNPC_OnDeath(npcid, killerid, weaponid);
+forward FCNPC_OnDeath(npcid, killerid, reason);
 forward FCNPC_OnUpdate(npcid);
 
-forward FCNPC_OnTakeDamage(npcid, damagerid, weaponid, bodypart, Float:health_loss);
-forward FCNPC_OnGiveDamage(npcid, damagedid, weaponid, bodypart, Float:health_loss);
+forward FCNPC_OnTakeDamage(npcid, issuerid, weaponid, bodypart, Float:amount);
+forward FCNPC_OnGiveDamage(npcid, issuerid, weaponid, bodypart, Float:amount);
 
 forward FCNPC_OnReachDestination(npcid);
 
-forward FCNPC_OnWeaponShot(npcid, weaponid, hittype, hitid, Float:x, Float:y, Float:z);
+forward FCNPC_OnWeaponShot(npcid, weaponid, hittype, hitid, Float:fX, Float:fY, Float:fZ);
 forward FCNPC_OnWeaponStateChange(npcid, weapon_state);
 
 forward FCNPC_OnStreamIn(npcid, forplayerid);
 forward FCNPC_OnStreamOut(npcid, forplayerid);
 
-forward FCNPC_OnVehicleEntryComplete(npcid, vehicleid, seat);
+forward FCNPC_OnVehicleEntryComplete(npcid, vehicleid, seatid);
 forward FCNPC_OnVehicleExitComplete(npcid);
-forward FCNPC_OnVehicleTakeDamage(npcid, damagerid, vehicleid, weaponid, Float:x, Float:y, Float:z);
+forward FCNPC_OnVehicleTakeDamage(npcid, issuerid, vehicleid, weaponid, Float:fX, Float:fY, Float:fZ);
 
 forward FCNPC_OnFinishPlayback(npcid);
 
@@ -119,7 +119,7 @@ forward FCNPC_OnChangeNode(npcid, newnodeid, oldnodeid);
 forward FCNPC_OnFinishMovePath(npcid, pathid);
 forward FCNPC_OnFinishMovePathPoint(npcid, pathid, pointid);
 
-forward FCNPC_OnChangeHeightPos(npcid, Float:new_z, Float:old_z); // disabled by default, see FCNPC_SetMinHeightPosCall
+forward FCNPC_OnChangeHeightPos(npcid, Float:newz, Float:oldz); // disabled by default, see FCNPC_SetMinHeightPosCall
 ```
 
 Natives
