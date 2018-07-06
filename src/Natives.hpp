@@ -195,13 +195,13 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_CreateMovePath(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_DestroyMovePath(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_IsValidMovePath(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_AddPointToPath(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_AddPointsToPath(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_AddPointsToPath2(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_RemovePointFromPath(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_IsValidMovePoint(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_GetMovePoint(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_GetNumberMovePoint(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_AddPointToMovePath(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_AddPointsToMovePath(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_AddPointsToMovePath2(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_RemovePointFromMovePath(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_IsValidMovePathPoint(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_GetMovePathPoint(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_GetNumberMovePathPoint(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GoByMovePath(AMX *amx, cell *params);
 
 	static cell AMX_NATIVE_CALL FCNPC_SetMoveMode(AMX *amx, cell *params);

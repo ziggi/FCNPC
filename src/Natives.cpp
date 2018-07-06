@@ -3389,10 +3389,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsValidMovePath(AMX *amx, cell *params)
 	return pServer->GetMovePath()->IsPathValid(iPathId);
 }
 
-// native FCNPC_AddPointToPath(pathid, Float:x, Float:y, Float:z);
-cell AMX_NATIVE_CALL CNatives::FCNPC_AddPointToPath(AMX *amx, cell *params)
+// native FCNPC_AddPointToMovePath(pathid, Float:x, Float:y, Float:z);
+cell AMX_NATIVE_CALL CNatives::FCNPC_AddPointToMovePath(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(4, "FCNPC_AddPointToPath");
+	CHECK_PARAMS(4, "FCNPC_AddPointToMovePath");
 
 	// get params
 	int iPathId = static_cast<int>(params[1]);
@@ -3401,10 +3401,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AddPointToPath(AMX *amx, cell *params)
 	return pServer->GetMovePath()->AddPoint(iPathId, vecPoint);
 }
 
-// native FCNPC_AddPointsToPath(pathid, Float:points[][3], const size = sizeof(points));
-cell AMX_NATIVE_CALL CNatives::FCNPC_AddPointsToPath(AMX *amx, cell *params)
+// native FCNPC_AddPointsToMovePath(pathid, Float:points[][3], const size = sizeof(points));
+cell AMX_NATIVE_CALL CNatives::FCNPC_AddPointsToMovePath(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "FCNPC_AddPointsToPath");
+	CHECK_PARAMS(3, "FCNPC_AddPointsToMovePath");
 
 	// get params
 	int iPathId = static_cast<int>(params[1]);
@@ -3431,10 +3431,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AddPointsToPath(AMX *amx, cell *params)
 	return 1;
 }
 
-// native FCNPC_AddPointsToPath2(pathid, Float:points_x[], Float:points_y[], Float:points_z[], const size = sizeof(points_x));
-cell AMX_NATIVE_CALL CNatives::FCNPC_AddPointsToPath2(AMX *amx, cell *params)
+// native FCNPC_AddPointsToMovePath2(pathid, Float:points_x[], Float:points_y[], Float:points_z[], const size = sizeof(points_x));
+cell AMX_NATIVE_CALL CNatives::FCNPC_AddPointsToMovePath2(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(5, "FCNPC_AddPointsToPath2");
+	CHECK_PARAMS(5, "FCNPC_AddPointsToMovePath2");
 
 	// get params
 	int iPathId = static_cast<int>(params[1]);
@@ -3465,10 +3465,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AddPointsToPath2(AMX *amx, cell *params)
 	return 1;
 }
 
-// native FCNPC_RemovePointFromPath(pathid, pointid);
-cell AMX_NATIVE_CALL CNatives::FCNPC_RemovePointFromPath(AMX *amx, cell *params)
+// native FCNPC_RemovePointFromMovePath(pathid, pointid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_RemovePointFromMovePath(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "FCNPC_RemovePointFromPath");
+	CHECK_PARAMS(2, "FCNPC_RemovePointFromMovePath");
 
 	// get params
 	int iPathId = static_cast<int>(params[1]);
@@ -3477,10 +3477,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_RemovePointFromPath(AMX *amx, cell *params)
 	return pServer->GetMovePath()->RemovePoint(iPathId, iPointId);
 }
 
-// native FCNPC_IsValidMovePoint(pathid, pointid);
-cell AMX_NATIVE_CALL CNatives::FCNPC_IsValidMovePoint(AMX *amx, cell *params)
+// native FCNPC_IsValidMovePathPoint(pathid, pointid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_IsValidMovePathPoint(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "FCNPC_IsValidMovePoint");
+	CHECK_PARAMS(2, "FCNPC_IsValidMovePathPoint");
 
 	// get params
 	int iPathId = static_cast<int>(params[1]);
@@ -3489,10 +3489,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsValidMovePoint(AMX *amx, cell *params)
 	return pServer->GetMovePath()->IsPointValid(iPathId, iPointId);
 }
 
-// native FCNPC_GetMovePoint(pathid, pointid, &Float:x, &Float:y, &Float:z);
-cell AMX_NATIVE_CALL CNatives::FCNPC_GetMovePoint(AMX *amx, cell *params)
+// native FCNPC_GetMovePathPoint(pathid, pointid, &Float:x, &Float:y, &Float:z);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetMovePathPoint(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(5, "FCNPC_GetMovePoint");
+	CHECK_PARAMS(5, "FCNPC_GetMovePathPoint");
 
 	// get params
 	int iPathId = static_cast<int>(params[1]);
@@ -3517,10 +3517,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetMovePoint(AMX *amx, cell *params)
 	return 1;
 }
 
-// native FCNPC_GetNumberMovePoint(pathid);
-cell AMX_NATIVE_CALL CNatives::FCNPC_GetNumberMovePoint(AMX *amx, cell *params)
+// native FCNPC_GetNumberMovePathPoint(pathid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetNumberMovePathPoint(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "FCNPC_GetNumberMovePoint");
+	CHECK_PARAMS(1, "FCNPC_GetNumberMovePathPoint");
 
 	// get params
 	int iPathId = static_cast<int>(params[1]);
