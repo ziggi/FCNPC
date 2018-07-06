@@ -2374,10 +2374,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleSeat(AMX *amx, cell *params)
 	return pPlayerData->GetSeatId();
 }
 
-// native FCNPC_SetVehicleSiren(npcid, bool:status);
-cell AMX_NATIVE_CALL CNatives::FCNPC_SetVehicleSiren(AMX *amx, cell *params)
+// native FCNPC_UseVehicleSiren(npcid, bool:use = true);
+cell AMX_NATIVE_CALL CNatives::FCNPC_UseVehicleSiren(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "FCNPC_SetVehicleSiren");
+	CHECK_PARAMS(2, "FCNPC_UseVehicleSiren");
 
 	// Get params
 	WORD wNpcId = static_cast<WORD>(params[1]);
@@ -2399,10 +2399,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVehicleSiren(AMX *amx, cell *params)
 	return 1;
 }
 
-// native FCNPC_IsVehicleSiren(npcid);
-cell AMX_NATIVE_CALL CNatives::FCNPC_IsVehicleSiren(AMX *amx, cell *params)
+// native FCNPC_IsVehicleSirenUsed(npcid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_IsVehicleSirenUsed(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "FCNPC_IsVehicleSiren");
+	CHECK_PARAMS(1, "FCNPC_IsVehicleSirenUsed");
 
 	// Get params
 	WORD wNpcId = static_cast<WORD>(params[1]);
@@ -2725,9 +2725,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StopSurfing(AMX *amx, cell *params)
 	return 1;
 }
 
-cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleReloading(AMX *amx, cell *params)
+// native FCNPC_UseReloading(npcid, bool:use = true);
+cell AMX_NATIVE_CALL CNatives::FCNPC_UseReloading(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "FCNPC_ToggleReloading");
+	CHECK_PARAMS(2, "FCNPC_UseReloading");
 
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);
@@ -2744,9 +2745,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleReloading(AMX *amx, cell *params)
 	return 1;
 }
 
-cell AMX_NATIVE_CALL CNatives::FCNPC_HasReloading(AMX *amx, cell *params)
+// native FCNPC_IsReloadingUsed(npcid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_IsReloadingUsed(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "FCNPC_HasReloading");
+	CHECK_PARAMS(1, "FCNPC_IsReloadingUsed");
 
 	// Get the NPC id
 	WORD wNpcId = static_cast<WORD>(params[1]);
@@ -2761,9 +2763,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_HasReloading(AMX *amx, cell *params)
 	return pPlayerData->HasReloading();
 }
 
-cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleInfiniteAmmo(AMX *amx, cell *params)
+// native FCNPC_UseInfiniteAmmo(npcid, bool:use = true);
+cell AMX_NATIVE_CALL CNatives::FCNPC_UseInfiniteAmmo(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "FCNPC_ToggleInfiniteAmmo");
+	CHECK_PARAMS(2, "FCNPC_UseInfiniteAmmo");
 
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);
@@ -2780,9 +2783,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleInfiniteAmmo(AMX *amx, cell *params)
 	return 1;
 }
 
-cell AMX_NATIVE_CALL CNatives::FCNPC_HasInfiniteAmmo(AMX *amx, cell *params)
+// native FCNPC_IsInfiniteAmmoUsed(npcid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_IsInfiniteAmmoUsed(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "FCNPC_HasInfiniteAmmo");
+	CHECK_PARAMS(1, "FCNPC_IsInfiniteAmmoUsed");
 
 	// Get the NPC id
 	WORD wNpcId = static_cast<WORD>(params[1]);
@@ -3307,22 +3311,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsPlayingNodePaused(AMX *amx, cell *params)
 	return pPlayerData->IsPlayingNodePaused();
 }
 
-// native FCNPC_IsMoveModeEnabled(mode)
-cell AMX_NATIVE_CALL CNatives::FCNPC_IsMoveModeEnabled(AMX *amx, cell *params)
+// native FCNPC_UseMoveMode(mode, bool:use = true)
+cell AMX_NATIVE_CALL CNatives::FCNPC_UseMoveMode(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "FCNPC_IsMoveModeEnabled");
-
-	// Get the params
-	WORD iMoveMode = static_cast<WORD>(params[1]);
-
-	// Return status
-	return pServer->IsMoveModeEnabled(iMoveMode);
-}
-
-// native FCNPC_ToggleMoveMode(mode, bool:toggle)
-cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleMoveMode(AMX *amx, cell *params)
-{
-	CHECK_PARAMS(2, "FCNPC_ToggleMoveMode");
+	CHECK_PARAMS(2, "FCNPC_UseMoveMode");
 
 	// Get the params
 	WORD iMoveMode = static_cast<WORD>(params[1]);
@@ -3335,6 +3327,18 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleMoveMode(AMX *amx, cell *params)
 	}
 
 	return 0;
+}
+
+// native FCNPC_IsMoveModeUsed(mode)
+cell AMX_NATIVE_CALL CNatives::FCNPC_IsMoveModeUsed(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_IsMoveModeUsed");
+
+	// Get the params
+	WORD iMoveMode = static_cast<WORD>(params[1]);
+
+	// Return status
+	return pServer->IsMoveModeEnabled(iMoveMode);
 }
 
 // native FCNPC_TriggerWeaponShot(npcid, weaponid, hittype, hitid, Float:x, Float:y, Float:z, bool:ishit = true, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0);
@@ -3635,10 +3639,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetMinHeightPosCall(AMX *amx, cell *params)
 	return amx_ftoc(fHeight);
 }
 
-// native FCNPC_ToggleCrashLogCreation(bool:toggle);
-cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleCrashLogCreation(AMX *amx, cell *params)
+// native FCNPC_UseCrashLog(bool:use = true);
+cell AMX_NATIVE_CALL CNatives::FCNPC_UseCrashLog(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "FCNPC_ToggleCrashLogCreation");
+	CHECK_PARAMS(1, "FCNPC_UseCrashLog");
 
 	// get the params
 	bool bIsEnabled = static_cast<int>(params[1]) != 0;
@@ -3648,10 +3652,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleCrashLogCreation(AMX *amx, cell *para
 	return 1;
 }
 
-// native FCNPC_GetCrashLogCreation();
-cell AMX_NATIVE_CALL CNatives::FCNPC_GetCrashLogCreation(AMX *amx, cell *params)
+// native FCNPC_IsCrashLogUsed();
+cell AMX_NATIVE_CALL CNatives::FCNPC_IsCrashLogUsed(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(0, "FCNPC_GetCrashLogCreation");
+	CHECK_PARAMS(0, "FCNPC_IsCrashLogUsed");
 
 	// get the state
 	return pServer->GetCrashLogCreation();

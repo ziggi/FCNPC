@@ -19,11 +19,11 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_GetUpdateRate(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetTickRate(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetTickRate(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_IsMoveModeEnabled(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_ToggleMoveMode(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_UseMoveMode(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_IsMoveModeUsed(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_TriggerWeaponShot(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_ToggleCrashLogCreation(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_GetCrashLogCreation(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_UseCrashLog(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_IsCrashLogUsed(AMX *amx, cell *params);
 
 	static cell AMX_NATIVE_CALL FCNPC_Create(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_Destroy(AMX *amx, cell *params);
@@ -139,10 +139,10 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_IsShooting(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_IsReloading(AMX *amx, cell *params);
 
-	static cell AMX_NATIVE_CALL FCNPC_ToggleReloading(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_HasReloading(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_ToggleInfiniteAmmo(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_HasInfiniteAmmo(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_UseReloading(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_IsReloadingUsed(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_UseInfiniteAmmo(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_IsInfiniteAmmoUsed(AMX *amx, cell *params);
 
 	static cell AMX_NATIVE_CALL FCNPC_EnterVehicle(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_ExitVehicle(AMX *amx, cell *params);
@@ -150,8 +150,8 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_RemoveFromVehicle(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetVehicleID(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetVehicleSeat(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_SetVehicleSiren(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_IsVehicleSiren(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_UseVehicleSiren(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_IsVehicleSirenUsed(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetVehicleHealth(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetVehicleHealth(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetVehicleHydraThrusters(AMX *amx, cell *params);
