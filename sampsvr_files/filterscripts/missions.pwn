@@ -493,7 +493,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	return 0;
 }
 
-public FCNPC_OnVehicleEntryComplete(npcid, vehicleid, seat)
+public FCNPC_OnVehicleEntryComplete(npcid, vehicleid, seatid)
 {
 	// Get the NPC mission
 	new mission = GetNPCMission(npcid);
@@ -512,7 +512,7 @@ public FCNPC_OnVehicleEntryComplete(npcid, vehicleid, seat)
 	return 1;
 }
 
-public FCNPC_OnVehicleExitComplete(npcid)
+public FCNPC_OnVehicleExitComplete(npcid, vehicleid)
 {
 	// Get the NPC mission
 	new mission = GetNPCMission(npcid);
@@ -1326,7 +1326,7 @@ public OnPlayerDeath(playerid, killerid, reason)
 	}
 }
 
-public FCNPC_OnDeath(npcid, killerid, weaponid)
+public FCNPC_OnDeath(npcid, killerid, reason)
 {
 	// Is he a mission NPC ?
 	new mission = GetNPCMission(npcid);
@@ -1341,10 +1341,8 @@ public FCNPC_OnDeath(npcid, killerid, weaponid)
 		}
 
 		// Send a death message
-		SendDeathMessage(killerid, npcid, weaponid);
+		SendDeathMessage(killerid, npcid, reason);
 
 	}
 	return 1;
 }
-
-

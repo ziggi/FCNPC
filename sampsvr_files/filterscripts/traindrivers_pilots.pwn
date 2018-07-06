@@ -144,7 +144,7 @@ public FCNPC_OnFinishPlayback(npcid)
 	return 1;
 }
 
-public FCNPC_OnVehicleTakeDamage(npcid, damagerid, vehicleid, weaponid, Float:x, Float:y, Float:z)
+public FCNPC_OnVehicleTakeDamage(npcid, issuerid, vehicleid, Float:amount, weaponid, Float:fX, Float:fY, Float:fZ)
 {
 	for(new traindriver = 0; traindriver < MAX_STANDARD_NPC_TRAINDRIVERS; traindriver++) {
 		if(npcid == TrainDriverNPCs[traindriver]) {
