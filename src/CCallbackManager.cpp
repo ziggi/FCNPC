@@ -215,9 +215,9 @@ int CCallbackManager::OnTakeDamage(WORD wPlayerId, WORD wDamagerId, BYTE byteWea
 			iIndex = c.second.at(FCNPC_OnTakeDamage);
 		}
 		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnTakeDamage", &iIndex)) {
-			amx_Push(c.first, amx_ftoc(fHealthLoss));
 			amx_Push(c.first, iBodyPart);
 			amx_Push(c.first, byteWeaponId);
+			amx_Push(c.first, amx_ftoc(fHealthLoss));
 			amx_Push(c.first, wDamagerId);
 			amx_Push(c.first, wPlayerId);
 
@@ -239,9 +239,9 @@ void CCallbackManager::OnGiveDamage(WORD wPlayerId, WORD wDamagedId, BYTE byteWe
 			iIndex = c.second.at(FCNPC_OnGiveDamage);
 		}
 		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnGiveDamage", &iIndex)) {
-			amx_Push(c.first, amx_ftoc(fHealthLoss));
 			amx_Push(c.first, iBodyPart);
 			amx_Push(c.first, byteWeaponId);
+			amx_Push(c.first, amx_ftoc(fHealthLoss));
 			amx_Push(c.first, wDamagedId);
 			amx_Push(c.first, wPlayerId);
 

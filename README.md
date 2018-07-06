@@ -95,8 +95,8 @@ forward FCNPC_OnRespawn(npcid);
 forward FCNPC_OnDeath(npcid, killerid, reason);
 forward FCNPC_OnUpdate(npcid);
 
-forward FCNPC_OnTakeDamage(npcid, issuerid, weaponid, bodypart, Float:amount);
-forward FCNPC_OnGiveDamage(npcid, damagedid, weaponid, bodypart, Float:amount);
+forward FCNPC_OnTakeDamage(npcid, issuerid, Float:amount, weaponid, bodypart);
+forward FCNPC_OnGiveDamage(npcid, damagedid, Float:amount, weaponid, bodypart);
 
 forward FCNPC_OnReachDestination(npcid);
 
