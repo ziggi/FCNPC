@@ -434,7 +434,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 stock BG_EnterVehicle(playerid, slot, vehicleid, seat)
 {
 	new npcid = gPlayerNpc[playerid][slot];
-	FCNPC_EnterVehicle(npcid, vehicleid, seat, MOVE_TYPE_RUN);
+	FCNPC_EnterVehicle(npcid, vehicleid, seat, FCNPC_MOVE_TYPE_RUN);
 }
 
 stock BG_ExitVehicle(playerid, slot)
@@ -548,7 +548,7 @@ public BG_SetFollowPosition(npcid, playerid)
 	} else {
 		dist_offset = -1.0;
 		range = -dist_offset + 0.5;
-		speed = MOVE_SPEED_AUTO;
+		speed = FCNPC_MOVE_SPEED_AUTO;
 	}
 
 	if (!IsPlayerInRangeOfPoint(npcid, range, pos_x, pos_y, pos_z)) {

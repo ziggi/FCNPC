@@ -19,9 +19,9 @@ public FCNPC_IncludeVersion = FCNPC_INCLUDE_VERSION;
 #pragma unused FCNPC_IncludeVersion
 
 #if defined GetPlayerCustomSkin
-	#define SAMP_03DL 1
+	#define FCNPC_SAMP_03DL 1
 #else
-	#define SAMP_03DL 0
+	#define FCNPC_SAMP_03DL 0
 #endif
 
 // Definitions
@@ -45,58 +45,6 @@ public FCNPC_IncludeVersion = FCNPC_INCLUDE_VERSION;
 
 #define FCNPC_INVALID_MOVEPATH_ID  (-1)
 #define FCNPC_INVALID_RECORD_ID    (-1)
-
-// Compatibility with older versions
-#if !defined MOVE_TYPE_AUTO
-	#define MOVE_TYPE_AUTO FCNPC_MOVE_TYPE_AUTO
-#endif
-
-#if !defined MOVE_TYPE_WALK
-	#define MOVE_TYPE_WALK FCNPC_MOVE_TYPE_WALK
-#endif
-
-#if !defined MOVE_TYPE_RUN
-	#define MOVE_TYPE_RUN FCNPC_MOVE_TYPE_RUN
-#endif
-
-#if !defined MOVE_TYPE_SPRINT
-	#define MOVE_TYPE_SPRINT FCNPC_MOVE_TYPE_SPRINT
-#endif
-
-#if !defined MOVE_TYPE_DRIVE
-	#define MOVE_TYPE_DRIVE FCNPC_MOVE_TYPE_DRIVE
-#endif
-
-
-#if !defined MOVE_SPEED_AUTO
-	#define MOVE_SPEED_AUTO FCNPC_MOVE_SPEED_AUTO
-#endif
-
-#if !defined MOVE_SPEED_WALK
-	#define MOVE_SPEED_WALK FCNPC_MOVE_SPEED_WALK
-#endif
-
-#if !defined MOVE_SPEED_RUN
-	#define MOVE_SPEED_RUN FCNPC_MOVE_SPEED_RUN
-#endif
-
-#if !defined MOVE_SPEED_SPRINT
-	#define MOVE_SPEED_SPRINT FCNPC_MOVE_SPEED_SPRINT
-#endif
-
-
-#if !defined MAX_NODES
-	#define MAX_NODES FCNPC_MAX_NODES
-#endif
-
-
-#if !defined INVALID_MOVEPATH_ID
-	#define INVALID_MOVEPATH_ID FCNPC_INVALID_MOVEPATH_ID
-#endif
-
-#if !defined INVALID_RECORD_ID
-	#define INVALID_RECORD_ID FCNPC_INVALID_RECORD_ID
-#endif
 
 // Callbacks
 forward FCNPC_OnCreate(npcid);
@@ -188,7 +136,7 @@ native FCNPC_IsInvulnerable(npcid);
 
 native FCNPC_SetSkin(npcid, skinid);
 native FCNPC_GetSkin(npcid);
-#if SAMP_03DL
+#if FCNPC_SAMP_03DL
 	native FCNPC_GetCustomSkin(npcid);
 #endif
 

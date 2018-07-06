@@ -1134,7 +1134,7 @@ public PlayCutscene(mission)
 			SetPlayerCameraLookAt(Mission[mission][players][i], 1475.30, -1027.52, 29.42);
 		}
 		// Make the first player enter the vehicle
-		FCNPC_EnterVehicle(Mission[mission][npcs][0], Mission[mission][vehicles][0], 1, MOVE_TYPE_WALK);
+		FCNPC_EnterVehicle(Mission[mission][npcs][0], Mission[mission][vehicles][0], 1, FCNPC_MOVE_TYPE_WALK);
 		Mission[mission][cutscene_stages][1] = 0;
 		Mission[mission][cutscene_process] = false;
 	}

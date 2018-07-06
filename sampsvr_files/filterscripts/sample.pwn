@@ -80,7 +80,7 @@ public CreateNPC()
 stock MoveNPC(npcid)
 {
 	new mstage = gNpc[npcid][E_MOVE_STAGE];
-	FCNPC_GoTo(npcid, gMovements[mstage][0], gMovements[mstage][1], gMovements[mstage][2], MOVE_TYPE_RUN);
+	FCNPC_GoTo(npcid, gMovements[mstage][0], gMovements[mstage][1], gMovements[mstage][2], FCNPC_MOVE_TYPE_RUN);
 }
 
 public FCNPC_OnDeath(npcid, killerid, reason)
