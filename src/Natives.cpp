@@ -85,7 +85,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsSpawned(AMX *amx, cell *params)
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	// Respawn the player
@@ -115,7 +115,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsDead(AMX *amx, cell *params)
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	// Return the player dead state
@@ -142,12 +142,12 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsStreamedIn(AMX *amx, cell *params)
 	// Make sure the npc is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	// Make sure the player is valid
 	if (!pServer->GetPlayerManager()->IsPlayerConnected(wForPlayerId) || wForPlayerId == wNpcId) {
-		return 0;
+		return false;
 	}
 
 	// Return the player is streamed
@@ -164,7 +164,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsStreamedForAnyone(AMX *amx, cell *params)
 	// Make sure the npc is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	for (WORD i = 0; i <= pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
@@ -174,12 +174,12 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsStreamedForAnyone(AMX *amx, cell *params)
 		}
 
 		if (pPlayerData->IsStreamedIn(i)) {
-			return 1;
+			return true;
 		}
 	}
 
 	// Return the player is streamed
-	return 0;
+	return false;
 }
 
 // native FCNPC_GetValidArray(npcs[], const size = sizeof(npcs));
@@ -862,7 +862,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsInvulnerable(AMX *amx, cell *params)
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	// Get the player invulnerable
@@ -1323,7 +1323,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsMoving(AMX *amx, cell *params)
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	// Get the player moving state
@@ -1342,11 +1342,11 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsMovingAtPlayer(AMX *amx, cell *params)
 	// validation
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	if (!pServer->GetPlayerManager()->IsPlayerConnected(wPlayerId) || wPlayerId == wNpcId) {
-		return 0;
+		return false;
 	}
 
 	// Get the player moving state
@@ -2148,7 +2148,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsAttacking(AMX *amx, cell *params)
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	// Get the player attacking state
@@ -2165,7 +2165,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsAiming(AMX *amx, cell *params)
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	// Get the player aiming state
@@ -2184,11 +2184,11 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsAimingAtPlayer(AMX *amx, cell *params)
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	if (!pServer->GetPlayerManager()->IsPlayerConnected(wPlayerId) || wPlayerId == wNpcId) {
-		return 0;
+		return false;
 	}
 
 	// Get the player aiming state
@@ -2223,7 +2223,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsShooting(AMX *amx, cell *params)
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	// Get the player shooting state
@@ -2240,7 +2240,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsReloading(AMX *amx, cell *params)
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	// Get the player shooting state
@@ -2410,12 +2410,12 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsVehicleSiren(AMX *amx, cell *params)
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	// Make sure the player is in vehicle
 	if (pPlayerData->GetVehicleId() == INVALID_VEHICLE_ID) {
-		return 0;
+		return false;
 	}
 
 	// Return siren state
@@ -2754,7 +2754,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_HasReloading(AMX *amx, cell *params)
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	// Get the player reloading
@@ -2790,7 +2790,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_HasInfiniteAmmo(AMX *amx, cell *params)
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	// Get the player infinite ammo
@@ -3282,7 +3282,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsPlayingNode(AMX *amx, cell *params)
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	// return node playing status
@@ -3300,7 +3300,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsPlayingNodePaused(AMX *amx, cell *params)
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	// return node pause status
@@ -3316,7 +3316,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsMoveModeEnabled(AMX *amx, cell *params)
 	WORD iMoveMode = static_cast<WORD>(params[1]);
 
 	// Return status
-	return static_cast<int>(pServer->IsMoveModeEnabled(iMoveMode));
+	return pServer->IsMoveModeEnabled(iMoveMode);
 }
 
 // native FCNPC_ToggleMoveMode(mode, bool:toggle)
@@ -3654,7 +3654,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetCrashLogCreation(AMX *amx, cell *params)
 	CHECK_PARAMS(0, "FCNPC_GetCrashLogCreation");
 
 	// get the state
-	return static_cast<int>(pServer->GetCrashLogCreation());
+	return pServer->GetCrashLogCreation();
 }
 
 // native FCNPC_ShowInTabListForPlayer(npcid, forplayerid);
