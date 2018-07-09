@@ -19,9 +19,9 @@ public FCNPC_IncludeVersion = FCNPC_INCLUDE_VERSION;
 #pragma unused FCNPC_IncludeVersion
 
 #if defined GetPlayerCustomSkin
-	#define SAMP_03DL 1
+	#define FCNPC_SAMP_03DL 1
 #else
-	#define SAMP_03DL 0
+	#define FCNPC_SAMP_03DL 0
 #endif
 
 // Definitions
@@ -46,90 +46,39 @@ public FCNPC_IncludeVersion = FCNPC_INCLUDE_VERSION;
 #define FCNPC_INVALID_MOVEPATH_ID  (-1)
 #define FCNPC_INVALID_RECORD_ID    (-1)
 
-// Compatibility with older versions
-#if !defined MOVE_TYPE_AUTO
-	#define MOVE_TYPE_AUTO FCNPC_MOVE_TYPE_AUTO
-#endif
-
-#if !defined MOVE_TYPE_WALK
-	#define MOVE_TYPE_WALK FCNPC_MOVE_TYPE_WALK
-#endif
-
-#if !defined MOVE_TYPE_RUN
-	#define MOVE_TYPE_RUN FCNPC_MOVE_TYPE_RUN
-#endif
-
-#if !defined MOVE_TYPE_SPRINT
-	#define MOVE_TYPE_SPRINT FCNPC_MOVE_TYPE_SPRINT
-#endif
-
-#if !defined MOVE_TYPE_DRIVE
-	#define MOVE_TYPE_DRIVE FCNPC_MOVE_TYPE_DRIVE
-#endif
-
-
-#if !defined MOVE_SPEED_AUTO
-	#define MOVE_SPEED_AUTO FCNPC_MOVE_SPEED_AUTO
-#endif
-
-#if !defined MOVE_SPEED_WALK
-	#define MOVE_SPEED_WALK FCNPC_MOVE_SPEED_WALK
-#endif
-
-#if !defined MOVE_SPEED_RUN
-	#define MOVE_SPEED_RUN FCNPC_MOVE_SPEED_RUN
-#endif
-
-#if !defined MOVE_SPEED_SPRINT
-	#define MOVE_SPEED_SPRINT FCNPC_MOVE_SPEED_SPRINT
-#endif
-
-
-#if !defined MAX_NODES
-	#define MAX_NODES FCNPC_MAX_NODES
-#endif
-
-
-#if !defined INVALID_MOVEPATH_ID
-	#define INVALID_MOVEPATH_ID FCNPC_INVALID_MOVEPATH_ID
-#endif
-
-#if !defined INVALID_RECORD_ID
-	#define INVALID_RECORD_ID FCNPC_INVALID_RECORD_ID
-#endif
-
 // Callbacks
 forward FCNPC_OnCreate(npcid);
 forward FCNPC_OnDestroy(npcid);
 forward FCNPC_OnSpawn(npcid);
 forward FCNPC_OnRespawn(npcid);
-forward FCNPC_OnDeath(npcid, killerid, weaponid);
+forward FCNPC_OnDeath(npcid, killerid, reason);
+forward FCNPC_OnUpdate(npcid);
 
-forward FCNPC_OnVehicleEntryComplete(npcid, vehicleid, seat);
-forward FCNPC_OnVehicleExitComplete(npcid);
+forward FCNPC_OnTakeDamage(npcid, issuerid, Float:amount, weaponid, bodypart);
+forward FCNPC_OnGiveDamage(npcid, damagedid, Float:amount, weaponid, bodypart);
 
 forward FCNPC_OnReachDestination(npcid);
-forward FCNPC_OnFinishPlayback(npcid);
 
-forward FCNPC_OnTakeDamage(npcid, damagerid, weaponid, bodypart, Float:health_loss);
-forward FCNPC_OnGiveDamage(npcid, damagedid, weaponid, bodypart, Float:health_loss);
-forward FCNPC_OnVehicleTakeDamage(npcid, damagerid, vehicleid, weaponid, Float:x, Float:y, Float:z);
-forward FCNPC_OnWeaponShot(npcid, weaponid, hittype, hitid, Float:x, Float:y, Float:z);
+forward FCNPC_OnWeaponShot(npcid, weaponid, hittype, hitid, Float:fX, Float:fY, Float:fZ);
 forward FCNPC_OnWeaponStateChange(npcid, weapon_state);
-
-forward FCNPC_OnFinishNodePoint(npcid, nodeid, pointid);
-forward FCNPC_OnChangeNode(npcid, newnodeid, oldnodeid);
-forward FCNPC_OnFinishNode(npcid, nodeid);
 
 forward FCNPC_OnStreamIn(npcid, forplayerid);
 forward FCNPC_OnStreamOut(npcid, forplayerid);
 
-forward FCNPC_OnUpdate(npcid);
+forward FCNPC_OnVehicleEntryComplete(npcid, vehicleid, seatid);
+forward FCNPC_OnVehicleExitComplete(npcid, vehicleid);
+forward FCNPC_OnVehicleTakeDamage(npcid, issuerid, vehicleid, Float:amount, weaponid, Float:fX, Float:fY, Float:fZ);
+
+forward FCNPC_OnFinishPlayback(npcid);
+
+forward FCNPC_OnFinishNode(npcid, nodeid);
+forward FCNPC_OnFinishNodePoint(npcid, nodeid, pointid);
+forward FCNPC_OnChangeNode(npcid, newnodeid, oldnodeid);
 
 forward FCNPC_OnFinishMovePath(npcid, pathid);
 forward FCNPC_OnFinishMovePathPoint(npcid, pathid, pointid);
 
-forward FCNPC_OnChangeHeightPos(npcid, Float:new_z, Float:old_z); // disabled by default, see FCNPC_SetMinHeightPosCall
+forward FCNPC_OnChangeHeightPos(npcid, Float:newz, Float:oldz); // disabled by default, see FCNPC_SetMinHeightPosCall
 
 // Natives
 native FCNPC_GetPluginVersion(version[], const size = sizeof(version));
@@ -137,21 +86,21 @@ native FCNPC_SetUpdateRate(rate);
 native FCNPC_GetUpdateRate();
 native FCNPC_SetTickRate(rate);
 native FCNPC_GetTickRate();
-native FCNPC_IsMoveModeEnabled(mode);
-native FCNPC_ToggleMoveModeEnabled(mode, bool:toggle);
-native FCNPC_ToggleCrashLogCreation(bool:toggle);
-native FCNPC_GetCrashLogCreation();
+native FCNPC_UseMoveMode(mode, bool:use = true);
+native bool:FCNPC_IsMoveModeUsed(mode);
+native FCNPC_UseCrashLog(bool:use = true);
+native bool:FCNPC_IsCrashLogUsed();
 
 native FCNPC_Create(name[]);
 native FCNPC_Destroy(npcid);
 native FCNPC_Spawn(npcid, skinid, Float:x, Float:y, Float:z);
 native FCNPC_Respawn(npcid);
-native FCNPC_IsSpawned(npcid);
+native bool:FCNPC_IsSpawned(npcid);
 native FCNPC_Kill(npcid);
-native FCNPC_IsDead(npcid);
-native FCNPC_IsValid(npcid);
-native FCNPC_IsStreamedIn(npcid, forplayerid);
-native FCNPC_IsStreamedForAnyone(npcid);
+native bool:FCNPC_IsDead(npcid);
+native bool:FCNPC_IsValid(npcid);
+native bool:FCNPC_IsStreamedIn(npcid, forplayerid);
+native bool:FCNPC_IsStreamedInForAnyone(npcid);
 native FCNPC_GetValidArray(npcs[], const size = sizeof(npcs));
 
 native FCNPC_SetPosition(npcid, Float:x, Float:y, Float:z);
@@ -183,11 +132,11 @@ native Float:FCNPC_GiveArmour(npcid, Float:armour);
 native Float:FCNPC_GetArmour(npcid);
 
 native FCNPC_SetInvulnerable(npcid, bool:invulnerable = true);
-native FCNPC_IsInvulnerable(npcid);
+native bool:FCNPC_IsInvulnerable(npcid);
 
 native FCNPC_SetSkin(npcid, skinid);
 native FCNPC_GetSkin(npcid);
-#if SAMP_03DL
+#if FCNPC_SAMP_03DL
 	native FCNPC_GetCustomSkin(npcid);
 #endif
 
@@ -236,14 +185,16 @@ native FCNPC_ClearAnimations(npcid);
 native FCNPC_SetFightingStyle(npcid, style);
 native FCNPC_GetFightingStyle(npcid);
 
-native FCNPC_ToggleReloading(npcid, bool:toggle);
-native FCNPC_ToggleInfiniteAmmo(npcid, bool:toggle);
+native FCNPC_UseReloading(npcid, bool:use = true);
+native bool:FCNPC_IsReloadingUsed(npcid);
+native FCNPC_UseInfiniteAmmo(npcid, bool:use = true);
+native bool:FCNPC_IsInfiniteAmmoUsed(npcid);
 
 native FCNPC_GoTo(npcid, Float:x, Float:y, Float:z, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, Float:radius = 0.0, bool:setangle = true, Float:min_distance = 0.0, stopdelay = 250);
 native FCNPC_GoToPlayer(npcid, playerid, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, Float:radius = 0.0, bool:setangle = true, Float:min_distance = 0.0, Float:dist_check = 1.5, stopdelay = 250);
 native FCNPC_Stop(npcid);
-native FCNPC_IsMoving(npcid);
-native FCNPC_IsMovingAtPlayer(npcid, playerid);
+native bool:FCNPC_IsMoving(npcid);
+native bool:FCNPC_IsMovingAtPlayer(npcid, playerid);
 native FCNPC_GetDestinationPoint(npcid, &Float:x, &Float:y, &Float:z);
 
 native FCNPC_AimAt(npcid, Float:x, Float:y, Float:z, bool:shoot = false, shoot_delay = -1, bool:setangle = true, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0);
@@ -251,12 +202,12 @@ native FCNPC_AimAtPlayer(npcid, playerid, bool:shoot = false, shoot_delay = -1, 
 native FCNPC_StopAim(npcid);
 native FCNPC_MeleeAttack(npcid, delay = -1, bool:fightstyle = false);
 native FCNPC_StopAttack(npcid);
-native FCNPC_IsAttacking(npcid);
-native FCNPC_IsAiming(npcid);
-native FCNPC_IsAimingAtPlayer(npcid, playerid);
+native bool:FCNPC_IsAttacking(npcid);
+native bool:FCNPC_IsAiming(npcid);
+native bool:FCNPC_IsAimingAtPlayer(npcid, playerid);
 native FCNPC_GetAimingPlayer(npcid);
-native FCNPC_IsShooting(npcid);
-native FCNPC_IsReloading(npcid);
+native bool:FCNPC_IsShooting(npcid);
+native bool:FCNPC_IsReloading(npcid);
 native FCNPC_TriggerWeaponShot(npcid, weaponid, hittype, hitid, Float:x, Float:y, Float:z, bool:ishit = true, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0);
 
 native FCNPC_EnterVehicle(npcid, vehicleid, seatid, type = FCNPC_MOVE_TYPE_WALK);
@@ -266,8 +217,8 @@ native FCNPC_PutInVehicle(npcid, vehicleid, seatid);
 native FCNPC_RemoveFromVehicle(npcid);
 native FCNPC_GetVehicleID(npcid);
 native FCNPC_GetVehicleSeat(npcid);
-native FCNPC_SetVehicleSiren(npcid, bool:status);
-native FCNPC_IsVehicleSiren(npcid);
+native FCNPC_UseVehicleSiren(npcid, bool:use = true);
+native bool:FCNPC_IsVehicleSirenUsed(npcid);
 native FCNPC_SetVehicleHealth(npcid, Float:health);
 native Float:FCNPC_GetVehicleHealth(npcid);
 native FCNPC_SetVehicleHydraThrusters(npcid, direction);
@@ -295,7 +246,7 @@ native FCNPC_GetPlayingPlaybackPath(npcid, path[], const size = sizeof(path));
 
 native FCNPC_OpenNode(nodeid);
 native FCNPC_CloseNode(nodeid);
-native FCNPC_IsNodeOpen(nodeid);
+native bool:FCNPC_IsNodeOpen(nodeid);
 native FCNPC_GetNodeType(nodeid);
 native FCNPC_SetNodePoint(nodeid, pointid);
 native FCNPC_GetNodePointPosition(nodeid, &Float:x, &Float:y, &Float:z);
@@ -305,19 +256,19 @@ native FCNPC_PlayNode(npcid, nodeid, move_type = FCNPC_MOVE_TYPE_AUTO, Float:spe
 native FCNPC_StopPlayingNode(npcid);
 native FCNPC_PausePlayingNode(npcid);
 native FCNPC_ResumePlayingNode(npcid);
-native FCNPC_IsPlayingNode(npcid);
-native FCNPC_IsPlayingNodePaused(npcid);
+native bool:FCNPC_IsPlayingNode(npcid);
+native bool:FCNPC_IsPlayingNodePaused(npcid);
 
 native FCNPC_CreateMovePath();
 native FCNPC_DestroyMovePath(pathid);
-native FCNPC_IsValidMovePath(pathid);
-native FCNPC_AddPointToPath(pathid, Float:x, Float:y, Float:z);
-native FCNPC_AddPointsToPath(pathid, Float:points[][3], const size = sizeof(points));
-native FCNPC_AddPointsToPath2(pathid, Float:points_x[], Float:points_y[], Float:points_z[], const size = sizeof(points_x));
-native FCNPC_RemovePointFromPath(pathid, pointid);
-native FCNPC_IsValidMovePoint(pathid, pointid);
-native FCNPC_GetMovePoint(pathid, pointid, &Float:x, &Float:y, &Float:z);
-native FCNPC_GetNumberMovePoint(pathid);
+native bool:FCNPC_IsValidMovePath(pathid);
+native FCNPC_AddPointToMovePath(pathid, Float:x, Float:y, Float:z);
+native FCNPC_AddPointsToMovePath(pathid, Float:points[][3], const size = sizeof(points));
+native FCNPC_AddPointsToMovePath2(pathid, Float:points_x[], Float:points_y[], Float:points_z[], const size = sizeof(points_x));
+native FCNPC_RemovePointFromMovePath(pathid, pointid);
+native bool:FCNPC_IsValidMovePathPoint(pathid, pointid);
+native FCNPC_GetMovePathPoint(pathid, pointid, &Float:x, &Float:y, &Float:z);
+native FCNPC_GetNumberMovePathPoint(pathid);
 native FCNPC_GoByMovePath(npcid, pathid, pointid = 0, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, Float:radius = 0.0, bool:setangle = true, Float:min_distance = 0.0);
 
 native FCNPC_SetMoveMode(npcid, mode);
@@ -407,7 +358,7 @@ native FCNPC_HideInTabListForPlayer(npcid, forplayerid);
 			FCNPC_GetPluginVersion(plugin_version);
 
 			if (strcmp(version, plugin_version) != 0) {
-				printf("\n** Please update your FCNPC plugin to %s from here: https://github.com/ziggi/FCNPC/releases.\n", version);
+				printf("\n*** [FCNPC] Info: A newer version (v%s) is available at https://github.com/ziggi/FCNPC/releases ***\n", version);
 			}
 		}
 	}

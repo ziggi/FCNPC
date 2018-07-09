@@ -19,11 +19,11 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_GetUpdateRate(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetTickRate(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetTickRate(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_IsMoveModeEnabled(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_ToggleMoveMode(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_UseMoveMode(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_IsMoveModeUsed(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_TriggerWeaponShot(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_ToggleCrashLogCreation(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_GetCrashLogCreation(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_UseCrashLog(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_IsCrashLogUsed(AMX *amx, cell *params);
 
 	static cell AMX_NATIVE_CALL FCNPC_Create(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_Destroy(AMX *amx, cell *params);
@@ -34,7 +34,7 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_IsDead(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_IsValid(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_IsStreamedIn(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_IsStreamedForAnyone(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_IsStreamedInForAnyone(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetValidArray(AMX *amx, cell *params);
 
 	static cell AMX_NATIVE_CALL FCNPC_SetPosition(AMX *amx, cell *params);
@@ -139,8 +139,10 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_IsShooting(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_IsReloading(AMX *amx, cell *params);
 
-	static cell AMX_NATIVE_CALL FCNPC_ToggleReloading(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_ToggleInfiniteAmmo(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_UseReloading(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_IsReloadingUsed(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_UseInfiniteAmmo(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_IsInfiniteAmmoUsed(AMX *amx, cell *params);
 
 	static cell AMX_NATIVE_CALL FCNPC_EnterVehicle(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_ExitVehicle(AMX *amx, cell *params);
@@ -148,8 +150,8 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_RemoveFromVehicle(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetVehicleID(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetVehicleSeat(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_SetVehicleSiren(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_IsVehicleSiren(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_UseVehicleSiren(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_IsVehicleSirenUsed(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetVehicleHealth(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetVehicleHealth(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetVehicleHydraThrusters(AMX *amx, cell *params);
@@ -193,13 +195,13 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_CreateMovePath(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_DestroyMovePath(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_IsValidMovePath(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_AddPointToPath(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_AddPointsToPath(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_AddPointsToPath2(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_RemovePointFromPath(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_IsValidMovePoint(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_GetMovePoint(AMX *amx, cell *params);
-	static cell AMX_NATIVE_CALL FCNPC_GetNumberMovePoint(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_AddPointToMovePath(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_AddPointsToMovePath(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_AddPointsToMovePath2(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_RemovePointFromMovePath(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_IsValidMovePathPoint(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_GetMovePathPoint(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_GetNumberMovePathPoint(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GoByMovePath(AMX *amx, cell *params);
 
 	static cell AMX_NATIVE_CALL FCNPC_SetMoveMode(AMX *amx, cell *params);

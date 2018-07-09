@@ -972,8 +972,9 @@ void CPlayerData::Process()
 		Update(UPDATE_STATE_PASSENGER);
 	} else if (byteState == PLAYER_STATE_EXIT_VEHICLE) {
 		if ((dwThisTick - m_dwEnterExitTickCount) > 1500) {
+			WORD wVehicleId = m_pPlayer->wVehicleId;
 			RemoveFromVehicle();
-			CCallbackManager::OnVehicleExitComplete(m_wPlayerId);
+			CCallbackManager::OnVehicleExitComplete(m_wPlayerId, wVehicleId);
 		}
 	}
 }
@@ -1788,9 +1789,19 @@ void CPlayerData::ToggleReloading(bool bToggle)
 	m_bHasReload = bToggle;
 }
 
+bool CPlayerData::HasReloading()
+{
+	return m_bHasReload;
+}
+
 void CPlayerData::ToggleInfiniteAmmo(bool bToggle)
 {
 	m_bHasInfiniteAmmo = bToggle;
+}
+
+bool CPlayerData::HasInfiniteAmmo()
+{
+	return m_bHasInfiniteAmmo;
 }
 
 void CPlayerData::AimAt(const CVector &vecPoint, bool bShoot, int iShootDelay, bool bSetAngle, const CVector &vecOffsetFrom)
@@ -2013,25 +2024,26 @@ void CPlayerData::ProcessDamage(WORD wDamagerId, float fHealthLoss, BYTE byteWea
 
 void CPlayerData::ProcessVehicleDamage(WORD wDamagerId, WORD wVehicleId, BYTE byteWeaponId, const CVector &vecHit)
 {
-	int iReturn = CCallbackManager::OnVehicleTakeDamage(m_wPlayerId, wDamagerId, wVehicleId, byteWeaponId, vecHit);
+	CVehicle *pVehicle = GetVehicle();
+
+	if (!pVehicle) {
+		return;
+	}
+
+	float fHealth = GetVehicleHealth();
+	float fDamage = CWeaponInfo::GetDefaultInfo(byteWeaponId).fDamage;
+
+	if (fHealth > 0.0f) {
+		fHealth -= fDamage;
+
+		if (fHealth < 0.0f) {
+			fHealth = 0.0f;
+		}
+	}
+
+	int iReturn = CCallbackManager::OnVehicleTakeDamage(m_wPlayerId, wDamagerId, wVehicleId, byteWeaponId, vecHit, fDamage);
 
 	if (iReturn) {
-		CVehicle *pVehicle = GetVehicle();
-
-		if (!pVehicle) {
-			return;
-		}
-
-		float fHealth = GetVehicleHealth();
-
-		if (fHealth > 0.0f) {
-			fHealth -= CWeaponInfo::GetDefaultInfo(byteWeaponId).fDamage;
-
-			if (fHealth < 0.0f) {
-				fHealth = 0.0f;
-			}
-		}
-
 		SetVehicleHealth(fHealth);
 
 		if (fHealth < 250.0f) {

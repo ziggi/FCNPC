@@ -80,10 +80,10 @@ public CreateNPC()
 stock MoveNPC(npcid)
 {
 	new mstage = gNpc[npcid][E_MOVE_STAGE];
-	FCNPC_GoTo(npcid, gMovements[mstage][0], gMovements[mstage][1], gMovements[mstage][2], MOVE_TYPE_RUN);
+	FCNPC_GoTo(npcid, gMovements[mstage][0], gMovements[mstage][1], gMovements[mstage][2], FCNPC_MOVE_TYPE_RUN);
 }
 
-public FCNPC_OnDeath(npcid, killerid, weaponid)
+public FCNPC_OnDeath(npcid, killerid, reason)
 {
 	if (!gNpc[npcid][E_VALID]) {
 		return 1;
@@ -93,7 +93,7 @@ public FCNPC_OnDeath(npcid, killerid, weaponid)
 	GetPlayerName(killerid, name, sizeof(name));
 
 	new msg[144];
- 	format(msg, sizeof(msg), "NPC %d was killed by %d (%s) with weapon %d", npcid, killerid, name, weaponid);
+ 	format(msg, sizeof(msg), "NPC %d was killed by %d (%s) with weapon %d", npcid, killerid, name, reason);
  	SendClientMessageToAll(0xFF00FF00, msg);
 
  	SetTimerEx("DestroyNPC", 2000, 0, "i", npcid);

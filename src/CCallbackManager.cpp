@@ -189,7 +189,7 @@ void CCallbackManager::OnVehicleEntryComplete(WORD wPlayerId, WORD wVehicleId, i
 	}
 }
 
-void CCallbackManager::OnVehicleExitComplete(WORD wPlayerId)
+void CCallbackManager::OnVehicleExitComplete(WORD wPlayerId, WORD wVehicleId)
 {
 	int iIndex = 0;
 
@@ -198,6 +198,7 @@ void CCallbackManager::OnVehicleExitComplete(WORD wPlayerId)
 			iIndex = c.second.at(FCNPC_OnVehicleExitComplete);
 		}
 		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnVehicleExitComplete", &iIndex)) {
+			amx_Push(c.first, wVehicleId);
 			amx_Push(c.first, wPlayerId);
 
 			amx_Exec(c.first, NULL, iIndex);
@@ -215,9 +216,9 @@ int CCallbackManager::OnTakeDamage(WORD wPlayerId, WORD wDamagerId, BYTE byteWea
 			iIndex = c.second.at(FCNPC_OnTakeDamage);
 		}
 		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnTakeDamage", &iIndex)) {
-			amx_Push(c.first, amx_ftoc(fHealthLoss));
 			amx_Push(c.first, iBodyPart);
 			amx_Push(c.first, byteWeaponId);
+			amx_Push(c.first, amx_ftoc(fHealthLoss));
 			amx_Push(c.first, wDamagerId);
 			amx_Push(c.first, wPlayerId);
 
@@ -239,9 +240,9 @@ void CCallbackManager::OnGiveDamage(WORD wPlayerId, WORD wDamagedId, BYTE byteWe
 			iIndex = c.second.at(FCNPC_OnGiveDamage);
 		}
 		if (iIndex != 0 || !amx_FindPublic(c.first, "FCNPC_OnGiveDamage", &iIndex)) {
-			amx_Push(c.first, amx_ftoc(fHealthLoss));
 			amx_Push(c.first, iBodyPart);
 			amx_Push(c.first, byteWeaponId);
+			amx_Push(c.first, amx_ftoc(fHealthLoss));
 			amx_Push(c.first, wDamagedId);
 			amx_Push(c.first, wPlayerId);
 
@@ -295,7 +296,7 @@ void CCallbackManager::OnWeaponStateChange(WORD wPlayerId, int iWeaponState)
 	}
 }
 
-int CCallbackManager::OnVehicleTakeDamage(WORD wPlayerId, WORD wDamagerId, WORD wVehicleId, BYTE byteWeaponId, CVector vecHit)
+int CCallbackManager::OnVehicleTakeDamage(WORD wPlayerId, WORD wDamagerId, WORD wVehicleId, BYTE byteWeaponId, CVector vecHit, float fHealthLoss)
 {
 	cell cReturn = 1;
 	int iIndex = 0;
@@ -309,6 +310,7 @@ int CCallbackManager::OnVehicleTakeDamage(WORD wPlayerId, WORD wDamagerId, WORD 
 			amx_Push(c.first, amx_ftoc(vecHit.fY));
 			amx_Push(c.first, amx_ftoc(vecHit.fX));
 			amx_Push(c.first, byteWeaponId);
+			amx_Push(c.first, amx_ftoc(fHealthLoss));
 			amx_Push(c.first, wVehicleId);
 			amx_Push(c.first, wDamagerId);
 			amx_Push(c.first, wPlayerId);

@@ -97,9 +97,9 @@ public FCNPC_OnReachDestination(npcid)
 	BG_SetFollowTimer(npcid);
 }
 
-public FCNPC_OnTakeDamage(npcid, damagerid, weaponid, bodypart, Float:health_loss)
+public FCNPC_OnTakeDamage(npcid, issuerid, Float:amount, weaponid, bodypart)
 {
-	if (!IsPlayerConnected(damagerid) || !BG_IsValid(npcid)) {
+	if (!IsPlayerConnected(issuerid) || !BG_IsValid(npcid)) {
 		return 1;
 	}
 
@@ -110,19 +110,19 @@ public FCNPC_OnTakeDamage(npcid, damagerid, weaponid, bodypart, Float:health_los
 		bodypart_name[MAX_BODYPART_NAME],
 		weapon_name[16];
 
-	GetPlayerName(damagerid, player_name, sizeof(player_name));
+	GetPlayerName(issuerid, player_name, sizeof(player_name));
 	GetBodypartName(bodypart, bodypart_name);
 	GetWeaponName(weaponid, weapon_name, sizeof(weapon_name));
 
 	format(string, sizeof(string),
 	       "NPC(%d) was damaged by %s(%d) with %s(%d) in the %s (hp: %f)",
-	       npcid, player_name, damagerid, weapon_name, weaponid, bodypart_name, health_loss);
+	       npcid, player_name, issuerid, weapon_name, weaponid, bodypart_name, amount);
 	SendClientMessageToAll(0xFF0000FF, string);
 #endif
 	return 1;
 }
 
-public FCNPC_OnVehicleEntryComplete(npcid, vehicleid, seat)
+public FCNPC_OnVehicleEntryComplete(npcid, vehicleid, seatid)
 {
 #if defined DEBUG
 	new string[27 + 3 + 1];
@@ -132,7 +132,7 @@ public FCNPC_OnVehicleEntryComplete(npcid, vehicleid, seat)
 	return 1;
 }
 
-public FCNPC_OnVehicleExitComplete(npcid)
+public FCNPC_OnVehicleExitComplete(npcid, vehicleid)
 {
 #if defined DEBUG
 	new string[26 + 3 + 1];
@@ -434,7 +434,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 stock BG_EnterVehicle(playerid, slot, vehicleid, seat)
 {
 	new npcid = gPlayerNpc[playerid][slot];
-	FCNPC_EnterVehicle(npcid, vehicleid, seat, MOVE_TYPE_RUN);
+	FCNPC_EnterVehicle(npcid, vehicleid, seat, FCNPC_MOVE_TYPE_RUN);
 }
 
 stock BG_ExitVehicle(playerid, slot)
@@ -548,7 +548,7 @@ public BG_SetFollowPosition(npcid, playerid)
 	} else {
 		dist_offset = -1.0;
 		range = -dist_offset + 0.5;
-		speed = MOVE_SPEED_AUTO;
+		speed = FCNPC_MOVE_SPEED_AUTO;
 	}
 
 	if (!IsPlayerInRangeOfPoint(npcid, range, pos_x, pos_y, pos_z)) {

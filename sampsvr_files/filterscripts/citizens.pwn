@@ -60,7 +60,7 @@ public OnFilterScriptInit()
 	// Set the update rate
 	FCNPC_SetUpdateRate(80);
 	// Open all nodes
-	for (new i = 0; i < MAX_NODES; i++) {
+	for (new i = 0; i < FCNPC_MAX_NODES; i++) {
 		if (!FCNPC_IsNodeOpen(i) && !FCNPC_OpenNode(i)) {
 			printf("Error: Failed to open node %d from (scriptfiles/FCNPC/nodes/NODES%d.DAT)", i, i);
 			return 0;
@@ -91,7 +91,7 @@ public OnFilterScriptInit()
 
 		// Generate a random nodeid
 		do {
-			nodeid = random(MAX_NODES);
+			nodeid = random(FCNPC_MAX_NODES);
 		} while (!IsValidZone(nodeid));
 
 		// Get the nodeid info
@@ -103,7 +103,7 @@ public OnFilterScriptInit()
 
 			FCNPC_SetNodePoint(nodeid, point);
 
-			FCNPC_PlayNode(npcid, nodeid, MOVE_TYPE_WALK, .UseMapAndreas = true);
+			FCNPC_PlayNode(npcid, nodeid, FCNPC_MOVE_TYPE_WALK, .UseMapAndreas = true);
 		} else {
 			point = random(vehnodes - 1);
 
@@ -134,7 +134,7 @@ public OnFilterScriptExit()
 		}
  	}
 	// Close all nodes
-	for (new i = 0; i < MAX_NODES; i++) {
+	for (new i = 0; i < FCNPC_MAX_NODES; i++) {
 		if (FCNPC_IsNodeOpen(i)) {
 			FCNPC_CloseNode(i);
 		}
@@ -201,7 +201,7 @@ stock GetRandomCarModel()
 stock IsValidZone(zoneid)
 {
 #if defined SAN_ANDREAS
-	return zoneid > 0 && zoneid < MAX_NODES;
+	return zoneid > 0 && zoneid < FCNPC_MAX_NODES;
 #elseif defined LOS_SANTOS
 	return (zoneid >= 5 && zoneid <= 7) || (zoneid >= 12 && zoneid <= 15) || (zoneid >= 20 && zoneid <= 23);
 #elseif defined SAN_FIERRO

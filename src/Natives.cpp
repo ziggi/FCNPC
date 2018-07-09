@@ -85,7 +85,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsSpawned(AMX *amx, cell *params)
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	// Respawn the player
@@ -115,7 +115,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsDead(AMX *amx, cell *params)
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	// Return the player dead state
@@ -142,21 +142,21 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsStreamedIn(AMX *amx, cell *params)
 	// Make sure the npc is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	// Make sure the player is valid
 	if (!pServer->GetPlayerManager()->IsPlayerConnected(wForPlayerId) || wForPlayerId == wNpcId) {
-		return 0;
+		return false;
 	}
 
 	// Return the player is streamed
 	return pPlayerData->IsStreamedIn(wForPlayerId);
 }
 
-cell AMX_NATIVE_CALL CNatives::FCNPC_IsStreamedForAnyone(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL CNatives::FCNPC_IsStreamedInForAnyone(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "FCNPC_IsStreamedForAnyone");
+	CHECK_PARAMS(1, "FCNPC_IsStreamedInForAnyone");
 
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);
@@ -164,7 +164,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsStreamedForAnyone(AMX *amx, cell *params)
 	// Make sure the npc is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	for (WORD i = 0; i <= pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
@@ -174,12 +174,12 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsStreamedForAnyone(AMX *amx, cell *params)
 		}
 
 		if (pPlayerData->IsStreamedIn(i)) {
-			return 1;
+			return true;
 		}
 	}
 
 	// Return the player is streamed
-	return 0;
+	return false;
 }
 
 // native FCNPC_GetValidArray(npcs[], const size = sizeof(npcs));
@@ -862,7 +862,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsInvulnerable(AMX *amx, cell *params)
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	// Get the player invulnerable
@@ -1323,7 +1323,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsMoving(AMX *amx, cell *params)
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	// Get the player moving state
@@ -1342,11 +1342,11 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsMovingAtPlayer(AMX *amx, cell *params)
 	// validation
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	if (!pServer->GetPlayerManager()->IsPlayerConnected(wPlayerId) || wPlayerId == wNpcId) {
-		return 0;
+		return false;
 	}
 
 	// Get the player moving state
@@ -2148,7 +2148,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsAttacking(AMX *amx, cell *params)
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	// Get the player attacking state
@@ -2165,7 +2165,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsAiming(AMX *amx, cell *params)
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	// Get the player aiming state
@@ -2184,11 +2184,11 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsAimingAtPlayer(AMX *amx, cell *params)
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	if (!pServer->GetPlayerManager()->IsPlayerConnected(wPlayerId) || wPlayerId == wNpcId) {
-		return 0;
+		return false;
 	}
 
 	// Get the player aiming state
@@ -2223,7 +2223,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsShooting(AMX *amx, cell *params)
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	// Get the player shooting state
@@ -2240,7 +2240,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsReloading(AMX *amx, cell *params)
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	// Get the player shooting state
@@ -2374,10 +2374,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleSeat(AMX *amx, cell *params)
 	return pPlayerData->GetSeatId();
 }
 
-// native FCNPC_SetVehicleSiren(npcid, bool:status);
-cell AMX_NATIVE_CALL CNatives::FCNPC_SetVehicleSiren(AMX *amx, cell *params)
+// native FCNPC_UseVehicleSiren(npcid, bool:use = true);
+cell AMX_NATIVE_CALL CNatives::FCNPC_UseVehicleSiren(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "FCNPC_SetVehicleSiren");
+	CHECK_PARAMS(2, "FCNPC_UseVehicleSiren");
 
 	// Get params
 	WORD wNpcId = static_cast<WORD>(params[1]);
@@ -2399,10 +2399,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVehicleSiren(AMX *amx, cell *params)
 	return 1;
 }
 
-// native FCNPC_IsVehicleSiren(npcid);
-cell AMX_NATIVE_CALL CNatives::FCNPC_IsVehicleSiren(AMX *amx, cell *params)
+// native FCNPC_IsVehicleSirenUsed(npcid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_IsVehicleSirenUsed(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "FCNPC_IsVehicleSiren");
+	CHECK_PARAMS(1, "FCNPC_IsVehicleSirenUsed");
 
 	// Get params
 	WORD wNpcId = static_cast<WORD>(params[1]);
@@ -2410,12 +2410,12 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsVehicleSiren(AMX *amx, cell *params)
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	// Make sure the player is in vehicle
 	if (pPlayerData->GetVehicleId() == INVALID_VEHICLE_ID) {
-		return 0;
+		return false;
 	}
 
 	// Return siren state
@@ -2725,9 +2725,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StopSurfing(AMX *amx, cell *params)
 	return 1;
 }
 
-cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleReloading(AMX *amx, cell *params)
+// native FCNPC_UseReloading(npcid, bool:use = true);
+cell AMX_NATIVE_CALL CNatives::FCNPC_UseReloading(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "FCNPC_ToggleReloading");
+	CHECK_PARAMS(2, "FCNPC_UseReloading");
 
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);
@@ -2744,9 +2745,28 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleReloading(AMX *amx, cell *params)
 	return 1;
 }
 
-cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleInfiniteAmmo(AMX *amx, cell *params)
+// native FCNPC_IsReloadingUsed(npcid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_IsReloadingUsed(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "FCNPC_ToggleInfiniteAmmo");
+	CHECK_PARAMS(1, "FCNPC_IsReloadingUsed");
+
+	// Get the NPC id
+	WORD wNpcId = static_cast<WORD>(params[1]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return false;
+	}
+
+	// Get the player reloading
+	return pPlayerData->HasReloading();
+}
+
+// native FCNPC_UseInfiniteAmmo(npcid, bool:use = true);
+cell AMX_NATIVE_CALL CNatives::FCNPC_UseInfiniteAmmo(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_UseInfiniteAmmo");
 
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);
@@ -2761,6 +2781,24 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleInfiniteAmmo(AMX *amx, cell *params)
 	// Toggle it
 	pPlayerData->ToggleInfiniteAmmo(bToggle);
 	return 1;
+}
+
+// native FCNPC_IsInfiniteAmmoUsed(npcid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_IsInfiniteAmmoUsed(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_IsInfiniteAmmoUsed");
+
+	// Get the NPC id
+	WORD wNpcId = static_cast<WORD>(params[1]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return false;
+	}
+
+	// Get the player infinite ammo
+	return pPlayerData->HasInfiniteAmmo();
 }
 
 // native FCNPC_StartPlayingPlayback(npcid, file[] = "", recordid = FCNPC_INVALID_RECORD_ID, bool:auto_unload = false, Float : delta_x = 0.0, Float : delta_y = 0.0, Float : delta_z = 0.0, Float : delta_qw = 0.0, Float : delta_qx = 0.0, Float : delta_qy = 0.0, Float : delta_qz = 0.0);
@@ -3248,7 +3286,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsPlayingNode(AMX *amx, cell *params)
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	// return node playing status
@@ -3266,29 +3304,17 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsPlayingNodePaused(AMX *amx, cell *params)
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return false;
 	}
 
 	// return node pause status
 	return pPlayerData->IsPlayingNodePaused();
 }
 
-// native FCNPC_IsMoveModeEnabled(mode)
-cell AMX_NATIVE_CALL CNatives::FCNPC_IsMoveModeEnabled(AMX *amx, cell *params)
+// native FCNPC_UseMoveMode(mode, bool:use = true)
+cell AMX_NATIVE_CALL CNatives::FCNPC_UseMoveMode(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "FCNPC_IsMoveModeEnabled");
-
-	// Get the params
-	WORD iMoveMode = static_cast<WORD>(params[1]);
-
-	// Return status
-	return static_cast<int>(pServer->IsMoveModeEnabled(iMoveMode));
-}
-
-// native FCNPC_ToggleMoveMode(mode, bool:toggle)
-cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleMoveMode(AMX *amx, cell *params)
-{
-	CHECK_PARAMS(2, "FCNPC_ToggleMoveMode");
+	CHECK_PARAMS(2, "FCNPC_UseMoveMode");
 
 	// Get the params
 	WORD iMoveMode = static_cast<WORD>(params[1]);
@@ -3301,6 +3327,18 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleMoveMode(AMX *amx, cell *params)
 	}
 
 	return 0;
+}
+
+// native FCNPC_IsMoveModeUsed(mode)
+cell AMX_NATIVE_CALL CNatives::FCNPC_IsMoveModeUsed(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_IsMoveModeUsed");
+
+	// Get the params
+	WORD iMoveMode = static_cast<WORD>(params[1]);
+
+	// Return status
+	return pServer->IsMoveModeEnabled(iMoveMode);
 }
 
 // native FCNPC_TriggerWeaponShot(npcid, weaponid, hittype, hitid, Float:x, Float:y, Float:z, bool:ishit = true, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0);
@@ -3355,10 +3393,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsValidMovePath(AMX *amx, cell *params)
 	return pServer->GetMovePath()->IsPathValid(iPathId);
 }
 
-// native FCNPC_AddPointToPath(pathid, Float:x, Float:y, Float:z);
-cell AMX_NATIVE_CALL CNatives::FCNPC_AddPointToPath(AMX *amx, cell *params)
+// native FCNPC_AddPointToMovePath(pathid, Float:x, Float:y, Float:z);
+cell AMX_NATIVE_CALL CNatives::FCNPC_AddPointToMovePath(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(4, "FCNPC_AddPointToPath");
+	CHECK_PARAMS(4, "FCNPC_AddPointToMovePath");
 
 	// get params
 	int iPathId = static_cast<int>(params[1]);
@@ -3367,10 +3405,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AddPointToPath(AMX *amx, cell *params)
 	return pServer->GetMovePath()->AddPoint(iPathId, vecPoint);
 }
 
-// native FCNPC_AddPointsToPath(pathid, Float:points[][3], const size = sizeof(points));
-cell AMX_NATIVE_CALL CNatives::FCNPC_AddPointsToPath(AMX *amx, cell *params)
+// native FCNPC_AddPointsToMovePath(pathid, Float:points[][3], const size = sizeof(points));
+cell AMX_NATIVE_CALL CNatives::FCNPC_AddPointsToMovePath(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "FCNPC_AddPointsToPath");
+	CHECK_PARAMS(3, "FCNPC_AddPointsToMovePath");
 
 	// get params
 	int iPathId = static_cast<int>(params[1]);
@@ -3397,10 +3435,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AddPointsToPath(AMX *amx, cell *params)
 	return 1;
 }
 
-// native FCNPC_AddPointsToPath2(pathid, Float:points_x[], Float:points_y[], Float:points_z[], const size = sizeof(points_x));
-cell AMX_NATIVE_CALL CNatives::FCNPC_AddPointsToPath2(AMX *amx, cell *params)
+// native FCNPC_AddPointsToMovePath2(pathid, Float:points_x[], Float:points_y[], Float:points_z[], const size = sizeof(points_x));
+cell AMX_NATIVE_CALL CNatives::FCNPC_AddPointsToMovePath2(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(5, "FCNPC_AddPointsToPath2");
+	CHECK_PARAMS(5, "FCNPC_AddPointsToMovePath2");
 
 	// get params
 	int iPathId = static_cast<int>(params[1]);
@@ -3431,10 +3469,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AddPointsToPath2(AMX *amx, cell *params)
 	return 1;
 }
 
-// native FCNPC_RemovePointFromPath(pathid, pointid);
-cell AMX_NATIVE_CALL CNatives::FCNPC_RemovePointFromPath(AMX *amx, cell *params)
+// native FCNPC_RemovePointFromMovePath(pathid, pointid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_RemovePointFromMovePath(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "FCNPC_RemovePointFromPath");
+	CHECK_PARAMS(2, "FCNPC_RemovePointFromMovePath");
 
 	// get params
 	int iPathId = static_cast<int>(params[1]);
@@ -3443,10 +3481,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_RemovePointFromPath(AMX *amx, cell *params)
 	return pServer->GetMovePath()->RemovePoint(iPathId, iPointId);
 }
 
-// native FCNPC_IsValidMovePoint(pathid, pointid);
-cell AMX_NATIVE_CALL CNatives::FCNPC_IsValidMovePoint(AMX *amx, cell *params)
+// native FCNPC_IsValidMovePathPoint(pathid, pointid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_IsValidMovePathPoint(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "FCNPC_IsValidMovePoint");
+	CHECK_PARAMS(2, "FCNPC_IsValidMovePathPoint");
 
 	// get params
 	int iPathId = static_cast<int>(params[1]);
@@ -3455,10 +3493,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsValidMovePoint(AMX *amx, cell *params)
 	return pServer->GetMovePath()->IsPointValid(iPathId, iPointId);
 }
 
-// native FCNPC_GetMovePoint(pathid, pointid, &Float:x, &Float:y, &Float:z);
-cell AMX_NATIVE_CALL CNatives::FCNPC_GetMovePoint(AMX *amx, cell *params)
+// native FCNPC_GetMovePathPoint(pathid, pointid, &Float:x, &Float:y, &Float:z);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetMovePathPoint(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(5, "FCNPC_GetMovePoint");
+	CHECK_PARAMS(5, "FCNPC_GetMovePathPoint");
 
 	// get params
 	int iPathId = static_cast<int>(params[1]);
@@ -3483,10 +3521,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetMovePoint(AMX *amx, cell *params)
 	return 1;
 }
 
-// native FCNPC_GetNumberMovePoint(pathid);
-cell AMX_NATIVE_CALL CNatives::FCNPC_GetNumberMovePoint(AMX *amx, cell *params)
+// native FCNPC_GetNumberMovePathPoint(pathid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetNumberMovePathPoint(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "FCNPC_GetNumberMovePoint");
+	CHECK_PARAMS(1, "FCNPC_GetNumberMovePathPoint");
 
 	// get params
 	int iPathId = static_cast<int>(params[1]);
@@ -3601,10 +3639,10 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetMinHeightPosCall(AMX *amx, cell *params)
 	return amx_ftoc(fHeight);
 }
 
-// native FCNPC_ToggleCrashLogCreation(bool:toggle);
-cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleCrashLogCreation(AMX *amx, cell *params)
+// native FCNPC_UseCrashLog(bool:use = true);
+cell AMX_NATIVE_CALL CNatives::FCNPC_UseCrashLog(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "FCNPC_ToggleCrashLogCreation");
+	CHECK_PARAMS(1, "FCNPC_UseCrashLog");
 
 	// get the params
 	bool bIsEnabled = static_cast<int>(params[1]) != 0;
@@ -3614,13 +3652,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ToggleCrashLogCreation(AMX *amx, cell *para
 	return 1;
 }
 
-// native FCNPC_GetCrashLogCreation();
-cell AMX_NATIVE_CALL CNatives::FCNPC_GetCrashLogCreation(AMX *amx, cell *params)
+// native FCNPC_IsCrashLogUsed();
+cell AMX_NATIVE_CALL CNatives::FCNPC_IsCrashLogUsed(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(0, "FCNPC_GetCrashLogCreation");
+	CHECK_PARAMS(0, "FCNPC_IsCrashLogUsed");
 
 	// get the state
-	return static_cast<int>(pServer->GetCrashLogCreation());
+	return pServer->GetCrashLogCreation();
 }
 
 // native FCNPC_ShowInTabListForPlayer(npcid, forplayerid);
