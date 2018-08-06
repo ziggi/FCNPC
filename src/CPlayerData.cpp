@@ -171,7 +171,7 @@ bool CPlayerData::Spawn(int iSkinId)
 	m_bSpawned = true;
 	m_pPlayer->bReadyToSpawn = true;
 	// Set the player skin
-	m_pPlayer->spawn.iSkin = iSkinId;
+	SetSkin(iSkinId, false);
 	// Call the SAMP spawn functions
 	CFunctions::SpawnPlayer(m_pPlayer);
 	// Set the player stats
@@ -1128,7 +1128,7 @@ bool CPlayerData::IsInvulnerable()
 	return m_bIsInvulnerable;
 }
 
-void CPlayerData::SetSkin(int iSkin)
+void CPlayerData::SetSkin(int iSkin, bool bSendRPC)
 {
 	// Make sure the skin has changed
 	if (iSkin == m_pPlayer->spawn.iSkin) {
@@ -1147,8 +1147,9 @@ void CPlayerData::SetSkin(int iSkin)
 	}
 
 #ifdef SAMP_03DL
-	if (iSkin > 20000) {
-		m_pPlayer->spawn.iSkin = CFunctions::GetSkinBaseID(iSkin);
+	int iBaseId = CFunctions::GetSkinBaseID(iSkin);
+	if (iSkin > 20000 && iBaseId != -1) {
+		m_pPlayer->spawn.iSkin = iBaseId;
 		m_pPlayer->spawn.dwCustomSkin = iSkin;
 	} else {
 		m_pPlayer->spawn.iSkin = iSkin;
@@ -1159,10 +1160,10 @@ void CPlayerData::SetSkin(int iSkin)
 #endif
 
 	// Send RPC
-	if (m_pPlayer->bReadyToSpawn) {
+	if (bSendRPC && m_pPlayer->bReadyToSpawn) {
 		RakNet::BitStream bsData;
-		bsData.Write(static_cast<DWORD>(m_pPlayer->wPlayerId));
-		bsData.Write(iSkin);
+		bsData.Write(m_pPlayer->wPlayerId);
+		bsData.Write(m_pPlayer->spawn.iSkin);
 #ifdef SAMP_03DL
 		bsData.Write(m_pPlayer->spawn.dwCustomSkin);
 #endif

@@ -108,7 +108,7 @@ public:
 	bool SetWeaponInfo(BYTE byteWeaponId, const SWeaponInfo &sWeaponInfo);
 	SWeaponInfo GetWeaponInfo(BYTE byteWeaponId);
 
-	void SetSkin(int iSkin);
+	void SetSkin(int iSkin, bool bSendRPC = true);
 	int GetSkin();
 	int GetCustomSkin();
 	void SetInterior(int iInterior);
