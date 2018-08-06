@@ -19,6 +19,9 @@ CServer      *pServer;
 bool         bServerInit = false;
 DWORD        dwStartTick;
 CNetGame     *pNetGame;
+#ifdef SAMP_03DL
+CArtInfo     *pArtInfo;
+#endif
 void         *pConsole = NULL;
 void         *pRakServer = NULL;
 char         szSampClient[64];
@@ -321,6 +324,7 @@ PLUGIN_EXPORT int PLUGIN_CALL AmxLoad(AMX *pAMX)
 		// Set the initialized flag
 		bServerInit = true;
 	}
+
 	// Register the AMX
 	CCallbackManager::RegisterAMX(pAMX);
 	g_Invoke->amx_list.push_back(pAMX);

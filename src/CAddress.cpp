@@ -33,6 +33,9 @@ DWORD CAddress::FUNC_ClientJoin_RPC = 0;
 // Variables
 DWORD CAddress::VAR_ServerAuthentication = 0;
 DWORD CAddress::VAR_NetVersion = 0;
+#ifdef SAMP_03DL
+DWORD CAddress::VAR_ArtInfo = 0;
+#endif
 
 // Offsets
 DWORD CAddress::OFFSET_RemoteSystemManager = 0;
@@ -116,6 +119,9 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 
 			VAR_ServerAuthentication = 0x4fc470;
 			VAR_NetVersion = 0xfde;
+#ifdef SAMP_03DL
+			VAR_ArtInfo = 0x4fc444;
+#endif
 
 			OFFSET_RemoteSystemManager = 0x33c;
 			OFFSET_RemoteSystemSize = 0xcb8;
@@ -145,6 +151,9 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 			// Variables
 			VAR_ServerAuthentication = *(DWORD *)(CUtils::FindPattern("\x8B\x4C\x24\x28\xA1\xE8\x5F\x4F\x00\x81\xF1\xD9\x0F\x00\x00\x3B\xC1", "xxxxx????xx????xx") + 5);
 			VAR_NetVersion = *(DWORD *)(CUtils::FindPattern("\x8B\x4C\x24\x28\xA1\xE8\x5F\x4F\x00\x81\xF1\xD9\x0F\x00\x00\x3B\xC1", "xxxxx????xx????xx") + 11);
+#ifdef SAMP_03DL
+			VAR_ArtInfo = *(DWORD *)(CUtils::FindPattern("\xA3\x44\xC4\x4F\x00\xE8\x80\x4A\x00\x00\x68\xD8\x3E\x00\x00\xE8\xC7\xE6\x00\x00", "xxxxxxxxxxxxxxxxxxxx") + 1);
+#endif
 
 			// Offsets
 			OFFSET_RemoteSystemManager = *(DWORD *)(CUtils::FindPattern("\x8B\x96\x3C\x03\x00\x00\x8A\x0C\x17\x84\xC9\x8D\x04\x17", "xx????xx?xxxx?") + 2);
@@ -231,6 +240,9 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 
 			VAR_ServerAuthentication = 0x81b7d2c;
 			VAR_NetVersion = 0xfde;
+#ifdef SAMP_03DL
+			VAR_ArtInfo = 0x81d7934;
+#endif
 
 			OFFSET_RemoteSystemManager = 0x334;
 			OFFSET_RemoteSystemSize = 0xc69;
@@ -260,6 +272,9 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 			// Variables
 			VAR_ServerAuthentication = *(DWORD *)(CUtils::FindPattern("\x8B\x85\x7C\xFC\xFF\xFF\x35", "xxxxxxx") + 13);
 			VAR_NetVersion = *(DWORD *)(CUtils::FindPattern("\x8B\x85\x7C\xFC\xFF\xFF\x35", "xxxxxxx") + 7);
+#ifdef SAMP_03DL
+			VAR_ArtInfo = *(DWORD *)(CUtils::FindPattern("\x89\x3D\x34\x79\x1D\x08\xB8\xCD\x5D\x16\x08\x89\x44\x24\x04\x89\x3C\x24", "xxxxxxxxxxxxxxxxxx") + 1);
+#endif
 
 			// Offsets
 			OFFSET_RemoteSystemManager = *(DWORD *)(CUtils::FindPattern("\x8B\x87\x34\x03\x00\x00\x80\x3C\x03\x00\x74\xE6\x8D\x55\x0C\x8D\x44\x18\x01\x89\x54\x24\x04", "xx????xxxxx?xxxxxxxxxxx") + 2);
@@ -292,6 +307,9 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 	logprintf("\nPointers:");
 	logprintf("  VAR_ServerAuthentication: 0x%x", CAddress::VAR_ServerAuthentication);
 	logprintf("  VAR_NetVersion: 0x%x", CAddress::VAR_NetVersion);
+#ifdef SAMP_03DL
+	logprintf("  VAR_ArtInfo: 0x%x", CAddress::VAR_ArtInfo);
+#endif
 
 	logprintf("\nOffsets:");
 	logprintf("  OFFSET_RemoteSystemManager: 0x%x", CAddress::OFFSET_RemoteSystemManager);

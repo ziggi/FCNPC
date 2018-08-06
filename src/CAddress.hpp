@@ -55,6 +55,9 @@ public:
 	// Variables
 	static DWORD           VAR_ServerAuthentication;
 	static DWORD           VAR_NetVersion;
+#ifdef SAMP_03DL
+	static DWORD           VAR_ArtInfo;
+#endif
 
 	// Offsets
 	static DWORD           OFFSET_RemoteSystemManager;

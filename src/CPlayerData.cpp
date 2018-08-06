@@ -15,6 +15,9 @@ struct CPlayer;
 
 extern CServer  *pServer;
 extern CNetGame *pNetGame;
+#ifdef SAMP_03DL
+extern CArtInfo *pArtInfo;
+#endif
 
 CPlayerData::CPlayerData(WORD playerId, char *szName)
 {
@@ -1145,7 +1148,7 @@ void CPlayerData::SetSkin(int iSkin)
 
 #ifdef SAMP_03DL
 	if (iSkin > 20000) {
-		m_pPlayer->spawn.iSkin = 0; // TODO get base id
+		m_pPlayer->spawn.iSkin = CFunctions::GetSkinBaseID(iSkin);
 		m_pPlayer->spawn.dwCustomSkin = iSkin;
 	} else {
 		m_pPlayer->spawn.iSkin = iSkin;
