@@ -56,7 +56,7 @@ public:
 
 	void SetDisonnectedPlayer(WORD wPlayerId)
 	{
-		SetRemoteStatus(wPlayerId, UNASSIGNED_PLAYER_ID, false, 0, 0, 0);
+		SetRemoteStatus(wPlayerId, UNASSIGNED_PLAYER_ID, true, 0, 0, 0);
 	};
 
 };
