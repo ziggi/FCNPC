@@ -769,13 +769,16 @@ void CPlayerData::Process()
 			} else if (dwMoveTick > m_dwMoveTime + m_dwMoveStopDelay) {
 				StopMoving();
 
-				CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[m_wVehicleToEnter];
-				CVector vecDestination;
+				CVehicle *pVehicle = NULL;
 				float fDistance = 0.0f;
 
-				if (pVehicle) {
-					vecDestination = pServer->GetVehicleSeatPos(pVehicle, m_byteSeatToEnter);
-					fDistance = CMath::GetDistanceBetween3DPoints(m_pPlayer->vecPosition, vecDestination);
+				if (m_wVehicleToEnter != INVALID_VEHICLE_ID) {
+					pVehicle = pNetGame->pVehiclePool->pVehicle[m_wVehicleToEnter];
+
+					if (pVehicle) {
+						CVector vecDestination = pServer->GetVehicleSeatPos(pVehicle, m_byteSeatToEnter);
+						fDistance = CMath::GetDistanceBetween3DPoints(m_pPlayer->vecPosition, vecDestination);
+					}
 				}
 
 				// Validate the vehicle and check distance
