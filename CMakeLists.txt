@@ -64,7 +64,7 @@ include_directories (
 
 # subhook
 set (SUBHOOK_STATIC true)
-set (SUBHOOK_NO_TESTS true)
+set (SUBHOOK_TESTS false)
 add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/subhook
 )
