@@ -174,21 +174,21 @@ int __attribute__((__cdecl__)) HOOK_CGameMode__OnGameModeExit(CGameMode *thisptr
 
 void CHooks::InstallHooks()
 {
-	CGameMode__OnPlayerGiveDamage_hook = subhook_new(reinterpret_cast<void*>(CAddress::FUNC_CGameMode__OnPlayerGiveDamage), reinterpret_cast<void*>(HOOK_CGameMode__OnPlayerGiveDamage), static_cast<subhook_options_t>(NULL));
+	CGameMode__OnPlayerGiveDamage_hook = subhook_new(reinterpret_cast<void*>(CAddress::FUNC_CGameMode__OnPlayerGiveDamage), reinterpret_cast<void*>(HOOK_CGameMode__OnPlayerGiveDamage), static_cast<subhook_flags_t>(NULL));
 	subhook_install(CGameMode__OnPlayerGiveDamage_hook);
 
-	CGameMode__OnPlayerTakeDamage_hook = subhook_new(reinterpret_cast<void*>(CAddress::FUNC_CGameMode__OnPlayerTakeDamage), reinterpret_cast<void*>(HOOK_CGameMode__OnPlayerTakeDamage), static_cast<subhook_options_t>(NULL));
+	CGameMode__OnPlayerTakeDamage_hook = subhook_new(reinterpret_cast<void*>(CAddress::FUNC_CGameMode__OnPlayerTakeDamage), reinterpret_cast<void*>(HOOK_CGameMode__OnPlayerTakeDamage), static_cast<subhook_flags_t>(NULL));
 	subhook_install(CGameMode__OnPlayerTakeDamage_hook);
 
-	CGameMode__OnPlayerWeaponShot_hook = subhook_new(reinterpret_cast<void*>(CAddress::FUNC_CGameMode__OnPlayerWeaponShot), reinterpret_cast<void*>(HOOK_CGameMode__OnPlayerWeaponShot), static_cast<subhook_options_t>(NULL));
+	CGameMode__OnPlayerWeaponShot_hook = subhook_new(reinterpret_cast<void*>(CAddress::FUNC_CGameMode__OnPlayerWeaponShot), reinterpret_cast<void*>(HOOK_CGameMode__OnPlayerWeaponShot), static_cast<subhook_flags_t>(NULL));
 	subhook_install(CGameMode__OnPlayerWeaponShot_hook);
 
-	CGameMode__OnPlayerStreamIn_hook = subhook_new(reinterpret_cast<void*>(CAddress::FUNC_CGameMode__OnPlayerStreamIn), reinterpret_cast<void*>(HOOK_CGameMode__OnPlayerStreamIn), static_cast<subhook_options_t>(NULL));
+	CGameMode__OnPlayerStreamIn_hook = subhook_new(reinterpret_cast<void*>(CAddress::FUNC_CGameMode__OnPlayerStreamIn), reinterpret_cast<void*>(HOOK_CGameMode__OnPlayerStreamIn), static_cast<subhook_flags_t>(NULL));
 	subhook_install(CGameMode__OnPlayerStreamIn_hook);
 
-	CGameMode__OnPlayerStreamOut_hook = subhook_new(reinterpret_cast<void*>(CAddress::FUNC_CGameMode__OnPlayerStreamOut), reinterpret_cast<void*>(HOOK_CGameMode__OnPlayerStreamOut), static_cast<subhook_options_t>(NULL));
+	CGameMode__OnPlayerStreamOut_hook = subhook_new(reinterpret_cast<void*>(CAddress::FUNC_CGameMode__OnPlayerStreamOut), reinterpret_cast<void*>(HOOK_CGameMode__OnPlayerStreamOut), static_cast<subhook_flags_t>(NULL));
 	subhook_install(CGameMode__OnPlayerStreamOut_hook);
 
-	CGameMode__OnGameModeExit_hook = subhook_new(reinterpret_cast<void*>(CAddress::FUNC_CGameMode__OnGameModeExit), reinterpret_cast<void*>(HOOK_CGameMode__OnGameModeExit), static_cast<subhook_options_t>(NULL));
+	CGameMode__OnGameModeExit_hook = subhook_new(reinterpret_cast<void*>(CAddress::FUNC_CGameMode__OnGameModeExit), reinterpret_cast<void*>(HOOK_CGameMode__OnGameModeExit), static_cast<subhook_flags_t>(NULL));
 	subhook_install(CGameMode__OnGameModeExit_hook);
 }
