@@ -48,7 +48,7 @@ public:
 	static CVector *GetVehicleModelInfoEx(int iModelID, int iInfoType);
 	static WORD GetMaxPlayers();
 	static WORD GetMaxNPC();
-	static void PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE byteWeaponId, const CVector &vecPoint, const CVector &vecOffsetFrom, bool bIsHit);
+
 #ifdef SAMP_03DL
 	static int GetSkinBaseID(DWORD dwSkinId);
 #endif
@@ -64,6 +64,8 @@ public:
 	static PlayerID GetPlayerIDFromIndex(int index);
 	static int GetIndexFromPlayerID(PlayerID playerId);
 
+	static void PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE byteWeaponId, const CVector &vecPoint, const CVector &vecOffsetFrom, bool bIsHit);
+
 	// Functions
 	static ClientJoin_RPC_t                 pfn__ClientJoin_RPC;
 	static CPlayerPool__DeletePlayer_t      pfn__CPlayerPool__DeletePlayer;
@@ -78,6 +80,10 @@ public:
 	static RakNet__Receive_t                pfn__RakNet__Receive;
 	static RakNet__GetPlayerIDFromIndex_t   pfn__RakNet__GetPlayerIDFromIndex;
 	static RakNet__GetIndexFromPlayerID_t   pfn__RakNet__GetIndexFromPlayerID;
+
+private:
+
+
 };
 
 #endif
