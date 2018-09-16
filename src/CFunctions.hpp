@@ -89,6 +89,7 @@ private:
 	static WORD GetClosestVehicleInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, float &fDistance);
 	static WORD GetClosestObjectInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, float &fDistance);
 	static WORD GetClosestPlayerObjectInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, float &fDistance, WORD wPlayerId);
+	static WORD GetClosestMapPointInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, float &fDistance);
 
 };
 

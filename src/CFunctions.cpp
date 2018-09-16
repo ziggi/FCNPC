@@ -307,8 +307,9 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[bulletSyncDataTarget.wHitID];
 			if (pPlayer) {
 				bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pPlayer->vecPosition);
-				//bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pNPC->vecPosition);
 				bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget - pPlayer->vecPosition;
+				//bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pNPC->vecPosition);
+				//bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget - pNPC->vecPosition;
 			}
 		}
 		break;
@@ -347,7 +348,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	// Call FCNPC_OnWeaponShot
 	int send = CCallbackManager::OnWeaponShot(wPlayerId, bulletSyncDataTarget.byteWeaponID, bulletSyncDataTarget.byteHitType, bulletSyncDataTarget.wHitID, bulletSyncDataTarget.vecCenterOfHit);
 	if (send != 0) {
-		// If it is an NPC
+		// If the target is an NPC
 		if (bIsHit && bulletSyncDataTarget.byteHitType == BULLET_HIT_TYPE_PLAYER && pServer->GetPlayerManager()->IsNpcConnected(bulletSyncDataTarget.wHitID)) {
 			CPlayerData *pHitPlayerData = pServer->GetPlayerManager()->GetAt(bulletSyncDataTarget.wHitID);
 
@@ -397,7 +398,7 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 	float fClosestActorDistance = 0.0;
 	WORD wClosestActor = GetClosestActorInBetween(vecHitOrigin, vecHitTarget, fClosestActorDistance);
 	if (wClosestActor != INVALID_ACTOR_ID && (wClosestEntity == 0xFFFF || fClosestActorDistance < fClosestEntityDistance)) {
-		byteHitType = BULLET_HIT_TYPE_NONE; //Actors don't have a hit type
+		byteHitType = BULLET_HIT_TYPE_NONE; //Actors don't have a hit type, this is conform with the SA-MP native OnPlayerWeaponShot
 		fClosestEntityDistance = fClosestActorDistance;
 		wClosestEntity = wClosestActor;
 	}
@@ -427,6 +428,15 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 		byteHitType = BULLET_HIT_TYPE_PLAYER_OBJECT;
 		fClosestEntityDistance = fClosestPlayerObjectDistance;
 		wClosestEntity = wClosestPlayerObject;
+	}
+
+	//Check if a map point is in between the origin and the target
+	float fClosestMapPointDistance = 0.0;
+	WORD wClosestMapPoint = GetClosestMapPointInBetween(vecHitOrigin, vecHitTarget, fClosestMapPointDistance);
+	if (wClosestMapPoint != 0 && (wClosestEntity == 0xFFFF || fClosestMapPointDistance < fClosestEntityDistance)) {
+		byteHitType = BULLET_HIT_TYPE_OBJECT;
+		fClosestEntityDistance = fClosestMapPointDistance;
+		wClosestEntity = wClosestMapPoint;
 	}
 
 	return wClosestEntity;
@@ -634,4 +644,18 @@ WORD CFunctions::GetClosestPlayerObjectInBetween(const CVector &vecHitOrigin, co
 	}
 
 	return wClosestPlayerObject;
+}
+
+WORD CFunctions::GetClosestMapPointInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, float &fDistance)
+{
+	//TODO
+	//- GetClosestPlayerObjectInBetween only checks for player objects of the shooter, not the target
+	//- implement GetClosestMapPointInBetween when ColAndreas is enabled, otherwise return nothing (0)
+	//- improve GetClosestObjectInBetween and GetClosestPlayerObjectInBetween when ColAndreas is enabled, otherwise fall back on existing code
+	//- add FCNPC_AimAt, FCNPC_AimAtPlayer, FCNPC_TriggerWeaponShot extra parameter that disables inbetween checking for certain types (bit masking)
+	//- add FCNPC_AimAt, FCNPC_AimAtPlayer, FCNPC_TriggerWeaponShot extra parameter with same effect as MOVE_MODE_X, called SHOOT_MODE_X
+	//- add SP weapon ranges in CWeaponInfo and use these ranges instead of MAX_DAMAGE_DISTANCE, see column 'weaponRange' in weapon.dat
+	//- add custom hit radii for each entity type and use these ranges instead of MAX_HIT_RADIUS
+
+	return 0;
 }
