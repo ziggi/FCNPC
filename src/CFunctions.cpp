@@ -423,7 +423,7 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 
 	// Check if a player object is in between the origin and the target
 	float fClosestPlayerObjectDistance = 0.0;
-	WORD wClosestPlayerObject = GetClosestPlayerObjectInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestPlayerObjectDistance, wPlayerId);
+	WORD wClosestPlayerObject = GetClosestPlayerObjectInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestPlayerObjectDistance, wPlayerId); //Only checks for player objects of the shooter, not the target
 	if (wClosestPlayerObject != INVALID_OBJECT_ID && (wClosestEntity == 0xFFFF || fClosestPlayerObjectDistance < fClosestEntityDistance)) {
 		byteHitType = BULLET_HIT_TYPE_PLAYER_OBJECT;
 		fClosestEntityDistance = fClosestPlayerObjectDistance;
@@ -616,7 +616,7 @@ WORD CFunctions::GetClosestPlayerObjectInBetween(const CVector &vecHitOrigin, co
 {
 	WORD wClosestPlayerObject = INVALID_OBJECT_ID;
 
-	// Loop through all the player objects
+	// Loop through all the player objects of the shooter
 	for (WORD i = 1; i < MAX_OBJECTS; i++) { //Player object IDs start at 1
 
 		// Validate the player object
@@ -649,7 +649,6 @@ WORD CFunctions::GetClosestPlayerObjectInBetween(const CVector &vecHitOrigin, co
 WORD CFunctions::GetClosestMapPointInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float &fDistance)
 {
 	//TODO
-	//- GetClosestPlayerObjectInBetween only checks for player objects of the shooter, not the target
 	//- implement GetClosestMapPointInBetween when ColAndreas is enabled, otherwise return nothing (0)
 	//- improve GetClosestObjectInBetween and GetClosestPlayerObjectInBetween when ColAndreas is enabled, otherwise fall back on existing code
 	//- add FCNPC_AimAt, FCNPC_AimAtPlayer, FCNPC_TriggerWeaponShot extra parameter that disables inbetween checking for certain types (bit masking)
