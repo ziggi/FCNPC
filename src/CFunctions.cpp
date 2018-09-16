@@ -272,18 +272,16 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 
 	// Create the target SendBullet structure
 	CBulletSyncData bulletSyncDataTarget;
-	if (bIsHit) {
-		bulletSyncDataTarget.wHitID = wHitId;
-		bulletSyncDataTarget.byteHitType = byteHitType;
-	}
-	else {
-		bulletSyncDataTarget.wHitID = INVALID_PLAYER_ID;
-		bulletSyncDataTarget.byteHitType = BULLET_HIT_TYPE_NONE;
-	}
+	bulletSyncDataTarget.wHitID = wHitId;
+	bulletSyncDataTarget.byteHitType = byteHitType;
 	bulletSyncDataTarget.byteWeaponID = byteWeaponId;
-	bulletSyncDataTarget.vecCenterOfHit = CVector();
 	bulletSyncDataTarget.vecHitOrigin = vecOrigin;
 	bulletSyncDataTarget.vecHitTarget = vecPoint;
+	bulletSyncDataTarget.vecCenterOfHit = CVector();
+	if (!bIsHit) {
+		bulletSyncDataTarget.wHitID = 0xFFFF; // Using 0xFFFF instead of INVALID_PLAYER_ID, because the hitId is not necessarily a player
+		bulletSyncDataTarget.byteHitType = BULLET_HIT_TYPE_NONE;
+	}
 
 	// Find player in vecPoint
 	if (bIsHit && bulletSyncDataTarget.byteHitType == BULLET_HIT_TYPE_NONE) {
