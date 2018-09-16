@@ -284,12 +284,12 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	}
 
 	// Check if something is in between the origin and the target
-	BYTE byteClosestEntityHitType = BULLET_HIT_TYPE_NONE;
+	/*BYTE byteClosestEntityHitType = BULLET_HIT_TYPE_NONE;
 	WORD wClosestEntity = GetClosestEntityInBetween(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, byteClosestEntityHitType, wPlayerId, bulletSyncDataTarget.wHitID);
 	if (wClosestEntity != 0xFFFF) {
 		bulletSyncDataTarget.wHitID = wClosestEntity;
 		bulletSyncDataTarget.byteHitType = byteClosestEntityHitType;
-	}
+	}*/
 
 	// Get center of hit
 	switch (bulletSyncDataTarget.byteHitType) {
