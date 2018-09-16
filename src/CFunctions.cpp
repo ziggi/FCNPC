@@ -284,9 +284,9 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	}
 
 	// Check if something is in between the origin and the target
-	/*BYTE byteClosestEntityHitType = BULLET_HIT_TYPE_NONE;
+	BYTE byteClosestEntityHitType = BULLET_HIT_TYPE_NONE;
 	WORD wClosestEntity = GetClosestEntityInBetween(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, bulletSyncDataTarget.byteWeaponID, byteClosestEntityHitType, wPlayerId, bulletSyncDataTarget.wHitID);
-	if (wClosestEntity != 0xFFFF) {
+	/*if (wClosestEntity != 0xFFFF) {
 		bulletSyncDataTarget.wHitID = wClosestEntity;
 		bulletSyncDataTarget.byteHitType = byteClosestEntityHitType;
 	}*/
@@ -654,7 +654,6 @@ WORD CFunctions::GetClosestMapPointInBetween(const CVector &vecHitOrigin, const 
 	//- improve GetClosestObjectInBetween and GetClosestPlayerObjectInBetween when ColAndreas is enabled, otherwise fall back on existing code
 	//- add FCNPC_AimAt, FCNPC_AimAtPlayer, FCNPC_TriggerWeaponShot extra parameter that disables inbetween checking for certain types (bit masking)
 	//- add FCNPC_AimAt, FCNPC_AimAtPlayer, FCNPC_TriggerWeaponShot extra parameter with same effect as MOVE_MODE_X, called SHOOT_MODE_X
-	//- add custom hit radii for each entity type and use these ranges instead of MAX_HIT_RADIUS
 
 	return 0;
 }
