@@ -293,27 +293,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	bulletSyncDataInBetween.byteHitType = BULLET_HIT_TYPE_NONE;
 
 	// Check if something is in between the origin and the target
-	for (WORD i = 0; i <= pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
-		if (!pServer->GetPlayerManager()->IsPlayerConnected(i) || wPlayerId == i) {
-			continue;
-		}
-
-		CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[i];
-		if (!pPlayer) {
-			continue;
-		}
-
-		bool bIsPlayerOnRay = CMath::GetDistanceFromRayToPoint(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pPlayer->vecPosition) < MAX_HIT_RADIUS;
-		bool bIsPlayerInDamageRange = bIsPlayerOnRay && CMath::GetDistanceBetween3DPoints(bulletSyncDataTarget.vecHitOrigin, pPlayer->vecPosition) < MAX_DAMAGE_DISTANCE;
-
-		if (bIsPlayerOnRay && bIsPlayerInDamageRange) {
-			bulletSyncDataInBetween.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pPlayer->vecPosition);
-			bulletSyncDataInBetween.vecCenterOfHit = bulletSyncDataInBetween.vecHitTarget;
-			bulletSyncDataInBetween.wHitID = i;
-			bulletSyncDataInBetween.byteHitType = BULLET_HIT_TYPE_PLAYER;
-			break; //TODO get closest player, not player with lowest id
-		}
-	}
+	GetClosestPlayerInBetween(wPlayerId, bulletSyncDataTarget.wHitID, bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, bulletSyncDataInBetween);
 
 	// If something is in between the origin and the target, make that something the target
 	if (bulletSyncDataInBetween.wHitID != 0xFFFF) {
@@ -384,5 +364,41 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 
 		// Send it
 		CFunctions::GlobalPacket(&bsSend);
+	}
+}
+
+void CFunctions::GetClosestPlayerInBetween(WORD wPlayerId, WORD wTargetId, const CVector &vecHitOrigin, const CVector &vecHitTarget, CBulletSyncData &bulletSyncDataInBetween) {
+	WORD wClosestPlayer = INVALID_PLAYER_ID;
+	float fClosestPlayerDistance = 0.0;
+
+	// Loop through all the players
+	for (WORD i = 0; i <= pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
+
+		// Validate the player
+		CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[i];
+		if (wPlayerId == i || wTargetId == i || !pPlayer || !pServer->GetPlayerManager()->IsPlayerConnected(i) || pServer->GetPlayerManager()->IsNPC(i)) {
+			continue;
+		}
+
+		// Is the player on the ray
+		if (CMath::GetDistanceFromRayToPoint(vecHitOrigin, vecHitTarget, pPlayer->vecPosition) > MAX_HIT_RADIUS) {
+			continue;
+		}
+
+		// Is the player in the damage range
+		float fPlayerDistance = CMath::GetDistanceBetween3DPoints(vecHitOrigin, pPlayer->vecPosition);
+		if (fPlayerDistance > MAX_DAMAGE_DISTANCE) {
+			continue;
+		}
+
+		// Is the player closer
+		if (wClosestPlayer == INVALID_PLAYER_ID || fPlayerDistance < fClosestPlayerDistance) {
+			bulletSyncDataInBetween.vecHitTarget = CMath::GetNearestPointToRay(vecHitOrigin, vecHitTarget, pPlayer->vecPosition);
+			bulletSyncDataInBetween.vecCenterOfHit = bulletSyncDataInBetween.vecHitTarget;
+			bulletSyncDataInBetween.wHitID = i;
+			bulletSyncDataInBetween.byteHitType = BULLET_HIT_TYPE_PLAYER;
+			fClosestPlayerDistance = fPlayerDistance;
+			wClosestPlayer = i;
+		}
 	}
 }

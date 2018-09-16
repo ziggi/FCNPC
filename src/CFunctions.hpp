@@ -82,7 +82,7 @@ public:
 	static RakNet__GetIndexFromPlayerID_t   pfn__RakNet__GetIndexFromPlayerID;
 
 private:
-
+	static void GetClosestPlayerInBetween(WORD wPlayerId, WORD wTargetId, const CVector &vecHitOrigin, const CVector &vecHitTarget, CBulletSyncData &bulletSyncDataInBetween);
 
 };
 
