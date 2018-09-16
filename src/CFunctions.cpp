@@ -272,18 +272,28 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 
 	// Create the target SendBullet structure
 	CBulletSyncData bulletSyncDataTarget;
-	bulletSyncDataTarget.wHitID = wHitId;
-	bulletSyncDataTarget.byteHitType = byteHitType;
 	bulletSyncDataTarget.byteWeaponID = byteWeaponId;
 	bulletSyncDataTarget.vecHitOrigin = vecOrigin;
 	bulletSyncDataTarget.vecHitTarget = vecPoint;
 	bulletSyncDataTarget.vecCenterOfHit = CVector();
+	bulletSyncDataTarget.wHitID = wHitId;
+	bulletSyncDataTarget.byteHitType = byteHitType;
 	if (!bIsHit) {
 		bulletSyncDataTarget.wHitID = 0xFFFF; // Using 0xFFFF instead of INVALID_PLAYER_ID, because the hitId is not necessarily a player
 		bulletSyncDataTarget.byteHitType = BULLET_HIT_TYPE_NONE;
 	}
 
+	// Is something in between the origin and the target
+	CBulletSyncData bulletSyncDataInBetween;
+	bulletSyncDataInBetween.byteWeaponID = bulletSyncDataTarget.byteWeaponID;
+	bulletSyncDataInBetween.vecHitOrigin = bulletSyncDataTarget.vecHitOrigin;
+	bulletSyncDataInBetween.vecHitTarget = CVector();
+	bulletSyncDataInBetween.vecCenterOfHit = CVector();
+	bulletSyncDataTarget.wHitID = 0xFFFF;
+	bulletSyncDataTarget.byteHitType = BULLET_HIT_TYPE_NONE;
+
 	// Find player in vecPoint
+	/*
 	if (bIsHit && bulletSyncDataTarget.byteHitType == BULLET_HIT_TYPE_NONE) {
 		for (WORD i = 0; i <= pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
 			if (!pServer->GetPlayerManager()->IsPlayerConnected(i) || wPlayerId == i) {
@@ -306,6 +316,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 			}
 		}
 	}
+	*/
 
 	// Get center of hit
 	switch (bulletSyncDataTarget.byteHitType) {
