@@ -283,16 +283,16 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		bulletSyncDataTarget.byteHitType = BULLET_HIT_TYPE_NONE;
 	}
 
-	// Is something in between the origin and the target
+	// Create the inBetween SendBullet structure
 	CBulletSyncData bulletSyncDataInBetween;
 	bulletSyncDataInBetween.byteWeaponID = bulletSyncDataTarget.byteWeaponID;
 	bulletSyncDataInBetween.vecHitOrigin = bulletSyncDataTarget.vecHitOrigin;
 	bulletSyncDataInBetween.vecHitTarget = CVector();
-	bulletSyncDataInBetween.vecCenterOfHit = CVector();
-	bulletSyncDataTarget.wHitID = 0xFFFF;
-	bulletSyncDataTarget.byteHitType = BULLET_HIT_TYPE_NONE;
+	bulletSyncDataInBetween.vecCenterOfHit = bulletSyncDataInBetween.vecHitTarget;
+	bulletSyncDataInBetween.wHitID = 0xFFFF;
+	bulletSyncDataInBetween.byteHitType = BULLET_HIT_TYPE_NONE;
 
-	/*
+	// Check if something is in between the origin and the target
 	for (WORD i = 0; i <= pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
 		if (!pServer->GetPlayerManager()->IsPlayerConnected(i) || wPlayerId == i) {
 			continue;
@@ -307,13 +307,18 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		bool bIsPlayerInDamageRange = bIsPlayerOnRay && CMath::GetDistanceBetween3DPoints(bulletSyncDataTarget.vecHitOrigin, pPlayer->vecPosition) < MAX_DAMAGE_DISTANCE;
 
 		if (bIsPlayerOnRay && bIsPlayerInDamageRange) {
-			bulletSyncDataTarget.byteHitType = BULLET_HIT_TYPE_PLAYER;
-			bulletSyncDataTarget.wHitID = i;
-			bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pPlayer->vecPosition);
-			break;
+			bulletSyncDataInBetween.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pPlayer->vecPosition);
+			bulletSyncDataInBetween.vecCenterOfHit = bulletSyncDataInBetween.vecHitTarget;
+			bulletSyncDataInBetween.wHitID = i;
+			bulletSyncDataInBetween.byteHitType = BULLET_HIT_TYPE_PLAYER;
+			break; //TODO get closest player, not player with lowest id
 		}
 	}
-	*/
+
+	// If something is in between the origin and the target, make that something the target
+	if (bulletSyncDataInBetween.wHitID != 0xFFFF) {
+		bulletSyncDataTarget = bulletSyncDataInBetween; //TODO check if struct copying works (deep copy or shallow copy?)
+	}
 
 	// Get center of hit
 	switch (bulletSyncDataTarget.byteHitType) {
