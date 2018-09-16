@@ -1165,7 +1165,11 @@ void CPlayerData::SetSkin(int iSkin, bool bSendRPC)
 	// Send RPC
 	if (bSendRPC && m_pPlayer->bReadyToSpawn) {
 		RakNet::BitStream bsData;
+#ifdef SAMP_03DL
 		bsData.Write(m_pPlayer->wPlayerId);
+#else
+		bsData.Write(static_cast<DWORD>(m_pPlayer->wPlayerId));
+#endif
 		bsData.Write(m_pPlayer->spawn.iSkin);
 #ifdef SAMP_03DL
 		bsData.Write(m_pPlayer->spawn.dwCustomSkin);
