@@ -270,7 +270,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	pPlayerData->GetPosition(&vecOrigin);
 	vecOrigin += vecOffsetFrom;
 
-	// Create the SendBullet structure
+	// Create the target SendBullet structure
 	CBulletSyncData bulletSyncDataTarget;
 	if (bIsHit) {
 		bulletSyncDataTarget.wHitID = wHitId;
@@ -285,7 +285,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	bulletSyncDataTarget.vecHitOrigin = vecOrigin;
 	bulletSyncDataTarget.vecHitTarget = vecPoint;
 
-	// find player in vecPoint
+	// Find player in vecPoint
 	if (bIsHit && bulletSyncDataTarget.byteHitType == BULLET_HIT_TYPE_NONE) {
 		for (WORD i = 0; i <= pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
 			if (!pServer->GetPlayerManager()->IsPlayerConnected(i) || wPlayerId == i) {
@@ -309,7 +309,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		}
 	}
 
-	// get center of hit
+	// Get center of hit
 	switch (bulletSyncDataTarget.byteHitType) {
 	case BULLET_HIT_TYPE_NONE:
 		bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget;
@@ -348,13 +348,13 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		break;
 	}
 
-	// update bullet sync data
+	// Update bullet sync data
 	pPlayerData->SetBulletSync(&bulletSyncDataTarget);
 
-	// call FCNPC_OnWeaponShot
+	// Call FCNPC_OnWeaponShot
 	int send = CCallbackManager::OnWeaponShot(wPlayerId, bulletSyncDataTarget.byteWeaponID, bulletSyncDataTarget.byteHitType, bulletSyncDataTarget.wHitID, bulletSyncDataTarget.vecCenterOfHit);
 	if (send != 0) {
-		// if it is a NPC
+		// If it is a NPC
 		if (bIsHit && bulletSyncDataTarget.byteHitType == BULLET_HIT_TYPE_PLAYER && pServer->GetPlayerManager()->IsNpcConnected(bulletSyncDataTarget.wHitID)) {
 			CPlayerData *pHitPlayerData = pServer->GetPlayerManager()->GetAt(bulletSyncDataTarget.wHitID);
 
