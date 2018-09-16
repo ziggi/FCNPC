@@ -297,7 +297,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 
 	// If something is in between the origin and the target, make that something the target
 	if (bulletSyncDataInBetween.wHitID != 0xFFFF) {
-		bulletSyncDataTarget = bulletSyncDataInBetween; //TODO check if struct copying works (deep copy or shallow copy?)
+		bulletSyncDataTarget = bulletSyncDataInBetween;
 	}
 
 	// Get center of hit
