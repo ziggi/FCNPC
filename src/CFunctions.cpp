@@ -292,28 +292,25 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	bulletSyncDataTarget.wHitID = 0xFFFF;
 	bulletSyncDataTarget.byteHitType = BULLET_HIT_TYPE_NONE;
 
-	// Find player in vecPoint
 	/*
-	if (bIsHit && bulletSyncDataTarget.byteHitType == BULLET_HIT_TYPE_NONE) {
-		for (WORD i = 0; i <= pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
-			if (!pServer->GetPlayerManager()->IsPlayerConnected(i) || wPlayerId == i) {
-				continue;
-			}
+	for (WORD i = 0; i <= pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
+		if (!pServer->GetPlayerManager()->IsPlayerConnected(i) || wPlayerId == i) {
+			continue;
+		}
 
-			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[i];
-			if (!pPlayer) {
-				continue;
-			}
+		CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[i];
+		if (!pPlayer) {
+			continue;
+		}
 
-			bool bIsPlayerOnRay = CMath::GetDistanceFromRayToPoint(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pPlayer->vecPosition) < MAX_HIT_RADIUS;
-			bool bIsPlayerInDamageRange = bIsPlayerOnRay && CMath::GetDistanceBetween3DPoints(bulletSyncDataTarget.vecHitOrigin, pPlayer->vecPosition) < MAX_DAMAGE_DISTANCE;
+		bool bIsPlayerOnRay = CMath::GetDistanceFromRayToPoint(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pPlayer->vecPosition) < MAX_HIT_RADIUS;
+		bool bIsPlayerInDamageRange = bIsPlayerOnRay && CMath::GetDistanceBetween3DPoints(bulletSyncDataTarget.vecHitOrigin, pPlayer->vecPosition) < MAX_DAMAGE_DISTANCE;
 
-			if (bIsPlayerOnRay && bIsPlayerInDamageRange) {
-				bulletSyncDataTarget.byteHitType = BULLET_HIT_TYPE_PLAYER;
-				bulletSyncDataTarget.wHitID = i;
-				bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pPlayer->vecPosition);
-				break;
-			}
+		if (bIsPlayerOnRay && bIsPlayerInDamageRange) {
+			bulletSyncDataTarget.byteHitType = BULLET_HIT_TYPE_PLAYER;
+			bulletSyncDataTarget.wHitID = i;
+			bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pPlayer->vecPosition);
+			break;
 		}
 	}
 	*/
