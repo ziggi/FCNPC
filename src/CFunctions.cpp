@@ -297,13 +297,13 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 				continue;
 			}
 
-			bool bIsPlayerOnRay = CMath::GetDistanceFromRayToPoint(vecOrigin, vecPoint, pPlayer->vecPosition) < MAX_HIT_RADIUS;
-			bool bIsPlayerInDamageRange = bIsPlayerOnRay && CMath::GetDistanceBetween3DPoints(vecOrigin, pPlayer->vecPosition) < MAX_DAMAGE_DISTANCE;
+			bool bIsPlayerOnRay = CMath::GetDistanceFromRayToPoint(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pPlayer->vecPosition) < MAX_HIT_RADIUS;
+			bool bIsPlayerInDamageRange = bIsPlayerOnRay && CMath::GetDistanceBetween3DPoints(bulletSyncDataTarget.vecHitOrigin, pPlayer->vecPosition) < MAX_DAMAGE_DISTANCE;
 
 			if (bIsPlayerOnRay && bIsPlayerInDamageRange) {
 				bulletSyncDataTarget.byteHitType = BULLET_HIT_TYPE_PLAYER;
 				bulletSyncDataTarget.wHitID = i;
-				bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(vecOrigin, vecPoint, pPlayer->vecPosition);
+				bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pPlayer->vecPosition);
 				break;
 			}
 		}
