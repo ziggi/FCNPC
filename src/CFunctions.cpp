@@ -323,7 +323,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		}
 		break;
 	case BULLET_HIT_TYPE_OBJECT:
-		if (bulletSyncDataTarget.wHitID >= 0 && bulletSyncDataTarget.wHitID < MAX_OBJECTS) {
+		if (bulletSyncDataTarget.wHitID >= 1 && bulletSyncDataTarget.wHitID < MAX_OBJECTS) { //Object IDs start at 1
 			CObject *pObject = pNetGame->pObjectPool->pObjects[bulletSyncDataTarget.wHitID];
 			if (pObject) {
 				bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pObject->matWorld.pos);
@@ -332,7 +332,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		}
 		break;
 	case BULLET_HIT_TYPE_PLAYER_OBJECT:
-		if (bulletSyncDataTarget.wHitID >= 0 && bulletSyncDataTarget.wHitID < MAX_OBJECTS) {
+		if (bulletSyncDataTarget.wHitID >= 1 && bulletSyncDataTarget.wHitID < MAX_OBJECTS) { //Player object IDs start at 1
 			CObject *pPlayerObject = pNetGame->pObjectPool->pPlayerObjects[wPlayerId][bulletSyncDataTarget.wHitID];
 			if (pPlayerObject) {
 				bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pPlayerObject->matWorld.pos);
@@ -583,7 +583,7 @@ WORD CFunctions::GetClosestObjectInBetween(const CVector &vecHitOrigin, const CV
 	WORD wClosestObject = INVALID_OBJECT_ID;
 
 	// Loop through all the objects
-	for (WORD i = 0; i < MAX_OBJECTS; i++) {
+	for (WORD i = 1; i < MAX_OBJECTS; i++) { //Object IDs start at 1
 
 		// Validate the object
 		CObject *pObject = pNetGame->pObjectPool->pObjects[i];
@@ -617,7 +617,7 @@ WORD CFunctions::GetClosestPlayerObjectInBetween(const CVector &vecHitOrigin, co
 	WORD wClosestPlayerObject = INVALID_OBJECT_ID;
 
 	// Loop through all the player objects
-	for (WORD i = 0; i < MAX_OBJECTS; i++) {
+	for (WORD i = 1; i < MAX_OBJECTS; i++) { //Player object IDs start at 1
 
 		// Validate the player object
 		CObject *pPlayerObject = pNetGame->pObjectPool->pPlayerObjects[wPlayerId][i];
