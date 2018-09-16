@@ -283,21 +283,12 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		bulletSyncDataTarget.byteHitType = BULLET_HIT_TYPE_NONE;
 	}
 
-	// Create the inBetween SendBullet structure
-	CBulletSyncData bulletSyncDataInBetween;
-	bulletSyncDataInBetween.byteWeaponID = bulletSyncDataTarget.byteWeaponID;
-	bulletSyncDataInBetween.vecHitOrigin = bulletSyncDataTarget.vecHitOrigin;
-	bulletSyncDataInBetween.vecHitTarget = CVector();
-	bulletSyncDataInBetween.vecCenterOfHit = bulletSyncDataInBetween.vecHitTarget;
-	bulletSyncDataInBetween.wHitID = 0xFFFF;
-	bulletSyncDataInBetween.byteHitType = BULLET_HIT_TYPE_NONE;
-
 	// Check if something is in between the origin and the target
-	GetClosestEntityInBetween(wPlayerId, bulletSyncDataTarget.wHitID, bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, bulletSyncDataInBetween);
-
-	// If something is in between the origin and the target, make that something the target
-	if (bulletSyncDataInBetween.wHitID != 0xFFFF) {
-		bulletSyncDataTarget = bulletSyncDataInBetween;
+	BYTE byteClosestEntityHitType = BULLET_HIT_TYPE_NONE;
+	WORD wClosestEntity = GetClosestEntityInBetween(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, byteClosestEntityHitType, wPlayerId, bulletSyncDataTarget.wHitID);
+	if (wClosestEntity != 0xFFFF) {
+		bulletSyncDataTarget.wHitID = wClosestEntity;
+		bulletSyncDataTarget.byteHitType = byteClosestEntityHitType;
 	}
 
 	// Get center of hit
@@ -306,7 +297,8 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		if (bulletSyncDataTarget.wHitID >= 0 && bulletSyncDataTarget.wHitID < MAX_ACTORS) { //Actors don't have a hit type
 			CActor *pActor = pNetGame->pActorPool->pActor[bulletSyncDataTarget.wHitID];
 			if (pActor) {
-				bulletSyncDataTarget.vecCenterOfHit -= pActor->vecPosition;
+				bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pActor->vecPosition);
+				bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget - pActor->vecPosition;
 			}
 		}
 		break;
@@ -314,7 +306,9 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		if (bulletSyncDataTarget.wHitID >= 0 && bulletSyncDataTarget.wHitID < MAX_PLAYERS) {
 			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[bulletSyncDataTarget.wHitID];
 			if (pPlayer) {
-				bulletSyncDataTarget.vecCenterOfHit -= pPlayer->vecPosition;
+				bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pPlayer->vecPosition);
+				//bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pNPC->vecPosition);
+				bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget - pPlayer->vecPosition;
 			}
 		}
 		break;
@@ -322,7 +316,8 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		if (bulletSyncDataTarget.wHitID >= 1 && bulletSyncDataTarget.wHitID < MAX_VEHICLES) { //Vehicle IDs start at 1
 			CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[bulletSyncDataTarget.wHitID];
 			if (pVehicle) {
-				bulletSyncDataTarget.vecCenterOfHit -= pVehicle->vecPosition;
+				bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pVehicle->vecPosition);
+				bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget - pVehicle->vecPosition;
 			}
 		}
 		break;
@@ -330,7 +325,8 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		if (bulletSyncDataTarget.wHitID >= 0 && bulletSyncDataTarget.wHitID < MAX_OBJECTS) {
 			CObject *pObject = pNetGame->pObjectPool->pObjects[bulletSyncDataTarget.wHitID];
 			if (pObject) {
-				bulletSyncDataTarget.vecCenterOfHit -= pObject->matWorld.pos;
+				bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pObject->matWorld.pos);
+				bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget - pObject->matWorld.pos;
 			}
 		}
 		break;
@@ -338,7 +334,8 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		if (bulletSyncDataTarget.wHitID >= 0 && bulletSyncDataTarget.wHitID < MAX_OBJECTS) {
 			CObject *pPlayerObject = pNetGame->pObjectPool->pPlayerObjects[wPlayerId][bulletSyncDataTarget.wHitID];
 			if (pPlayerObject) {
-				bulletSyncDataTarget.vecCenterOfHit -= pPlayerObject->matWorld.pos;
+				bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pPlayerObject->matWorld.pos);
+				bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget - pPlayerObject->matWorld.pos;
 			}
 		}
 		break;
@@ -373,118 +370,71 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	}
 }
 
-void CFunctions::GetClosestEntityInBetween(WORD wPlayerId, WORD wTargetId, const CVector &vecHitOrigin, const CVector &vecHitTarget, CBulletSyncData &bulletSyncDataInBetween)
+WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE &byteHitType, WORD wPlayerId, WORD wTargetId)
 {
 	WORD wClosestEntity = 0xFFFF;
 	float fClosestEntityDistance = 0.0;
 
-	// Create the playerInBetween SendBullet structure
-	CBulletSyncData bulletSyncDataPlayerInBetween;
-	bulletSyncDataPlayerInBetween.byteWeaponID = bulletSyncDataInBetween.byteWeaponID;
-	bulletSyncDataPlayerInBetween.vecHitOrigin = bulletSyncDataInBetween.vecHitOrigin;
-	bulletSyncDataPlayerInBetween.vecHitTarget = CVector();
-	bulletSyncDataPlayerInBetween.vecCenterOfHit = bulletSyncDataPlayerInBetween.vecHitTarget;
-	bulletSyncDataPlayerInBetween.wHitID = 0xFFFF;
-	bulletSyncDataPlayerInBetween.byteHitType = BULLET_HIT_TYPE_NONE;
-
 	// Check if a player is in between the origin and the target
-	GetClosestPlayerInBetween(wPlayerId, wTargetId, vecHitOrigin, vecHitTarget, bulletSyncDataPlayerInBetween);
-	if (bulletSyncDataPlayerInBetween.wHitID != INVALID_PLAYER_ID && (wClosestEntity == 0xFFFF || fClosestPlayerDistance < fClosestEntityDistance)) {
-		bulletSyncDataInBetween = bulletSyncDataPlayerInBetween;
+	float fClosestPlayerDistance = 0.0;
+	WORD wClosestPlayer = GetClosestPlayerInBetween(vecHitOrigin, vecHitTarget, fClosestPlayerDistance, wPlayerId, wTargetId);
+	if (wClosestPlayer != INVALID_PLAYER_ID && (wClosestEntity == 0xFFFF || fClosestPlayerDistance < fClosestEntityDistance)) {
+		byteHitType = BULLET_HIT_TYPE_PLAYER;
 		fClosestEntityDistance = fClosestPlayerDistance;
-		wClosestEntity = bulletSyncDataPlayerInBetween.wHitID;
+		wClosestEntity = wClosestPlayer;
 	}
-
-	// Create the npcInBetween SendBullet structure
-	CBulletSyncData bulletSyncDataNPCInBetween;
-	bulletSyncDataNPCInBetween.byteWeaponID = bulletSyncDataInBetween.byteWeaponID;
-	bulletSyncDataNPCInBetween.vecHitOrigin = bulletSyncDataInBetween.vecHitOrigin;
-	bulletSyncDataNPCInBetween.vecHitTarget = CVector();
-	bulletSyncDataNPCInBetween.vecCenterOfHit = bulletSyncDataNPCInBetween.vecHitTarget;
-	bulletSyncDataNPCInBetween.wHitID = 0xFFFF;
-	bulletSyncDataNPCInBetween.byteHitType = BULLET_HIT_TYPE_NONE;
 
 	// Check if an NPC is in between the origin and the target
-	GetClosestNPCInBetween(wPlayerId, wTargetId, vecHitOrigin, vecHitTarget, bulletSyncDataNPCInBetween);
-	if (bulletSyncDataNPCInBetween.wHitID != INVALID_PLAYER_ID && (wClosestEntity == 0xFFFF || fClosestNPCDistance < fClosestEntityDistance)) {
-		bulletSyncDataInBetween = bulletSyncDataNPCInBetween;
+	float fClosestNPCDistance = 0.0;
+	WORD wClosestNPC = GetClosestNPCInBetween(vecHitOrigin, vecHitTarget, fClosestNPCDistance, wPlayerId, wTargetId); //Separate function in case we need to handle NPCs differently form players in the future
+	if (wClosestNPC != INVALID_PLAYER_ID && (wClosestEntity == 0xFFFF || fClosestNPCDistance < fClosestEntityDistance)) {
+		byteHitType = BULLET_HIT_TYPE_PLAYER;
 		fClosestEntityDistance = fClosestNPCDistance;
-		wClosestEntity = bulletSyncDataNPCInBetween.wHitID;
+		wClosestEntity = wClosestNPC;
 	}
-
-	// Create the actorInBetween SendBullet structure
-	CBulletSyncData bulletSyncDataActorInBetween;
-	bulletSyncDataActorInBetween.byteWeaponID = bulletSyncDataInBetween.byteWeaponID;
-	bulletSyncDataActorInBetween.vecHitOrigin = bulletSyncDataInBetween.vecHitOrigin;
-	bulletSyncDataActorInBetween.vecHitTarget = CVector();
-	bulletSyncDataActorInBetween.vecCenterOfHit = bulletSyncDataActorInBetween.vecHitTarget;
-	bulletSyncDataActorInBetween.wHitID = 0xFFFF;
-	bulletSyncDataActorInBetween.byteHitType = BULLET_HIT_TYPE_NONE;
 
 	// Check if an actor is in between the origin and the target
-	GetClosestActorInBetween(wPlayerId, wTargetId, vecHitOrigin, vecHitTarget, bulletSyncDataActorInBetween);
-	if (bulletSyncDataActorInBetween.wHitID != INVALID_ACTOR_ID && (wClosestEntity == 0xFFFF || fClosestActorDistance < fClosestEntityDistance)) {
-		bulletSyncDataInBetween = bulletSyncDataActorInBetween;
+	float fClosestActorDistance = 0.0;
+	WORD wClosestActor = GetClosestActorInBetween(vecHitOrigin, vecHitTarget, fClosestActorDistance);
+	if (wClosestActor != INVALID_ACTOR_ID && (wClosestEntity == 0xFFFF || fClosestActorDistance < fClosestEntityDistance)) {
+		byteHitType = BULLET_HIT_TYPE_NONE; //Actors don't have a hit type
 		fClosestEntityDistance = fClosestActorDistance;
-		wClosestEntity = bulletSyncDataActorInBetween.wHitID;
+		wClosestEntity = wClosestActor;
 	}
-
-	// Create the vehicleInBetween SendBullet structure
-	CBulletSyncData bulletSyncDataVehicleInBetween;
-	bulletSyncDataVehicleInBetween.byteWeaponID = bulletSyncDataInBetween.byteWeaponID;
-	bulletSyncDataVehicleInBetween.vecHitOrigin = bulletSyncDataInBetween.vecHitOrigin;
-	bulletSyncDataVehicleInBetween.vecHitTarget = CVector();
-	bulletSyncDataVehicleInBetween.vecCenterOfHit = bulletSyncDataVehicleInBetween.vecHitTarget;
-	bulletSyncDataVehicleInBetween.wHitID = 0xFFFF;
-	bulletSyncDataVehicleInBetween.byteHitType = BULLET_HIT_TYPE_NONE;
 
 	// Check if a vehicle is in between the origin and the target
-	GetClosestVehicleInBetween(wPlayerId, wTargetId, vecHitOrigin, vecHitTarget, bulletSyncDataVehicleInBetween);
-	if (bulletSyncDataVehicleInBetween.wHitID != INVALID_VEHICLE_ID && (wClosestEntity == 0xFFFF || fClosestVehicleDistance < fClosestEntityDistance)) {
-		bulletSyncDataInBetween = bulletSyncDataVehicleInBetween;
+	float fClosestVehicleDistance = 0.0;
+	WORD wClosestVehicle = GetClosestVehicleInBetween(vecHitOrigin, vecHitTarget, fClosestVehicleDistance);
+	if (wClosestVehicle != INVALID_VEHICLE_ID && (wClosestEntity == 0xFFFF || fClosestVehicleDistance < fClosestEntityDistance)) {
+		byteHitType = BULLET_HIT_TYPE_VEHICLE;
 		fClosestEntityDistance = fClosestVehicleDistance;
-		wClosestEntity = bulletSyncDataVehicleInBetween.wHitID;
+		wClosestEntity = wClosestVehicle;
 	}
-
-	// Create the objectInBetween SendBullet structure
-	CBulletSyncData bulletSyncDataObjectInBetween;
-	bulletSyncDataObjectInBetween.byteWeaponID = bulletSyncDataInBetween.byteWeaponID;
-	bulletSyncDataObjectInBetween.vecHitOrigin = bulletSyncDataInBetween.vecHitOrigin;
-	bulletSyncDataObjectInBetween.vecHitTarget = CVector();
-	bulletSyncDataObjectInBetween.vecCenterOfHit = bulletSyncDataObjectInBetween.vecHitTarget;
-	bulletSyncDataObjectInBetween.wHitID = 0xFFFF;
-	bulletSyncDataObjectInBetween.byteHitType = BULLET_HIT_TYPE_NONE;
 
 	// Check if an object is in between the origin and the target
-	GetClosestObjectInBetween(wPlayerId, wTargetId, vecHitOrigin, vecHitTarget, bulletSyncDataObjectInBetween);
-	if (bulletSyncDataObjectInBetween.wHitID != INVALID_OBJECT_ID && (wClosestEntity == 0xFFFF || fClosestObjectDistance < fClosestEntityDistance)) {
-		bulletSyncDataInBetween = bulletSyncDataObjectInBetween;
+	float fClosestObjectDistance = 0.0;
+	WORD wClosestObject = GetClosestObjectInBetween(vecHitOrigin, vecHitTarget, fClosestObjectDistance);
+	if (wClosestObject != INVALID_OBJECT_ID && (wClosestEntity == 0xFFFF || fClosestObjectDistance < fClosestEntityDistance)) {
+		byteHitType = BULLET_HIT_TYPE_OBJECT;
 		fClosestEntityDistance = fClosestObjectDistance;
-		wClosestEntity = bulletSyncDataObjectInBetween.wHitID;
+		wClosestEntity = wClosestObject;
 	}
-
-	// Create the playerObjectInBetween SendBullet structure
-	CBulletSyncData bulletSyncDataPlayerObjectInBetween;
-	bulletSyncDataPlayerObjectInBetween.byteWeaponID = bulletSyncDataInBetween.byteWeaponID;
-	bulletSyncDataPlayerObjectInBetween.vecHitOrigin = bulletSyncDataInBetween.vecHitOrigin;
-	bulletSyncDataPlayerObjectInBetween.vecHitTarget = CVector();
-	bulletSyncDataPlayerObjectInBetween.vecCenterOfHit = bulletSyncDataPlayerObjectInBetween.vecHitTarget;
-	bulletSyncDataPlayerObjectInBetween.wHitID = 0xFFFF;
-	bulletSyncDataPlayerObjectInBetween.byteHitType = BULLET_HIT_TYPE_NONE;
 
 	// Check if a player object is in between the origin and the target
-	GetClosestPlayerObjectInBetween(wPlayerId, wTargetId, vecHitOrigin, vecHitTarget, bulletSyncDataPlayerObjectInBetween);
-	if (bulletSyncDataPlayerObjectInBetween.wHitID != INVALID_OBJECT_ID && (wClosestEntity == 0xFFFF || fClosestPlayerObjectDistance < fClosestEntityDistance)) {
-		bulletSyncDataInBetween = bulletSyncDataPlayerObjectInBetween;
+	float fClosestPlayerObjectDistance = 0.0;
+	WORD wClosestPlayerObject = GetClosestPlayerObjectInBetween(vecHitOrigin, vecHitTarget, fClosestPlayerObjectDistance, wPlayerId);
+	if (wClosestPlayerObject != INVALID_OBJECT_ID && (wClosestEntity == 0xFFFF || fClosestPlayerObjectDistance < fClosestEntityDistance)) {
+		byteHitType = BULLET_HIT_TYPE_PLAYER_OBJECT;
 		fClosestEntityDistance = fClosestPlayerObjectDistance;
-		wClosestEntity = bulletSyncDataPlayerObjectInBetween.wHitID;
+		wClosestEntity = wClosestPlayerObject;
 	}
+
+	return wClosestEntity;
 }
 
-void CFunctions::GetClosestPlayerInBetween(WORD wPlayerId, WORD wTargetId, const CVector &vecHitOrigin, const CVector &vecHitTarget, CBulletSyncData &bulletSyncDataInBetween)
+WORD CFunctions::GetClosestPlayerInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, float &fDistance, WORD wPlayerId, WORD wTargetId)
 {
 	WORD wClosestPlayer = INVALID_PLAYER_ID;
-	float fClosestPlayerDistance = 0.0;
 
 	// Loop through all the players
 	for (WORD i = 0; i <= pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
@@ -507,21 +457,18 @@ void CFunctions::GetClosestPlayerInBetween(WORD wPlayerId, WORD wTargetId, const
 		}
 
 		// Is the player closer
-		if (wClosestPlayer == INVALID_PLAYER_ID || fPlayerDistance < fClosestPlayerDistance) {
-			bulletSyncDataInBetween.vecHitTarget = CMath::GetNearestPointToRay(vecHitOrigin, vecHitTarget, pPlayer->vecPosition);
-			bulletSyncDataInBetween.vecCenterOfHit = bulletSyncDataInBetween.vecHitTarget;
-			bulletSyncDataInBetween.wHitID = i;
-			bulletSyncDataInBetween.byteHitType = BULLET_HIT_TYPE_PLAYER;
-			fClosestPlayerDistance = fPlayerDistance;
+		if (wClosestPlayer == INVALID_PLAYER_ID || fPlayerDistance < fDistance) {
+			fDistance = fPlayerDistance;
 			wClosestPlayer = i;
 		}
 	}
+
+	return wClosestPlayer;
 }
 
-void CFunctions::GetClosestNPCInBetween(WORD wPlayerId, WORD wTargetId, const CVector &vecHitOrigin, const CVector &vecHitTarget, CBulletSyncData &bulletSyncDataInBetween)
+WORD CFunctions::GetClosestNPCInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, float &fDistance, WORD wPlayerId, WORD wTargetId)
 {
 	WORD wClosestNPC = INVALID_PLAYER_ID;
-	float fClosestNPCDistance = 0.0;
 
 	// Loop through all the NPCs
 	for (WORD i = 0; i <= pNetGame->pPlayerPool->dwPlayerPoolSize; i++) {
@@ -544,21 +491,18 @@ void CFunctions::GetClosestNPCInBetween(WORD wPlayerId, WORD wTargetId, const CV
 		}
 
 		// Is the NPC closer
-		if (wClosestNPC == INVALID_PLAYER_ID || fNPCDistance < fClosestNPCDistance) {
-			bulletSyncDataInBetween.vecHitTarget = CMath::GetNearestPointToRay(vecHitOrigin, vecHitTarget, pNPC->vecPosition);
-			bulletSyncDataInBetween.vecCenterOfHit = bulletSyncDataInBetween.vecHitTarget;
-			bulletSyncDataInBetween.wHitID = i;
-			bulletSyncDataInBetween.byteHitType = BULLET_HIT_TYPE_PLAYER;
-			fClosestNPCDistance = fNPCDistance;
+		if (wClosestNPC == INVALID_PLAYER_ID || fNPCDistance < fDistance) {
+			fDistance = fNPCDistance;
 			wClosestNPC = i;
 		}
 	}
+
+	return wClosestNPC;
 }
 
-void CFunctions::GetClosestActorInBetween(WORD wPlayerId, WORD wTargetId, const CVector &vecHitOrigin, const CVector &vecHitTarget, CBulletSyncData &bulletSyncDataInBetween)
+WORD CFunctions::GetClosestActorInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, float &fDistance)
 {
 	WORD wClosestActor = INVALID_ACTOR_ID;
-	float fClosestActorDistance = 0.0;
 
 	// Loop through all the actors
 	for (WORD i = 0; i <= pNetGame->pActorPool->dwActorPoolSize; i++) {
@@ -581,21 +525,18 @@ void CFunctions::GetClosestActorInBetween(WORD wPlayerId, WORD wTargetId, const 
 		}
 
 		// Is the actor closer
-		if (wClosestActor == INVALID_ACTOR_ID || fActorDistance < fClosestActorDistance) {
-			bulletSyncDataInBetween.vecHitTarget = CMath::GetNearestPointToRay(vecHitOrigin, vecHitTarget, pActor->vecPosition);
-			bulletSyncDataInBetween.vecCenterOfHit = bulletSyncDataInBetween.vecHitTarget;
-			bulletSyncDataInBetween.wHitID = i;
-			bulletSyncDataInBetween.byteHitType = BULLET_HIT_TYPE_NONE; //Actors don't have a hit type
-			fClosestActorDistance = fActorDistance;
+		if (wClosestActor == INVALID_ACTOR_ID || fActorDistance < fDistance) {
+			fDistance = fActorDistance;
 			wClosestActor = i;
 		}
 	}
+
+	return wClosestActor;
 }
 
-void CFunctions::GetClosestVehicleInBetween(WORD wPlayerId, WORD wTargetId, const CVector &vecHitOrigin, const CVector &vecHitTarget, CBulletSyncData &bulletSyncDataInBetween)
+WORD CFunctions::GetClosestVehicleInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, float &fDistance)
 {
 	WORD wClosestVehicle = INVALID_VEHICLE_ID;
-	float fClosestVehicleDistance = 0.0;
 
 	// Loop through all the vehicles
 	for (WORD i = 1; i <= pNetGame->pVehiclePool->dwVehiclePoolSize; i++) { //Vehicle IDs start at 1
@@ -618,21 +559,18 @@ void CFunctions::GetClosestVehicleInBetween(WORD wPlayerId, WORD wTargetId, cons
 		}
 
 		// Is the vehicle closer
-		if (wClosestVehicle == INVALID_VEHICLE_ID || fVehicleDistance < fClosestVehicleDistance) {
-			bulletSyncDataInBetween.vecHitTarget = CMath::GetNearestPointToRay(vecHitOrigin, vecHitTarget, pVehicle->vecPosition);
-			bulletSyncDataInBetween.vecCenterOfHit = bulletSyncDataInBetween.vecHitTarget;
-			bulletSyncDataInBetween.wHitID = i;
-			bulletSyncDataInBetween.byteHitType = BULLET_HIT_TYPE_VEHICLE;
-			fClosestVehicleDistance = fVehicleDistance;
+		if (wClosestVehicle == INVALID_VEHICLE_ID || fVehicleDistance < fDistance) {
+			fDistance = fVehicleDistance;
 			wClosestVehicle = i;
 		}
 	}
+
+	return wClosestVehicle;
 }
 
-void CFunctions::GetClosestObjectInBetween(WORD wPlayerId, WORD wTargetId, const CVector &vecHitOrigin, const CVector &vecHitTarget, CBulletSyncData &bulletSyncDataInBetween)
+WORD CFunctions::GetClosestObjectInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, float &fDistance)
 {
 	WORD wClosestObject = INVALID_OBJECT_ID;
-	float fClosestObjectDistance = 0.0;
 
 	// Loop through all the objects
 	for (WORD i = 0; i < MAX_OBJECTS; i++) {
@@ -655,21 +593,18 @@ void CFunctions::GetClosestObjectInBetween(WORD wPlayerId, WORD wTargetId, const
 		}
 
 		// Is the object closer
-		if (wClosestObject == INVALID_OBJECT_ID || fObjectDistance < fClosestObjectDistance) {
-			bulletSyncDataInBetween.vecHitTarget = CMath::GetNearestPointToRay(vecHitOrigin, vecHitTarget, pObject->matWorld.pos);
-			bulletSyncDataInBetween.vecCenterOfHit = bulletSyncDataInBetween.vecHitTarget;
-			bulletSyncDataInBetween.wHitID = i;
-			bulletSyncDataInBetween.byteHitType = BULLET_HIT_TYPE_OBJECT;
-			fClosestObjectDistance = fObjectDistance;
+		if (wClosestObject == INVALID_OBJECT_ID || fObjectDistance < fDistance) {
+			fDistance = fObjectDistance;
 			wClosestObject = i;
 		}
 	}
+
+	return wClosestObject;
 }
 
-void CFunctions::GetClosestPlayerObjectInBetween(WORD wPlayerId, WORD wTargetId, const CVector &vecHitOrigin, const CVector &vecHitTarget, CBulletSyncData &bulletSyncDataInBetween)
+WORD CFunctions::GetClosestPlayerObjectInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, float &fDistance, WORD wPlayerId)
 {
 	WORD wClosestPlayerObject = INVALID_OBJECT_ID;
-	float fClosestPlayerObjectDistance = 0.0;
 
 	// Loop through all the player objects
 	for (WORD i = 0; i < MAX_OBJECTS; i++) {
@@ -692,13 +627,11 @@ void CFunctions::GetClosestPlayerObjectInBetween(WORD wPlayerId, WORD wTargetId,
 		}
 
 		// Is the player object closer
-		if (wClosestPlayerObject == INVALID_OBJECT_ID || fPlayerObjectDistance < fClosestPlayerObjectDistance) {
-			bulletSyncDataInBetween.vecHitTarget = CMath::GetNearestPointToRay(vecHitOrigin, vecHitTarget, pPlayerObject->matWorld.pos);
-			bulletSyncDataInBetween.vecCenterOfHit = bulletSyncDataInBetween.vecHitTarget;
-			bulletSyncDataInBetween.wHitID = i;
-			bulletSyncDataInBetween.byteHitType = BULLET_HIT_TYPE_PLAYER_OBJECT;
-			fClosestPlayerObjectDistance = fPlayerObjectDistance;
+		if (wClosestPlayerObject == INVALID_OBJECT_ID || fPlayerObjectDistance < fDistance) {
+			fDistance = fPlayerObjectDistance;
 			wClosestPlayerObject = i;
 		}
 	}
+
+	return wClosestPlayerObject;
 }
