@@ -83,6 +83,11 @@ public:
 
 private:
 	static void GetClosestPlayerInBetween(WORD wPlayerId, WORD wTargetId, const CVector &vecHitOrigin, const CVector &vecHitTarget, CBulletSyncData &bulletSyncDataInBetween);
+	static void GetClosestNPCInBetween(WORD wPlayerId, WORD wTargetId, const CVector &vecHitOrigin, const CVector &vecHitTarget, CBulletSyncData &bulletSyncDataInBetween);
+	static void GetClosestActorInBetween(WORD wPlayerId, WORD wTargetId, const CVector &vecHitOrigin, const CVector &vecHitTarget, CBulletSyncData &bulletSyncDataInBetween);
+	static void GetClosestVehicleInBetween(WORD wPlayerId, WORD wTargetId, const CVector &vecHitOrigin, const CVector &vecHitTarget, CBulletSyncData &bulletSyncDataInBetween);
+	static void GetClosestObjectInBetween(WORD wPlayerId, WORD wTargetId, const CVector &vecHitOrigin, const CVector &vecHitTarget, CBulletSyncData &bulletSyncDataInBetween);
+	static void GetClosestPlayerObjectInBetween(WORD wPlayerId, WORD wTargetId, const CVector &vecHitOrigin, const CVector &vecHitTarget, CBulletSyncData &bulletSyncDataInBetween);
 
 };
 
