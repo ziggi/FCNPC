@@ -354,15 +354,15 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	// Call FCNPC_OnWeaponShot
 	int send = CCallbackManager::OnWeaponShot(wPlayerId, bulletSyncDataTarget.byteWeaponID, bulletSyncDataTarget.byteHitType, bulletSyncDataTarget.wHitID, bulletSyncDataTarget.vecCenterOfHit);
 	if (send != 0) {
-		// If it is a NPC
+		// If it is an NPC
 		if (bIsHit && bulletSyncDataTarget.byteHitType == BULLET_HIT_TYPE_PLAYER && pServer->GetPlayerManager()->IsNpcConnected(bulletSyncDataTarget.wHitID)) {
 			CPlayerData *pHitPlayerData = pServer->GetPlayerManager()->GetAt(bulletSyncDataTarget.wHitID);
 
 			if (pHitPlayerData && !pHitPlayerData->IsInvulnerable() && pHitPlayerData->GetState() != PLAYER_STATE_WASTED) {
-				SWeaponInfo sWeaponInfo = CWeaponInfo::GetDefaultInfo(byteWeaponId);
+				SWeaponInfo sWeaponInfo = CWeaponInfo::GetDefaultInfo(bulletSyncDataTarget.byteWeaponID);
 
-				pHitPlayerData->ProcessDamage(wPlayerId, sWeaponInfo.fDamage, byteWeaponId, BODY_PART_TORSO);
-				CCallbackManager::OnGiveDamage(wPlayerId, bulletSyncDataTarget.wHitID, byteWeaponId, BODY_PART_TORSO, sWeaponInfo.fDamage);
+				pHitPlayerData->ProcessDamage(wPlayerId, sWeaponInfo.fDamage, bulletSyncDataTarget.byteWeaponID, BODY_PART_TORSO);
+				CCallbackManager::OnGiveDamage(wPlayerId, bulletSyncDataTarget.wHitID, bulletSyncDataTarget.byteWeaponID, BODY_PART_TORSO, sWeaponInfo.fDamage);
 			}
 		}
 
