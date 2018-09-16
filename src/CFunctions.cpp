@@ -275,7 +275,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	bulletSyncDataTarget.byteWeaponID = byteWeaponId;
 	bulletSyncDataTarget.vecHitOrigin = vecOrigin;
 	bulletSyncDataTarget.vecHitTarget = vecPoint;
-	bulletSyncDataTarget.vecCenterOfHit = CVector();
+	bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget;
 	bulletSyncDataTarget.wHitID = wHitId;
 	bulletSyncDataTarget.byteHitType = byteHitType;
 	if (!bIsHit) {
@@ -321,13 +321,12 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	// Get center of hit
 	switch (bulletSyncDataTarget.byteHitType) {
 	case BULLET_HIT_TYPE_NONE:
-		bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget;
 		break;
 	case BULLET_HIT_TYPE_PLAYER:
-		if (bulletSyncDataTarget.wHitID < MAX_PLAYERS) {
+		if (bulletSyncDataTarget.wHitID >= 0 && bulletSyncDataTarget.wHitID < MAX_PLAYERS) {
 			CPlayer *pHitPlayerData = pNetGame->pPlayerPool->pPlayer[bulletSyncDataTarget.wHitID];
 			if (pHitPlayerData) {
-				bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget - pHitPlayerData->vecPosition;
+				bulletSyncDataTarget.vecCenterOfHit -= pHitPlayerData->vecPosition;
 			}
 		}
 		break;
@@ -335,7 +334,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		if (bulletSyncDataTarget.wHitID >= 1 && bulletSyncDataTarget.wHitID < MAX_VEHICLES) {
 			CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[bulletSyncDataTarget.wHitID];
 			if (pVehicle) {
-				bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget - pVehicle->vecPosition;
+				bulletSyncDataTarget.vecCenterOfHit -= pVehicle->vecPosition;
 			}
 		}
 		break;
@@ -343,7 +342,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		if (bulletSyncDataTarget.wHitID >= 1 && bulletSyncDataTarget.wHitID < MAX_OBJECTS) {
 			CObject *pObject = pNetGame->pObjectPool->pObjects[bulletSyncDataTarget.wHitID];
 			if (pObject) {
-				bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget - pObject->matWorld.pos;
+				bulletSyncDataTarget.vecCenterOfHit -= pObject->matWorld.pos;
 			}
 		}
 		break;
@@ -351,7 +350,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		if (bulletSyncDataTarget.wHitID >= 1 && bulletSyncDataTarget.wHitID < MAX_OBJECTS) {
 			CObject *pObject = pNetGame->pObjectPool->pPlayerObjects[wPlayerId][bulletSyncDataTarget.wHitID];
 			if (pObject) {
-				bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget - pObject->matWorld.pos;
+				bulletSyncDataTarget.vecCenterOfHit -= pObject->matWorld.pos;
 			}
 		}
 		break;
