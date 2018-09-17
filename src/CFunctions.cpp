@@ -313,6 +313,10 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 				bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget - pActor->vecPosition;
 			}
 		}
+		else if (bulletSyncDataTarget.wHitID == -1) { // Hit map
+			logprintf("HIT MAP");
+			bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget; // When map is hit use the target position, this is conform with the SA-MP callback OnPlayerWeaponShot
+		}
 		else { // Hit nothing
 			logprintf("HIT NOTHING");
 			bulletSyncDataTarget.vecCenterOfHit = CVector(); // When nothing is hit use 0.0, this is conform with the SA-MP callback OnPlayerWeaponShot
@@ -493,7 +497,7 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 		float fClosestMapPointDistance = 0.0;
 		WORD wClosestMapPoint = GetClosestMapPointInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestMapPointDistance);
 		if (wClosestMapPoint != 0 && (wClosestEntity == 0xFFFF || fClosestMapPointDistance < fClosestEntityDistance)) {
-			byteHitType = BULLET_HIT_TYPE_OBJECT;
+			byteHitType = BULLET_HIT_TYPE_NONE;
 			fClosestEntityDistance = fClosestMapPointDistance;
 			wClosestEntity = wClosestMapPoint;
 		}
@@ -713,9 +717,24 @@ WORD CFunctions::GetClosestPlayerObjectInBetween(const CVector &vecHitOrigin, co
 WORD CFunctions::GetClosestMapPointInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float &fDistance)
 {
 	//TODO
-	//- implement GetClosestMapPointInBetween when ColAndreas is enabled, otherwise return nothing (0)
-	//- improve GetClosestObjectInBetween and GetClosestPlayerObjectInBetween when ColAndreas is enabled, otherwise fall back on existing code
-	//- add FCNPC_AimAt, FCNPC_AimAtPlayer, FCNPC_TriggerWeaponShot extra parameter with same effect as MOVE_MODE_X, called SHOOT_MODE_X
+	//1) GetClosestMapPointInBetween:
+	//- implement when ColAndreas is enabled, otherwise return nothing (0).
+	//- currently the code handles map points when the hit type is BULLET_HIT_TYPE_NONE and the hit ID is -1.
+	//- this function should specificly check for map points only, not for global objects or custom objects!
+	//- keep in mind that bullets can penetrate water and still deal damage.
+
+	//2) GetClosestObjectInBetween:
+	//- improve when ColAndreas is enabled, otherwise fall back on existing code.
+	//- this function should specificly check for global objects only, not for custom objects or map points!
+	//- keep in mind that bullets can penetrate water and still deal damage.
+	
+	//3) GetClosestPlayerObjectInBetween:
+	//- improve when ColAndreas is enabled, otherwise fall back on existing code.
+	//- this function should specificly check for custom objects only, not for global objects or map points!
+	//- keep in mind that bullets can penetrate water and still deal damage.
+
+	//4) FCNPC_SHOOT_MODE_X:
+	//- add FCNPC_AimAt, FCNPC_AimAtPlayer, FCNPC_TriggerWeaponShot extra parameter with same effect as FCNPC_MOVE_MODE_X, called FCNPC_SHOOT_MODE_X
 
 	return 0;
 }
