@@ -310,12 +310,13 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 			if (pActor) {
 				logprintf("HIT ACTOR");
 				bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pActor->vecPosition);
-				bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget - pActor->vecPosition;
+				bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget; // When actor is hit use the actor collision position, this is conform with the SA-MP callback OnPlayerWeaponShot
 			}
 		}
 		else if (bulletSyncDataTarget.wHitID == -1) { // Hit map
 			logprintf("HIT MAP");
-			bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget; // When map is hit use the target position, this is conform with the SA-MP callback OnPlayerWeaponShot
+			//bulletSyncDataTarget.vecCenterOfHit = vecHitCollision; // When map is hit use the object collision position, this is conform with the SA-MP callback OnPlayerWeaponShot
+			bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget; //Temporary replacement
 		}
 		else { // Hit nothing
 			logprintf("HIT NOTHING");
@@ -722,6 +723,7 @@ WORD CFunctions::GetClosestMapPointInBetween(const CVector &vecHitOrigin, const 
 	//- currently the code handles map points when the hit type is BULLET_HIT_TYPE_NONE and the hit ID is -1.
 	//- this function should specificly check for map points only, not for global objects or custom objects!
 	//- keep in mind that bullets can penetrate water and still deal damage.
+	//- change the switch for map points in PlayerShoot to use the collision point instead of the target point
 
 	//2) GetClosestObjectInBetween:
 	//- improve when ColAndreas is enabled, otherwise fall back on existing code.
