@@ -82,14 +82,14 @@ public:
 	static RakNet__GetIndexFromPlayerID_t   pfn__RakNet__GetIndexFromPlayerID;
 
 private:
-	static WORD GetClosestEntityInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, BYTE &byteHitType, WORD &wPlayerObjectOwnerId, BYTE checkInBetween, WORD wPlayerId, WORD wTargetId);
+	static WORD GetClosestEntityInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, BYTE &byteHitType, WORD &wPlayerObjectOwnerId, CVector &vecHitMap, BYTE checkInBetween, WORD wPlayerId, WORD wTargetId);
 	static WORD GetClosestPlayerInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float &fDistance, WORD wPlayerId, WORD wTargetId);
 	static WORD GetClosestNPCInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float &fDistance, WORD wPlayerId, WORD wTargetId);
 	static WORD GetClosestActorInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float &fDistance);
 	static WORD GetClosestVehicleInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float &fDistance);
 	static WORD GetClosestObjectInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float &fDistance);
 	static WORD GetClosestPlayerObjectInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float &fDistance, WORD wOwnerId);
-	static WORD GetClosestMapPointInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float &fDistance);
+	static WORD GetClosestMapPointInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float &fDistance, CVector &vecHitMap);
 
 };
 

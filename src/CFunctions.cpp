@@ -296,7 +296,8 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	// If something is in between the origin and the target (we currently don't handle checking beyond the target, even when missing with leftover range)
 	BYTE byteClosestEntityHitType = BULLET_HIT_TYPE_NONE;
 	WORD wPlayerObjectOwnerId = INVALID_PLAYER_ID;
-	WORD wClosestEntity = GetClosestEntityInBetween(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, bulletSyncDataTarget.byteWeaponID, byteClosestEntityHitType, wPlayerObjectOwnerId, checkInBetween, wPlayerId, wHitId); // Pass original hit ID to correctly handle missed or out of range shots!
+	CVector vecHitMap = bulletSyncDataTarget.vecHitTarget;
+	WORD wClosestEntity = GetClosestEntityInBetween(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, bulletSyncDataTarget.byteWeaponID, byteClosestEntityHitType, wPlayerObjectOwnerId, vecHitMap, checkInBetween, wPlayerId, wHitId); // Pass original hit ID to correctly handle missed or out of range shots!
 	if (wClosestEntity != 0xFFFF) {
 		logprintf("SOMETHING IN BETWEEN SHOOTER AND TARGET");
 		bulletSyncDataTarget.wHitID = wClosestEntity;
@@ -316,8 +317,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		}
 		else if (bulletSyncDataTarget.wHitID == -1) { // Hit map
 			logprintf("HIT MAP");
-			//bulletSyncDataTarget.vecCenterOfHit = vecHitCollision; // When map is hit use the object collision position, this is conform with the SA-MP callback OnPlayerWeaponShot
-			bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget; //Temporary replacement
+			bulletSyncDataTarget.vecCenterOfHit = vecHitMap; // When map is hit use the object collision position, this is conform with the SA-MP callback OnPlayerWeaponShot
 		}
 		else { // Hit nothing
 			logprintf("HIT NOTHING");
@@ -413,7 +413,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	}
 }
 
-WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, BYTE &byteHitType, WORD &wPlayerObjectOwnerId, BYTE checkInBetween, WORD wPlayerId, WORD wTargetId)
+WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, BYTE &byteHitType, WORD &wPlayerObjectOwnerId, CVector &vecHitMap, BYTE checkInBetween, WORD wPlayerId, WORD wTargetId)
 {
 	WORD wClosestEntity = 0xFFFF;
 	float fClosestEntityDistance = 0.0;
@@ -500,7 +500,7 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 	// Check if a map point is in between the origin and the target
 	if (checkInBetween & FCNPC_SHOOT_CHECK_MAP) {
 		float fClosestMapPointDistance = 0.0;
-		WORD wClosestMapPoint = GetClosestMapPointInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestMapPointDistance);
+		WORD wClosestMapPoint = GetClosestMapPointInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestMapPointDistance, vecHitMap);
 		if (wClosestMapPoint != 0 && (wClosestEntity == 0xFFFF || fClosestMapPointDistance < fClosestEntityDistance)) {
 			byteHitType = BULLET_HIT_TYPE_NONE;
 			fClosestEntityDistance = fClosestMapPointDistance;
@@ -719,7 +719,7 @@ WORD CFunctions::GetClosestPlayerObjectInBetween(const CVector &vecHitOrigin, co
 	return wClosestPlayerObject;
 }
 
-WORD CFunctions::GetClosestMapPointInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float &fDistance)
+WORD CFunctions::GetClosestMapPointInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float &fDistance, CVector &vecHitMap)
 {
 	//TODO
 	//1) GetClosestMapPointInBetween:
@@ -727,7 +727,7 @@ WORD CFunctions::GetClosestMapPointInBetween(const CVector &vecHitOrigin, const 
 	//- currently the code handles map points when the hit type is BULLET_HIT_TYPE_NONE and the hit ID is -1.
 	//- this function should specificly check for map points only, not for global objects or custom objects!
 	//- keep in mind that bullets can penetrate water and still deal damage.
-	//- change the switch for map points in PlayerShoot to use the collision point instead of the target point
+	//- store the collision point in vecHitMap
 
 	//2) GetClosestObjectInBetween:
 	//- improve when ColAndreas is enabled, otherwise fall back on existing code.
