@@ -281,23 +281,26 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 
 	// If the shooter misses his shot
 	if (!bIsHit) {
+		logprintf("TARGET MISSED");
 		bulletSyncDataTarget.wHitID = 0xFFFF; // Using 0xFFFF instead of INVALID_PLAYER_ID, because the hitId is not necessarily a player
 		bulletSyncDataTarget.byteHitType = BULLET_HIT_TYPE_NONE;
 	}
 
 	// If the target is not in range
 	if (CMath::GetDistanceBetween3DPoints(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget) > CWeaponInfo::GetDefaultInfo(bulletSyncDataTarget.byteWeaponID).fRange) {
+		logprintf("TARGET OUT OF RANGE");
 		bulletSyncDataTarget.wHitID = 0xFFFF;
 		bulletSyncDataTarget.byteHitType = BULLET_HIT_TYPE_NONE;
 	}
 
 	// If something is in between the origin and the target
-	/*BYTE byteClosestEntityHitType = BULLET_HIT_TYPE_NONE;
+	BYTE byteClosestEntityHitType = BULLET_HIT_TYPE_NONE;
 	WORD wClosestEntity = GetClosestEntityInBetween(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, bulletSyncDataTarget.byteWeaponID, byteClosestEntityHitType, wPlayerId, bulletSyncDataTarget.wHitID);
 	if (wClosestEntity != 0xFFFF) {
-		bulletSyncDataTarget.wHitID = wClosestEntity;
-		bulletSyncDataTarget.byteHitType = byteClosestEntityHitType;
-	}*/
+		logprintf("SOMETHING IN BETWEEN SHOOTER AND TARGET");
+		/*bulletSyncDataTarget.wHitID = wClosestEntity;
+		bulletSyncDataTarget.byteHitType = byteClosestEntityHitType;*/
+	}
 
 	// Get center of hit
 	switch (bulletSyncDataTarget.byteHitType) {
@@ -305,11 +308,13 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		if (bulletSyncDataTarget.wHitID >= 0 && bulletSyncDataTarget.wHitID < MAX_ACTORS) { // Actors don't have a hit type
 			CActor *pActor = pNetGame->pActorPool->pActor[bulletSyncDataTarget.wHitID];
 			if (pActor) {
+				logprintf("HIT ACTOR");
 				bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pActor->vecPosition);
 				bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget - pActor->vecPosition;
 			}
 		}
 		else { // Hit nothing
+			logprintf("HIT NOTHING");
 			bulletSyncDataTarget.vecCenterOfHit = CVector(); // Conform with SA-MP native when nothing is hit
 		}
 		break;
@@ -317,6 +322,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		if (bulletSyncDataTarget.wHitID >= 0 && bulletSyncDataTarget.wHitID < MAX_PLAYERS) {
 			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[bulletSyncDataTarget.wHitID];
 			if (pPlayer) {
+				logprintf("HIT PLAYER");
 				bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pPlayer->vecPosition);
 				bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget - pPlayer->vecPosition;
 				//bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pNPC->vecPosition);
@@ -328,6 +334,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		if (bulletSyncDataTarget.wHitID >= 1 && bulletSyncDataTarget.wHitID < MAX_VEHICLES) { // Vehicle IDs start at 1
 			CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[bulletSyncDataTarget.wHitID];
 			if (pVehicle) {
+				logprintf("HIT VEHICLE");
 				bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pVehicle->vecPosition);
 				bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget - pVehicle->vecPosition;
 			}
@@ -337,6 +344,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		if (bulletSyncDataTarget.wHitID >= 1 && bulletSyncDataTarget.wHitID < MAX_OBJECTS) { // Object IDs start at 1
 			CObject *pObject = pNetGame->pObjectPool->pObjects[bulletSyncDataTarget.wHitID];
 			if (pObject) {
+				logprintf("HIT OBJECT");
 				bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pObject->matWorld.pos);
 				bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget - pObject->matWorld.pos;
 			}
@@ -346,6 +354,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		if (bulletSyncDataTarget.wHitID >= 1 && bulletSyncDataTarget.wHitID < MAX_OBJECTS) { // Player object IDs start at 1
 			CObject *pPlayerObject = pNetGame->pObjectPool->pPlayerObjects[wPlayerId][bulletSyncDataTarget.wHitID];
 			if (pPlayerObject) {
+				logprintf("HIT PLAYER OBJECT");
 				bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pPlayerObject->matWorld.pos);
 				bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget - pPlayerObject->matWorld.pos;
 			}
@@ -368,6 +377,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 
 				pHitPlayerData->ProcessDamage(wPlayerId, sWeaponInfo.fDamage, bulletSyncDataTarget.byteWeaponID, BODY_PART_TORSO);
 				CCallbackManager::OnGiveDamage(wPlayerId, bulletSyncDataTarget.wHitID, bulletSyncDataTarget.byteWeaponID, BODY_PART_TORSO, sWeaponInfo.fDamage);
+				logprintf("DAMAGE NPC");
 			}
 		}
 
