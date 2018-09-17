@@ -287,7 +287,8 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	}
 
 	// If the target is not in range
-	if (CMath::GetDistanceBetween3DPoints(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget) > CWeaponInfo::GetDefaultInfo(bulletSyncDataTarget.byteWeaponID).fRange) {
+	float fTargetDistance = CMath::GetDistanceBetween3DPoints(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget);
+	if (fTargetDistance > CWeaponInfo::GetDefaultInfo(bulletSyncDataTarget.byteWeaponID).fRange) {
 		logprintf("TARGET OUT OF RANGE");
 		bulletSyncDataTarget.wHitID = 0xFFFF;
 		bulletSyncDataTarget.byteHitType = BULLET_HIT_TYPE_NONE;
@@ -297,7 +298,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	BYTE byteClosestEntityHitType = BULLET_HIT_TYPE_NONE;
 	WORD wPlayerObjectOwnerId = INVALID_PLAYER_ID;
 	CVector vecHitMap = bulletSyncDataTarget.vecHitTarget;
-	WORD wClosestEntity = GetClosestEntityInBetween(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, bulletSyncDataTarget.byteWeaponID, byteClosestEntityHitType, wPlayerObjectOwnerId, vecHitMap, checkInBetween, wPlayerId, wHitId); // Pass original hit ID to correctly handle missed or out of range shots!
+	WORD wClosestEntity = GetClosestEntityInBetween(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, bulletSyncDataTarget.byteWeaponID, fTargetDistance, byteClosestEntityHitType, wPlayerObjectOwnerId, vecHitMap, checkInBetween, wPlayerId, wHitId); // Pass original hit ID to correctly handle missed or out of range shots!
 	if (wClosestEntity != 0xFFFF) {
 		logprintf("SOMETHING IN BETWEEN SHOOTER AND TARGET");
 		bulletSyncDataTarget.wHitID = wClosestEntity;
@@ -433,7 +434,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	}
 }
 
-WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, BYTE &byteHitType, WORD &wPlayerObjectOwnerId, CVector &vecHitMap, BYTE checkInBetween, WORD wPlayerId, WORD wTargetId)
+WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float fTargetDistance, BYTE &byteHitType, WORD &wPlayerObjectOwnerId, CVector &vecHitMap, BYTE checkInBetween, WORD wPlayerId, WORD wTargetId)
 {
 	WORD wClosestEntity = 0xFFFF;
 	float fClosestEntityDistance = 0.0;
@@ -442,7 +443,7 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 	WORD wClosestPlayer = INVALID_PLAYER_ID;
 	if (checkInBetween & FCNPC_SHOOT_CHECK_PLAYER) {
 		float fClosestPlayerDistance = 0.0;
-		wClosestPlayer = GetClosestPlayerInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestPlayerDistance, wPlayerId, wTargetId);
+		wClosestPlayer = GetClosestPlayerInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fTargetDistance, fClosestPlayerDistance, wPlayerId, wTargetId);
 		if (wClosestPlayer != INVALID_PLAYER_ID && (wClosestEntity == 0xFFFF || fClosestPlayerDistance < fClosestEntityDistance)) {
 			byteHitType = BULLET_HIT_TYPE_PLAYER;
 			fClosestEntityDistance = fClosestPlayerDistance;
@@ -454,7 +455,7 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 	WORD wClosestNPC = INVALID_PLAYER_ID;
 	if (checkInBetween & FCNPC_SHOOT_CHECK_NPC) {
 		float fClosestNPCDistance = 0.0;
-		wClosestNPC = GetClosestNPCInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestNPCDistance, wPlayerId, wTargetId);
+		wClosestNPC = GetClosestNPCInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fTargetDistance, fClosestNPCDistance, wPlayerId, wTargetId);
 		if (wClosestNPC != INVALID_PLAYER_ID && (wClosestEntity == 0xFFFF || fClosestNPCDistance < fClosestEntityDistance)) {
 			byteHitType = BULLET_HIT_TYPE_PLAYER;
 			fClosestEntityDistance = fClosestNPCDistance;
@@ -465,7 +466,7 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 	// Check if an actor is in between the origin and the target
 	if (checkInBetween & FCNPC_SHOOT_CHECK_ACTOR) {
 		float fClosestActorDistance = 0.0;
-		WORD wClosestActor = GetClosestActorInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestActorDistance);
+		WORD wClosestActor = GetClosestActorInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fTargetDistance, fClosestActorDistance);
 		if (wClosestActor != INVALID_ACTOR_ID && (wClosestEntity == 0xFFFF || fClosestActorDistance < fClosestEntityDistance)) {
 			byteHitType = BULLET_HIT_TYPE_NONE;
 			fClosestEntityDistance = fClosestActorDistance;
@@ -476,7 +477,7 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 	// Check if a vehicle is in between the origin and the target
 	if (checkInBetween & FCNPC_SHOOT_CHECK_VEHICLE) {
 		float fClosestVehicleDistance = 0.0;
-		WORD wClosestVehicle = GetClosestVehicleInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestVehicleDistance);
+		WORD wClosestVehicle = GetClosestVehicleInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fTargetDistance, fClosestVehicleDistance);
 		if (wClosestVehicle != INVALID_VEHICLE_ID && (wClosestEntity == 0xFFFF || fClosestVehicleDistance < fClosestEntityDistance)) {
 			byteHitType = BULLET_HIT_TYPE_VEHICLE;
 			fClosestEntityDistance = fClosestVehicleDistance;
@@ -487,7 +488,7 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 	// Check if an object is in between the origin and the target
 	if (checkInBetween & FCNPC_SHOOT_CHECK_OBJECT) {
 		float fClosestObjectDistance = 0.0;
-		WORD wClosestObject = GetClosestObjectInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestObjectDistance);
+		WORD wClosestObject = GetClosestObjectInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fTargetDistance, fClosestObjectDistance);
 		if (wClosestObject != INVALID_OBJECT_ID && (wClosestEntity == 0xFFFF || fClosestObjectDistance < fClosestEntityDistance)) {
 			byteHitType = BULLET_HIT_TYPE_OBJECT;
 			fClosestEntityDistance = fClosestObjectDistance;
@@ -498,7 +499,7 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 	// Check if a player object of the shooter is in between the origin and the target
 	if (checkInBetween & FCNPC_SHOOT_CHECK_POBJECT_ORIG) {
 		float fClosestPlayerObjectDistance = 0.0;
-		WORD wClosestPlayerObject = GetClosestPlayerObjectInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestPlayerObjectDistance, wPlayerId);
+		WORD wClosestPlayerObject = GetClosestPlayerObjectInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fTargetDistance, fClosestPlayerObjectDistance, wPlayerId);
 		if (wClosestPlayerObject != INVALID_OBJECT_ID && (wClosestEntity == 0xFFFF || fClosestPlayerObjectDistance < fClosestEntityDistance)) {
 			byteHitType = BULLET_HIT_TYPE_PLAYER_OBJECT;
 			wPlayerObjectOwnerId = wPlayerId;
@@ -511,7 +512,7 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 		// Check if a player object of the target is in between the origin and the target
 		if (wTargetId != INVALID_PLAYER_ID) {
 			float fClosestPlayerObjectDistance = 0.0;
-			WORD wClosestPlayerObject = GetClosestPlayerObjectInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestPlayerObjectDistance, wTargetId);
+			WORD wClosestPlayerObject = GetClosestPlayerObjectInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fTargetDistance, fClosestPlayerObjectDistance, wTargetId);
 			if (wClosestPlayerObject != INVALID_OBJECT_ID && (wClosestEntity == 0xFFFF || fClosestPlayerObjectDistance < fClosestEntityDistance)) {
 				byteHitType = BULLET_HIT_TYPE_PLAYER_OBJECT;
 				wPlayerObjectOwnerId = wTargetId;
@@ -523,7 +524,7 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 		// Check if a player object of the closestPlayer is in between the origin and the target when the closestPlayer is currently the closest entity
 		if (wClosestPlayer != INVALID_PLAYER_ID && wClosestEntity == wClosestPlayer) {
 			float fClosestPlayerObjectDistance = 0.0;
-			WORD wClosestPlayerObject = GetClosestPlayerObjectInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestPlayerObjectDistance, wClosestPlayer);
+			WORD wClosestPlayerObject = GetClosestPlayerObjectInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fTargetDistance, fClosestPlayerObjectDistance, wClosestPlayer);
 			if (wClosestPlayerObject != INVALID_OBJECT_ID && (wClosestEntity == 0xFFFF || fClosestPlayerObjectDistance < fClosestEntityDistance)) {
 				byteHitType = BULLET_HIT_TYPE_PLAYER_OBJECT;
 				wPlayerObjectOwnerId = wClosestPlayer;
@@ -535,7 +536,7 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 		// Check if a player object of the closestNPC is in between the origin and the target when the closestNPC is currently the closest entity
 		if (wClosestNPC != INVALID_PLAYER_ID && wClosestEntity == wClosestNPC) {
 			float fClosestPlayerObjectDistance = 0.0;
-			WORD wClosestPlayerObject = GetClosestPlayerObjectInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestPlayerObjectDistance, wClosestNPC);
+			WORD wClosestPlayerObject = GetClosestPlayerObjectInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fTargetDistance, fClosestPlayerObjectDistance, wClosestNPC);
 			if (wClosestPlayerObject != INVALID_OBJECT_ID && (wClosestEntity == 0xFFFF || fClosestPlayerObjectDistance < fClosestEntityDistance)) {
 				byteHitType = BULLET_HIT_TYPE_PLAYER_OBJECT;
 				wPlayerObjectOwnerId = wClosestNPC;
@@ -548,7 +549,7 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 	// Check if a map point is in between the origin and the target
 	if (checkInBetween & FCNPC_SHOOT_CHECK_MAP) {
 		float fClosestMapPointDistance = 0.0;
-		WORD wClosestMapPoint = GetClosestMapPointInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestMapPointDistance, vecHitMap);
+		WORD wClosestMapPoint = GetClosestMapPointInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fTargetDistance, fClosestMapPointDistance, vecHitMap);
 		if (wClosestMapPoint != 0 && (wClosestEntity == 0xFFFF || fClosestMapPointDistance < fClosestEntityDistance)) {
 			byteHitType = BULLET_HIT_TYPE_NONE;
 			fClosestEntityDistance = fClosestMapPointDistance;
@@ -559,7 +560,7 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 	return wClosestEntity;
 }
 
-WORD CFunctions::GetClosestPlayerInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float &fDistance, WORD wPlayerId, WORD wTargetId)
+WORD CFunctions::GetClosestPlayerInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float fTargetDistance, float &fDistance, WORD wPlayerId, WORD wTargetId)
 {
 	WORD wClosestPlayer = INVALID_PLAYER_ID;
 
@@ -583,7 +584,12 @@ WORD CFunctions::GetClosestPlayerInBetween(const CVector &vecHitOrigin, const CV
 			continue;
 		}
 
-		// Is the player closer
+		// Is the player in between the origin and the target
+		if (fPlayerDistance >= fTargetDistance) {
+			continue;
+		}
+
+		// Is the player closer than another player
 		if (wClosestPlayer == INVALID_PLAYER_ID || fPlayerDistance < fDistance) {
 			fDistance = fPlayerDistance;
 			wClosestPlayer = i;
@@ -593,7 +599,7 @@ WORD CFunctions::GetClosestPlayerInBetween(const CVector &vecHitOrigin, const CV
 	return wClosestPlayer;
 }
 
-WORD CFunctions::GetClosestNPCInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float &fDistance, WORD wPlayerId, WORD wTargetId)
+WORD CFunctions::GetClosestNPCInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float fTargetDistance, float &fDistance, WORD wPlayerId, WORD wTargetId)
 {
 	WORD wClosestNPC = INVALID_PLAYER_ID;
 
@@ -617,7 +623,12 @@ WORD CFunctions::GetClosestNPCInBetween(const CVector &vecHitOrigin, const CVect
 			continue;
 		}
 
-		// Is the NPC closer
+		// Is the NPC in between the origin and the target
+		if (fNPCDistance >= fTargetDistance) {
+			continue;
+		}
+
+		// Is the NPC closer than another NPC
 		if (wClosestNPC == INVALID_PLAYER_ID || fNPCDistance < fDistance) {
 			fDistance = fNPCDistance;
 			wClosestNPC = i;
@@ -627,7 +638,7 @@ WORD CFunctions::GetClosestNPCInBetween(const CVector &vecHitOrigin, const CVect
 	return wClosestNPC;
 }
 
-WORD CFunctions::GetClosestActorInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float &fDistance)
+WORD CFunctions::GetClosestActorInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float fTargetDistance, float &fDistance)
 {
 	WORD wClosestActor = INVALID_ACTOR_ID;
 
@@ -651,7 +662,12 @@ WORD CFunctions::GetClosestActorInBetween(const CVector &vecHitOrigin, const CVe
 			continue;
 		}
 
-		// Is the actor closer
+		// Is the actor in between the origin and the target
+		if (fActorDistance >= fTargetDistance) {
+			continue;
+		}
+
+		// Is the actor closer than another actor
 		if (wClosestActor == INVALID_ACTOR_ID || fActorDistance < fDistance) {
 			fDistance = fActorDistance;
 			wClosestActor = i;
@@ -661,7 +677,7 @@ WORD CFunctions::GetClosestActorInBetween(const CVector &vecHitOrigin, const CVe
 	return wClosestActor;
 }
 
-WORD CFunctions::GetClosestVehicleInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float &fDistance)
+WORD CFunctions::GetClosestVehicleInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float fTargetDistance, float &fDistance)
 {
 	WORD wClosestVehicle = INVALID_VEHICLE_ID;
 
@@ -685,7 +701,12 @@ WORD CFunctions::GetClosestVehicleInBetween(const CVector &vecHitOrigin, const C
 			continue;
 		}
 
-		// Is the vehicle closer
+		// Is the vehicle in between the origin and the target
+		if (fVehicleDistance >= fTargetDistance) {
+			continue;
+		}
+
+		// Is the vehicle closer than another vehicle
 		if (wClosestVehicle == INVALID_VEHICLE_ID || fVehicleDistance < fDistance) {
 			fDistance = fVehicleDistance;
 			wClosestVehicle = i;
@@ -695,7 +716,7 @@ WORD CFunctions::GetClosestVehicleInBetween(const CVector &vecHitOrigin, const C
 	return wClosestVehicle;
 }
 
-WORD CFunctions::GetClosestObjectInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float &fDistance)
+WORD CFunctions::GetClosestObjectInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float fTargetDistance, float &fDistance)
 {
 	WORD wClosestObject = INVALID_OBJECT_ID;
 
@@ -719,7 +740,12 @@ WORD CFunctions::GetClosestObjectInBetween(const CVector &vecHitOrigin, const CV
 			continue;
 		}
 
-		// Is the object closer
+		// Is the object in between the origin and the target
+		if (fObjectDistance >= fTargetDistance) {
+			continue;
+		}
+
+		// Is the object closer than another object
 		if (wClosestObject == INVALID_OBJECT_ID || fObjectDistance < fDistance) {
 			fDistance = fObjectDistance;
 			wClosestObject = i;
@@ -729,7 +755,7 @@ WORD CFunctions::GetClosestObjectInBetween(const CVector &vecHitOrigin, const CV
 	return wClosestObject;
 }
 
-WORD CFunctions::GetClosestPlayerObjectInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float &fDistance, WORD wOwnerId)
+WORD CFunctions::GetClosestPlayerObjectInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float fTargetDistance, float &fDistance, WORD wOwnerId)
 {
 	WORD wClosestPlayerObject = INVALID_OBJECT_ID;
 
@@ -756,7 +782,12 @@ WORD CFunctions::GetClosestPlayerObjectInBetween(const CVector &vecHitOrigin, co
 				continue;
 			}
 
-			// Is the player object closer
+			// Is the player object in between the origin and the target
+			if (fPlayerObjectDistance >= fTargetDistance) {
+				continue;
+			}
+
+			// Is the player object closer than another player object
 			if (wClosestPlayerObject == INVALID_OBJECT_ID || fPlayerObjectDistance < fDistance) {
 				fDistance = fPlayerObjectDistance;
 				wClosestPlayerObject = i;
@@ -767,7 +798,7 @@ WORD CFunctions::GetClosestPlayerObjectInBetween(const CVector &vecHitOrigin, co
 	return wClosestPlayerObject;
 }
 
-WORD CFunctions::GetClosestMapPointInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float &fDistance, CVector &vecHitMap)
+WORD CFunctions::GetClosestMapPointInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float fTargetDistance, float &fDistance, CVector &vecHitMap)
 {
 	//TODO
 	//1) GetClosestMapPointInBetween:
