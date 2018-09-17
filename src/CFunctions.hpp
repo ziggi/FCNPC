@@ -88,7 +88,7 @@ private:
 	static WORD GetClosestActorInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float &fDistance);
 	static WORD GetClosestVehicleInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float &fDistance);
 	static WORD GetClosestObjectInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float &fDistance);
-	static WORD GetClosestPlayerObjectInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float &fDistance, WORD wPlayerId);
+	static WORD GetClosestPlayerObjectInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float &fDistance, WORD wOwnerId);
 	static WORD GetClosestMapPointInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float &fDistance);
 
 };
