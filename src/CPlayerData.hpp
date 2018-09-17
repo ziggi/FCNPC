@@ -148,8 +148,8 @@ public:
 	void ToggleInfiniteAmmo(bool bToggle);
 	bool HasInfiniteAmmo();
 
-	void AimAt(const CVector &vecPoint, bool bShoot, int iShootDelay, bool bSetAngle, const CVector &vecOffsetFrom);
-	void AimAtPlayer(WORD wHitId, bool bShoot, int iShootDelay, bool bSetAngle, const CVector &vecOffset, const CVector &vecOffsetFrom);
+	void AimAt(const CVector &vecPoint, bool bShoot, int iShootDelay, bool bSetAngle, const CVector &vecOffsetFrom, BYTE checkInBetween);
+	void AimAtPlayer(WORD wHitId, bool bShoot, int iShootDelay, bool bSetAngle, const CVector &vecOffset, const CVector &vecOffsetFrom, BYTE checkInBetween);
 	void UpdateAimingData(const CVector &vecPoint, bool bSetAngle);
 	void StopAim();
 	bool MeleeAttack(int iTime, bool bUseFightstyle);
@@ -259,6 +259,7 @@ private:
 	WORD m_wHitId;
 	bool m_bAimSetAngle;
 	BYTE m_byteHitType;
+	BYTE m_byteCheckInBetween;
 	WORD m_wVehicleToEnter;
 	BYTE m_byteSeatToEnter;
 	WORD m_wLastDamagerId;

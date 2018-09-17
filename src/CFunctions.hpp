@@ -64,7 +64,7 @@ public:
 	static PlayerID GetPlayerIDFromIndex(int index);
 	static int GetIndexFromPlayerID(PlayerID playerId);
 
-	static void PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE byteWeaponId, const CVector &vecPoint, const CVector &vecOffsetFrom, bool bIsHit);
+	static void PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE byteWeaponId, const CVector &vecPoint, const CVector &vecOffsetFrom, bool bIsHit, BYTE checkInBetween);
 
 	// Functions
 	static ClientJoin_RPC_t                 pfn__ClientJoin_RPC;
@@ -82,7 +82,7 @@ public:
 	static RakNet__GetIndexFromPlayerID_t   pfn__RakNet__GetIndexFromPlayerID;
 
 private:
-	static WORD GetClosestEntityInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, BYTE &byteHitType, WORD wPlayerId, WORD wTargetId);
+	static WORD GetClosestEntityInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, BYTE &byteHitType, BYTE checkInBetween, WORD wPlayerId, WORD wTargetId);
 	static WORD GetClosestPlayerInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float &fDistance, WORD wPlayerId, WORD wTargetId);
 	static WORD GetClosestNPCInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float &fDistance, WORD wPlayerId, WORD wTargetId);
 	static WORD GetClosestActorInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float &fDistance);

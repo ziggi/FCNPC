@@ -254,7 +254,7 @@ int CFunctions::GetIndexFromPlayerID(PlayerID playerId)
 	return pfn__RakNet__GetIndexFromPlayerID(pRakServer, playerId);
 }
 
-void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE byteWeaponId, const CVector &vecPoint, const CVector &vecOffsetFrom, bool bIsHit)
+void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE byteWeaponId, const CVector &vecPoint, const CVector &vecOffsetFrom, bool bIsHit, BYTE checkInBetween)
 {
 	// Validate the player
 	CPlayerManager *pPlayerManager = pServer->GetPlayerManager();
@@ -295,7 +295,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 
 	// If something is in between the origin and the target (we currently don't handle checking beyond the target, even when missing with leftover range)
 	BYTE byteClosestEntityHitType = BULLET_HIT_TYPE_NONE;
-	WORD wClosestEntity = GetClosestEntityInBetween(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, bulletSyncDataTarget.byteWeaponID, byteClosestEntityHitType, wPlayerId, wHitId); // Pass original hit ID to correctly handle missed or out of range shots!
+	WORD wClosestEntity = GetClosestEntityInBetween(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, bulletSyncDataTarget.byteWeaponID, byteClosestEntityHitType, checkInBetween, wPlayerId, wHitId); // Pass original hit ID to correctly handle missed or out of range shots!
 	if (wClosestEntity != 0xFFFF) {
 		logprintf("SOMETHING IN BETWEEN SHOOTER AND TARGET");
 		bulletSyncDataTarget.wHitID = wClosestEntity;
@@ -406,81 +406,97 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	}
 }
 
-WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, BYTE &byteHitType, WORD wPlayerId, WORD wTargetId)
+WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, BYTE &byteHitType, BYTE checkInBetween, WORD wPlayerId, WORD wTargetId)
 {
 	WORD wClosestEntity = 0xFFFF;
 	float fClosestEntityDistance = 0.0;
 
 	// Check if a player is in between the origin and the target
-	float fClosestPlayerDistance = 0.0;
-	WORD wClosestPlayer = GetClosestPlayerInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestPlayerDistance, wPlayerId, wTargetId);
-	if (wClosestPlayer != INVALID_PLAYER_ID && (wClosestEntity == 0xFFFF || fClosestPlayerDistance < fClosestEntityDistance)) {
-		byteHitType = BULLET_HIT_TYPE_PLAYER;
-		fClosestEntityDistance = fClosestPlayerDistance;
-		wClosestEntity = wClosestPlayer;
+	if (checkInBetween & FCNPC_SHOOT_CHECK_PLAYER) {
+		float fClosestPlayerDistance = 0.0;
+		WORD wClosestPlayer = GetClosestPlayerInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestPlayerDistance, wPlayerId, wTargetId);
+		if (wClosestPlayer != INVALID_PLAYER_ID && (wClosestEntity == 0xFFFF || fClosestPlayerDistance < fClosestEntityDistance)) {
+			byteHitType = BULLET_HIT_TYPE_PLAYER;
+			fClosestEntityDistance = fClosestPlayerDistance;
+			wClosestEntity = wClosestPlayer;
+		}
 	}
 
 	// Check if an NPC is in between the origin and the target
-	float fClosestNPCDistance = 0.0;
-	WORD wClosestNPC = GetClosestNPCInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestNPCDistance, wPlayerId, wTargetId);
-	if (wClosestNPC != INVALID_PLAYER_ID && (wClosestEntity == 0xFFFF || fClosestNPCDistance < fClosestEntityDistance)) {
-		byteHitType = BULLET_HIT_TYPE_PLAYER;
-		fClosestEntityDistance = fClosestNPCDistance;
-		wClosestEntity = wClosestNPC;
+	if (checkInBetween & FCNPC_SHOOT_CHECK_NPC) {
+		float fClosestNPCDistance = 0.0;
+		WORD wClosestNPC = GetClosestNPCInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestNPCDistance, wPlayerId, wTargetId);
+		if (wClosestNPC != INVALID_PLAYER_ID && (wClosestEntity == 0xFFFF || fClosestNPCDistance < fClosestEntityDistance)) {
+			byteHitType = BULLET_HIT_TYPE_PLAYER;
+			fClosestEntityDistance = fClosestNPCDistance;
+			wClosestEntity = wClosestNPC;
+		}
 	}
 
 	// Check if an actor is in between the origin and the target
-	float fClosestActorDistance = 0.0;
-	WORD wClosestActor = GetClosestActorInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestActorDistance);
-	if (wClosestActor != INVALID_ACTOR_ID && (wClosestEntity == 0xFFFF || fClosestActorDistance < fClosestEntityDistance)) {
-		byteHitType = BULLET_HIT_TYPE_NONE;
-		fClosestEntityDistance = fClosestActorDistance;
-		wClosestEntity = wClosestActor;
+	if (checkInBetween & FCNPC_SHOOT_CHECK_ACTOR) {
+		float fClosestActorDistance = 0.0;
+		WORD wClosestActor = GetClosestActorInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestActorDistance);
+		if (wClosestActor != INVALID_ACTOR_ID && (wClosestEntity == 0xFFFF || fClosestActorDistance < fClosestEntityDistance)) {
+			byteHitType = BULLET_HIT_TYPE_NONE;
+			fClosestEntityDistance = fClosestActorDistance;
+			wClosestEntity = wClosestActor;
+		}
 	}
 
 	// Check if a vehicle is in between the origin and the target
-	float fClosestVehicleDistance = 0.0;
-	WORD wClosestVehicle = GetClosestVehicleInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestVehicleDistance);
-	if (wClosestVehicle != INVALID_VEHICLE_ID && (wClosestEntity == 0xFFFF || fClosestVehicleDistance < fClosestEntityDistance)) {
-		byteHitType = BULLET_HIT_TYPE_VEHICLE;
-		fClosestEntityDistance = fClosestVehicleDistance;
-		wClosestEntity = wClosestVehicle;
+	if (checkInBetween & FCNPC_SHOOT_CHECK_VEHICLE) {
+		float fClosestVehicleDistance = 0.0;
+		WORD wClosestVehicle = GetClosestVehicleInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestVehicleDistance);
+		if (wClosestVehicle != INVALID_VEHICLE_ID && (wClosestEntity == 0xFFFF || fClosestVehicleDistance < fClosestEntityDistance)) {
+			byteHitType = BULLET_HIT_TYPE_VEHICLE;
+			fClosestEntityDistance = fClosestVehicleDistance;
+			wClosestEntity = wClosestVehicle;
+		}
 	}
 
 	// Check if an object is in between the origin and the target
-	float fClosestObjectDistance = 0.0;
-	WORD wClosestObject = GetClosestObjectInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestObjectDistance);
-	if (wClosestObject != INVALID_OBJECT_ID && (wClosestEntity == 0xFFFF || fClosestObjectDistance < fClosestEntityDistance)) {
-		byteHitType = BULLET_HIT_TYPE_OBJECT;
-		fClosestEntityDistance = fClosestObjectDistance;
-		wClosestEntity = wClosestObject;
+	if (checkInBetween & FCNPC_SHOOT_CHECK_OBJECT) {
+		float fClosestObjectDistance = 0.0;
+		WORD wClosestObject = GetClosestObjectInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestObjectDistance);
+		if (wClosestObject != INVALID_OBJECT_ID && (wClosestEntity == 0xFFFF || fClosestObjectDistance < fClosestEntityDistance)) {
+			byteHitType = BULLET_HIT_TYPE_OBJECT;
+			fClosestEntityDistance = fClosestObjectDistance;
+			wClosestEntity = wClosestObject;
+		}
 	}
 
 	// Check if a player object of the shooter is in between the origin and the target
-	float fClosestPlayerObjectDistance1 = 0.0;
-	WORD wClosestPlayerObject1 = GetClosestPlayerObjectInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestPlayerObjectDistance1, wPlayerId);
-	if (wClosestPlayerObject1 != INVALID_OBJECT_ID && (wClosestEntity == 0xFFFF || fClosestPlayerObjectDistance1 < fClosestEntityDistance)) {
-		byteHitType = BULLET_HIT_TYPE_PLAYER_OBJECT;
-		fClosestEntityDistance = fClosestPlayerObjectDistance1;
-		wClosestEntity = wClosestPlayerObject1;
+	if (checkInBetween & FCNPC_SHOOT_CHECK_POBJECT_ORIG) {
+		float fClosestPlayerObjectDistance1 = 0.0;
+		WORD wClosestPlayerObject1 = GetClosestPlayerObjectInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestPlayerObjectDistance1, wPlayerId);
+		if (wClosestPlayerObject1 != INVALID_OBJECT_ID && (wClosestEntity == 0xFFFF || fClosestPlayerObjectDistance1 < fClosestEntityDistance)) {
+			byteHitType = BULLET_HIT_TYPE_PLAYER_OBJECT;
+			fClosestEntityDistance = fClosestPlayerObjectDistance1;
+			wClosestEntity = wClosestPlayerObject1;
+		}
 	}
 
 	// Check if a player object of the target is in between the origin and the target
-	float fClosestPlayerObjectDistance2 = 0.0;
-	WORD wClosestPlayerObject2 = GetClosestPlayerObjectInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestPlayerObjectDistance2, wTargetId);
-	if (wClosestPlayerObject2 != INVALID_OBJECT_ID && (wClosestEntity == 0xFFFF || fClosestPlayerObjectDistance2 < fClosestEntityDistance)) {
-		byteHitType = BULLET_HIT_TYPE_PLAYER_OBJECT;
-		fClosestEntityDistance = fClosestPlayerObjectDistance2;
-		wClosestEntity = wClosestPlayerObject2;
+	if (checkInBetween & FCNPC_SHOOT_CHECK_POBJECT_TARG) {
+		float fClosestPlayerObjectDistance2 = 0.0;
+		WORD wClosestPlayerObject2 = GetClosestPlayerObjectInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestPlayerObjectDistance2, wTargetId);
+		if (wClosestPlayerObject2 != INVALID_OBJECT_ID && (wClosestEntity == 0xFFFF || fClosestPlayerObjectDistance2 < fClosestEntityDistance)) {
+			byteHitType = BULLET_HIT_TYPE_PLAYER_OBJECT;
+			fClosestEntityDistance = fClosestPlayerObjectDistance2;
+			wClosestEntity = wClosestPlayerObject2;
+		}
 	}
 
 	// Check if a map point is in between the origin and the target
-	float fClosestMapPointDistance = 0.0;
-	WORD wClosestMapPoint = GetClosestMapPointInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestMapPointDistance);
-	if (wClosestMapPoint != 0 && (wClosestEntity == 0xFFFF || fClosestMapPointDistance < fClosestEntityDistance)) {
-		byteHitType = BULLET_HIT_TYPE_OBJECT;
-		fClosestEntityDistance = fClosestMapPointDistance;
-		wClosestEntity = wClosestMapPoint;
+	if (checkInBetween & FCNPC_SHOOT_CHECK_MAP) {
+		float fClosestMapPointDistance = 0.0;
+		WORD wClosestMapPoint = GetClosestMapPointInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestMapPointDistance);
+		if (wClosestMapPoint != 0 && (wClosestEntity == 0xFFFF || fClosestMapPointDistance < fClosestEntityDistance)) {
+			byteHitType = BULLET_HIT_TYPE_OBJECT;
+			fClosestEntityDistance = fClosestMapPointDistance;
+			wClosestEntity = wClosestMapPoint;
+		}
 	}
 
 	return wClosestEntity;
@@ -699,7 +715,6 @@ WORD CFunctions::GetClosestMapPointInBetween(const CVector &vecHitOrigin, const 
 	//TODO
 	//- implement GetClosestMapPointInBetween when ColAndreas is enabled, otherwise return nothing (0)
 	//- improve GetClosestObjectInBetween and GetClosestPlayerObjectInBetween when ColAndreas is enabled, otherwise fall back on existing code
-	//- add FCNPC_AimAt, FCNPC_AimAtPlayer, FCNPC_TriggerWeaponShot extra parameter that disables inbetween checking for certain types (bit masking)
 	//- add FCNPC_AimAt, FCNPC_AimAtPlayer, FCNPC_TriggerWeaponShot extra parameter with same effect as MOVE_MODE_X, called SHOOT_MODE_X
 
 	return 0;
