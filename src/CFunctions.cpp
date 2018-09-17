@@ -383,7 +383,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 				}
 			}
 			else if (pServer->GetPlayerManager()->IsPlayerConnected(wPlayerObjectOwnerId)) {
-				if (!pServer->GetPlayerManager()->IsNPC(bulletSyncDataTarget.wHitID)) { // Handles player objects of the closestPlayer
+				if (!pServer->GetPlayerManager()->IsNPC(wPlayerObjectOwnerId)) { // Handles player objects of the closestPlayer
 					CObject *pPlayerObject = pNetGame->pObjectPool->pPlayerObjects[wPlayerObjectOwnerId][bulletSyncDataTarget.wHitID];
 					if (pPlayerObject) {
 						logprintf("HIT PLAYER OBJECT CLOSESTPLAYER");
