@@ -270,7 +270,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	pPlayerData->GetPosition(&vecOrigin);
 	vecOrigin += vecOffsetFrom;
 
-	// Create the target SendBullet structure
+	// Create the initial SendBullet structure
 	CBulletSyncData bulletSyncDataTarget;
 	bulletSyncDataTarget.byteWeaponID = byteWeaponId;
 	bulletSyncDataTarget.vecHitOrigin = vecOrigin;
@@ -278,15 +278,23 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget;
 	bulletSyncDataTarget.wHitID = wHitId;
 	bulletSyncDataTarget.byteHitType = byteHitType;
+
+	// If the shooter misses his shot
 	if (!bIsHit) {
 		bulletSyncDataTarget.wHitID = 0xFFFF; // Using 0xFFFF instead of INVALID_PLAYER_ID, because the hitId is not necessarily a player
 		bulletSyncDataTarget.byteHitType = BULLET_HIT_TYPE_NONE;
 	}
 
-	// Check if something is in between the origin and the target
-	BYTE byteClosestEntityHitType = BULLET_HIT_TYPE_NONE;
+	// If the target is not in range
+	if (CMath::GetDistanceBetween3DPoints(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget) > CWeaponInfo::GetDefaultInfo(bulletSyncDataTarget.byteWeaponID).fRange) {
+		bulletSyncDataTarget.wHitID = 0xFFFF;
+		bulletSyncDataTarget.byteHitType = BULLET_HIT_TYPE_NONE;
+	}
+
+	// If something is in between the origin and the target
+	/*BYTE byteClosestEntityHitType = BULLET_HIT_TYPE_NONE;
 	WORD wClosestEntity = GetClosestEntityInBetween(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, bulletSyncDataTarget.byteWeaponID, byteClosestEntityHitType, wPlayerId, bulletSyncDataTarget.wHitID);
-	/*if (wClosestEntity != 0xFFFF) {
+	if (wClosestEntity != 0xFFFF) {
 		bulletSyncDataTarget.wHitID = wClosestEntity;
 		bulletSyncDataTarget.byteHitType = byteClosestEntityHitType;
 	}*/
@@ -301,6 +309,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 				bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget - pActor->vecPosition;
 			}
 		}
+		else {} //Hit nothing
 		break;
 	case BULLET_HIT_TYPE_PLAYER:
 		if (bulletSyncDataTarget.wHitID >= 0 && bulletSyncDataTarget.wHitID < MAX_PLAYERS) {
@@ -349,7 +358,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	int send = CCallbackManager::OnWeaponShot(wPlayerId, bulletSyncDataTarget.byteWeaponID, bulletSyncDataTarget.byteHitType, bulletSyncDataTarget.wHitID, bulletSyncDataTarget.vecCenterOfHit);
 	if (send != 0) {
 		// If the target is an NPC
-		if (bIsHit && bulletSyncDataTarget.byteHitType == BULLET_HIT_TYPE_PLAYER && pServer->GetPlayerManager()->IsNpcConnected(bulletSyncDataTarget.wHitID)) {
+		if (bulletSyncDataTarget.byteHitType == BULLET_HIT_TYPE_PLAYER && pServer->GetPlayerManager()->IsNpcConnected(bulletSyncDataTarget.wHitID)) {
 			CPlayerData *pHitPlayerData = pServer->GetPlayerManager()->GetAt(bulletSyncDataTarget.wHitID);
 
 			if (pHitPlayerData && !pHitPlayerData->IsInvulnerable() && pHitPlayerData->GetState() != PLAYER_STATE_WASTED) {
