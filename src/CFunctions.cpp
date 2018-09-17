@@ -293,13 +293,13 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		bulletSyncDataTarget.byteHitType = BULLET_HIT_TYPE_NONE;
 	}
 
-	// If something is in between the origin and the target
+	// If something is in between the origin and the target (we currently don't handle checking beyond the target, even when missing with leftover range)
 	BYTE byteClosestEntityHitType = BULLET_HIT_TYPE_NONE;
-	WORD wClosestEntity = GetClosestEntityInBetween(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, bulletSyncDataTarget.byteWeaponID, byteClosestEntityHitType, wPlayerId, bulletSyncDataTarget.wHitID);
+	WORD wClosestEntity = GetClosestEntityInBetween(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, bulletSyncDataTarget.byteWeaponID, byteClosestEntityHitType, wPlayerId, wHitId); // Pass original hit ID to correctly handle missed or out of range shots!
 	if (wClosestEntity != 0xFFFF) {
 		logprintf("SOMETHING IN BETWEEN SHOOTER AND TARGET");
-		/*bulletSyncDataTarget.wHitID = wClosestEntity;
-		bulletSyncDataTarget.byteHitType = byteClosestEntityHitType;*/
+		bulletSyncDataTarget.wHitID = wClosestEntity;
+		bulletSyncDataTarget.byteHitType = byteClosestEntityHitType;
 	}
 
 	// Get center of hit
@@ -322,11 +322,16 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		if (bulletSyncDataTarget.wHitID >= 0 && bulletSyncDataTarget.wHitID < MAX_PLAYERS) {
 			CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[bulletSyncDataTarget.wHitID];
 			if (pPlayer) {
-				logprintf("HIT PLAYER");
-				bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pPlayer->vecPosition);
-				bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget - pPlayer->vecPosition;
-				//bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pNPC->vecPosition);
-				//bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget - pNPC->vecPosition;
+				if (!pServer->GetPlayerManager()->IsNPC(bulletSyncDataTarget.wHitID)) {
+					logprintf("HIT PLAYER");
+					bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pPlayer->vecPosition);
+					bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget - pPlayer->vecPosition;
+				}
+				else {
+					logprintf("HIT NPC");
+					bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pPlayer->vecPosition);
+					bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget - pPlayer->vecPosition;
+				}
 			}
 		}
 		break;
