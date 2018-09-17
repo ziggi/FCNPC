@@ -409,8 +409,10 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 
 	// Call FCNPC_OnWeaponShot
 	int send = CCallbackManager::OnWeaponShot(wPlayerId, bulletSyncDataTarget.byteWeaponID, bulletSyncDataTarget.byteHitType, bulletSyncDataTarget.wHitID, bulletSyncDataTarget.vecCenterOfHit);
+	logprintf("TYPE %d, ID %d, %.2f, %.2f, %.2f", bulletSyncDataTarget.byteHitType, bulletSyncDataTarget.wHitID, bulletSyncDataTarget.vecCenterOfHit.fX, bulletSyncDataTarget.vecCenterOfHit.fY, bulletSyncDataTarget.vecCenterOfHit.fZ);
+
+	// Deal damage to the target NPC if the target is an NPC
 	if (send != 0) {
-		// If the target is an NPC
 		if (bulletSyncDataTarget.byteHitType == BULLET_HIT_TYPE_PLAYER && pServer->GetPlayerManager()->IsNpcConnected(bulletSyncDataTarget.wHitID)) {
 			CPlayerData *pHitPlayerData = pServer->GetPlayerManager()->GetAt(bulletSyncDataTarget.wHitID);
 
@@ -691,7 +693,7 @@ WORD CFunctions::GetClosestVehicleInBetween(const CVector &vecHitOrigin, const C
 		}
 
 		// Is the vehicle on the ray
-		if (CMath::GetDistanceFromRayToPoint(vecHitOrigin, vecHitTarget, pVehicle->vecPosition) > MAX_HIT_RADIUS) {
+		if (CMath::GetDistanceFromRayToPoint(vecHitOrigin, vecHitTarget, pVehicle->vecPosition) > MAX_HIT_RADIUS_VEHICLE) { //Don't use MAX_HIT_RADIUS
 			continue;
 		}
 

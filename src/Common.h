@@ -17,6 +17,7 @@ extern logprintf_t          logprintf;
 
 // Settings
 #define MAX_HIT_RADIUS                  0.4f
+#define MAX_HIT_RADIUS_VEHICLE          1.0f
 #define MAX_DISTANCE_TO_ENTER_VEHICLE   30.0f
 #define MIN_VEHICLE_GO_TO_DISTANCE      1.0f
 #define DEFAULT_UPDATE_RATE             50
