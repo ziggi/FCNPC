@@ -302,14 +302,16 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	// Get center of hit
 	switch (bulletSyncDataTarget.byteHitType) {
 	case BULLET_HIT_TYPE_NONE:
-		if (bulletSyncDataTarget.wHitID >= 0 && bulletSyncDataTarget.wHitID < MAX_ACTORS) { //Actors don't have a hit type
+		if (bulletSyncDataTarget.wHitID >= 0 && bulletSyncDataTarget.wHitID < MAX_ACTORS) { // Actors don't have a hit type
 			CActor *pActor = pNetGame->pActorPool->pActor[bulletSyncDataTarget.wHitID];
 			if (pActor) {
 				bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pActor->vecPosition);
 				bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget - pActor->vecPosition;
 			}
 		}
-		else {} //Hit nothing
+		else { // Hit nothing
+			bulletSyncDataTarget.vecCenterOfHit = CVector(); // Conform with SA-MP native when nothing is hit
+		}
 		break;
 	case BULLET_HIT_TYPE_PLAYER:
 		if (bulletSyncDataTarget.wHitID >= 0 && bulletSyncDataTarget.wHitID < MAX_PLAYERS) {
@@ -323,7 +325,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		}
 		break;
 	case BULLET_HIT_TYPE_VEHICLE:
-		if (bulletSyncDataTarget.wHitID >= 1 && bulletSyncDataTarget.wHitID < MAX_VEHICLES) { //Vehicle IDs start at 1
+		if (bulletSyncDataTarget.wHitID >= 1 && bulletSyncDataTarget.wHitID < MAX_VEHICLES) { // Vehicle IDs start at 1
 			CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[bulletSyncDataTarget.wHitID];
 			if (pVehicle) {
 				bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pVehicle->vecPosition);
@@ -332,7 +334,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		}
 		break;
 	case BULLET_HIT_TYPE_OBJECT:
-		if (bulletSyncDataTarget.wHitID >= 1 && bulletSyncDataTarget.wHitID < MAX_OBJECTS) { //Object IDs start at 1
+		if (bulletSyncDataTarget.wHitID >= 1 && bulletSyncDataTarget.wHitID < MAX_OBJECTS) { // Object IDs start at 1
 			CObject *pObject = pNetGame->pObjectPool->pObjects[bulletSyncDataTarget.wHitID];
 			if (pObject) {
 				bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pObject->matWorld.pos);
@@ -341,7 +343,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		}
 		break;
 	case BULLET_HIT_TYPE_PLAYER_OBJECT:
-		if (bulletSyncDataTarget.wHitID >= 1 && bulletSyncDataTarget.wHitID < MAX_OBJECTS) { //Player object IDs start at 1
+		if (bulletSyncDataTarget.wHitID >= 1 && bulletSyncDataTarget.wHitID < MAX_OBJECTS) { // Player object IDs start at 1
 			CObject *pPlayerObject = pNetGame->pObjectPool->pPlayerObjects[wPlayerId][bulletSyncDataTarget.wHitID];
 			if (pPlayerObject) {
 				bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pPlayerObject->matWorld.pos);
@@ -396,7 +398,7 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 
 	// Check if an NPC is in between the origin and the target
 	float fClosestNPCDistance = 0.0;
-	WORD wClosestNPC = GetClosestNPCInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestNPCDistance, wPlayerId, wTargetId); //Separate function in case we need to handle NPCs differently form players in the future
+	WORD wClosestNPC = GetClosestNPCInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestNPCDistance, wPlayerId, wTargetId); // Separate function in case we need to handle NPCs differently form players in the future
 	if (wClosestNPC != INVALID_PLAYER_ID && (wClosestEntity == 0xFFFF || fClosestNPCDistance < fClosestEntityDistance)) {
 		byteHitType = BULLET_HIT_TYPE_PLAYER;
 		fClosestEntityDistance = fClosestNPCDistance;
@@ -407,7 +409,7 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 	float fClosestActorDistance = 0.0;
 	WORD wClosestActor = GetClosestActorInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestActorDistance);
 	if (wClosestActor != INVALID_ACTOR_ID && (wClosestEntity == 0xFFFF || fClosestActorDistance < fClosestEntityDistance)) {
-		byteHitType = BULLET_HIT_TYPE_NONE; //Actors don't have a hit type, this is conform with the SA-MP native OnPlayerWeaponShot
+		byteHitType = BULLET_HIT_TYPE_NONE; // Actors don't have a hit type, this is conform with the SA-MP native OnPlayerWeaponShot
 		fClosestEntityDistance = fClosestActorDistance;
 		wClosestEntity = wClosestActor;
 	}
@@ -432,14 +434,14 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 
 	// Check if a player object is in between the origin and the target
 	float fClosestPlayerObjectDistance = 0.0;
-	WORD wClosestPlayerObject = GetClosestPlayerObjectInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestPlayerObjectDistance, wPlayerId); //Only checks for player objects of the shooter, not the target
+	WORD wClosestPlayerObject = GetClosestPlayerObjectInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestPlayerObjectDistance, wPlayerId); // Only checks for player objects of the shooter, not the target
 	if (wClosestPlayerObject != INVALID_OBJECT_ID && (wClosestEntity == 0xFFFF || fClosestPlayerObjectDistance < fClosestEntityDistance)) {
 		byteHitType = BULLET_HIT_TYPE_PLAYER_OBJECT;
 		fClosestEntityDistance = fClosestPlayerObjectDistance;
 		wClosestEntity = wClosestPlayerObject;
 	}
 
-	//Check if a map point is in between the origin and the target
+	// Check if a map point is in between the origin and the target
 	float fClosestMapPointDistance = 0.0;
 	WORD wClosestMapPoint = GetClosestMapPointInBetween(vecHitOrigin, vecHitTarget, byteWeaponID, fClosestMapPointDistance);
 	if (wClosestMapPoint != 0 && (wClosestEntity == 0xFFFF || fClosestMapPointDistance < fClosestEntityDistance)) {
@@ -558,7 +560,7 @@ WORD CFunctions::GetClosestVehicleInBetween(const CVector &vecHitOrigin, const C
 	WORD wClosestVehicle = INVALID_VEHICLE_ID;
 
 	// Loop through all the vehicles
-	for (WORD i = 1; i <= pNetGame->pVehiclePool->dwVehiclePoolSize; i++) { //Vehicle IDs start at 1
+	for (WORD i = 1; i <= pNetGame->pVehiclePool->dwVehiclePoolSize; i++) { // Vehicle IDs start at 1
 
 		// Validate the vehicle
 		CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[i];
@@ -592,7 +594,7 @@ WORD CFunctions::GetClosestObjectInBetween(const CVector &vecHitOrigin, const CV
 	WORD wClosestObject = INVALID_OBJECT_ID;
 
 	// Loop through all the objects
-	for (WORD i = 1; i < MAX_OBJECTS; i++) { //Object IDs start at 1
+	for (WORD i = 1; i < MAX_OBJECTS; i++) { // Object IDs start at 1
 
 		// Validate the object
 		CObject *pObject = pNetGame->pObjectPool->pObjects[i];
@@ -626,7 +628,7 @@ WORD CFunctions::GetClosestPlayerObjectInBetween(const CVector &vecHitOrigin, co
 	WORD wClosestPlayerObject = INVALID_OBJECT_ID;
 
 	// Loop through all the player objects of the shooter
-	for (WORD i = 1; i < MAX_OBJECTS; i++) { //Player object IDs start at 1
+	for (WORD i = 1; i < MAX_OBJECTS; i++) { // Player object IDs start at 1
 
 		// Validate the player object
 		CObject *pPlayerObject = pNetGame->pObjectPool->pPlayerObjects[wPlayerId][i];
