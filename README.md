@@ -62,6 +62,17 @@ Constants
 ```Pawn
 #define FCNPC_INCLUDE_VERSION		The current FCNPC include version.
 
+#define FCNPC_SHOOT_CHECK_NONE		(0)
+#define FCNPC_SHOOT_CHECK_PLAYER	(1)
+#define FCNPC_SHOOT_CHECK_NPC		(2)
+#define FCNPC_SHOOT_CHECK_ACTOR		(4)
+#define FCNPC_SHOOT_CHECK_VEHICLE	(8)
+#define FCNPC_SHOOT_CHECK_OBJECT	(16)
+#define FCNPC_SHOOT_CHECK_POBJECT_ORIG	(32)
+#define FCNPC_SHOOT_CHECK_POBJECT_TARG	(64)
+#define FCNPC_SHOOT_CHECK_MAP		(128)
+#define FCNPC_SHOOT_CHECK_ALL		(255)
+
 #define FCNPC_MOVE_TYPE_AUTO		(-1)
 #define FCNPC_MOVE_TYPE_WALK		(0)
 #define FCNPC_MOVE_TYPE_RUN		(1)
@@ -241,8 +252,8 @@ native bool:FCNPC_IsMoving(npcid);
 native bool:FCNPC_IsMovingAtPlayer(npcid, playerid);
 native FCNPC_GetDestinationPoint(npcid, &Float:x, &Float:y, &Float:z);
 
-native FCNPC_AimAt(npcid, Float:x, Float:y, Float:z, bool:shoot = false, shoot_delay = -1, bool:setangle = true, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0);
-native FCNPC_AimAtPlayer(npcid, playerid, bool:shoot = false, shoot_delay = -1, bool:setangle = true, Float:offset_x = 0.0, Float:offset_y = 0.0, Float:offset_z = 0.0, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0);
+native FCNPC_AimAt(npcid, Float:x, Float:y, Float:z, bool:shoot = false, shoot_delay = -1, bool:setangle = true, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0, checkInBetween = FCNPC_SHOOT_CHECK_ALL);
+native FCNPC_AimAtPlayer(npcid, playerid, bool:shoot = false, shoot_delay = -1, bool:setangle = true, Float:offset_x = 0.0, Float:offset_y = 0.0, Float:offset_z = 0.0, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0, checkInBetween = FCNPC_SHOOT_CHECK_ALL);
 native FCNPC_StopAim(npcid);
 native FCNPC_MeleeAttack(npcid, delay = -1, bool:fightstyle = false);
 native FCNPC_StopAttack(npcid);
@@ -252,7 +263,7 @@ native bool:FCNPC_IsAimingAtPlayer(npcid, playerid);
 native FCNPC_GetAimingPlayer(npcid);
 native bool:FCNPC_IsShooting(npcid);
 native bool:FCNPC_IsReloading(npcid);
-native FCNPC_TriggerWeaponShot(npcid, weaponid, hittype, hitid, Float:x, Float:y, Float:z, bool:ishit = true, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0);
+native FCNPC_TriggerWeaponShot(npcid, weaponid, hittype, hitid, Float:x, Float:y, Float:z, bool:ishit = true, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0, checkInBetween = FCNPC_SHOOT_CHECK_ALL);
 
 native FCNPC_EnterVehicle(npcid, vehicleid, seatid, type = FCNPC_MOVE_TYPE_WALK);
 native FCNPC_ExitVehicle(npcid);

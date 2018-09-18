@@ -48,7 +48,7 @@ public:
 	static CVector *GetVehicleModelInfoEx(int iModelID, int iInfoType);
 	static WORD GetMaxPlayers();
 	static WORD GetMaxNPC();
-	static void PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE byteWeaponId, const CVector &vecPoint, const CVector &vecOffsetFrom, bool bIsHit);
+
 #ifdef SAMP_03DL
 	static int GetSkinBaseID(DWORD dwSkinId);
 #endif
@@ -64,6 +64,8 @@ public:
 	static PlayerID GetPlayerIDFromIndex(int index);
 	static int GetIndexFromPlayerID(PlayerID playerId);
 
+	static void PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE byteWeaponId, const CVector &vecPoint, const CVector &vecOffsetFrom, bool bIsHit, BYTE checkInBetween);
+
 	// Functions
 	static ClientJoin_RPC_t                 pfn__ClientJoin_RPC;
 	static CPlayerPool__DeletePlayer_t      pfn__CPlayerPool__DeletePlayer;
@@ -78,6 +80,17 @@ public:
 	static RakNet__Receive_t                pfn__RakNet__Receive;
 	static RakNet__GetPlayerIDFromIndex_t   pfn__RakNet__GetPlayerIDFromIndex;
 	static RakNet__GetIndexFromPlayerID_t   pfn__RakNet__GetIndexFromPlayerID;
+
+private:
+	static WORD GetClosestEntityInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float fTargetDistance, BYTE &byteHitType, WORD &wPlayerObjectOwnerId, CVector &vecHitMap, BYTE checkInBetween, WORD wPlayerId, WORD wTargetId);
+	static WORD GetClosestPlayerInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float fTargetDistance, float &fDistance, WORD wPlayerId, WORD wTargetId);
+	static WORD GetClosestNPCInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float fTargetDistance, float &fDistance, WORD wPlayerId, WORD wTargetId);
+	static WORD GetClosestActorInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float fTargetDistance, float &fDistance);
+	static WORD GetClosestVehicleInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float fTargetDistance, float &fDistance);
+	static WORD GetClosestObjectInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float fTargetDistance, float &fDistance);
+	static WORD GetClosestPlayerObjectInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float fTargetDistance, float &fDistance, WORD wOwnerId);
+	static WORD GetClosestMapPointInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, BYTE byteWeaponID, float fTargetDistance, float &fDistance, CVector &vecHitMap);
+
 };
 
 #endif

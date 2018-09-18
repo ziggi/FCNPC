@@ -17,7 +17,7 @@ extern logprintf_t          logprintf;
 
 // Settings
 #define MAX_HIT_RADIUS                  0.4f
-#define MAX_DAMAGE_DISTANCE             200.0f
+#define MAX_HIT_RADIUS_VEHICLE          1.0f
 #define MAX_DISTANCE_TO_ENTER_VEHICLE   30.0f
 #define MIN_VEHICLE_GO_TO_DISTANCE      1.0f
 #define DEFAULT_UPDATE_RATE             50
@@ -47,6 +47,19 @@ extern logprintf_t          logprintf;
 #define UPDATE_STATE_ONFOOT     1
 #define UPDATE_STATE_DRIVER     2
 #define UPDATE_STATE_PASSENGER  3
+
+// Check in between shot (type BYTE suffices)
+#define FCNPC_SHOOT_CHECK_NONE           (0)
+#define FCNPC_SHOOT_CHECK_PLAYER         (1)
+#define FCNPC_SHOOT_CHECK_NPC            (2)
+#define FCNPC_SHOOT_CHECK_ACTOR          (4)
+#define FCNPC_SHOOT_CHECK_VEHICLE        (8)
+#define FCNPC_SHOOT_CHECK_OBJECT         (16)
+#define FCNPC_SHOOT_CHECK_POBJECT_ORIG   (32)
+#define FCNPC_SHOOT_CHECK_POBJECT_TARG   (64)
+#define FCNPC_SHOOT_CHECK_MAP            (128)
+#define FCNPC_SHOOT_CHECK_ALL            (255)
+
 // Movement type
 #define MOVE_TYPE_AUTO      -1
 #define MOVE_TYPE_WALK      0

@@ -27,6 +27,7 @@ struct SWeaponInfo
 {
 	int iType;
 	float fDamage;
+	float fRange;
 	int iClipSize;
 	int iShootTime;
 	int iReloadTime;
@@ -50,6 +51,9 @@ public:
 
 	float GetDamage(BYTE byteWeaponId);
 	bool SetDamage(BYTE byteWeaponId, float fDamage);
+
+	float GetRange(BYTE byteWeaponId);
+	bool SetRange(BYTE byteWeaponId, float fRange);
 
 	int GetClipSize(BYTE byteWeaponId);
 	bool SetClipSize(BYTE byteWeaponId, int iClipSize);

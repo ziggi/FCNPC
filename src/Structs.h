@@ -944,7 +944,7 @@ struct CActor
 	float			fHealth;
 	DWORD			pad;
 	float			fAngle;
-	CVector			vecPos;
+	CVector			vecPosition;
 	BYTE			pad8[12];
 	BYTE			byteInvulnerable;
 	WORD			wActorID;
