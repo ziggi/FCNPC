@@ -192,6 +192,8 @@ public:
 	int GetSurfingVehicle();
 	void SetSurfingObject(WORD wObjectId);
 	int GetSurfingObject();
+	void SetSurfingPlayerObject(WORD wObjectId);
+	int GetSurfingPlayerObject();
 	void StopSurfing();
 
 	bool StartPlayingPlayback(char *szFile, int iRecordId, bool bAutoUnload, const CVector &vecPoint, float *fQuaternion);
