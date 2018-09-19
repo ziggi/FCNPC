@@ -2363,6 +2363,23 @@ int CPlayerData::GetSurfingObject()
 	return INVALID_OBJECT_ID;
 }
 
+void CPlayerData::SetSurfingPlayerObject(WORD wObjectId)
+{
+	m_wSurfingInfo = MAX_VEHICLES + wObjectId;
+	pNetGame->pObjectPool->bPlayerObjectSlotState[m_wPlayerId][wObjectId] = true;
+}
+
+int CPlayerData::GetSurfingPlayerObject()
+{
+	WORD wObjectId = m_wSurfingInfo - MAX_VEHICLES;
+	if (wObjectId > 0 && wObjectId < MAX_OBJECTS) {
+		if (pNetGame->pObjectPool->bPlayerObjectSlotState[m_wPlayerId][wObjectId]) {
+			return wObjectId;
+		}
+	}
+	return INVALID_OBJECT_ID;
+}
+
 void CPlayerData::StopSurfing()
 {
 	WORD wObjectId = m_wSurfingInfo - MAX_VEHICLES;

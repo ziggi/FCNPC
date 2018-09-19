@@ -166,6 +166,8 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_GetSurfingVehicle(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetSurfingObject(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetSurfingObject(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_SetSurfingPlayerObject(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_GetSurfingPlayerObject(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_StopSurfing(AMX *amx, cell *params);
 
 	static cell AMX_NATIVE_CALL FCNPC_StartPlayingPlayback(AMX *amx, cell *params);
