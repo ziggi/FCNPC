@@ -246,6 +246,16 @@ native FCNPC_SetSurfingObject(npcid, objectid);
 native FCNPC_GetSurfingObject(npcid);
 native FCNPC_SetSurfingPlayerObject(npcid, objectid);
 native FCNPC_GetSurfingPlayerObject(npcid);
+#if defined _streamer_included
+	// native FCNPC_SetSurfingDynamicObject(npcid, objectid); // Fake native
+	stock FCNPC_SetSurfingDynamicObject(npcid, objectid) {
+		return FCNPC_SetSurfingPlayerObject(npcid, Streamer_GetItemInternalID(npcid, STREAMER_TYPE_OBJECT, objectid));
+	}
+	// native FCNPC_GetSurfingDynamicObject(npcid); // Fake native
+	stock FCNPC_GetSurfingDynamicObject(npcid) {
+		return Streamer_GetItemStreamerID(npcid, STREAMER_TYPE_OBJECT, FCNPC_GetSurfingPlayerObject(npcid));
+	}
+#endif
 native FCNPC_StopSurfing(npcid);
 
 native FCNPC_StartPlayingPlayback(npcid, file[] = "", recordid = FCNPC_INVALID_RECORD_ID, bool:auto_unload = false, Float:delta_x = 0.0, Float:delta_y  = 0.0, Float:delta_z  = 0.0, Float:delta_qw = 0.0, Float:delta_qx = 0.0, Float:delta_qy = 0.0, Float:delta_qz = 0.0);
