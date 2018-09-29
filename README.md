@@ -146,7 +146,7 @@ native bool:FCNPC_IsMoveModeUsed(mode);
 native FCNPC_UseCrashLog(bool:use = true);
 native bool:FCNPC_IsCrashLogUsed();
 
-native FCNPC_Create(name[]);
+native FCNPC_Create(const name[]);
 native FCNPC_Destroy(npcid);
 native FCNPC_Spawn(npcid, skinid, Float:x, Float:y, Float:z);
 native FCNPC_Respawn(npcid);
@@ -231,10 +231,10 @@ native FCNPC_SetSpecialAction(npcid, actionid);
 native FCNPC_GetSpecialAction(npcid);
 
 native FCNPC_SetAnimation(npcid, animationid, Float:fDelta = 4.1, loop = 0, lockx = 1, locky = 1, freeze = 0, time = 1);
-native FCNPC_SetAnimationByName(npcid, name[], Float:fDelta = 4.1, loop = 0, lockx = 1, locky = 1, freeze = 0, time = 1);
+native FCNPC_SetAnimationByName(npcid, const name[], Float:fDelta = 4.1, loop = 0, lockx = 1, locky = 1, freeze = 0, time = 1);
 native FCNPC_ResetAnimation(npcid);
 native FCNPC_GetAnimation(npcid, &animationid = 0, &Float:fDelta = 4.1, &loop = 0, &lockx = 1, &locky = 1, &freeze = 0, &time = 1);
-native FCNPC_ApplyAnimation(npcid, animlib[], animname[], Float:fDelta = 4.1, loop = 0, lockx = 1, locky = 1, freeze = 0, time = 1);
+native FCNPC_ApplyAnimation(npcid, const animlib[], const animname[], Float:fDelta = 4.1, loop = 0, lockx = 1, locky = 1, freeze = 0, time = 1);
 native FCNPC_ClearAnimations(npcid);
 
 native FCNPC_SetFightingStyle(npcid, style);
@@ -296,13 +296,13 @@ native FCNPC_GetSurfingPlayerObject(npcid);
 #endif
 native FCNPC_StopSurfing(npcid);
 
-native FCNPC_StartPlayingPlayback(npcid, file[] = "", recordid = FCNPC_INVALID_RECORD_ID, bool:auto_unload = false, Float:delta_x = 0.0, Float:delta_y  = 0.0, Float:delta_z  = 0.0, Float:delta_qw = 0.0, Float:delta_qx = 0.0, Float:delta_qy = 0.0, Float:delta_qz = 0.0);
+native FCNPC_StartPlayingPlayback(npcid, const file[] = "", recordid = FCNPC_INVALID_RECORD_ID, bool:auto_unload = false, Float:delta_x = 0.0, Float:delta_y  = 0.0, Float:delta_z  = 0.0, Float:delta_qw = 0.0, Float:delta_qx = 0.0, Float:delta_qy = 0.0, Float:delta_qz = 0.0);
 native FCNPC_StopPlayingPlayback(npcid);
 native FCNPC_PausePlayingPlayback(npcid);
 native FCNPC_ResumePlayingPlayback(npcid);
-native FCNPC_LoadPlayingPlayback(file[]);
+native FCNPC_LoadPlayingPlayback(const file[]);
 native FCNPC_UnloadPlayingPlayback(recordid);
-native FCNPC_SetPlayingPlaybackPath(npcid, path[]);
+native FCNPC_SetPlayingPlaybackPath(npcid, const path[]);
 native FCNPC_GetPlayingPlaybackPath(npcid, path[], const size = sizeof(path));
 
 native FCNPC_OpenNode(nodeid);
