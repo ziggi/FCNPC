@@ -68,7 +68,7 @@ int CMovePath::AddPoint(int iPathId, const CVector &vecPoint)
 
 bool CMovePath::RemovePoint(int iPathId, int iPointId)
 {
-	if (IsPointValid(iPathId, iPointId)) {
+	if (!IsPointValid(iPathId, iPointId)) {
 		return false;
 	}
 
