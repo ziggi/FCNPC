@@ -17,7 +17,7 @@ public:
 	int Create();
 	bool Destroy(int iPathId);
 	bool IsPathValid(int iPathId);
-	std::vector<CVector> *GetPoints(int iPathId);
+	std::map<int, CVector> *GetPoints(int iPathId);
 
 	int AddPoint(int iPathId, const CVector &vecPoint);
 	bool RemovePoint(int iPathId, int iPointId);
@@ -25,9 +25,7 @@ public:
 	CVector *GetPoint(int iPathId, int iPointId);
 
 private:
-	std::vector<std::vector<CVector>> m_vPath;
-	std::vector<std::vector<int>> m_vPointsID;
-	std::vector<int> m_vPathID;
+	std::map<int, std::map<int, CVector>> m_mMovePath;
 };
 
 #endif
