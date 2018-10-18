@@ -35,6 +35,9 @@ extern logprintf_t          logprintf;
 		return 0; \
 	}
 #endif
+#ifndef min
+#define min(a,b)            (((a) < (b)) ? (a) : (b))
+#endif
 // Plugin exports
 #define PLUGIN_DATA_NETGAME        225
 #define PLUGIN_DATA_RAKSERVER      226
@@ -49,16 +52,16 @@ extern logprintf_t          logprintf;
 #define UPDATE_STATE_PASSENGER  3
 
 // Check in between shot (type BYTE suffices)
-#define FCNPC_SHOOT_CHECK_NONE           (0)
-#define FCNPC_SHOOT_CHECK_PLAYER         (1)
-#define FCNPC_SHOOT_CHECK_NPC            (2)
-#define FCNPC_SHOOT_CHECK_ACTOR          (4)
-#define FCNPC_SHOOT_CHECK_VEHICLE        (8)
-#define FCNPC_SHOOT_CHECK_OBJECT         (16)
-#define FCNPC_SHOOT_CHECK_POBJECT_ORIG   (32)
-#define FCNPC_SHOOT_CHECK_POBJECT_TARG   (64)
-#define FCNPC_SHOOT_CHECK_MAP            (128)
-#define FCNPC_SHOOT_CHECK_ALL            (255)
+#define FCNPC_ENTITY_CHECK_NONE           (0)
+#define FCNPC_ENTITY_CHECK_PLAYER         (1)
+#define FCNPC_ENTITY_CHECK_NPC            (2)
+#define FCNPC_ENTITY_CHECK_ACTOR          (4)
+#define FCNPC_ENTITY_CHECK_VEHICLE        (8)
+#define FCNPC_ENTITY_CHECK_OBJECT         (16)
+#define FCNPC_ENTITY_CHECK_POBJECT_ORIG   (32)
+#define FCNPC_ENTITY_CHECK_POBJECT_TARG   (64)
+#define FCNPC_ENTITY_CHECK_MAP            (128)
+#define FCNPC_ENTITY_CHECK_ALL            (255)
 
 // Movement type
 #define MOVE_TYPE_AUTO      -1

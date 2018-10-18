@@ -235,6 +235,7 @@ AMX_NATIVE_INFO PluginNatives[] = {
 	{ "FCNPC_GetAimingPlayer", CNatives::FCNPC_GetAimingPlayer },
 	{ "FCNPC_IsShooting", CNatives::FCNPC_IsShooting },
 	{ "FCNPC_IsReloading", CNatives::FCNPC_IsReloading },
+	{ "FCNPC_GetClosestEntityInBetween", CNatives::FCNPC_GetClosestEntityInBetween },
 
 	{ "FCNPC_EnterVehicle", CNatives::FCNPC_EnterVehicle },
 	{ "FCNPC_ExitVehicle", CNatives::FCNPC_ExitVehicle },

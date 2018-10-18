@@ -138,6 +138,7 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_GetAimingPlayer(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_IsShooting(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_IsReloading(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_GetClosestEntityInBetween(AMX *amx, cell *params);
 
 	static cell AMX_NATIVE_CALL FCNPC_UseReloading(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_IsReloadingUsed(AMX *amx, cell *params);

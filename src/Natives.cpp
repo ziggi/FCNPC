@@ -2015,7 +2015,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAt(AMX *amx, cell *params)
 	int iShootDelay = static_cast<int>(params[6]);
 	bool bSetAngle = static_cast<int>(params[7]) != 0;
 	CVector vecOffsetFrom(amx_ctof(params[8]), amx_ctof(params[9]), amx_ctof(params[10]));
-	BYTE checkInBetween = static_cast<BYTE>(params[11]);
+	BYTE byteBetweenCheckFlags = static_cast<BYTE>(params[11]);
 
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
@@ -2035,7 +2035,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAt(AMX *amx, cell *params)
 		case WEAPON_TYPE_SPRAY:
 		case WEAPON_TYPE_THROW:
 			pPlayerData->StopAim();
-			pPlayerData->AimAt(vecPoint, bShoot, iShootDelay, bSetAngle, vecOffsetFrom, checkInBetween);
+			pPlayerData->AimAt(vecPoint, bShoot, iShootDelay, bSetAngle, vecOffsetFrom, byteBetweenCheckFlags);
 			return 1;
 	}
 
@@ -2247,6 +2247,54 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsReloading(AMX *amx, cell *params)
 
 	// Get the player shooting state
 	return pPlayerData->IsReloading();
+}
+
+// native FCNPC_GetClosestEntityInBetween(npcid, Float:x, Float:y, Float:z, Float:range, between_check_flags = FCNPC_ENTITY_CHECK_ALL, &entity_id = -1, &entity_type = -1, &object_owner_id = INVALID_PLAYER_ID, &Float:point_x = 0.0, &Float:point_y = 0.0, &Float:point_z = 0.0);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetClosestEntityInBetween(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_GetClosestEntityInBetween");
+
+	// Get the params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+	CVector vecHitTarget(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
+	float fRange = amx_ctof(params[5]);
+	BYTE byteBetweenCheckFlags = static_cast<BYTE>(params[6]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	WORD wEntityId;
+	BYTE byteEntityType;
+	WORD wPlayerObjectOwnerId;
+	CVector vecHitMap;
+	CVector vecHitOrigin;
+
+	pPlayerData->GetPosition(&vecHitOrigin);
+	wEntityId = CFunctions::GetClosestEntityInBetween(vecHitOrigin, vecHitTarget, fRange, byteBetweenCheckFlags, wNpcId, INVALID_PLAYER_ID, byteEntityType, wPlayerObjectOwnerId, vecHitMap);
+
+	cell *pAddress = NULL;
+	amx_GetAddr(amx, params[7], &pAddress);
+	*pAddress = wEntityId;
+
+	amx_GetAddr(amx, params[8], &pAddress);
+	*pAddress = byteEntityType;
+
+	amx_GetAddr(amx, params[9], &pAddress);
+	*pAddress = wPlayerObjectOwnerId;
+
+	amx_GetAddr(amx, params[10], &pAddress);
+	*pAddress = amx_ftoc(vecHitMap.fX);
+
+	amx_GetAddr(amx, params[11], &pAddress);
+	*pAddress = amx_ftoc(vecHitMap.fY);
+
+	amx_GetAddr(amx, params[12], &pAddress);
+	*pAddress = amx_ftoc(vecHitMap.fZ);
+
+	return 1;
 }
 
 cell AMX_NATIVE_CALL CNatives::FCNPC_EnterVehicle(AMX *amx, cell *params)
