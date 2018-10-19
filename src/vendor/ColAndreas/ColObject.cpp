@@ -13,27 +13,23 @@ ColAndreasColObject::ColAndreasColObject(uint16_t colindex, bool thirdparty = fa
 	colMapObject = new btCompoundShape();
 
 	// Build any spheres
-	for (uint16_t i = 0; i < CollisionModels[colindex].SphereCount; i++)
-	{
+	for (uint16_t i = 0; i < CollisionModels[colindex].SphereCount; i++) {
 		btSphereShape* sphere = new btSphereShape(CollisionModels[colindex].SphereData[i].Radius);
 		colMapObject->addChildShape(btTransform(btQuaternion(0, 0, 0, 1), btVector3(CollisionModels[colindex].SphereData[i].Offset.x, CollisionModels[colindex].SphereData[i].Offset.y, CollisionModels[colindex].SphereData[i].Offset.z)), sphere);
 		spheres.push_back(sphere);
 	}
 
-	for (uint16_t i = 0; i < CollisionModels[colindex].BoxCount; i++)
-	{
+	for (uint16_t i = 0; i < CollisionModels[colindex].BoxCount; i++) {
 		// Create a box shape
 		btBoxShape* box = new btBoxShape(btVector3(CollisionModels[colindex].BoxData[i].Size.x, CollisionModels[colindex].BoxData[i].Size.y, CollisionModels[colindex].BoxData[i].Size.z));
 		colMapObject->addChildShape(btTransform(btQuaternion(0, 0, 0, 1), btVector3(CollisionModels[colindex].BoxData[i].Center.x, CollisionModels[colindex].BoxData[i].Center.y, CollisionModels[colindex].BoxData[i].Center.z)), box);
 		boxes.push_back(box);
 	}
 
-	if (CollisionModels[colindex].FaceCount > 0)
-	{
+	if (CollisionModels[colindex].FaceCount > 0) {
 		// Create a triangular mesh
 		trimesh = new btTriangleMesh();
-		for (int i = 0; i < CollisionModels[colindex].FaceCount; i++)
-		{
+		for (int i = 0; i < CollisionModels[colindex].FaceCount; i++) {
 			// Add triangle faces
 			trimesh->addTriangle(btVector3(CollisionModels[colindex].FacesData[i].FaceA.x, CollisionModels[colindex].FacesData[i].FaceA.y, CollisionModels[colindex].FacesData[i].FaceA.z),
 				btVector3(CollisionModels[colindex].FacesData[i].FaceB.x, CollisionModels[colindex].FacesData[i].FaceB.y, CollisionModels[colindex].FacesData[i].FaceB.z),
@@ -45,22 +41,19 @@ ColAndreasColObject::ColAndreasColObject(uint16_t colindex, bool thirdparty = fa
 			btConvexTriangleMeshShape* convexMesh;
 			convexMesh = new btConvexTriangleMeshShape(trimesh);
 			colMapObject->addChildShape(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)), convexMesh); //producing a convex mesh
-		}
-		else
+		} else
 			colMapObject->addChildShape(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)), meshshape);
 	}
 }
 
 ColAndreasColObject::~ColAndreasColObject()
-{	
+{
 	delete meshshape;
 	delete trimesh;
-	for (uint16_t i = 0; i < boxes.size(); i++)
-	{
+	for (uint16_t i = 0; i < boxes.size(); i++) {
 		delete boxes[i];
 	}
-	for (uint16_t i = 0; i < spheres.size(); i++)
-	{
+	for (uint16_t i = 0; i < spheres.size(); i++) {
 		delete spheres[i];
 	}
 	delete colMapObject;
@@ -75,12 +68,9 @@ btCompoundShape* ColAndreasColObject::getCompoundShape()
 
 bool LoadCollisionData(btDynamicsWorld* collisionWorld)
 {
-	if (ReadColandreasDatabaseFile("scriptfiles/colandreas/ColAndreas.cadb"))
-	{
-		for (uint16_t i = 0; i < ModelCount; i++)
-		{
-			if (i % 100 == 0)
-			{
+	if (ReadColandreasDatabaseFile("scriptfiles/colandreas/ColAndreas.cadb")) {
+		for (uint16_t i = 0; i < ModelCount; i++) {
+			if (i % 100 == 0) {
 				printf("\33Loading: %0.1f\r", ((double)i / ModelCount) * 100);
 			}
 			ColAndreasColObject* colObject = new ColAndreasColObject(i);
@@ -117,7 +107,7 @@ ColAndreasMapObject::ColAndreasMapObject(uint16_t modelid, const btQuaternion& o
 
 	// Add rigid body to world
 	collisionWorld->addRigidBody(colMapRigidBody);
-	
+
 	// Create the tracker object
 	tracker = new ColAndreasObjectTracker();
 
@@ -157,8 +147,7 @@ MapWaterMesh::MapWaterMesh(btDynamicsWorld* world)
 	// Create a triangular mesh
 	trimesh = new btTriangleMesh();
 
-	for (uint16_t i = 0; i < 616; i++)
-	{
+	for (uint16_t i = 0; i < 616; i++) {
 		trimesh->addTriangle(btVector3(btScalar(waterData[i][0]), btScalar(waterData[i][1]), btScalar(waterData[i][2])),
 			btVector3(btScalar(waterData[i][3]), btScalar(waterData[i][4]), btScalar(waterData[i][5])),
 			btVector3(btScalar(waterData[i][6]), btScalar(waterData[i][7]), btScalar(waterData[i][8])));
@@ -193,16 +182,14 @@ MapWaterMesh::~MapWaterMesh()
 
 ObjectManager::ObjectManager()
 {
-	for (int i = 0; i < MAX_MAP_OBJECTS; i++)
-	{
+	for (int i = 0; i < MAX_MAP_OBJECTS; i++) {
 		slotUsed[i] = false;
 	}
 }
- 		 
+
 int ObjectManager::setExtraID(const uint16_t index, int type, int data)
 {
-	if (slotUsed[index] && type >= 0 && type < 10)
-	{
+	if (slotUsed[index] && type >= 0 && type < 10) {
 		mapObjects[index]->tracker->extraData[type] = data;
 		return 1;
 	}
@@ -211,8 +198,7 @@ int ObjectManager::setExtraID(const uint16_t index, int type, int data)
 
 int ObjectManager::getExtraID(const uint16_t index, int type)
 {
-	if (slotUsed[index] && type >= 0 && type < 10)
-	{
+	if (slotUsed[index] && type >= 0 && type < 10) {
 		return mapObjects[index]->tracker->extraData[type];
 	}
 	return -1;
@@ -221,10 +207,8 @@ int ObjectManager::getExtraID(const uint16_t index, int type)
 
 int ObjectManager::addObjectManager(ColAndreasMapObject* mapObject)
 {
-	for (int i = 0; i < MAX_MAP_OBJECTS; i++)
-	{
-		if (!slotUsed[i])
-		{
+	for (int i = 0; i < MAX_MAP_OBJECTS; i++) {
+		if (!slotUsed[i]) {
 			slotUsed[i] = true;
 			mapObjects[i] = mapObject;
 			mapObjects[i]->tracker->realIndex = i;
@@ -236,8 +220,7 @@ int ObjectManager::addObjectManager(ColAndreasMapObject* mapObject)
 
 int ObjectManager::removeObjectManager(const uint16_t index)
 {
-	if (slotUsed[index])
-	{
+	if (slotUsed[index]) {
 		slotUsed[index] = false;
 		delete mapObjects[index];
 		return 1;
@@ -245,10 +228,17 @@ int ObjectManager::removeObjectManager(const uint16_t index)
 	return 0;
 }
 
+int ObjectManager::validObjectManager(const uint16_t index)
+{
+	if (slotUsed[index]) {
+		return 1;
+	}
+	return 0;
+}
+
 int ObjectManager::setObjectPosition(const uint16_t index, btVector3& position)
 {
-	if (slotUsed[index])
-	{
+	if (slotUsed[index]) {
 		mapObjects[index]->setMapObjectPosition(position);
 		return 1;
 	}
@@ -257,8 +247,7 @@ int ObjectManager::setObjectPosition(const uint16_t index, btVector3& position)
 
 int ObjectManager::setObjectRotation(const uint16_t index, btQuaternion& rotation)
 {
-	if (slotUsed[index])
-	{
+	if (slotUsed[index]) {
 		mapObjects[index]->setMapObjectRotation(rotation);
 		return 1;
 	}
@@ -271,15 +260,13 @@ int ObjectManager::getBoundingSphere(uint16_t modelid, btVector3& center, btScal
 	uint16_t colindex = ModelRef[modelid];
 
 	// Check for LOD objects
-	if (colindex == 65535)
-	{
+	if (colindex == 65535) {
 		if (LodReference[modelid] > 0)
 			colindex = ModelRef[LodReference[modelid]];
 	}
 
 
-	if (colindex != 65535)
-	{
+	if (colindex != 65535) {
 		colObjects[colindex]->getCompoundShape()->getBoundingSphere(center, radius);
 		return 1;
 	}
@@ -294,15 +281,13 @@ int ObjectManager::getBoundingBox(uint16_t modelid, btVector3& min, btVector3& m
 	t.setIdentity();
 
 	// Check for LOD objects
-	if (colindex == 65535)
-	{
+	if (colindex == 65535) {
 		if (LodReference[modelid] > 0)
 			colindex = ModelRef[LodReference[modelid]];
 	}
 
 
-	if (colindex != 65535)
-	{
+	if (colindex != 65535) {
 		colObjects[colindex]->getCompoundShape()->getAabb(t, min, max);
 		return 1;
 	}
@@ -316,15 +301,12 @@ RemovedBuildingManager::RemovedBuildingManager()
 
 bool RemovedBuildingManager::isRemoved(uint16_t model, Vector position)
 {
-	for (uint16_t i = 0; i < removedBuildings.size(); i++)
-	{
-		if (model == removedBuildings[i].r_Model || model == -1)
-		{
+	for (uint16_t i = 0; i < removedBuildings.size(); i++) {
+		if (model == removedBuildings[i].r_Model || model == -1) {
 			btScalar dist = btDistance(btVector3(btScalar(position.x), btScalar(position.y), btScalar(position.z)),
 				btVector3(btScalar(removedBuildings[i].r_X), btScalar(removedBuildings[i].r_Y), btScalar(removedBuildings[i].r_Z)));
 
-			if (dist <= btScalar(removedBuildings[i].r_Radius))
-			{
+			if (dist <= btScalar(removedBuildings[i].r_Radius)) {
 				return 1;
 			}
 		}
@@ -339,23 +321,19 @@ void RemovedBuildingManager::addBuilding(removeBuildingData removeData)
 
 void InitCollisionMap(btDynamicsWorld* collisionWorld, RemovedBuildingManager* removedManager)
 {
-	for (uint16_t i = 0; i < IPLCount; i++)
-	{
-		if (ModelPlacements[i].Modelid > 19999)
-		{
+	for (uint16_t i = 0; i < IPLCount; i++) {
+		if (ModelPlacements[i].Modelid > 19999) {
 			logprintf("ERROR::InitCollisionMap::Invalid ModelID::%i", ModelPlacements[i].Modelid);
 			continue;
 		}
 
 		uint16_t index = ModelRef[ModelPlacements[i].Modelid];
 
-		if (i % 100 == 0)
-		{
+		if (i % 100 == 0) {
 			printf("\33Loading: %0.1f\r", ((double)i / IPLCount) * 100);
 		}
 
-		if (!removedManager->isRemoved(ModelPlacements[i].Modelid, ModelPlacements[i].Position))
-		{
+		if (!removedManager->isRemoved(ModelPlacements[i].Modelid, ModelPlacements[i].Position)) {
 			// Continue if model has no collision
 			if (index == 65535) continue;
 
@@ -366,7 +344,7 @@ void InitCollisionMap(btDynamicsWorld* collisionWorld, RemovedBuildingManager* r
 	}
 }
 
-uint16_t GetModelRef(uint16_t model) 
+uint16_t GetModelRef(uint16_t model)
 {
 	if (model <= 20000 && ModelRef[model] != 65535)
 		return ModelRef[model];

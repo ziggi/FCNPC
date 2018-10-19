@@ -360,6 +360,7 @@ AMX_NATIVE_INFO PluginNatives[] = {
 	{ "CA_ContactTest", ColAndreasNatives::CA_ContactTest },
 	{ "CA_CreateObject", ColAndreasNatives::CA_CreateObject },
 	{ "CA_DestroyObject", ColAndreasNatives::CA_DestroyObject },
+	{ "CA_IsValidObject", ColAndreasNatives::CA_IsValidObject },
 	{ "CA_EulerToQuat", ColAndreasNatives::CA_EulerToQuat },
 	{ "CA_QuatToEuler", ColAndreasNatives::CA_QuatToEuler },
 	{ "CA_RemoveBuilding", ColAndreasNatives::CA_RemoveBuilding },

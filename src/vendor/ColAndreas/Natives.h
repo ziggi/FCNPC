@@ -16,6 +16,7 @@ public:
 	static cell AMX_NATIVE_CALL CA_RayCastLineNormal(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL CA_CreateObject(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL CA_DestroyObject(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL CA_IsValidObject(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL CA_EulerToQuat(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL CA_QuatToEuler(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL CA_RemoveBuilding(AMX *amx, cell *params);

@@ -18,23 +18,25 @@ struct removeBuildingData
 };
 
 static uint16_t colindex = 0;
- 		 
+
 // Data structure to track in-game objects with respect to their colindex
 struct ColAndreasObjectTracker
 {
-    int32_t realIndex;
-    int32_t extraData[10];
+	int32_t realIndex;
+	int32_t extraData[10];
 
-    ColAndreasObjectTracker(){
-        realIndex = -1;
-        for(int i = 0; i < 10; i++)
-            extraData[i] = -1;
-    }
-    ~ColAndreasObjectTracker() {
-        realIndex = -1;
-        for(int i = 0; i < 10; i++)
-            extraData[i] = -1;
-    }
+	ColAndreasObjectTracker()
+	{
+		realIndex = -1;
+		for (int i = 0; i < 10; i++)
+			extraData[i] = -1;
+	}
+	~ColAndreasObjectTracker()
+	{
+		realIndex = -1;
+		for (int i = 0; i < 10; i++)
+			extraData[i] = -1;
+	}
 };
 
 // Collision Objects
@@ -92,10 +94,11 @@ public:
 	ObjectManager();
 	int addObjectManager(ColAndreasMapObject* mapObject);
 	int removeObjectManager(const uint16_t index);
+	int validObjectManager(const uint16_t index);
 	int setObjectPosition(const uint16_t index, btVector3& position);
 	int setObjectRotation(const uint16_t index, btQuaternion& rotation);
 	int getBoundingSphere(uint16_t modelid, btVector3& center, btScalar& radius);
-	int getBoundingBox(uint16_t modelid, btVector3& min, btVector3& max);	      
+	int getBoundingBox(uint16_t modelid, btVector3& min, btVector3& max);
 	int setExtraID(const uint16_t index, int type, int data);
 	int getExtraID(const uint16_t index, int type);
 private:
@@ -123,7 +126,8 @@ uint16_t GetModelRef(uint16_t model);
 extern std::vector <ColAndreasColObject*> colObjects;
 extern std::vector <btCompoundShape*> colConvex; //for the sake of contact tests
 
-typedef struct {
+typedef struct
+{
 	btVector3 pos;
 	btScalar dist;
 } btMultiCast;
