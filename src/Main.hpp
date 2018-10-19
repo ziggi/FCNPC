@@ -13,9 +13,7 @@
 	#include <windows.h>
 	#include <snprintf/snprintf.h>
 
-	#pragma warning(disable : 4201)
-	#pragma warning(disable : 4206)
-	#pragma warning(disable : 4127)
+	#pragma warning(disable : 4201 4206 4127 4100 4305 4127)
 	#define STDCALL __stdcall
 	#define THISCALL __thiscall
 	#define FASTCALL __fastcall
@@ -49,10 +47,14 @@
 #include <algorithm>
 #include <array>
 #include <queue>
+#include <sstream>
+#include <btBulletDynamicsCommon.h>
 // Library includes
 #include <sdk/plugin.h>
 #include <Invoke/Invoke.h>
 #include <raknet/BitStream.h>
+#include "vendor/MapAndreas/MapAndreas.h"
+#include "vendor/ColAndreas/DynamicWorld.h"
 #include <subhook/subhook.h>
 #include <strlcpy/strlcpy.h>
 // ExceptionHandler includes
@@ -89,6 +91,8 @@
 #include "CPlayerData.hpp"
 // Scripting includes
 #include "Natives.hpp"
+#include "vendor/MapAndreas/natives.h"
+#include "vendor/ColAndreas/Natives.h"
 
 // externals
 extern CServer      *pServer;
@@ -101,3 +105,7 @@ extern void         *pConsole;
 extern void         *pRakServer;
 extern char         szSampVersion[64];
 extern char         szSampClient[64];
+
+extern bool colInit;
+extern bool colDataLoaded;
+extern cell nullAddress;

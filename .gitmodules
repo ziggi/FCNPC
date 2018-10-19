@@ -1,3 +1,6 @@
 [submodule "lib/subhook"]
 	path = lib/subhook
 	url = https://github.com/Zeex/subhook.git
+[submodule "lib/bullet3"]
+	path = lib/bullet3
+	url = https://github.com/bulletphysics/bullet3.git

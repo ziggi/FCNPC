@@ -35,6 +35,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	source_group("${LIBRARY_GROUP}snprintf" FILES ${SNPRINTF_SRC})
 
 	# flags
+	set (USE_MSVC_RUNTIME_LIBRARY_DLL true)
 	set (CMAKE_C_FLAGS "/Zp1 /W4 /MT")
 	set (CMAKE_CXX_FLAGS "/Zp1 /W4 /EHsc /MT")
 	set (CMAKE_SHARED_LINKER_FLAGS "/NOLOGO /MACHINE:X86")
@@ -60,7 +61,33 @@ include_directories (
 	${CMAKE_CURRENT_SOURCE_DIR}/src
 	${CMAKE_CURRENT_SOURCE_DIR}/lib
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/sdk/amx
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/bullet3/src
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/bullet3/include
 )
+
+# Bullet
+set (BUILD_CPU_DEMOS OFF CACHE BOOL "Build original Bullet CPU examples")
+set (BUILD_BULLET2_DEMOS OFF CACHE BOOL "Set when you want to build the Bullet 2 demos")
+set (BUILD_EXTRAS OFF CACHE BOOL "Set when you want to build the extras")
+set (BUILD_OPENGL3_DEMOS OFF CACHE BOOL "Set when you want to build the OpenGL3+ demos")
+set (BUILD_UNIT_TESTS OFF CACHE BOOL "Build Unit Tests")
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/bullet3
+)
+
+set (BULLET_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/lib/bullet3")
+find_path(BULLET_INCLUDE_DIRS NAMES btBulletCollisionCommon.h
+  HINTS
+    ${BULLET_ROOT}/include
+    ${BULLET_ROOT}/src
+  PATH_SUFFIXES bullet
+)
+message (${BULLET_INCLUDE_DIRS})
+include_directories (
+	${BULLET_INCLUDE_DIR}
+)
+
+# include (FindBullet)
 
 # subhook
 set (SUBHOOK_STATIC true)
@@ -77,6 +104,23 @@ file (GLOB FCNPC_SRC
 	${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp
 )
 source_group("" FILES ${FCNPC_SRC})
+
+# MapAndreas
+file (GLOB MAPANDREAS_SRC
+	${CMAKE_CURRENT_SOURCE_DIR}/src/vendor/MapAndreas/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/vendor/MapAndreas/*.h
+)
+source_group("${VENDOR_GROUP}MapAndreas" FILES ${MAPANDREAS_SRC})
+
+# ColAndreas
+set (CA_VERSION "v1.4.0")
+set (CA_DATABASE_VERSION 2)
+add_definitions (-DCA_VERSION="${CA_VERSION}" -DCA_DATABASE_VERSION=${CA_DATABASE_VERSION})
+file (GLOB COLANDREAS_SRC
+	${CMAKE_CURRENT_SOURCE_DIR}/src/vendor/ColAndreas/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/vendor/ColAndreas/*.h
+)
+source_group("${VENDOR_GROUP}ColAndreas" FILES ${COLANDREAS_SRC})
 
 # SDK
 file (GLOB SDK_SRC
@@ -110,6 +154,8 @@ source_group("${LIBRARY_GROUP}RakNet" FILES ${RAKNET_SRC})
 
 # Library
 add_library (${PROJECT_NAME} SHARED ${FCNPC_SRC}
+                                    ${MAPANDREAS_SRC}
+                                    ${COLANDREAS_SRC}
                                     ${EXPORTS_SRC}
                                     ${SDK_SRC}
                                     ${STRLCPY_SRC}
@@ -119,6 +165,13 @@ add_library (${PROJECT_NAME} SHARED ${FCNPC_SRC}
 
 target_link_libraries (${PROJECT_NAME}
 	subhook
+	BulletInverseDynamics
+	BulletSoftBody
+	BulletCollision
+	BulletDynamics
+	LinearMath
+	Bullet3Common
+	LinearMath
 	)
 
 # add_definitions(-DSAMP_03DL)
