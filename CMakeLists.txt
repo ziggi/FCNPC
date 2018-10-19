@@ -152,6 +152,9 @@ file (GLOB RAKNET_SRC
 )
 source_group("${LIBRARY_GROUP}RakNet" FILES ${RAKNET_SRC})
 
+# Include file
+configure_file(src/FCNPC.inc.in ${CMAKE_CURRENT_SOURCE_DIR}/sampsvr_files/FCNPC.inc NEWLINE_STYLE CRLF)
+
 # Library
 add_library (${PROJECT_NAME} SHARED ${FCNPC_SRC}
                                     ${MAPANDREAS_SRC}
@@ -176,6 +179,8 @@ target_link_libraries (${PROJECT_NAME}
 
 # add_definitions(-DSAMP_03DL)
 add_library (${PROJECT_NAME}-DL SHARED ${FCNPC_SRC}
+                                       ${MAPANDREAS_SRC}
+                                       ${COLANDREAS_SRC}
                                        ${EXPORTS_DL_SRC}
                                        ${SDK_SRC}
                                        ${STRLCPY_SRC}
@@ -186,6 +191,11 @@ set_target_properties (${PROJECT_NAME}-DL PROPERTIES COMPILE_FLAGS -DSAMP_03DL)
 
 target_link_libraries (${PROJECT_NAME}-DL
 	subhook
+	BulletInverseDynamics
+	BulletSoftBody
+	BulletCollision
+	BulletDynamics
+	LinearMath
+	Bullet3Common
+	LinearMath
 	)
-
-configure_file(src/FCNPC.inc.in ${CMAKE_CURRENT_SOURCE_DIR}/sampsvr_files/FCNPC.inc NEWLINE_STYLE CRLF)
