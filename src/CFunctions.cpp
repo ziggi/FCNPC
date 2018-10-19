@@ -461,6 +461,7 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 {
 	WORD wClosestEntity = 0xFFFF;
 	float fClosestEntityDistance = 0.0;
+	byteEntityType = FCNPC_ENTITY_CHECK_NONE;
 
 	// Check if a player is in between the origin and the target
 	WORD wClosestPlayer = INVALID_PLAYER_ID;

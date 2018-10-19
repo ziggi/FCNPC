@@ -2252,7 +2252,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsReloading(AMX *amx, cell *params)
 // native FCNPC_GetClosestEntityInBetween(npcid, Float:x, Float:y, Float:z, Float:range, between_check_flags = FCNPC_ENTITY_CHECK_ALL, &entity_id = -1, &entity_type = -1, &object_owner_id = INVALID_PLAYER_ID, &Float:point_x = 0.0, &Float:point_y = 0.0, &Float:point_z = 0.0);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetClosestEntityInBetween(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "FCNPC_GetClosestEntityInBetween");
+	CHECK_PARAMS(12, "FCNPC_GetClosestEntityInBetween");
 
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);
