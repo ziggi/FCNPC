@@ -62,16 +62,16 @@ Constants
 ```Pawn
 #define FCNPC_INCLUDE_VERSION		The current FCNPC include version.
 
-#define FCNPC_SHOOT_CHECK_NONE		(0)
-#define FCNPC_SHOOT_CHECK_PLAYER	(1)
-#define FCNPC_SHOOT_CHECK_NPC		(2)
-#define FCNPC_SHOOT_CHECK_ACTOR		(4)
-#define FCNPC_SHOOT_CHECK_VEHICLE	(8)
-#define FCNPC_SHOOT_CHECK_OBJECT	(16)
-#define FCNPC_SHOOT_CHECK_POBJECT_ORIG	(32)
-#define FCNPC_SHOOT_CHECK_POBJECT_TARG	(64)
-#define FCNPC_SHOOT_CHECK_MAP		(128)
-#define FCNPC_SHOOT_CHECK_ALL		(255)
+#define FCNPC_ENTITY_CHECK_NONE		(0)
+#define FCNPC_ENTITY_CHECK_PLAYER	(1)
+#define FCNPC_ENTITY_CHECK_NPC		(2)
+#define FCNPC_ENTITY_CHECK_ACTOR	(4)
+#define FCNPC_ENTITY_CHECK_VEHICLE	(8)
+#define FCNPC_ENTITY_CHECK_OBJECT	(16)
+#define FCNPC_ENTITY_CHECK_POBJECT_ORIG	(32)
+#define FCNPC_ENTITY_CHECK_POBJECT_TARG	(64)
+#define FCNPC_ENTITY_CHECK_MAP		(128)
+#define FCNPC_ENTITY_CHECK_ALL		(255)
 
 #define FCNPC_MOVE_TYPE_AUTO		(-1)
 #define FCNPC_MOVE_TYPE_WALK		(0)
@@ -245,15 +245,15 @@ native bool:FCNPC_IsReloadingUsed(npcid);
 native FCNPC_UseInfiniteAmmo(npcid, bool:use = true);
 native bool:FCNPC_IsInfiniteAmmoUsed(npcid);
 
-native FCNPC_GoTo(npcid, Float:x, Float:y, Float:z, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, Float:radius = 0.0, bool:setangle = true, Float:min_distance = 0.0, stopdelay = 250);
-native FCNPC_GoToPlayer(npcid, playerid, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, Float:radius = 0.0, bool:setangle = true, Float:min_distance = 0.0, Float:dist_check = 1.5, stopdelay = 250);
+native FCNPC_GoTo(npcid, Float:x, Float:y, Float:z, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, Float:radius = 0.0, bool:set_angle = true, Float:min_distance = 0.0, stopdelay = 250);
+native FCNPC_GoToPlayer(npcid, playerid, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, Float:radius = 0.0, bool:set_angle = true, Float:min_distance = 0.0, Float:dist_check = 1.5, stopdelay = 250);
 native FCNPC_Stop(npcid);
 native bool:FCNPC_IsMoving(npcid);
 native bool:FCNPC_IsMovingAtPlayer(npcid, playerid);
 native FCNPC_GetDestinationPoint(npcid, &Float:x, &Float:y, &Float:z);
 
-native FCNPC_AimAt(npcid, Float:x, Float:y, Float:z, bool:shoot = false, shoot_delay = -1, bool:setangle = true, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0, checkInBetween = FCNPC_SHOOT_CHECK_ALL);
-native FCNPC_AimAtPlayer(npcid, playerid, bool:shoot = false, shoot_delay = -1, bool:setangle = true, Float:offset_x = 0.0, Float:offset_y = 0.0, Float:offset_z = 0.0, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0, checkInBetween = FCNPC_SHOOT_CHECK_ALL);
+native FCNPC_AimAt(npcid, Float:x, Float:y, Float:z, bool:shoot = false, shoot_delay = -1, bool:set_angle = true, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0, between_check_flags = FCNPC_ENTITY_CHECK_ALL);
+native FCNPC_AimAtPlayer(npcid, playerid, bool:shoot = false, shoot_delay = -1, bool:set_angle = true, Float:offset_x = 0.0, Float:offset_y = 0.0, Float:offset_z = 0.0, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0, between_check_flags = FCNPC_ENTITY_CHECK_ALL);
 native FCNPC_StopAim(npcid);
 native FCNPC_MeleeAttack(npcid, delay = -1, bool:fightstyle = false);
 native FCNPC_StopAttack(npcid);
@@ -263,7 +263,8 @@ native bool:FCNPC_IsAimingAtPlayer(npcid, playerid);
 native FCNPC_GetAimingPlayer(npcid);
 native bool:FCNPC_IsShooting(npcid);
 native bool:FCNPC_IsReloading(npcid);
-native FCNPC_TriggerWeaponShot(npcid, weaponid, hittype, hitid, Float:x, Float:y, Float:z, bool:ishit = true, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0, checkInBetween = FCNPC_SHOOT_CHECK_ALL);
+native FCNPC_TriggerWeaponShot(npcid, weaponid, hittype, hitid, Float:x, Float:y, Float:z, bool:is_hit = true, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0, between_check_flags = FCNPC_ENTITY_CHECK_ALL);
+native FCNPC_GetClosestEntityInBetween(npcid, Float:x, Float:y, Float:z, Float:range, between_check_flags = FCNPC_ENTITY_CHECK_ALL, &entity_id = -1, &entity_type = -1, &object_owner_id = INVALID_PLAYER_ID, &Float:point_x = 0.0, &Float:point_y = 0.0, &Float:point_z = 0.0);
 
 native FCNPC_EnterVehicle(npcid, vehicleid, seatid, type = FCNPC_MOVE_TYPE_WALK);
 native FCNPC_ExitVehicle(npcid);
@@ -313,7 +314,7 @@ native FCNPC_SetNodePoint(nodeid, pointid);
 native FCNPC_GetNodePointPosition(nodeid, &Float:x, &Float:y, &Float:z);
 native FCNPC_GetNodePointCount(nodeid);
 native FCNPC_GetNodeInfo(nodeid, &vehnodes, &pednodes, &navinode);
-native FCNPC_PlayNode(npcid, nodeid, move_type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, Float:radius = 0.0, bool:setangle = true);
+native FCNPC_PlayNode(npcid, nodeid, move_type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, Float:radius = 0.0, bool:set_angle = true);
 native FCNPC_StopPlayingNode(npcid);
 native FCNPC_PausePlayingNode(npcid);
 native FCNPC_ResumePlayingNode(npcid);
@@ -330,7 +331,7 @@ native FCNPC_RemovePointFromMovePath(pathid, pointid);
 native bool:FCNPC_IsValidMovePathPoint(pathid, pointid);
 native FCNPC_GetMovePathPoint(pathid, pointid, &Float:x, &Float:y, &Float:z);
 native FCNPC_GetNumberMovePathPoint(pathid);
-native FCNPC_GoByMovePath(npcid, pathid, pointid = 0, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, Float:radius = 0.0, bool:setangle = true, Float:min_distance = 0.0);
+native FCNPC_GoByMovePath(npcid, pathid, pointid = 0, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, Float:radius = 0.0, bool:set_angle = true, Float:min_distance = 0.0);
 
 native FCNPC_SetMoveMode(npcid, mode);
 native FCNPC_GetMoveMode(npcid);
