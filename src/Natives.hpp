@@ -21,6 +21,8 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_GetTickRate(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_UseMoveMode(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_IsMoveModeUsed(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_UseMovePathfinding(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_IsMovePathfindingUsed(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_TriggerWeaponShot(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_UseCrashLog(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_IsCrashLogUsed(AMX *amx, cell *params);

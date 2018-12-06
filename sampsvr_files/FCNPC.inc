@@ -47,6 +47,11 @@ public FCNPC_IncludeVersion = FCNPC_INCLUDE_VERSION;
 #define FCNPC_MOVE_MODE_MAPANDREAS (1)
 #define FCNPC_MOVE_MODE_COLANDREAS (2)
 
+#define FCNPC_MOVE_PATHFINDING_AUTO    (-1)
+#define FCNPC_MOVE_PATHFINDING_NONE    (0)
+#define FCNPC_MOVE_PATHFINDING_Z       (1)
+#define FCNPC_MOVE_PATHFINDING_RAYCAST (2)
+
 #define FCNPC_MOVE_SPEED_AUTO      (-1.0)
 #define FCNPC_MOVE_SPEED_WALK      (0.1552086)
 #define FCNPC_MOVE_SPEED_RUN       (0.56444)
@@ -99,6 +104,8 @@ native FCNPC_SetTickRate(rate);
 native FCNPC_GetTickRate();
 native FCNPC_UseMoveMode(mode, bool:use = true);
 native bool:FCNPC_IsMoveModeUsed(mode);
+native FCNPC_UseMovePathfinding(pathfinding, bool:use = true);
+native bool:FCNPC_IsMovePathfindingUsed(pathfinding);
 native FCNPC_UseCrashLog(bool:use = true);
 native bool:FCNPC_IsCrashLogUsed();
 
@@ -201,8 +208,8 @@ native bool:FCNPC_IsReloadingUsed(npcid);
 native FCNPC_UseInfiniteAmmo(npcid, bool:use = true);
 native bool:FCNPC_IsInfiniteAmmoUsed(npcid);
 
-native FCNPC_GoTo(npcid, Float:x, Float:y, Float:z, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, Float:radius = 0.0, bool:set_angle = true, Float:min_distance = 0.0, stopdelay = 250);
-native FCNPC_GoToPlayer(npcid, playerid, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, Float:radius = 0.0, bool:set_angle = true, Float:min_distance = 0.0, Float:dist_check = 1.5, stopdelay = 250);
+native FCNPC_GoTo(npcid, Float:x, Float:y, Float:z, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, pathfinding = FCNPC_MOVE_PATHFINDING_AUTO, Float:radius = 0.0, bool:set_angle = true, Float:min_distance = 0.0, stopdelay = 250);
+native FCNPC_GoToPlayer(npcid, playerid, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, pathfinding = FCNPC_MOVE_PATHFINDING_AUTO, Float:radius = 0.0, bool:set_angle = true, Float:min_distance = 0.0, Float:dist_check = 1.5, stopdelay = 250);
 native FCNPC_Stop(npcid);
 native bool:FCNPC_IsMoving(npcid);
 native bool:FCNPC_IsMovingAtPlayer(npcid, playerid);
@@ -293,7 +300,7 @@ native FCNPC_RemovePointFromMovePath(pathid, pointid);
 native bool:FCNPC_IsValidMovePathPoint(pathid, pointid);
 native FCNPC_GetMovePathPoint(pathid, pointid, &Float:x, &Float:y, &Float:z);
 native FCNPC_GetNumberMovePathPoint(pathid);
-native FCNPC_GoByMovePath(npcid, pathid, pointid = 0, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, Float:radius = 0.0, bool:set_angle = true, Float:min_distance = 0.0);
+native FCNPC_GoByMovePath(npcid, pathid, pointid = 0, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, pathfinding = FCNPC_MOVE_PATHFINDING_AUTO, Float:radius = 0.0, bool:set_angle = true, Float:min_distance = 0.0);
 
 native FCNPC_SetMoveMode(npcid, mode);
 native FCNPC_GetMoveMode(npcid);

@@ -135,6 +135,8 @@ AMX_NATIVE_INFO PluginNatives[] = {
 	{ "FCNPC_GetTickRate", CNatives::FCNPC_GetTickRate },
 	{ "FCNPC_UseMoveMode", CNatives::FCNPC_UseMoveMode },
 	{ "FCNPC_IsMoveModeUsed", CNatives::FCNPC_IsMoveModeUsed },
+	{ "FCNPC_UseMovePathfinding", CNatives::FCNPC_UseMovePathfinding },
+	{ "FCNPC_IsMovePathfindingUsed", CNatives::FCNPC_IsMovePathfindingUsed },
 	{ "FCNPC_TriggerWeaponShot", CNatives::FCNPC_TriggerWeaponShot },
 	{ "FCNPC_UseCrashLog", CNatives::FCNPC_UseCrashLog },
 	{ "FCNPC_IsCrashLogUsed", CNatives::FCNPC_IsCrashLogUsed },

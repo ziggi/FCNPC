@@ -68,6 +68,7 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_iMovePoint = 0;
 	m_iMoveType = MOVE_TYPE_AUTO;
 	m_iMoveMode = MOVE_MODE_AUTO;
+	m_iMovePathfinding = MOVE_PATHFINDING_AUTO;
 	m_fMoveRadius = 0.0f;
 	m_bMoveSetAngle = false;
 	m_fMoveSpeed = MOVE_SPEED_AUTO;
@@ -1605,7 +1606,7 @@ void CPlayerData::GetKeys(WORD *pwUDAnalog, WORD *pwLRAnalog, DWORD *pdwKeys)
 	*pdwKeys = m_pPlayer->dwKeys;
 }
 
-bool CPlayerData::GoTo(const CVector &vecPoint, int iType, int iMode, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset, DWORD dwStopDelay)
+bool CPlayerData::GoTo(const CVector &vecPoint, int iType, int iMode, int iPathfinding, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset, DWORD dwStopDelay)
 {
 	// Validate the movement
 	if (iType == MOVE_TYPE_AUTO && GetState() == PLAYER_STATE_DRIVER) {
@@ -1676,15 +1677,16 @@ bool CPlayerData::GoTo(const CVector &vecPoint, int iType, int iMode, float fRad
 	m_bMoving = true;
 	// Save the data
 	SetMoveMode(iMode);
+	SetMovePathfinding(iPathfinding);
 	m_iMoveType = iType;
 	m_dwMoveStopDelay = dwStopDelay;
 	return true;
 }
 
-bool CPlayerData::GoToPlayer(WORD wPlayerId, int iType, int iMode, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset, float fDistCheck, DWORD dwStopDelay)
+bool CPlayerData::GoToPlayer(WORD wPlayerId, int iType, int iMode, int iPathfinding, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset, float fDistCheck, DWORD dwStopDelay)
 {
 	CVector vecPos = pNetGame->pPlayerPool->pPlayer[wPlayerId]->vecPosition;
-	if (GoTo(vecPos, iType, iMode, fRadius, bSetAngle, fSpeed, fDistOffset)) {
+	if (GoTo(vecPos, iType, iMode, iPathfinding, fRadius, bSetAngle, fSpeed, fDistOffset)) {
 		m_wMoveId = wPlayerId;
 		m_vecMovePlayerPosition = vecPos;
 		m_fDistCheck = fDistCheck;
@@ -1694,10 +1696,10 @@ bool CPlayerData::GoToPlayer(WORD wPlayerId, int iType, int iMode, float fRadius
 	return false;
 }
 
-bool CPlayerData::GoByMovePath(int iPathId, int iPointId, int iType, int iMode, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset)
+bool CPlayerData::GoByMovePath(int iPathId, int iPointId, int iType, int iMode, int iPathfinding, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset)
 {
 	CVector *vecPos = pServer->GetMovePath()->GetPoint(iPathId, 0);
-	if (GoTo(*vecPos, iType, iMode, fRadius, bSetAngle, fSpeed, fDistOffset)) {
+	if (GoTo(*vecPos, iType, iMode, iPathfinding, fRadius, bSetAngle, fSpeed, fDistOffset)) {
 		m_iMovePath = iPathId;
 		m_iMovePoint = iPointId;
 		return true;
@@ -1774,6 +1776,7 @@ void CPlayerData::StopMoving()
 	m_iMovePath = INVALID_MOVEPATH_ID;
 	m_iMovePoint = 0;
 	m_iMoveMode = MOVE_MODE_AUTO;
+	m_iMovePathfinding = MOVE_PATHFINDING_AUTO;
 	// Reset the player data
 	SetVelocity(CVector(0.0f, 0.0f, 0.0f));
 	SetTrainSpeed(0.0f);
@@ -2146,7 +2149,7 @@ bool CPlayerData::EnterVehicle(WORD wVehicleId, BYTE byteSeatId, int iType)
 		CFunctions::PlayerEnterVehicle(m_pPlayer, m_wVehicleToEnter, m_byteSeatToEnter);
 	} else {
 		// Go to the vehicle
-		GoTo(vecDestination, iType, GetMoveMode());
+		GoTo(vecDestination, iType, GetMoveMode(), GetMovePathfinding());
 	}
 
 	return true;
@@ -2518,7 +2521,7 @@ bool CPlayerData::PlayNode(int iNodeId, int iMoveType, int iMode, float fRadius,
 	UpdateNodePoint(m_wNodePoint);
 
 	m_pNode->GetPosition(&vecPos);
-	GoTo(vecPos, iMoveType, iMode, fRadius, bSetAngle, fSpeed);
+	GoTo(vecPos, iMoveType, iMode, MOVE_PATHFINDING_NONE, fRadius, bSetAngle, fSpeed);
 	return true;
 }
 
@@ -2569,7 +2572,7 @@ void CPlayerData::ResumePlayingNode()
 	}
 
 	m_bIsPlayingNodePaused = false;
-	GoTo(m_vecNodeLastPos, m_iNodeMoveType, m_iNodeMoveMode, m_fNodeMoveRadius, m_bNodeMoveSetAngle, m_fNodeMoveSpeed);
+	GoTo(m_vecNodeLastPos, m_iNodeMoveType, m_iNodeMoveMode, MOVE_PATHFINDING_NONE, m_fNodeMoveRadius, m_bNodeMoveSetAngle, m_fNodeMoveSpeed);
 }
 
 bool CPlayerData::IsPlayingNodePaused()
@@ -2639,6 +2642,32 @@ bool CPlayerData::SetMoveMode(int iMoveMode)
 int CPlayerData::GetMoveMode()
 {
 	return m_iMoveMode;
+}
+
+bool CPlayerData::SetMovePathfinding(int iMovePathfinding)
+{
+	if (iMovePathfinding == MOVE_PATHFINDING_AUTO) {
+		if (pServer->IsMovePathfindingEnabled(MOVE_PATHFINDING_RAYCAST)) {
+			m_iMovePathfinding = MOVE_PATHFINDING_RAYCAST;
+		} else if (pServer->IsMovePathfindingEnabled(MOVE_PATHFINDING_Z)) {
+			m_iMovePathfinding = MOVE_PATHFINDING_Z;
+		} else {
+			m_iMovePathfinding = MOVE_PATHFINDING_NONE;
+		}
+	} else {
+		if (!pServer->IsMovePathfindingEnabled(iMovePathfinding)) {
+			m_iMovePathfinding = MOVE_PATHFINDING_NONE;
+			return false;
+		}
+
+		m_iMovePathfinding = iMovePathfinding;
+	}
+	return true;
+}
+
+int CPlayerData::GetMovePathfinding()
+{
+	return m_iMovePathfinding;
 }
 
 void CPlayerData::SetMinHeightPosCall(float fHeight)

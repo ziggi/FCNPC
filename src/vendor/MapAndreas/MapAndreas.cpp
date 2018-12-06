@@ -15,6 +15,8 @@ CMapAndreas::CMapAndreas()
 {
 	m_iOperatingMode = MAP_ANDREAS_MODE_NONE;
 	m_pPointData = NULL;
+	mapFile = NULL;
+	m_gridSize = NULL;
 }
 
 CMapAndreas::CMapAndreas(const CMapAndreas *other)

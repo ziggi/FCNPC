@@ -53,6 +53,8 @@ public:
 
 	void ToggleMoveMode(int iMoveMode, bool bIsEnabled);
 	bool IsMoveModeEnabled(int iMoveMode);
+	void ToggleMovePathfinding(int iMovePathfinding, bool bIsEnabled);
+	bool IsMovePathfindingEnabled(int iMovePathfinding);
 
 	bool IsVehicleSeatOccupied(WORD wPlayerId, WORD wVehicleId, BYTE byteSeatId);
 	WORD GetVehicleSeatPlayerId(WORD wVehicleId, BYTE byteSeatId);
@@ -73,6 +75,7 @@ private:
 	DWORD m_dwUpdateRate;
 	bool m_bCrashLogCreation;
 	bool m_bMoveModeEnabled[MOVE_MODE_SIZE];
+	bool m_bMovePathfindingEnabled[MOVE_PATHFINDING_SIZE];
 
 	int m_iTicks;
 	int m_iTickRate;

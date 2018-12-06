@@ -132,9 +132,9 @@ public:
 	void ApplyAnimation(char *szAnimationLib, char *szAnimationName, float fDelta, bool bLoop, bool bLockX, bool bLockY, bool bFreeze, int iTime);
 	void ClearAnimations();
 
-	bool GoTo(const CVector &vecPoint, int iType, int iMode, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f, DWORD dwStopDelay = 250);
-	bool GoToPlayer(WORD wPlayerId, int iType, int iMode, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f, float fDistCheck = 1.5f, DWORD dwStopDelay = 250);
-	bool GoByMovePath(int iPathId, int iPointId, int iType, int iMode, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f);
+	bool GoTo(const CVector &vecPoint, int iType, int iMode, int iPathfinding, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f, DWORD dwStopDelay = 250);
+	bool GoToPlayer(WORD wPlayerId, int iType, int iMode, int iPathfinding, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f, float fDistCheck = 1.5f, DWORD dwStopDelay = 250);
+	bool GoByMovePath(int iPathId, int iPointId, int iType, int iMode, int iPathfinding, float fRadius = 0.0f, bool bSetAngle = true, float fSpeed = -1.0f, float fDistOffset = 0.0f);
 	void UpdateMovingData(CVector vecDestination, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset);
 	void GetDestination(CVector *pvecDestination);
 	void StopMoving();
@@ -214,6 +214,8 @@ public:
 
 	bool SetMoveMode(int iMoveMode);
 	int GetMoveMode();
+	bool SetMovePathfinding(int iMovePathfinding);
+	int GetMovePathfinding();
 	void SetMinHeightPosCall(float fHeight);
 	float GetMinHeightPosCall();
 
@@ -284,6 +286,7 @@ private:
 	int m_iMovePoint;
 	int m_iMoveType;
 	int m_iMoveMode;
+	int m_iMovePathfinding;
 	float m_fMoveRadius;
 	bool m_bMoveSetAngle;
 	float m_fMoveSpeed;

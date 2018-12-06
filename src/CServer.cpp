@@ -34,6 +34,10 @@ CServer::CServer(eSAMPVersion version)
 	for (int i = MOVE_MODE_NONE + 1; i < MOVE_MODE_SIZE; i++) {
 		m_bMoveModeEnabled[i] = true;
 	}
+	// init pathfinding mode
+	for (int i = MOVE_PATHFINDING_NONE + 1; i < MOVE_PATHFINDING_SIZE; i++) {
+		m_bMovePathfindingEnabled[i] = true;
+	}
 	// Initialize random seed
 	srand(static_cast<unsigned int>(time(NULL)));
 }
@@ -46,6 +50,7 @@ CServer::~CServer()
 	SAFE_DELETE(m_pMovePath);
 	SAFE_DELETE(m_pRecordManager);
 	SAFE_DELETE(m_pMapAndreas);
+	SAFE_DELETE(m_pColAndreas);
 }
 
 BYTE CServer::Initialize(AMX *pAMX)
@@ -256,6 +261,16 @@ void CServer::ToggleMoveMode(int iMoveMode, bool bIsEnabled)
 bool CServer::IsMoveModeEnabled(int iMoveMode)
 {
 	return m_bMoveModeEnabled[iMoveMode];
+}
+
+void CServer::ToggleMovePathfinding(int iMovePathfinding, bool bIsEnabled)
+{
+	m_bMovePathfindingEnabled[iMovePathfinding] = bIsEnabled;
+}
+
+bool CServer::IsMovePathfindingEnabled(int iMovePathfinding)
+{
+	return m_bMovePathfindingEnabled[iMovePathfinding];
 }
 
 bool CServer::IsVehicleSeatOccupied(WORD wPlayerId, WORD wVehicleId, BYTE byteSeatId)
