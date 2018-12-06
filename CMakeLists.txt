@@ -12,6 +12,7 @@ set (PLUGIN_VERSION "2.0.0")
 add_definitions (-DPLUGIN_VERSION="${PLUGIN_VERSION}" -DINCLUDE_VERSION=${INCLUDE_VERSION})
 
 set (CMAKE_SHARED_LIBRARY_PREFIX "")
+set (CMAKE_DEBUG_POSTFIX "")
 
 set (LIBRARY_GROUP "lib\\")
 
@@ -138,13 +139,6 @@ file (GLOB STRLCPY_SRC
 )
 source_group("${LIBRARY_GROUP}strlcpy" FILES ${STRLCPY_SRC})
 
-# invoke
-file (GLOB INVOKE_SRC
-	${CMAKE_CURRENT_SOURCE_DIR}/lib/Invoke/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/lib/Invoke/*.h
-)
-source_group("${LIBRARY_GROUP}Invoke" FILES ${INVOKE_SRC})
-
 # RakNet
 file (GLOB RAKNET_SRC
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/raknet/*.cpp
@@ -162,7 +156,6 @@ add_library (${PROJECT_NAME} SHARED ${FCNPC_SRC}
                                     ${EXPORTS_SRC}
                                     ${SDK_SRC}
                                     ${STRLCPY_SRC}
-                                    ${INVOKE_SRC}
                                     ${RAKNET_SRC}
                                     ${PLATFORM_SRC})
 
@@ -184,7 +177,6 @@ add_library (${PROJECT_NAME}-DL SHARED ${FCNPC_SRC}
                                        ${EXPORTS_DL_SRC}
                                        ${SDK_SRC}
                                        ${STRLCPY_SRC}
-                                       ${INVOKE_SRC}
                                        ${RAKNET_SRC}
                                        ${PLATFORM_SRC})
 set_target_properties (${PROJECT_NAME}-DL PROPERTIES COMPILE_FLAGS -DSAMP_03DL)

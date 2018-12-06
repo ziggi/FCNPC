@@ -1018,15 +1018,27 @@ void CPlayerData::UpdateHeightPos(CVector *pvecPosition)
 
 	float fNewZ = pvecPosition->fZ;
 
-	if (m_iMoveMode == MOVE_MODE_MAPANDREAS) {
+	if (m_iMoveMode == MOVE_MODE_MAPANDREAS && pServer->GetMapAndreas()->IsInited()) {
 		if (pvecPosition->fZ < 0.0f) {
 			return;
 		}
-		g_Invoke->MapAndreas_FindZ_For2DCoord(pvecPosition->fX, pvecPosition->fY, &fNewZ);
-		fNewZ += 1.0f;
-	} else if (m_iMoveMode == MOVE_MODE_COLANDREAS) {
-		g_Invoke->CA_RayCastLine(pvecPosition->fX, pvecPosition->fY, pvecPosition->fZ, pvecPosition->fX, pvecPosition->fY, pvecPosition->fZ - 1000.0f, &pvecPosition->fX, &pvecPosition->fY, &fNewZ);
-		fNewZ += 1.0f;
+		float fZ = pServer->GetMapAndreas()->FindZ_For2DCoord(pvecPosition->fX, pvecPosition->fY);
+		if (fZ > 0.0f) {
+			fNewZ = fZ + 1.0f;
+		}
+	} else if (m_iMoveMode == MOVE_MODE_COLANDREAS && colDataLoaded) {
+		CVector *vecResult = new CVector();
+		CVector vecStart = *pvecPosition;
+		CVector vecEnd = *pvecPosition;
+		vecEnd.fZ -= 1000.0f;
+
+		if (m_bMoving) {
+			vecStart.fZ = m_vecDestination.fZ;
+		}
+
+		if (CFunctions::RayCastLine(vecStart, vecEnd, vecResult)) {
+			fNewZ = vecResult->fZ + 1.0f;
+		}
 	}
 
 	if (m_iMoveMode != MOVE_MODE_NONE) {

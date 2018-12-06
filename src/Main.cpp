@@ -31,7 +31,7 @@ char         szSampVersion[64];
 bool colInit = false;
 bool colDataLoaded = false;
 cell nullAddress = NULL;
-ColAndreasWorld* collisionWorld;
+ColAndreasWorld *collisionWorld;
 
 PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports()
 {
@@ -99,10 +99,6 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 #endif
 	// Create the server instance
 	pServer = new CServer(version);
-	if (!pServer) {
-		logprintf("Failed. (Cant create server instance)");
-		return false;
-	}
 
 	// ColAndreas
 	logprintf("");
@@ -116,15 +112,6 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	logprintf("-------------------------------------------------");
 	logprintf("");
 	logprintf("Loading...");
-
-	collisionWorld = new ColAndreasWorld();
-
-	if (collisionWorld->loadCollisionData()) {
-		logprintf("Loaded collision data.");
-		colDataLoaded = true;
-	} else {
-		logprintf("No collision data found.");
-	}
 
 	logprintf("ColAndreas " CA_VERSION " Loaded.");
 	return true;
@@ -396,8 +383,7 @@ PLUGIN_EXPORT int PLUGIN_CALL AmxLoad(AMX *pAMX)
 
 	// Register the AMX
 	CCallbackManager::RegisterAMX(pAMX);
-	g_Invoke->amx_list.push_back(pAMX);
-	g_Invoke->getAddresses();
+
 	// Register the plugin natives for the amx instance
 	return amx_Register(pAMX, PluginNatives, -1);
 }
@@ -406,7 +392,6 @@ PLUGIN_EXPORT int PLUGIN_CALL AmxUnload(AMX *pAMX)
 {
 	// Unregister the AMX
 	CCallbackManager::UnregisterAMX(pAMX);
-	g_Invoke->amx_list.remove(pAMX);
 	return AMX_ERR_NONE;
 }
 

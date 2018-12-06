@@ -11,6 +11,8 @@
 #ifndef MOVEPATH_H
 #define MOVEPATH_H
 
+#include <map>
+
 class CMovePath
 {
 public:

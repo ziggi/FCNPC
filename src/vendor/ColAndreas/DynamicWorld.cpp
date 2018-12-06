@@ -16,7 +16,7 @@ ColAndreasWorld::ColAndreasWorld()
 ColAndreasWorld::~ColAndreasWorld()
 {
 	if (objectManager != NULL)
-		delete removedManager;
+		delete objectManager;
 
 	if (removedManager != NULL)
 		delete removedManager;

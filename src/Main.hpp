@@ -51,7 +51,6 @@
 #include <btBulletDynamicsCommon.h>
 // Library includes
 #include <sdk/plugin.h>
-#include <Invoke/Invoke.h>
 #include <raknet/BitStream.h>
 #include "vendor/MapAndreas/MapAndreas.h"
 #include "vendor/ColAndreas/DynamicWorld.h"

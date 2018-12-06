@@ -812,3 +812,22 @@ WORD CFunctions::GetClosestMapPointInBetween(const CVector &vecHitOrigin, const 
 
 	return 0;
 }
+
+
+WORD CFunctions::RayCastLine(CVector vecStart, CVector vecEnd, CVector *vecResult)
+{
+	btVector3 Start = btVector3(btScalar(vecStart.fX + 0.00001), btScalar(vecStart.fY + 0.00001), btScalar(vecStart.fZ + 0.00001));
+	btVector3 End = btVector3(btScalar(vecEnd.fX), btScalar(vecEnd.fY), btScalar(vecEnd.fZ));
+	btVector3 Result;
+	WORD wModel = 0;
+
+	if (pServer->GetColAndreas()->performRayTest(Start, End, Result, wModel)) {
+		vecResult->fX = Result.getX();
+		vecResult->fY = Result.getY();
+		vecResult->fZ = Result.getZ();
+
+		return wModel;
+	}
+
+	return 0;
+}
