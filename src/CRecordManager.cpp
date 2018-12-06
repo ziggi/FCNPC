@@ -88,6 +88,8 @@ int CRecordManager::Load(char *szFile)
 		}
 	}
 
+	fclose(pFile);
+
 	index = m_vSyncData.size();
 	m_vSyncData.push_back(recordNew);
 	return static_cast<int>(index);
