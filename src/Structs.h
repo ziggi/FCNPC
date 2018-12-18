@@ -216,6 +216,8 @@ typedef void(*VARCHANGEFUNC)();
 
 /* -------------------------------------------------------- */
 
+#pragma pack(push, 1)
+
 // RakNet Remote system
 struct PingAndClockDifferential
 {
@@ -1099,5 +1101,7 @@ struct CArtInfo
 };
 static_assert(sizeof(CArtInfo) == 269, "Invalid CArtInfo size");
 #endif
+
+#pragma pack(pop)
 
 #endif

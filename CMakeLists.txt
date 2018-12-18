@@ -52,7 +52,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	source_group("${LIBRARY_GROUP}fopen_s" FILES ${FOPEN_S_SRC})
 
 	# flags
-	set (FLAGS "-m32 -fPIC -O2 -fno-stack-protector -fpack-struct=1 -Wall -Wno-attributes -Wno-strict-aliasing -Wno-sequence-point")
+	set (FLAGS "-m32 -fPIC -O2 -fno-stack-protector -Wall -Wno-attributes -Wno-strict-aliasing -Wno-sequence-point")
 	set (CMAKE_C_FLAGS ${FLAGS})
 	set (CMAKE_CXX_FLAGS "${FLAGS} -std=c++11")
 	set (CMAKE_SHARED_LINKER_FLAGS "-fshort-wchar -shared -static-libgcc -static-libstdc++")
@@ -158,8 +158,8 @@ target_link_libraries (${PROJECT_NAME}
 	subhook
 	BulletInverseDynamics
 	BulletSoftBody
-	BulletDynamics
 	BulletCollision
+	BulletDynamics
 	LinearMath
 	Bullet3Common
 	)
@@ -179,8 +179,8 @@ target_link_libraries (${PROJECT_NAME}-DL
 	subhook
 	BulletInverseDynamics
 	BulletSoftBody
-	BulletDynamics
 	BulletCollision
+	BulletDynamics
 	LinearMath
 	Bullet3Common
 	)
