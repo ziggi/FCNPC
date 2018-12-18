@@ -112,8 +112,8 @@ class RemovedBuildingManager
 {
 public:
 	RemovedBuildingManager();
-	bool isRemoved(uint16_t model, Vector position);
-	void addBuilding(removeBuildingData removeData);
+	bool isRemoved(uint16_t model, const Vector position);
+	void addBuilding(const removeBuildingData removeData);
 private:
 	std::vector <removeBuildingData> removedBuildings;
 };

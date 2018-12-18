@@ -44,9 +44,10 @@ int CMapAndreas::Init(int iMode, char* cname, int len)
 		return MAP_ANDREAS_ERROR_SUCCESS;
 	}
 
-	char* name = new char [MAP_ANDREAS_MAX_NAME];
+	char name[MAP_ANDREAS_MAX_NAME];
+
 	if (len > 1) {
-		name = cname;
+		strlcpy(name, cname, MAP_ANDREAS_MAX_NAME);
 	} else {
 		switch (iMode) {
 			case MAP_ANDREAS_MODE_NOBUFFER:

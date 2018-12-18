@@ -52,19 +52,11 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	source_group("${LIBRARY_GROUP}fopen_s" FILES ${FOPEN_S_SRC})
 
 	# flags
-	set (FLAGS "-m32 -fPIC -O2 -fno-stack-protector -fpack-struct=1 -Wall -Wno-attributes -Wno-strict-aliasing -Wno-sequence-point -static-libstdc++")
+	set (FLAGS "-m32 -fPIC -O2 -fno-stack-protector -fpack-struct=1 -Wall -Wno-attributes -Wno-strict-aliasing -Wno-sequence-point")
 	set (CMAKE_C_FLAGS ${FLAGS})
 	set (CMAKE_CXX_FLAGS "${FLAGS} -std=c++11")
-	set (CMAKE_SHARED_LINKER_FLAGS "-fshort-wchar -shared")
+	set (CMAKE_SHARED_LINKER_FLAGS "-fshort-wchar -shared -static-libgcc -static-libstdc++")
 endif ()
-
-include_directories (
-	${CMAKE_CURRENT_SOURCE_DIR}/src
-	${CMAKE_CURRENT_SOURCE_DIR}/lib
-	${CMAKE_CURRENT_SOURCE_DIR}/lib/sdk/amx
-	${CMAKE_CURRENT_SOURCE_DIR}/lib/bullet3/src
-	${CMAKE_CURRENT_SOURCE_DIR}/lib/bullet3/include
-)
 
 # Bullet
 set (BUILD_CPU_DEMOS OFF CACHE BOOL "Build original Bullet CPU examples")
@@ -83,10 +75,6 @@ find_path(BULLET_INCLUDE_DIRS NAMES btBulletCollisionCommon.h
     ${BULLET_ROOT}/src
   PATH_SUFFIXES bullet
 )
-message (${BULLET_INCLUDE_DIRS})
-include_directories (
-	${BULLET_INCLUDE_DIR}
-)
 
 # include (FindBullet)
 
@@ -98,6 +86,13 @@ add_subdirectory (
 )
 
 # FCNPC
+include_directories (
+	${CMAKE_CURRENT_SOURCE_DIR}/src
+	${CMAKE_CURRENT_SOURCE_DIR}/lib
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/sdk/amx
+	${BULLET_INCLUDE_DIRS}
+)
+
 file (GLOB FCNPC_SRC
 	${FCNPC_SRC}
 	${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
@@ -163,14 +158,13 @@ target_link_libraries (${PROJECT_NAME}
 	subhook
 	BulletInverseDynamics
 	BulletSoftBody
-	BulletCollision
 	BulletDynamics
+	BulletCollision
 	LinearMath
 	Bullet3Common
-	LinearMath
 	)
 
-# add_definitions(-DSAMP_03DL)
+# SAMP03DL
 add_library (${PROJECT_NAME}-DL SHARED ${FCNPC_SRC}
                                        ${MAPANDREAS_SRC}
                                        ${COLANDREAS_SRC}
@@ -185,9 +179,8 @@ target_link_libraries (${PROJECT_NAME}-DL
 	subhook
 	BulletInverseDynamics
 	BulletSoftBody
-	BulletCollision
 	BulletDynamics
+	BulletCollision
 	LinearMath
 	Bullet3Common
-	LinearMath
 	)

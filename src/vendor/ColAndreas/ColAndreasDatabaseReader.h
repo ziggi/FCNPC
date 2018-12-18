@@ -1,13 +1,11 @@
 #ifndef COLANDREASDATABASEREADER_H_INCLUDED
 #define COLANDREASDATABASEREADER_H_INCLUDED
 
-#include <stdint.h>
+#include <cstdint>
 #include <iostream>
 #include <string>
 #include <fstream>
 #include <cstring>
-
-using namespace std;
 
 /*
 Binary file format
@@ -107,7 +105,7 @@ pass a refrence to the collisionmodel and itemplacment array's. The function wil
 returns a boolean true if function suceeded, otherwise false.
 */
 
-bool ReadColandreasDatabaseFile(std::string FileLocation);
+bool ReadColandreasDatabaseFile(const std::string FileLocation);
 extern CollisionModelstructure* CollisionModels;
 extern ItemPlacementstructure* ModelPlacements;
 extern uint16_t ModelCount;

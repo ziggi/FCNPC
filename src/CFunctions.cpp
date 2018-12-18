@@ -814,7 +814,7 @@ WORD CFunctions::GetClosestMapPointInBetween(const CVector &vecHitOrigin, const 
 }
 
 
-WORD CFunctions::RayCastLine(CVector vecStart, CVector vecEnd, CVector *vecResult)
+WORD CFunctions::RayCastLine(const CVector vecStart, const CVector vecEnd, CVector *vecResult)
 {
 	btVector3 Start = btVector3(btScalar(vecStart.fX + 0.00001), btScalar(vecStart.fY + 0.00001), btScalar(vecStart.fZ + 0.00001));
 	btVector3 End = btVector3(btScalar(vecEnd.fX), btScalar(vecEnd.fY), btScalar(vecEnd.fZ));

@@ -178,12 +178,11 @@ MapWaterMesh::~MapWaterMesh()
 	delete trimesh;
 }
 
-
-
 ObjectManager::ObjectManager()
 {
 	for (int i = 0; i < MAX_MAP_OBJECTS; i++) {
 		slotUsed[i] = false;
+		mapObjects[i] = NULL;
 	}
 }
 
@@ -299,10 +298,10 @@ RemovedBuildingManager::RemovedBuildingManager()
 {
 }
 
-bool RemovedBuildingManager::isRemoved(uint16_t model, Vector position)
+bool RemovedBuildingManager::isRemoved(uint16_t model, const Vector position)
 {
 	for (uint16_t i = 0; i < removedBuildings.size(); i++) {
-		if (model == removedBuildings[i].r_Model || model == -1) {
+		if (model == removedBuildings[i].r_Model) {
 			btScalar dist = btDistance(btVector3(btScalar(position.x), btScalar(position.y), btScalar(position.z)),
 				btVector3(btScalar(removedBuildings[i].r_X), btScalar(removedBuildings[i].r_Y), btScalar(removedBuildings[i].r_Z)));
 
@@ -314,7 +313,7 @@ bool RemovedBuildingManager::isRemoved(uint16_t model, Vector position)
 	return 0;
 }
 
-void RemovedBuildingManager::addBuilding(removeBuildingData removeData)
+void RemovedBuildingManager::addBuilding(const removeBuildingData removeData)
 {
 	removedBuildings.push_back(removeData);
 }
@@ -346,7 +345,7 @@ void InitCollisionMap(btDynamicsWorld* collisionWorld, RemovedBuildingManager* r
 
 uint16_t GetModelRef(uint16_t model)
 {
-	if (model <= 20000 && ModelRef[model] != 65535)
+	if (model < 20000 && ModelRef[model] != 65535)
 		return ModelRef[model];
 	else
 		return 65535;

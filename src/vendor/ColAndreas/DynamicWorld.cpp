@@ -10,25 +10,20 @@ ColAndreasWorld::ColAndreasWorld()
 	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
 	removedManager = new RemovedBuildingManager();
 	objectManager = new ObjectManager();
+	mapWaterMesh = NULL;
 }
 
 // ColAndreas closed
 ColAndreasWorld::~ColAndreasWorld()
 {
-	if (objectManager != NULL)
-		delete objectManager;
-
-	if (removedManager != NULL)
-		delete removedManager;
-
+	delete objectManager;
+	delete removedManager;
 	delete dynamicsWorld;
 	delete solver;
 	delete dispatcher;
 	delete collisionConfiguration;
 	delete broadphase;
-
-	if (mapWaterMesh != NULL)
-		delete mapWaterMesh;
+	delete mapWaterMesh;
 }
 
 btScalar ColAndreasWorld::getDist3D(const btVector3& c1, const btVector3& c2)
@@ -54,7 +49,7 @@ void ColAndreasWorld::EulerToQuat(btVector3& rotation, btQuaternion& result)
 	btScalar s3 = sin(rotation.getZ() / 2);
 	btScalar c1c2 = c1 * c2;
 	btScalar s1s2 = s1 * s2;
-	result.setW((c1c2*c3 - s1s2 * s3));
+	result.setW(c1c2*c3 - s1s2 * s3);
 	result.setZ(c1c2*s3 + s1s2 * c3);
 	result.setY(s1*c2*c3 + c1 * s2*s3);
 	result.setX(c1*s2*c3 - s1 * c2*s3);
@@ -267,10 +262,8 @@ void ColAndreasWorld::colandreasInitMap()
 
 uint16_t ColAndreasWorld::createColAndreasMapObject(uint16_t addtomanager, uint16_t modelid, const btQuaternion& objectRot, const btVector3& objectPos)
 {
-	ColAndreasMapObject* mapObject = new ColAndreasMapObject(modelid, objectRot, objectPos, this->dynamicsWorld);
 	if (addtomanager) {
-		uint16_t index = 0;
-		return this->objectManager->addObjectManager(mapObject);
+		return this->objectManager->addObjectManager(new ColAndreasMapObject(modelid, objectRot, objectPos, this->dynamicsWorld));
 	}
 	return -1;
 }

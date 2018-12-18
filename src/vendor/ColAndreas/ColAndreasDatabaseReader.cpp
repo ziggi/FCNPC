@@ -14,14 +14,11 @@ void DeleteCollisionData()
 	delete ModelPlacements;
 }
 
-bool ReadColandreasDatabaseFile(std::string FileLocation)
+bool ReadColandreasDatabaseFile(const std::string FileLocation)
 {
 	bool returnValue = false;
-
-	ifstream ColAndreasBinaryfile;
-
-	ColAndreasBinaryfile.open(FileLocation, ios::in | ios::binary);
-
+	
+	std::ifstream ColAndreasBinaryfile(FileLocation, std::ios::in | std::ios::binary);
 	if (ColAndreasBinaryfile.is_open()) {
 		ColAndreasBinaryfile.seekg(0, ColAndreasBinaryfile.end);
 		int length = static_cast<int>(ColAndreasBinaryfile.tellg());
@@ -95,13 +92,13 @@ bool ReadColandreasDatabaseFile(std::string FileLocation)
 				}
 
 				// Set model ref default values
-				for (int i = 0; i < 20000; i++)
+				for (uint16_t i = 0; i < sizeof(ModelRef) / sizeof(uint16_t); i++)
 				{
 					ModelRef[i] = 65535;
 				}
 
 				// Initialize model reference
-				for (int i = 0; i < ModelCount; i++)
+				for (uint16_t i = 0; i < ModelCount; i++)
 				{
 					ModelRef[CollisionModels[i].Modelid] = i;
 				}
@@ -118,5 +115,6 @@ bool ReadColandreasDatabaseFile(std::string FileLocation)
 		delete [] buffer;
 	}
 	ColAndreasBinaryfile.close();
+	
 	return returnValue;
 }
