@@ -61,6 +61,8 @@ const int MAX_RPC_MAP_SIZE = ((RPCIndex)-1) - 1;
 
 using RPCFunction = void(*)(RPCParameters *p);
 
+#pragma pack(push, 1)
+
 struct PlayerID
 {
 	unsigned int binaryAddress;
@@ -88,5 +90,7 @@ struct RPCParameters
 	unsigned int numberOfBitsOfData;
 	PlayerID sender;
 };
+
+#pragma pack(pop)
 
 #endif

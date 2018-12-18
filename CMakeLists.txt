@@ -158,8 +158,8 @@ target_link_libraries (${PROJECT_NAME}
 	subhook
 	BulletInverseDynamics
 	BulletSoftBody
-	BulletCollision
 	BulletDynamics
+	BulletCollision
 	LinearMath
 	Bullet3Common
 	)
@@ -179,8 +179,8 @@ target_link_libraries (${PROJECT_NAME}-DL
 	subhook
 	BulletInverseDynamics
 	BulletSoftBody
-	BulletCollision
 	BulletDynamics
+	BulletCollision
 	LinearMath
 	Bullet3Common
 	)
