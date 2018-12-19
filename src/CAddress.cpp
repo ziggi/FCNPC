@@ -59,7 +59,7 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 			FUNC_CPlayerPool__DeletePlayer = 0x466570;
 			FUNC_CPlayer__Kill = 0x484620;
 			FUNC_CPlayer__EnterVehicle = 0x484c70;
-			FUNC_CPlayer__ExitVehicle = 0x484f50;
+			FUNC_CPlayer__ExitVehicle = 0x484d90;
 			FUNC_CPlayer__SpawnForWorld = 0x486d30;
 			FUNC_GetVehicleModelInfo = 0x488240;
 			FUNC_CConsole__GetIntVariable = 0x48b5b0;
@@ -85,7 +85,7 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 			FUNC_CPlayerPool__DeletePlayer = 0x466570;
 			FUNC_CPlayer__Kill = 0x484620;
 			FUNC_CPlayer__EnterVehicle = 0x484c70;
-			FUNC_CPlayer__ExitVehicle = 0x484f50;
+			FUNC_CPlayer__ExitVehicle = 0x484d90;
 			FUNC_CPlayer__SpawnForWorld = 0x486d30;
 			FUNC_GetVehicleModelInfo = 0x488240;
 			FUNC_CConsole__GetIntVariable = 0x48b5b0;
@@ -110,8 +110,8 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 		case SAMP_VERSION_03DL_R1:
 			FUNC_CPlayerPool__DeletePlayer = 0x466550;
 			FUNC_CPlayer__Kill = 0x485020;
-			FUNC_CPlayer__EnterVehicle = 0x485672;
-			FUNC_CPlayer__ExitVehicle = 0x485952;
+			FUNC_CPlayer__EnterVehicle = 0x485670;
+			FUNC_CPlayer__ExitVehicle = 0x485790;
 			FUNC_CPlayer__SpawnForWorld = 0x487730;
 			FUNC_GetVehicleModelInfo = 0x4892a0;
 			FUNC_CConsole__GetIntVariable = 0x490c80;
