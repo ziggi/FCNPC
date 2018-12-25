@@ -69,6 +69,6 @@ private:
 	btSequentialImpulseConstraintSolver* solver;
 };
 
-extern ColAndreasWorld* collisionWorld;
+extern ColAndreasWorld* gCollisionWorld;
 
 #endif
