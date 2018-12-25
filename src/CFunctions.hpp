@@ -67,7 +67,7 @@ public:
 	static void PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE byteWeaponId, const CVector &vecPoint, const CVector &vecOffsetFrom, bool bIsHit, BYTE byteBetweenCheckFlags);
 	static WORD GetClosestEntityInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, float fRange, BYTE byteBetweenCheckFlags, WORD wPlayerId, WORD wTargetId, BYTE &byteEntityType, WORD &wPlayerObjectOwnerId, CVector &vecHitMap);
 
-	static WORD RayCastLine(const CVector vecStart, const CVector vecEnd, CVector *vecResult);
+	static WORD RayCastLine(const CVector &vecStart, const CVector &vecEnd, CVector *vecResult);
 
 	// Functions
 	static ClientJoin_RPC_t                 pfn__ClientJoin_RPC;

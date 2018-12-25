@@ -260,7 +260,7 @@ void ColAndreasWorld::colandreasInitMap()
 	InitCollisionMap(this->dynamicsWorld, this->removedManager);
 }
 
-uint16_t ColAndreasWorld::createColAndreasMapObject(uint16_t addtomanager, uint16_t modelid, const btQuaternion& objectRot, const btVector3& objectPos)
+int ColAndreasWorld::createColAndreasMapObject(uint16_t addtomanager, uint16_t modelid, const btQuaternion& objectRot, const btVector3& objectPos)
 {
 	if (addtomanager) {
 		return this->objectManager->addObjectManager(new ColAndreasMapObject(modelid, objectRot, objectPos, this->dynamicsWorld));

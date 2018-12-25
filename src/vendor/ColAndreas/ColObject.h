@@ -17,8 +17,6 @@ struct removeBuildingData
 	float r_Radius;
 };
 
-static uint16_t colindex = 0;
-
 // Data structure to track in-game objects with respect to their colindex
 struct ColAndreasObjectTracker
 {
@@ -112,8 +110,8 @@ class RemovedBuildingManager
 {
 public:
 	RemovedBuildingManager();
-	bool isRemoved(uint16_t model, const Vector position);
-	void addBuilding(const removeBuildingData removeData);
+	bool isRemoved(uint16_t model, const Vector &position);
+	void addBuilding(const removeBuildingData &removeData);
 private:
 	std::vector <removeBuildingData> removedBuildings;
 };

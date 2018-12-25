@@ -14,7 +14,7 @@ void DeleteCollisionData()
 	delete ModelPlacements;
 }
 
-bool ReadColandreasDatabaseFile(const std::string FileLocation)
+bool ReadColandreasDatabaseFile(const std::string &FileLocation)
 {
 	bool returnValue = false;
 	

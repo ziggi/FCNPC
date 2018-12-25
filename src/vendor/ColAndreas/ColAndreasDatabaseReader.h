@@ -105,7 +105,7 @@ pass a refrence to the collisionmodel and itemplacment array's. The function wil
 returns a boolean true if function suceeded, otherwise false.
 */
 
-bool ReadColandreasDatabaseFile(const std::string FileLocation);
+bool ReadColandreasDatabaseFile(const std::string &FileLocation);
 extern CollisionModelstructure* CollisionModels;
 extern ItemPlacementstructure* ModelPlacements;
 extern uint16_t ModelCount;

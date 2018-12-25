@@ -55,7 +55,7 @@ public:
 	int performRayTestNormal(const btVector3& Start, const btVector3& End, btVector3& Result, btVector3& Normal, uint16_t& model);
 	int performContactTest(uint16_t modelid, btVector3& objectPos, btQuaternion& objectRot);
 
-	uint16_t createColAndreasMapObject(uint16_t addtomanager, uint16_t modelid, const btQuaternion& objectRot, const btVector3& objectPos);
+	int createColAndreasMapObject(uint16_t addtomanager, uint16_t modelid, const btQuaternion& objectRot, const btVector3& objectPos);
 	uint16_t getModelRef(uint16_t model);
 	void colandreasInitMap();
 	bool loadCollisionData();

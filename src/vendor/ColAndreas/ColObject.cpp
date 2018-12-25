@@ -77,6 +77,7 @@ bool LoadCollisionData(btDynamicsWorld* collisionWorld)
 			ColAndreasColObject* convex = new ColAndreasColObject(i, true); //true for convex mesh
 			colObjects.push_back(colObject);
 			colConvex.push_back(convex->getCompoundShape()); //storing convex bodies
+			delete convex;
 		}
 		return true;
 	}
@@ -86,7 +87,7 @@ bool LoadCollisionData(btDynamicsWorld* collisionWorld)
 
 ColAndreasMapObject::ColAndreasMapObject(uint16_t modelid, const btQuaternion& objectRot, const btVector3& objectPos, btDynamicsWorld* world)
 {
-	colindex = ModelRef[modelid];
+	uint16_t colindex = ModelRef[modelid];
 
 	collisionWorld = world;
 
@@ -298,7 +299,7 @@ RemovedBuildingManager::RemovedBuildingManager()
 {
 }
 
-bool RemovedBuildingManager::isRemoved(uint16_t model, const Vector position)
+bool RemovedBuildingManager::isRemoved(uint16_t model, const Vector &position)
 {
 	for (uint16_t i = 0; i < removedBuildings.size(); i++) {
 		if (model == removedBuildings[i].r_Model) {
@@ -313,7 +314,7 @@ bool RemovedBuildingManager::isRemoved(uint16_t model, const Vector position)
 	return 0;
 }
 
-void RemovedBuildingManager::addBuilding(const removeBuildingData removeData)
+void RemovedBuildingManager::addBuilding(const removeBuildingData &removeData)
 {
 	removedBuildings.push_back(removeData);
 }
@@ -336,9 +337,7 @@ void InitCollisionMap(btDynamicsWorld* collisionWorld, RemovedBuildingManager* r
 			// Continue if model has no collision
 			if (index == 65535) continue;
 
-			ColAndreasMapObject* tmpObject;
-			tmpObject = new ColAndreasMapObject(ModelPlacements[i].Modelid, btQuaternion(ModelPlacements[i].Rotation.x, ModelPlacements[i].Rotation.y, ModelPlacements[i].Rotation.z, ModelPlacements[i].Rotation.w), btVector3(ModelPlacements[i].Position.x, ModelPlacements[i].Position.y, ModelPlacements[i].Position.z), collisionWorld);
-
+			ColAndreasMapObject(ModelPlacements[i].Modelid, btQuaternion(ModelPlacements[i].Rotation.x, ModelPlacements[i].Rotation.y, ModelPlacements[i].Rotation.z, ModelPlacements[i].Rotation.w), btVector3(ModelPlacements[i].Position.x, ModelPlacements[i].Position.y, ModelPlacements[i].Position.z), collisionWorld);
 		}
 	}
 }
