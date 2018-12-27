@@ -82,12 +82,12 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	logprintf("Loading...");
 #ifdef SAMP_03DL
 	if (version != SAMP_VERSION_03DL_R1 && version != SAMP_VERSION_UNKNOWN) {
-		logprintf("Failed. (Use FCNPC-DL for this version of the server)");
+		logprintf("Failed. (Use FCNPC for this version of the server (now you are using FCNPC-DL))");
 		return false;
 	}
 #else
 	if (version == SAMP_VERSION_03DL_R1) {
-		logprintf("Failed. (Use FCNPC for this version of the server (now you are using FCNPC-DL))");
+		logprintf("Failed. (Use FCNPC-DL for this version of the server)");
 		return false;
 	}
 #endif
