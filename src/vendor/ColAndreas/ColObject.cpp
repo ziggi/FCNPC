@@ -11,6 +11,8 @@ std::vector <btCompoundShape*> colConvex;
 ColAndreasColObject::ColAndreasColObject(uint16_t colindex, bool thirdparty = false)
 {
 	colMapObject = new btCompoundShape();
+	trimesh = NULL;
+	meshshape = NULL;
 
 	// Build any spheres
 	for (uint16_t i = 0; i < CollisionModels[colindex].SphereCount; i++) {
