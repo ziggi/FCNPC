@@ -30,7 +30,6 @@ char         szSampVersion[64];
 // ColAndreas stuff
 bool colInit = false;
 bool colDataLoaded = false;
-cell nullAddress = NULL;
 ColAndreasWorld *gCollisionWorld;
 
 PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports()

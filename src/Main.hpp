@@ -107,4 +107,3 @@ extern char         szSampClient[64];
 
 extern bool colInit;
 extern bool colDataLoaded;
-extern cell nullAddress;

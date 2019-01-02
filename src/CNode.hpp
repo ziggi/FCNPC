@@ -14,6 +14,9 @@
 #include "Structs.h"
 
 class CPlayerData;
+
+#pragma pack(push, 1)
+
 // Header
 struct CNodeHeader
 {
@@ -63,6 +66,8 @@ struct CLinkNode
 	WORD wNodeId; // 0x0002 - 0x0004
 	// Size = 0x4
 };
+
+#pragma pack(pop)
 
 class CNode
 {
