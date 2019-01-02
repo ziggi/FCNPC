@@ -1017,9 +1017,10 @@ void CPlayerData::UpdateHeightPos(CVector *pvecPosition)
 		return;
 	}
 
+	int iMoveMode = m_bPlayingNode ? m_iNodeMoveMode : m_iMoveMode;
 	float fNewZ = pvecPosition->fZ;
 
-	if (m_iMoveMode == MOVE_MODE_MAPANDREAS && pServer->GetMapAndreas()->IsInited()) {
+	if (iMoveMode == MOVE_MODE_MAPANDREAS && pServer->GetMapAndreas()->IsInited()) {
 		if (pvecPosition->fZ < 0.0f) {
 			return;
 		}
@@ -1027,7 +1028,7 @@ void CPlayerData::UpdateHeightPos(CVector *pvecPosition)
 		if (fZ > 0.0f) {
 			fNewZ = fZ + 1.0f;
 		}
-	} else if (m_iMoveMode == MOVE_MODE_COLANDREAS && colDataLoaded) {
+	} else if (iMoveMode == MOVE_MODE_COLANDREAS && colDataLoaded) {
 		CVector *vecResult = new CVector();
 		CVector vecStart = *pvecPosition;
 		CVector vecEnd = *pvecPosition;
@@ -1042,7 +1043,7 @@ void CPlayerData::UpdateHeightPos(CVector *pvecPosition)
 		}
 	}
 
-	if (m_iMoveMode != MOVE_MODE_NONE) {
+	if (iMoveMode != MOVE_MODE_NONE) {
 		if (m_fMinHeightPos < 0.0f) {
 			pvecPosition->fZ = fNewZ;
 		} else if (m_fMinHeightPos <= std::abs(fNewZ - pvecPosition->fZ)) {
