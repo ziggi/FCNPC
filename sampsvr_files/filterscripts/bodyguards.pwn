@@ -194,7 +194,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 			FCNPC_SetVirtualWorld(npcid, GetPlayerVirtualWorld(playerid));
 			FCNPC_SetInterior(npcid, GetPlayerInterior(playerid));
 			FCNPC_SetWeapon(npcid, random(3) + 22);
-			FCNPC_ToggleInfiniteAmmo(npcid, true);
+			FCNPC_UseInfiniteAmmo(npcid, true);
 			FCNPC_SetArmour(npcid, 80);
 			FCNPC_SetFightingStyle(npcid, random(4) + 3);
 
@@ -535,24 +535,24 @@ public BG_SetFollowPosition(npcid, playerid)
 		Float:pos_x,
 		Float:pos_y,
 		Float:pos_z,
-		Float:dist_offset,
+		Float:min_distance,
 		Float:range,
 		Float:speed;
 
 	GetPlayerPos(playerid, pos_x, pos_y, pos_z);
 
 	if (FCNPC_GetVehicleID(npcid) != INVALID_VEHICLE_ID) {
-		dist_offset = -3.0;
-		range = -dist_offset + 1.0;
+		min_distance = -3.0;
+		range = -min_distance + 1.0;
 		speed = 0.8;
 	} else {
-		dist_offset = -1.0;
-		range = -dist_offset + 0.5;
+		min_distance = -1.0;
+		range = -min_distance + 0.5;
 		speed = FCNPC_MOVE_SPEED_AUTO;
 	}
 
 	if (!IsPlayerInRangeOfPoint(npcid, range, pos_x, pos_y, pos_z)) {
-		FCNPC_GoToPlayer(npcid, playerid, .speed = speed, .dist_offset = dist_offset);
+		FCNPC_GoToPlayer(npcid, playerid, .speed = speed, .min_distance = min_distance);
 		KillTimer(gFollowTimer[npcid]);
 		gFollowTimer[npcid] = 0;
 		return 1;

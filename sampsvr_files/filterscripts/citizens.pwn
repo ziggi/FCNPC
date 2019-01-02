@@ -103,7 +103,7 @@ public OnFilterScriptInit()
 
 			FCNPC_SetNodePoint(nodeid, point);
 
-			FCNPC_PlayNode(npcid, nodeid, FCNPC_MOVE_TYPE_WALK, .UseMapAndreas = true);
+			FCNPC_PlayNode(npcid, nodeid, FCNPC_MOVE_TYPE_WALK);
 		} else {
 			point = random(vehnodes - 1);
 
@@ -113,7 +113,7 @@ public OnFilterScriptInit()
 			vehicleid = CreateVehicle(GetRandomCarModel(), x, y, z, 0, -1, -1, 1);
 			FCNPC_PutInVehicle(npcid, vehicleid, 0);
 
-			FCNPC_PlayNode(npcid, nodeid, .UseMapAndreas = true, .speed = 1.0 + frandom(1.0));
+			FCNPC_PlayNode(npcid, nodeid, .speed = 1.0 + frandom(1.0));
 		}
 	}
 	return 1;
@@ -187,10 +187,10 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	return 0;
 }
 
-public FCNPC_OnChangeNode(npcid, nodeid)
+public FCNPC_OnChangeNode(npcid, newnodeid, oldnodeid)
 {
 	// Validate the node zone
- 	return IsValidZone(nodeid) ? 1 : 0;
+ 	return IsValidZone(newnodeid) ? 1 : 0;
 }
 
 stock GetRandomCarModel()

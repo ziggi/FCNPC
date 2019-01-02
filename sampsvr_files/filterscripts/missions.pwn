@@ -41,7 +41,7 @@
 // Same goes for vehicles (11 vehicles per mission = 110 vehicle slots used)
 
 forward StartMission(slotid, starterid);
-forward EndMission(mission, reason[], bool:success);
+forward EndMission(mission, const reason[], bool:success);
 forward JoinMission(playerid, mission, slot);
 forward LeaveMission(playerid);
 forward BeginMission(mission);
@@ -950,7 +950,7 @@ public StartMission(slotid, starterid)
 	return true;
 }
 
-public EndMission(mission, reason[], bool:success)
+public EndMission(mission, const reason[], bool:success)
 {
 	if (mission == INVALID_MISSION)
 	{
