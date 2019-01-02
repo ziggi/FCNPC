@@ -34,8 +34,8 @@
 forward Float:frandom(Float:max);
 
 new
-	gMaxCitiziens,
-	gCitizienID[MAX_PLAYERS] = {INVALID_PLAYER_ID, ...},
+	gMaxCitizens,
+	gCitizenID[MAX_PLAYERS] = {INVALID_PLAYER_ID, ...},
 	gCars[] = {
 		401, 402, 404, 405, 409, 410, 411, 412, 415, 419, 420, 421, 426, 429,
 		434, 436, 438, 439, 442, 445, 451, 458, 466, 467, 474, 475, 477, 479,
@@ -49,16 +49,17 @@ public OnFilterScriptInit()
 {
 	printf("");
 	printf("-------------------------------------------------");
-	printf(" FCNPC - Fully Customizable NPC citiziens FS");
+	printf(" FCNPC - Fully Customizable NPC citizens FS");
 	printf("");
 	printf("- Author: OrMisicL");
 	printf("- Contributor: ziggi");
 	printf("-------------------------------------------------");
 	printf("");
 	//
-	gMaxCitiziens = GetConsoleVarAsInt("maxnpc");
+	gMaxCitizens = GetConsoleVarAsInt("maxnpc");
 	// Set the update rate
 	FCNPC_SetUpdateRate(80);
+
 	// Open all nodes
 	for (new i = 0; i < FCNPC_MAX_NODES; i++) {
 		if (!FCNPC_IsNodeOpen(i) && !FCNPC_OpenNode(i)) {
@@ -66,7 +67,7 @@ public OnFilterScriptInit()
 			return 0;
 		}
 	}
-	// Create all the citiziens
+	// Create all the citizens
 	new
 		name[MAX_PLAYER_NAME + 1],
 		npcid,
@@ -76,9 +77,9 @@ public OnFilterScriptInit()
 		vehicleid,
 		vehnodes, pednodes, navinodes;
 
-	for (new i = 0; i < gMaxCitiziens; i++) {
-		// Generate the citizien name
-		format(name, sizeof(name), "citizien_%d", i + 1);
+	for (new i = 0; i < gMaxCitizens; i++) {
+		// Generate the citizen name
+		format(name, sizeof(name), "citizen_%d", i + 1);
 
 		// Create and spawn the NPC
 		npcid = FCNPC_Create(name);
@@ -86,7 +87,7 @@ public OnFilterScriptInit()
 			printf("Warning: Failed to create NPC ID %d (%s)", i, name);
 			continue;
 		}
-		gCitizienID[i] = npcid;
+		gCitizenID[i] = npcid;
 		FCNPC_Spawn(npcid, random(299), 0, 0, 0);
 
 		// Generate a random nodeid
@@ -124,13 +125,13 @@ public OnFilterScriptExit()
 	// Delete all NPCs
 	new vehicleid;
 	for (new i = 0; i < MAX_PLAYERS; i++) {
-		if (gCitizienID[i] != INVALID_PLAYER_ID) {
-			vehicleid = FCNPC_GetVehicleID(gCitizienID[i]);
+		if (gCitizenID[i] != INVALID_PLAYER_ID) {
+			vehicleid = FCNPC_GetVehicleID(gCitizenID[i]);
 			if (vehicleid != 0) {
 				DestroyVehicle(vehicleid);
 			}
-			FCNPC_Destroy(gCitizienID[i]);
-			gCitizienID[i] = INVALID_PLAYER_ID;
+			FCNPC_Destroy(gCitizenID[i]);
+			gCitizenID[i] = INVALID_PLAYER_ID;
 		}
  	}
 	// Close all nodes
@@ -145,21 +146,21 @@ public OnFilterScriptExit()
 public OnPlayerCommandText(playerid, cmdtext[])
 {
 	// Test command
-	if (strcmp(cmdtext, "/citizien", true, 9) == 0) {
+	if (strcmp(cmdtext, "/citizen", true, 9) == 0) {
 		new
 			param[4],
 			npcid;
 
 		strmid(param, cmdtext, 10, strlen(cmdtext));
 		if (strlen(param) == 0) {
-			SendClientMessage(playerid, 0xB35959AA, "Usage: /citizien <ID>");
+			SendClientMessage(playerid, 0xB35959AA, "Usage: /citizen <ID>");
 			return 1;
 		}
 
 		npcid = strval(param);
 
 		if (!FCNPC_IsValid(npcid)) {
-			SendClientMessage(playerid, 0xB35959AA, "Invalid citizien ID");
+			SendClientMessage(playerid, 0xB35959AA, "Invalid citizen ID");
 			return 1;
 		}
 
@@ -170,16 +171,16 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	}
 	if (strcmp(cmdtext, "/pause", true, 6) == 0) {
 		for (new i = 0; i < MAX_PLAYERS; i++) {
-			if (gCitizienID[i] != INVALID_PLAYER_ID) {
-				FCNPC_PausePlayingNode(gCitizienID[i]);
+			if (gCitizenID[i] != INVALID_PLAYER_ID) {
+				FCNPC_PausePlayingNode(gCitizenID[i]);
 			}
 		}
 		return 1;
 	}
 	if (strcmp(cmdtext, "/resume", true, 7) == 0) {
 		for (new i = 0; i < MAX_PLAYERS; i++) {
-			if (gCitizienID[i] != INVALID_PLAYER_ID) {
-				FCNPC_ResumePlayingNode(gCitizienID[i]);
+			if (gCitizenID[i] != INVALID_PLAYER_ID) {
+				FCNPC_ResumePlayingNode(gCitizenID[i]);
 			}
 		}
 		return 1;
