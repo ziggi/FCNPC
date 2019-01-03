@@ -1029,7 +1029,7 @@ void CPlayerData::UpdateHeightPos(CVector *pvecPosition)
 			fNewZ = fZ + 1.0f;
 		}
 	} else if (iMoveMode == MOVE_MODE_COLANDREAS && colDataLoaded) {
-		CVector *vecResult = new CVector();
+		CVector vecResult;
 		CVector vecStart = *pvecPosition;
 		CVector vecEnd = *pvecPosition;
 		vecEnd.fZ -= 1000.0f;
@@ -1038,13 +1038,13 @@ void CPlayerData::UpdateHeightPos(CVector *pvecPosition)
 			vecStart.fZ = m_vecDestination.fZ;
 		}
 
-		if (CFunctions::RayCastLine(vecStart, vecEnd, vecResult)) {
-			fNewZ = vecResult->fZ + 1.0f;
+		if (CFunctions::RayCastLine(vecStart, vecEnd, &vecResult)) {
+			fNewZ = vecResult.fZ + 1.0f;
 		} else {
 			vecStart.fZ = m_vecDestination.fZ + 1000.0f;
 
-			if (CFunctions::RayCastLine(vecStart, vecEnd, vecResult)) {
-				fNewZ = vecResult->fZ + 1.0f;
+			if (CFunctions::RayCastLine(vecStart, vecEnd, &vecResult)) {
+				fNewZ = vecResult.fZ + 1.0f;
 			}
 		}
 	}
