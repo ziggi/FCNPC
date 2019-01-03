@@ -1040,6 +1040,12 @@ void CPlayerData::UpdateHeightPos(CVector *pvecPosition)
 
 		if (CFunctions::RayCastLine(vecStart, vecEnd, vecResult)) {
 			fNewZ = vecResult->fZ + 1.0f;
+		} else {
+			vecStart.fZ = m_vecDestination.fZ + 1000.0f;
+
+			if (CFunctions::RayCastLine(vecStart, vecEnd, vecResult)) {
+				fNewZ = vecResult->fZ + 1.0f;
+			}
 		}
 	}
 
