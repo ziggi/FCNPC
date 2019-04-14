@@ -60,7 +60,8 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 			FUNC_CPlayer__Kill = 0x484620;
 			// R2: 0x484c70 | R3: 0x484c72
 			FUNC_CPlayer__EnterVehicle = CUtils::FindPattern("\xEC\x1C\x01\x00\x00\x53\x55\x56\x8B\xF1\x57\x8D\x4C\x24\x18", "xxxxxxxxxxxxxxx") - 0x14;
-			FUNC_CPlayer__ExitVehicle = 0x484d90; // R2: 0x484d90 | R3: 0x484f52
+			// R2: 0x484d90 | R3: 0x484f52
+			FUNC_CPlayer__ExitVehicle = CUtils::FindPattern("\xEC\x18\x01\x00\x00\x56\x8B\xF1\x57\x8B\xBC\x24\x30\x01\x00\x00\x8D\x4C\x24", "xxxxxxxxxxxxxxxxxxx") - 0x14;
 			FUNC_CPlayer__SpawnForWorld = 0x486d30;
 			FUNC_GetVehicleModelInfo = 0x488240;
 			FUNC_CConsole__GetIntVariable = 0x48b5b0;
