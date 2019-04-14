@@ -58,12 +58,14 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 		case SAMP_VERSION_037_R2:
 			FUNC_CPlayerPool__DeletePlayer = 0x466570;
 			FUNC_CPlayer__Kill = 0x484620;
-			FUNC_CPlayer__EnterVehicle = 0x484c70;
-			FUNC_CPlayer__ExitVehicle = 0x484d90;
+			// R2: 0x484c70 | R3: 0x484c72
+			FUNC_CPlayer__EnterVehicle = CUtils::FindPattern("\xEC\x1C\x01\x00\x00\x53\x55\x56\x8B\xF1\x57\x8D\x4C\x24\x18", "xxxxxxxxxxxxxxx") - 0x14;
+			FUNC_CPlayer__ExitVehicle = 0x484d90; // R2: 0x484d90 | R3: 0x484f52
 			FUNC_CPlayer__SpawnForWorld = 0x486d30;
 			FUNC_GetVehicleModelInfo = 0x488240;
 			FUNC_CConsole__GetIntVariable = 0x48b5b0;
-			FUNC_ClientJoin_RPC = 0x4918f0;
+			// R2: 0x4918f0 | R3: 0x491910
+			FUNC_ClientJoin_RPC = CUtils::FindPattern("\x83\xC1\x08\x8B\x11\x66\x8B\x49\x04\x89\x54\x24\x14\x99\x83\xE2\x07\x03\xC2\xC1\xF8\x03\x53\x40\x50\x66\x89", "xxxxxxxxxxxxxxxxxxxxxxxxxxx") - 0x3E;
 
 			VAR_ServerAuthentication = 0x4f5fe8;
 			VAR_NetVersion = 0xfd9;
@@ -78,7 +80,8 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 			FUNC_CGameMode__OnPlayerWeaponShot = 0x46f360;
 			FUNC_CGameMode__OnPlayerStreamIn = 0x46e8e0;
 			FUNC_CGameMode__OnPlayerStreamOut = 0x46e950;
-			FUNC_CGameMode__OnGameModeExit = 0x46adc0;
+			// R2: 0x46adc0 | R3: 0x46d7b0
+			FUNC_CGameMode__OnGameModeExit = CUtils::FindPattern("\x51\x53\x56\x8D\x44\x24\x08\x50\x8B\xF1\x68\x78\xBB\x4B\x00", "xxxxxxxxxxxx?xx");
 			break;
 
 		case CRMP_VERSION_037_R2:
@@ -162,7 +165,7 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 			OFFSET_RemoteSystem__Unknown = *(DWORD *)(CUtils::FindPattern("\x80\xB8\xB5\x0C\x00\x00\x02\x0F\x85\x4C\x01\x00\x00\x8B\x7C\x24\x3C\x8B\xCF", "xx????xx??????xx?xx") + 2);
 
 			// callbacks
-			FUNC_CGameMode__OnPlayerGiveDamage = CUtils::FindPattern("\x83\xEC\x08\x56\x8D\x44\x24\x08\x50\x8B\xF1\x68\x9C\xBE\x4B\x00", "xxxxxxxxxxxxxxxx");
+			FUNC_CGameMode__OnPlayerGiveDamage = CUtils::FindPattern("\x83\xEC\x08\x56\x8D\x44\x24\x08\x50\x8B\xF1\x68\x9C\xBE\x4B\x00", "xxxxxxxxxxxxx?xx");
 			FUNC_CGameMode__OnPlayerTakeDamage = CUtils::FindPattern("\x83\xEC\x08\x56\x8D\x44\x24\x08\x50\x8B\xF1\x68\x88\x5E\x4B\x00", "xxxxxxxxxxxxx?xx");
 			FUNC_CGameMode__OnPlayerWeaponShot = CUtils::FindPattern("\x51\x8B\x44\x24\x18\x53\x8B\x58\x04\x55\x8B\x68\x08\x56\x57\x8B\x38\x8D\x44\x24\x28\x50\x8B\xF1\x68\xA8\x5F\x4B\x00", "xxxxxxxxxxxxxxxxxxxxxxxxxx?xx");
 			FUNC_CGameMode__OnPlayerStreamIn = CUtils::FindPattern("\x83\xEC\x08\x56\x8B\xF1\x8A\x46\x68\x84\xC0\x75\x09\x33\xC0\x5E\x83\xC4\x08\xC2\x08\x00\x8D\x44\x24\x08\x50\x68\xEC\x5D\x4B\x00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx?xx");
