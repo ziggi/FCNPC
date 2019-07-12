@@ -54,8 +54,7 @@ extern logprintf_t          logprintf;
 // Check in between shot mode
 #define FCNPC_ENTITY_MODE_AUTO			(-1)
 #define FCNPC_ENTITY_MODE_NONE			(0)
-#define FCNPC_ENTITY_MODE_MAPANDREAS	(1)
-#define FCNPC_ENTITY_MODE_COLANDREAS	(2)
+#define FCNPC_ENTITY_MODE_COLANDREAS	(1)
 
 // Check in between shot (type BYTE suffices)
 #define FCNPC_ENTITY_CHECK_NONE           (0)
