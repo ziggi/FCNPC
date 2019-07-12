@@ -51,6 +51,12 @@ extern logprintf_t          logprintf;
 #define UPDATE_STATE_DRIVER     2
 #define UPDATE_STATE_PASSENGER  3
 
+// Check in between shot mode
+#define FCNPC_ENTITY_MODE_AUTO			(-1)
+#define FCNPC_ENTITY_MODE_NONE			(0)
+#define FCNPC_ENTITY_MODE_MAPANDREAS	(1)
+#define FCNPC_ENTITY_MODE_COLANDREAS	(2)
+
 // Check in between shot (type BYTE suffices)
 #define FCNPC_ENTITY_CHECK_NONE           (0)
 #define FCNPC_ENTITY_CHECK_PLAYER         (1)

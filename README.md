@@ -73,6 +73,11 @@ Constants
 #define FCNPC_ENTITY_CHECK_MAP		(128)
 #define FCNPC_ENTITY_CHECK_ALL		(255)
 
+#define FCNPC_ENTITY_MODE_AUTO			(-1)
+#define FCNPC_ENTITY_MODE_NONE			(0)
+#define FCNPC_ENTITY_MODE_MAPANDREAS	(1)
+#define FCNPC_ENTITY_MODE_COLANDREAS	(2)
+
 #define FCNPC_MOVE_TYPE_AUTO		(-1)
 #define FCNPC_MOVE_TYPE_WALK		(0)
 #define FCNPC_MOVE_TYPE_RUN		(1)
@@ -260,8 +265,8 @@ native bool:FCNPC_IsMoving(npcid);
 native bool:FCNPC_IsMovingAtPlayer(npcid, playerid);
 native FCNPC_GetDestinationPoint(npcid, &Float:x, &Float:y, &Float:z);
 
-native FCNPC_AimAt(npcid, Float:x, Float:y, Float:z, bool:shoot = false, shoot_delay = -1, bool:set_angle = true, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0, between_check_flags = FCNPC_ENTITY_CHECK_ALL);
-native FCNPC_AimAtPlayer(npcid, playerid, bool:shoot = false, shoot_delay = -1, bool:set_angle = true, Float:offset_x = 0.0, Float:offset_y = 0.0, Float:offset_z = 0.0, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0, between_check_flags = FCNPC_ENTITY_CHECK_ALL);
+native FCNPC_AimAt(npcid, Float:x, Float:y, Float:z, bool:shoot = false, shoot_delay = -1, bool:set_angle = true, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0, between_check_mode = FCNPC_ENTITY_MODE_AUTO, between_check_flags = FCNPC_ENTITY_CHECK_ALL);
+native FCNPC_AimAtPlayer(npcid, playerid, bool:shoot = false, shoot_delay = -1, bool:set_angle = true, Float:offset_x = 0.0, Float:offset_y = 0.0, Float:offset_z = 0.0, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0, between_check_mode = FCNPC_ENTITY_MODE_AUTO, between_check_flags = FCNPC_ENTITY_CHECK_ALL);
 native FCNPC_StopAim(npcid);
 native FCNPC_MeleeAttack(npcid, delay = -1, bool:fightstyle = false);
 native FCNPC_StopAttack(npcid);
@@ -271,8 +276,8 @@ native bool:FCNPC_IsAimingAtPlayer(npcid, playerid);
 native FCNPC_GetAimingPlayer(npcid);
 native bool:FCNPC_IsShooting(npcid);
 native bool:FCNPC_IsReloading(npcid);
-native FCNPC_TriggerWeaponShot(npcid, weaponid, hittype, hitid, Float:x, Float:y, Float:z, bool:is_hit = true, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0, between_check_flags = FCNPC_ENTITY_CHECK_ALL);
-native FCNPC_GetClosestEntityInBetween(npcid, Float:x, Float:y, Float:z, Float:range, between_check_flags = FCNPC_ENTITY_CHECK_ALL, &entity_id = -1, &entity_type = -1, &object_owner_id = INVALID_PLAYER_ID, &Float:point_x = 0.0, &Float:point_y = 0.0, &Float:point_z = 0.0);
+native FCNPC_TriggerWeaponShot(npcid, weaponid, hittype, hitid, Float:x, Float:y, Float:z, bool:is_hit = true, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0, between_check_mode = FCNPC_ENTITY_MODE_AUTO, between_check_flags = FCNPC_ENTITY_CHECK_ALL);
+native FCNPC_GetClosestEntityInBetween(npcid, Float:x, Float:y, Float:z, Float:range, between_check_mode = FCNPC_ENTITY_MODE_AUTO, between_check_flags = FCNPC_ENTITY_CHECK_ALL, &entity_id = -1, &entity_type = -1, &object_owner_id = INVALID_PLAYER_ID, &Float:point_x = 0.0, &Float:point_y = 0.0, &Float:point_z = 0.0);
 
 native FCNPC_EnterVehicle(npcid, vehicleid, seatid, type = FCNPC_MOVE_TYPE_WALK);
 native FCNPC_ExitVehicle(npcid);
