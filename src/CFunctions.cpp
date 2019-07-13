@@ -342,7 +342,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 					bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pActor->vecPosition);
 					bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget; // When actor is hit use the actor collision position, this is conform with the SA-MP callback OnPlayerWeaponShot
 				}
-			} else if (bulletSyncDataTarget.wHitID == -1) { // Hit map
+			} else if (bulletSyncDataTarget.wHitID == MAX_ACTORS + 1) { // Hit map
 				// logprintf("HIT MAP");
 				bulletSyncDataTarget.vecCenterOfHit = vecHitMap; // When map is hit use the object collision position, this is conform with the SA-MP callback OnPlayerWeaponShot
 			} else { // Hit nothing
@@ -577,7 +577,7 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 		if (wClosestMapPoint != 0 && (wClosestEntity == 0xFFFF || fClosestMapPointDistance < fClosestEntityDistance)) {
 			byteEntityType = FCNPC_ENTITY_CHECK_MAP;
 			fClosestEntityDistance = fClosestMapPointDistance;
-			wClosestEntity = wClosestMapPoint;
+			wClosestEntity = MAX_ACTORS + 1;
 		}
 	}
 
@@ -720,30 +720,39 @@ WORD CFunctions::GetClosestObjectInBetween(const CVector &vecHitOrigin, const CV
 {
 	WORD wClosestObject = INVALID_OBJECT_ID;
 
-	// Loop through all the objects
-	for (WORD i = 1; i < MAX_OBJECTS; i++) { // Object IDs start at 1
-		// Validate the object
-		CObject *pObject = pNetGame->pObjectPool->pObjects[i];
-		if (!pObject) {
-			continue;
-		}
+	// Use ColAndreas when enabled
+	if (iMode == FCNPC_ENTITY_MODE_COLANDREAS && colDataLoaded) {
+		// Even though bullets can penetrate water and still deal damage, we can't check for points beyond water
 
-		// Is the object on the ray
-		if (CMath::GetDistanceFromRayToPoint(vecHitOrigin, vecHitTarget, pObject->matWorld.pos) > MAX_HIT_RADIUS) {
-			continue;
-		}
+		//TODO
+	}
+	// Fall back on less accurate code
+	else {
+		// Loop through all the objects
+		for (WORD i = 1; i < MAX_OBJECTS; i++) { // Object IDs start at 1
+			// Validate the object
+			CObject *pObject = pNetGame->pObjectPool->pObjects[i];
+			if (!pObject) {
+				continue;
+			}
 
-		// Is the object in the damage range
-		float fObjectDistance = CMath::GetDistanceBetween3DPoints(vecHitOrigin, pObject->matWorld.pos);
-		if (fObjectDistance > fRange) {
-			continue;
-		}
+			// Is the object on the ray
+			if (CMath::GetDistanceFromRayToPoint(vecHitOrigin, vecHitTarget, pObject->matWorld.pos) > MAX_HIT_RADIUS) {
+				continue;
+			}
 
-		// Is the object closer than another object
-		if (wClosestObject == INVALID_OBJECT_ID || fObjectDistance < fDistance) {
-			fDistance = fObjectDistance;
-			wClosestObject = i;
-		}
+			// Is the object in the damage range
+			float fObjectDistance = CMath::GetDistanceBetween3DPoints(vecHitOrigin, pObject->matWorld.pos);
+			if (fObjectDistance > fRange) {
+				continue;
+			}
+
+			// Is the object closer than another object
+			if (wClosestObject == INVALID_OBJECT_ID || fObjectDistance < fDistance) {
+				fDistance = fObjectDistance;
+				wClosestObject = i;
+			}
+		}		
 	}
 
 	return wClosestObject;
@@ -758,29 +767,38 @@ WORD CFunctions::GetClosestPlayerObjectInBetween(const CVector &vecHitOrigin, co
 		return wClosestPlayerObject;
 	}
 
-	// Loop through all the player objects of the owner
-	for (WORD i = 1; i < MAX_OBJECTS; i++) { // Player object IDs start at 1
-		// Validate the player object
-		CObject *pPlayerObject = pNetGame->pObjectPool->pPlayerObjects[wOwnerId][i];
-		if (!pPlayerObject) {
-			continue;
-		}
+	// Use ColAndreas when enabled
+	if (iMode == FCNPC_ENTITY_MODE_COLANDREAS && colDataLoaded) {
+		// Even though bullets can penetrate water and still deal damage, we can't check for points beyond water
 
-		// Is the player object on the ray
-		if (CMath::GetDistanceFromRayToPoint(vecHitOrigin, vecHitTarget, pPlayerObject->matWorld.pos) > MAX_HIT_RADIUS) {
-			continue;
-		}
+		//TODO
+	}
+	// Fall back on less accurate code
+	else {
+		// Loop through all the player objects of the owner
+		for (WORD i = 1; i < MAX_OBJECTS; i++) { // Player object IDs start at 1
+			// Validate the player object
+			CObject *pPlayerObject = pNetGame->pObjectPool->pPlayerObjects[wOwnerId][i];
+			if (!pPlayerObject) {
+				continue;
+			}
 
-		// Is the player object in the damage range
-		float fPlayerObjectDistance = CMath::GetDistanceBetween3DPoints(vecHitOrigin, pPlayerObject->matWorld.pos);
-		if (fPlayerObjectDistance > fRange) {
-			continue;
-		}
+			// Is the player object on the ray
+			if (CMath::GetDistanceFromRayToPoint(vecHitOrigin, vecHitTarget, pPlayerObject->matWorld.pos) > MAX_HIT_RADIUS) {
+				continue;
+			}
 
-		// Is the player object closer than another player object
-		if (wClosestPlayerObject == INVALID_OBJECT_ID || fPlayerObjectDistance < fDistance) {
-			fDistance = fPlayerObjectDistance;
-			wClosestPlayerObject = i;
+			// Is the player object in the damage range
+			float fPlayerObjectDistance = CMath::GetDistanceBetween3DPoints(vecHitOrigin, pPlayerObject->matWorld.pos);
+			if (fPlayerObjectDistance > fRange) {
+				continue;
+			}
+
+			// Is the player object closer than another player object
+			if (wClosestPlayerObject == INVALID_OBJECT_ID || fPlayerObjectDistance < fDistance) {
+				fDistance = fPlayerObjectDistance;
+				wClosestPlayerObject = i;
+			}
 		}
 	}
 
@@ -789,23 +807,37 @@ WORD CFunctions::GetClosestPlayerObjectInBetween(const CVector &vecHitOrigin, co
 
 WORD CFunctions::GetClosestMapPointInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, float fRange, float &fDistance, CVector &vecHitMap, int iMode)
 {
+	WORD wClosestMapPoint = 0;
+
+	// Use ColAndreas when enabled
+	if (iMode == FCNPC_ENTITY_MODE_COLANDREAS && colDataLoaded) {
+		// Even though bullets can penetrate water and still deal damage, we can't check for points beyond water
+
+		// The map point should be in the damage range
+		float fTargetDistance = CMath::GetDistanceBetween3DPoints(vecHitOrigin, vecHitTarget);
+		CVector vecHitNewTarget;
+		vecHitNewTarget.fX = vecHitOrigin.fX + (vecHitTarget.fX - vecHitOrigin.fX) / fTargetDistance * fRange;
+		vecHitNewTarget.fY = vecHitOrigin.fY + (vecHitTarget.fY - vecHitOrigin.fY) / fTargetDistance * fRange;
+		vecHitNewTarget.fZ = vecHitOrigin.fZ + (vecHitTarget.fZ - vecHitOrigin.fZ) / fTargetDistance * fRange;
+
+		// Is a map point on the ray
+		wClosestMapPoint = CFunctions::RayCastLine(vecHitOrigin, vecHitNewTarget, &vecHitMap);
+		if (wClosestMapPoint != 0) {
+			fDistance = CMath::GetDistanceBetween3DPoints(vecHitOrigin, vecHitMap);
+		}
+	}
+
+	return wClosestMapPoint;
+
 	//TODO
 	//1) GetClosestMapPointInBetween:
-	//- implement when ColAndreas is enabled, otherwise return nothing (0).
-	//- currently the code handles map points when the hit type is BULLET_HIT_TYPE_NONE and the hit ID is -1.
 	//- this function should specificly check for map points only, not for global objects or custom objects!
-	//- keep in mind that bullets can penetrate water and still deal damage.
-	//- store the collision point in vecHitMap
 
 	//2) GetClosestObjectInBetween:
-	//- improve when ColAndreas is enabled, otherwise fall back on existing code.
 	//- this function should specificly check for global objects only, not for custom objects or map points!
-	//- keep in mind that bullets can penetrate water and still deal damage.
 	
 	//3) GetClosestPlayerObjectInBetween:
-	//- improve when ColAndreas is enabled, otherwise fall back on existing code.
 	//- this function should specificly check for custom objects only, not for global objects or map points!
-	//- keep in mind that bullets can penetrate water and still deal damage.
 
 	return 0;
 }
