@@ -721,10 +721,11 @@ WORD CFunctions::GetClosestObjectInBetween(const CVector &vecHitOrigin, const CV
 	WORD wClosestObject = INVALID_OBJECT_ID;
 
 	// Use ColAndreas when enabled
-	if (iMode == FCNPC_ENTITY_MODE_COLANDREAS && colDataLoaded) {
+	bool colCanSeparateMapAndCustomObjects = false;
+	if (iMode == FCNPC_ENTITY_MODE_COLANDREAS && colDataLoaded && colCanSeparateMapAndCustomObjects) {
 		// Even though bullets can penetrate water and still deal damage, we can't check for points beyond water
-
-		//TODO
+		// Check for global objects only, not for custom objects or map points
+		// - Currently this is not supported, since ColAndreas can't distinguish between the map and global/custom objects
 	}
 	// Fall back on less accurate code
 	else {
@@ -768,10 +769,11 @@ WORD CFunctions::GetClosestPlayerObjectInBetween(const CVector &vecHitOrigin, co
 	}
 
 	// Use ColAndreas when enabled
-	if (iMode == FCNPC_ENTITY_MODE_COLANDREAS && colDataLoaded) {
+	bool colCanSeparateMapAndCustomObjects = false;
+	if (iMode == FCNPC_ENTITY_MODE_COLANDREAS && colDataLoaded && colCanSeparateMapAndCustomObjects) {
 		// Even though bullets can penetrate water and still deal damage, we can't check for points beyond water
-
-		//TODO
+		// Check for custom objects only, not for global objects or map points
+		// - Currently this is not supported, since ColAndreas can't distinguish between the map and global/custom objects
 	}
 	// Fall back on less accurate code
 	else {
@@ -812,6 +814,8 @@ WORD CFunctions::GetClosestMapPointInBetween(const CVector &vecHitOrigin, const 
 	// Use ColAndreas when enabled
 	if (iMode == FCNPC_ENTITY_MODE_COLANDREAS && colDataLoaded) {
 		// Even though bullets can penetrate water and still deal damage, we can't check for points beyond water
+		// Check for map points only, not for global objects or custom objects
+		// - Currently this function checks for all of the above, since ColAndreas can't distinguish between the map and global/custom objects
 
 		// The map point should be in the damage range
 		float fTargetDistance = CMath::GetDistanceBetween3DPoints(vecHitOrigin, vecHitTarget);
@@ -828,18 +832,6 @@ WORD CFunctions::GetClosestMapPointInBetween(const CVector &vecHitOrigin, const 
 	}
 
 	return wClosestMapPoint;
-
-	//TODO
-	//1) GetClosestMapPointInBetween:
-	//- this function should specificly check for map points only, not for global objects or custom objects!
-
-	//2) GetClosestObjectInBetween:
-	//- this function should specificly check for global objects only, not for custom objects or map points!
-	
-	//3) GetClosestPlayerObjectInBetween:
-	//- this function should specificly check for custom objects only, not for global objects or map points!
-
-	return 0;
 }
 
 
