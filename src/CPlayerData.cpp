@@ -59,6 +59,7 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_byteSeatToEnter = 0;
 	m_wHitId = INVALID_PLAYER_ID;
 	m_byteHitType = BULLET_HIT_TYPE_NONE;
+	m_iBetweenCheckMode = FCNPC_ENTITY_MODE_NONE;
 	m_byteBetweenCheckFlags = FCNPC_ENTITY_CHECK_NONE;
 	m_vecSurfing = CVector();
 	m_wSurfingInfo = 0;
@@ -935,7 +936,7 @@ void CPlayerData::Process()
 						if (GetWeaponType(m_byteWeaponId) == WEAPON_TYPE_SHOOT) {
 							bool bIsHit = rand() % 100 < static_cast<int>(GetWeaponAccuracy(m_byteWeaponId) * 100.0f);
 
-							CFunctions::PlayerShoot(m_wPlayerId, m_wHitId, m_byteHitType, m_byteWeaponId, m_vecAimAt, m_vecAimOffsetFrom, bIsHit, m_byteBetweenCheckFlags);
+							CFunctions::PlayerShoot(m_wPlayerId, m_wHitId, m_byteHitType, m_byteWeaponId, m_vecAimAt, m_vecAimOffsetFrom, bIsHit, m_iBetweenCheckMode, m_byteBetweenCheckFlags);
 						}
 
 						SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys | KEY_AIM | KEY_FIRE);
@@ -1838,7 +1839,7 @@ bool CPlayerData::HasInfiniteAmmo()
 	return m_bHasInfiniteAmmo;
 }
 
-void CPlayerData::AimAt(const CVector &vecPoint, bool bShoot, int iShootDelay, bool bSetAngle, const CVector &vecOffsetFrom, BYTE byteBetweenCheckFlags)
+void CPlayerData::AimAt(const CVector &vecPoint, bool bShoot, int iShootDelay, bool bSetAngle, const CVector &vecOffsetFrom, int iMode, BYTE byteBetweenCheckFlags)
 {
 	if (m_bMoving && m_iMoveType == MOVE_TYPE_SPRINT) {
 		return;
@@ -1872,14 +1873,15 @@ void CPlayerData::AimAt(const CVector &vecPoint, bool bShoot, int iShootDelay, b
 	// Set the shooting flag
 	m_bShooting = bShoot;
 
-	// Set the inBetween flags
+	// Set the inBetween mode and flags
+	m_iBetweenCheckMode = iMode;
 	m_byteBetweenCheckFlags = byteBetweenCheckFlags;
 }
 
-void CPlayerData::AimAtPlayer(WORD wHitId, bool bShoot, int iShootDelay, bool bSetAngle, const CVector &vecOffset, const CVector &vecOffsetFrom, BYTE byteCheckFlags)
+void CPlayerData::AimAtPlayer(WORD wHitId, bool bShoot, int iShootDelay, bool bSetAngle, const CVector &vecOffset, const CVector &vecOffsetFrom, int iMode, BYTE byteBetweenCheckFlags)
 {
 	CPlayer *pPlayer = pNetGame->pPlayerPool->pPlayer[wHitId];
-	AimAt(pPlayer->vecPosition + vecOffset, bShoot, iShootDelay, bSetAngle, vecOffsetFrom, byteCheckFlags);
+	AimAt(pPlayer->vecPosition + vecOffset, bShoot, iShootDelay, bSetAngle, vecOffsetFrom, iMode, byteBetweenCheckFlags);
 	m_wHitId = wHitId;
 	m_byteHitType = BULLET_HIT_TYPE_PLAYER;
 	m_vecAimOffset = vecOffset;
@@ -1944,6 +1946,7 @@ void CPlayerData::StopAim()
 	m_wHitId = INVALID_PLAYER_ID;
 	m_bAimSetAngle = false;
 	m_byteHitType = BULLET_HIT_TYPE_NONE;
+	m_iBetweenCheckMode = FCNPC_ENTITY_MODE_NONE;
 	m_byteBetweenCheckFlags = FCNPC_ENTITY_CHECK_NONE;
 	// Reset keys
 	SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys & ~(KEY_AIM | KEY_FIRE));

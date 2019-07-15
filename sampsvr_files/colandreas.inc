@@ -2,9 +2,12 @@
 // ColAndreas Plugin Include ///////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-#if defined COLANDREAS
+#if defined _colandreas_included
 	#endinput
 #endif
+#define _colandreas_included
+#pragma library colandreas
+
 #define COLANDREAS_VERSION (10400) //a.b.c 10000*a+100*b+c
 #define COLANDREAS (COLANDREAS_VERSION)
 

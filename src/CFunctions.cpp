@@ -254,7 +254,7 @@ int CFunctions::GetIndexFromPlayerID(PlayerID playerId)
 	return pfn__RakNet__GetIndexFromPlayerID(pRakServer, playerId);
 }
 
-void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE byteWeaponId, const CVector &vecPoint, const CVector &vecOffsetFrom, bool bIsHit, BYTE byteBetweenCheckFlags)
+void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE byteWeaponId, const CVector &vecPoint, const CVector &vecOffsetFrom, bool bIsHit, int iMode, BYTE byteBetweenCheckFlags)
 {
 	// Validate the player
 	CPlayerManager *pPlayerManager = pServer->GetPlayerManager();
@@ -301,7 +301,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	float fRange = CWeaponInfo::GetDefaultInfo(bulletSyncDataTarget.byteWeaponID).fRange;
 
 	// Pass original hit ID to correctly handle missed or out of range shots!
-	WORD wClosestEntity = GetClosestEntityInBetween(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, min(fRange, fTargetDistance), byteBetweenCheckFlags, wPlayerId, wHitId, byteClosestEntityType, wPlayerObjectOwnerId, vecHitMap);
+	WORD wClosestEntity = GetClosestEntityInBetween(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, min(fRange, fTargetDistance), iMode, byteBetweenCheckFlags, wPlayerId, wHitId, byteClosestEntityType, wPlayerObjectOwnerId, vecHitMap);
 	if (wClosestEntity != 0xFFFF) {
 		// logprintf("SOMETHING IN BETWEEN SHOOTER AND TARGET");
 		bulletSyncDataTarget.wHitID = wClosestEntity;
@@ -342,7 +342,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 					bulletSyncDataTarget.vecHitTarget = CMath::GetNearestPointToRay(bulletSyncDataTarget.vecHitOrigin, bulletSyncDataTarget.vecHitTarget, pActor->vecPosition);
 					bulletSyncDataTarget.vecCenterOfHit = bulletSyncDataTarget.vecHitTarget; // When actor is hit use the actor collision position, this is conform with the SA-MP callback OnPlayerWeaponShot
 				}
-			} else if (bulletSyncDataTarget.wHitID == -1) { // Hit map
+			} else if (bulletSyncDataTarget.wHitID == MAX_ACTORS + 1) { // Hit map
 				// logprintf("HIT MAP");
 				bulletSyncDataTarget.vecCenterOfHit = vecHitMap; // When map is hit use the object collision position, this is conform with the SA-MP callback OnPlayerWeaponShot
 			} else { // Hit nothing
@@ -457,7 +457,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	}
 }
 
-WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, float fRange, BYTE byteBetweenCheckFlags, WORD wPlayerId, WORD wTargetId, BYTE &byteEntityType, WORD &wPlayerObjectOwnerId, CVector &vecHitMap)
+WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, float fRange, int iMode, BYTE byteBetweenCheckFlags, WORD wPlayerId, WORD wTargetId, BYTE &byteEntityType, WORD &wPlayerObjectOwnerId, CVector &vecHitMap)
 {
 	WORD wClosestEntity = 0xFFFF;
 	float fClosestEntityDistance = 0.0;
@@ -512,7 +512,7 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 	// Check if an object is in between the origin and the target
 	if (byteBetweenCheckFlags & FCNPC_ENTITY_CHECK_OBJECT) {
 		float fClosestObjectDistance = 0.0;
-		WORD wClosestObject = GetClosestObjectInBetween(vecHitOrigin, vecHitTarget, fRange, fClosestObjectDistance);
+		WORD wClosestObject = GetClosestObjectInBetween(vecHitOrigin, vecHitTarget, fRange, fClosestObjectDistance, iMode);
 		if (wClosestObject != INVALID_OBJECT_ID && (wClosestEntity == 0xFFFF || fClosestObjectDistance < fClosestEntityDistance)) {
 			byteEntityType = FCNPC_ENTITY_CHECK_OBJECT;
 			fClosestEntityDistance = fClosestObjectDistance;
@@ -523,7 +523,7 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 	// Check if a player object of the shooter is in between the origin and the target
 	if (byteBetweenCheckFlags & FCNPC_ENTITY_CHECK_POBJECT_ORIG) {
 		float fClosestPlayerObjectDistance = 0.0;
-		WORD wClosestPlayerObject = GetClosestPlayerObjectInBetween(vecHitOrigin, vecHitTarget, fRange, fClosestPlayerObjectDistance, wPlayerId);
+		WORD wClosestPlayerObject = GetClosestPlayerObjectInBetween(vecHitOrigin, vecHitTarget, fRange, fClosestPlayerObjectDistance, wPlayerId, iMode);
 		if (wClosestPlayerObject != INVALID_OBJECT_ID && (wClosestEntity == 0xFFFF || fClosestPlayerObjectDistance < fClosestEntityDistance)) {
 			byteEntityType = FCNPC_ENTITY_CHECK_POBJECT_ORIG;
 			wPlayerObjectOwnerId = wPlayerId;
@@ -536,7 +536,7 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 		// Check if a player object of the target is in between the origin and the target
 		if (wTargetId != INVALID_PLAYER_ID) {
 			float fClosestPlayerObjectDistance = 0.0;
-			WORD wClosestPlayerObject = GetClosestPlayerObjectInBetween(vecHitOrigin, vecHitTarget, fRange, fClosestPlayerObjectDistance, wTargetId);
+			WORD wClosestPlayerObject = GetClosestPlayerObjectInBetween(vecHitOrigin, vecHitTarget, fRange, fClosestPlayerObjectDistance, wTargetId, iMode);
 			if (wClosestPlayerObject != INVALID_OBJECT_ID && (wClosestEntity == 0xFFFF || fClosestPlayerObjectDistance < fClosestEntityDistance)) {
 				byteEntityType = FCNPC_ENTITY_CHECK_POBJECT_TARG;
 				wPlayerObjectOwnerId = wTargetId;
@@ -548,7 +548,7 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 		// Check if a player object of the closestPlayer is in between the origin and the target when the closestPlayer is currently the closest entity
 		if (wClosestPlayer != INVALID_PLAYER_ID && wClosestEntity == wClosestPlayer) {
 			float fClosestPlayerObjectDistance = 0.0;
-			WORD wClosestPlayerObject = GetClosestPlayerObjectInBetween(vecHitOrigin, vecHitTarget, fRange, fClosestPlayerObjectDistance, wClosestPlayer);
+			WORD wClosestPlayerObject = GetClosestPlayerObjectInBetween(vecHitOrigin, vecHitTarget, fRange, fClosestPlayerObjectDistance, wClosestPlayer, iMode);
 			if (wClosestPlayerObject != INVALID_OBJECT_ID && (wClosestEntity == 0xFFFF || fClosestPlayerObjectDistance < fClosestEntityDistance)) {
 				byteEntityType = FCNPC_ENTITY_CHECK_POBJECT_TARG;
 				wPlayerObjectOwnerId = wClosestPlayer;
@@ -560,7 +560,7 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 		// Check if a player object of the closestNPC is in between the origin and the target when the closestNPC is currently the closest entity
 		if (wClosestNPC != INVALID_PLAYER_ID && wClosestEntity == wClosestNPC) {
 			float fClosestPlayerObjectDistance = 0.0;
-			WORD wClosestPlayerObject = GetClosestPlayerObjectInBetween(vecHitOrigin, vecHitTarget, fRange, fClosestPlayerObjectDistance, wClosestNPC);
+			WORD wClosestPlayerObject = GetClosestPlayerObjectInBetween(vecHitOrigin, vecHitTarget, fRange, fClosestPlayerObjectDistance, wClosestNPC, iMode);
 			if (wClosestPlayerObject != INVALID_OBJECT_ID && (wClosestEntity == 0xFFFF || fClosestPlayerObjectDistance < fClosestEntityDistance)) {
 				byteEntityType = FCNPC_ENTITY_CHECK_POBJECT_TARG;
 				wPlayerObjectOwnerId = wClosestNPC;
@@ -573,11 +573,11 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 	// Check if a map point is in between the origin and the target
 	if (byteBetweenCheckFlags & FCNPC_ENTITY_CHECK_MAP) {
 		float fClosestMapPointDistance = 0.0;
-		WORD wClosestMapPoint = GetClosestMapPointInBetween(vecHitOrigin, vecHitTarget, fRange, fClosestMapPointDistance, vecHitMap);
+		WORD wClosestMapPoint = GetClosestMapPointInBetween(vecHitOrigin, vecHitTarget, fRange, fClosestMapPointDistance, vecHitMap, iMode);
 		if (wClosestMapPoint != 0 && (wClosestEntity == 0xFFFF || fClosestMapPointDistance < fClosestEntityDistance)) {
 			byteEntityType = FCNPC_ENTITY_CHECK_MAP;
 			fClosestEntityDistance = fClosestMapPointDistance;
-			wClosestEntity = wClosestMapPoint;
+			wClosestEntity = MAX_ACTORS + 1;
 		}
 	}
 
@@ -716,40 +716,50 @@ WORD CFunctions::GetClosestVehicleInBetween(const CVector &vecHitOrigin, const C
 	return wClosestVehicle;
 }
 
-WORD CFunctions::GetClosestObjectInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, float fRange, float &fDistance)
+WORD CFunctions::GetClosestObjectInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, float fRange, float &fDistance, int iMode)
 {
 	WORD wClosestObject = INVALID_OBJECT_ID;
 
-	// Loop through all the objects
-	for (WORD i = 1; i < MAX_OBJECTS; i++) { // Object IDs start at 1
-		// Validate the object
-		CObject *pObject = pNetGame->pObjectPool->pObjects[i];
-		if (!pObject) {
-			continue;
-		}
+	// Use ColAndreas when enabled
+	bool colCanSeparateMapAndCustomObjects = false;
+	if (iMode == FCNPC_ENTITY_MODE_COLANDREAS && colDataLoaded && colCanSeparateMapAndCustomObjects) {
+		// Even though bullets can penetrate water and still deal damage, we can't check for points beyond water
+		// Check for global objects only, not for custom objects or map points
+		// - Currently this is not supported, since ColAndreas can't distinguish between the map and global/custom objects
+	}
+	// Fall back on less accurate code
+	else {
+		// Loop through all the objects
+		for (WORD i = 1; i < MAX_OBJECTS; i++) { // Object IDs start at 1
+			// Validate the object
+			CObject *pObject = pNetGame->pObjectPool->pObjects[i];
+			if (!pObject) {
+				continue;
+			}
 
-		// Is the object on the ray
-		if (CMath::GetDistanceFromRayToPoint(vecHitOrigin, vecHitTarget, pObject->matWorld.pos) > MAX_HIT_RADIUS) {
-			continue;
-		}
+			// Is the object on the ray
+			if (CMath::GetDistanceFromRayToPoint(vecHitOrigin, vecHitTarget, pObject->matWorld.pos) > MAX_HIT_RADIUS) {
+				continue;
+			}
 
-		// Is the object in the damage range
-		float fObjectDistance = CMath::GetDistanceBetween3DPoints(vecHitOrigin, pObject->matWorld.pos);
-		if (fObjectDistance > fRange) {
-			continue;
-		}
+			// Is the object in the damage range
+			float fObjectDistance = CMath::GetDistanceBetween3DPoints(vecHitOrigin, pObject->matWorld.pos);
+			if (fObjectDistance > fRange) {
+				continue;
+			}
 
-		// Is the object closer than another object
-		if (wClosestObject == INVALID_OBJECT_ID || fObjectDistance < fDistance) {
-			fDistance = fObjectDistance;
-			wClosestObject = i;
-		}
+			// Is the object closer than another object
+			if (wClosestObject == INVALID_OBJECT_ID || fObjectDistance < fDistance) {
+				fDistance = fObjectDistance;
+				wClosestObject = i;
+			}
+		}		
 	}
 
 	return wClosestObject;
 }
 
-WORD CFunctions::GetClosestPlayerObjectInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, float fRange, float &fDistance, WORD wOwnerId)
+WORD CFunctions::GetClosestPlayerObjectInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, float fRange, float &fDistance, WORD wOwnerId, int iMode)
 {
 	WORD wClosestPlayerObject = INVALID_OBJECT_ID;
 
@@ -758,59 +768,70 @@ WORD CFunctions::GetClosestPlayerObjectInBetween(const CVector &vecHitOrigin, co
 		return wClosestPlayerObject;
 	}
 
-	// Loop through all the player objects of the owner
-	for (WORD i = 1; i < MAX_OBJECTS; i++) { // Player object IDs start at 1
-		// Validate the player object
-		CObject *pPlayerObject = pNetGame->pObjectPool->pPlayerObjects[wOwnerId][i];
-		if (!pPlayerObject) {
-			continue;
-		}
+	// Use ColAndreas when enabled
+	bool colCanSeparateMapAndCustomObjects = false;
+	if (iMode == FCNPC_ENTITY_MODE_COLANDREAS && colDataLoaded && colCanSeparateMapAndCustomObjects) {
+		// Even though bullets can penetrate water and still deal damage, we can't check for points beyond water
+		// Check for custom objects only, not for global objects or map points
+		// - Currently this is not supported, since ColAndreas can't distinguish between the map and global/custom objects
+	}
+	// Fall back on less accurate code
+	else {
+		// Loop through all the player objects of the owner
+		for (WORD i = 1; i < MAX_OBJECTS; i++) { // Player object IDs start at 1
+			// Validate the player object
+			CObject *pPlayerObject = pNetGame->pObjectPool->pPlayerObjects[wOwnerId][i];
+			if (!pPlayerObject) {
+				continue;
+			}
 
-		// Is the player object on the ray
-		if (CMath::GetDistanceFromRayToPoint(vecHitOrigin, vecHitTarget, pPlayerObject->matWorld.pos) > MAX_HIT_RADIUS) {
-			continue;
-		}
+			// Is the player object on the ray
+			if (CMath::GetDistanceFromRayToPoint(vecHitOrigin, vecHitTarget, pPlayerObject->matWorld.pos) > MAX_HIT_RADIUS) {
+				continue;
+			}
 
-		// Is the player object in the damage range
-		float fPlayerObjectDistance = CMath::GetDistanceBetween3DPoints(vecHitOrigin, pPlayerObject->matWorld.pos);
-		if (fPlayerObjectDistance > fRange) {
-			continue;
-		}
+			// Is the player object in the damage range
+			float fPlayerObjectDistance = CMath::GetDistanceBetween3DPoints(vecHitOrigin, pPlayerObject->matWorld.pos);
+			if (fPlayerObjectDistance > fRange) {
+				continue;
+			}
 
-		// Is the player object closer than another player object
-		if (wClosestPlayerObject == INVALID_OBJECT_ID || fPlayerObjectDistance < fDistance) {
-			fDistance = fPlayerObjectDistance;
-			wClosestPlayerObject = i;
+			// Is the player object closer than another player object
+			if (wClosestPlayerObject == INVALID_OBJECT_ID || fPlayerObjectDistance < fDistance) {
+				fDistance = fPlayerObjectDistance;
+				wClosestPlayerObject = i;
+			}
 		}
 	}
 
 	return wClosestPlayerObject;
 }
 
-WORD CFunctions::GetClosestMapPointInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, float fRange, float &fDistance, CVector &vecHitMap)
+WORD CFunctions::GetClosestMapPointInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, float fRange, float &fDistance, CVector &vecHitMap, int iMode)
 {
-	//TODO
-	//1) GetClosestMapPointInBetween:
-	//- implement when ColAndreas is enabled, otherwise return nothing (0).
-	//- currently the code handles map points when the hit type is BULLET_HIT_TYPE_NONE and the hit ID is -1.
-	//- this function should specificly check for map points only, not for global objects or custom objects!
-	//- keep in mind that bullets can penetrate water and still deal damage.
-	//- store the collision point in vecHitMap
+	WORD wClosestMapPoint = 0;
 
-	//2) GetClosestObjectInBetween:
-	//- improve when ColAndreas is enabled, otherwise fall back on existing code.
-	//- this function should specificly check for global objects only, not for custom objects or map points!
-	//- keep in mind that bullets can penetrate water and still deal damage.
-	
-	//3) GetClosestPlayerObjectInBetween:
-	//- improve when ColAndreas is enabled, otherwise fall back on existing code.
-	//- this function should specificly check for custom objects only, not for global objects or map points!
-	//- keep in mind that bullets can penetrate water and still deal damage.
+	// Use ColAndreas when enabled
+	if (iMode == FCNPC_ENTITY_MODE_COLANDREAS && colDataLoaded) {
+		// Even though bullets can penetrate water and still deal damage, we can't check for points beyond water
+		// Check for map points only, not for global objects or custom objects
+		// - Currently this function checks for all of the above, since ColAndreas can't distinguish between the map and global/custom objects
 
-	//4) FCNPC_SHOOT_MODE_X:
-	//- add FCNPC_AimAt, FCNPC_AimAtPlayer, FCNPC_TriggerWeaponShot extra parameter with same effect as FCNPC_MOVE_MODE_X, called FCNPC_SHOOT_MODE_X
+		// The map point should be in the damage range
+		float fTargetDistance = CMath::GetDistanceBetween3DPoints(vecHitOrigin, vecHitTarget);
+		CVector vecHitNewTarget;
+		vecHitNewTarget.fX = vecHitOrigin.fX + (vecHitTarget.fX - vecHitOrigin.fX) / fTargetDistance * fRange;
+		vecHitNewTarget.fY = vecHitOrigin.fY + (vecHitTarget.fY - vecHitOrigin.fY) / fTargetDistance * fRange;
+		vecHitNewTarget.fZ = vecHitOrigin.fZ + (vecHitTarget.fZ - vecHitOrigin.fZ) / fTargetDistance * fRange;
 
-	return 0;
+		// Is a map point on the ray
+		wClosestMapPoint = CFunctions::RayCastLine(vecHitOrigin, vecHitNewTarget, &vecHitMap);
+		if (wClosestMapPoint != 0) {
+			fDistance = CMath::GetDistanceBetween3DPoints(vecHitOrigin, vecHitMap);
+		}
+	}
+
+	return wClosestMapPoint;
 }
 
 
