@@ -326,7 +326,7 @@ native FCNPC_SetNodePoint(nodeid, pointid);
 native FCNPC_GetNodePointPosition(nodeid, &Float:x, &Float:y, &Float:z);
 native FCNPC_GetNodePointCount(nodeid);
 native FCNPC_GetNodeInfo(nodeid, &vehnodes, &pednodes, &navinode);
-native FCNPC_PlayNode(npcid, nodeid, move_type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, Float:radius = 0.0, bool:set_angle = true);
+native FCNPC_PlayNode(npcid, nodeid, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, Float:radius = 0.0, bool:set_angle = true);
 native FCNPC_StopPlayingNode(npcid);
 native FCNPC_PausePlayingNode(npcid);
 native FCNPC_ResumePlayingNode(npcid);
