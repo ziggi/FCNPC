@@ -81,12 +81,12 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	logprintf("Loading...");
 #ifdef SAMP_03DL
 	if (version != SAMP_VERSION_03DL_R1 && version != SAMP_VERSION_UNKNOWN) {
-		logprintf("Failed. (Use FCNPC for this version of the server (now you are using FCNPC-DL))");
+		logprintf("[FCNPC] Error: Loading failed. This server requires the FCNPC version of the plugin, instead of the FCNPC-DL version.");
 		return false;
 	}
 #else
 	if (version == SAMP_VERSION_03DL_R1) {
-		logprintf("Failed. (Use FCNPC-DL for this version of the server)");
+		logprintf("[FCNPC] Error: Loading failed. This server requires the FCNPC-DL version of the plugin, instead of the FCNPC version.");
 		return false;
 	}
 #endif
@@ -123,7 +123,7 @@ PLUGIN_EXPORT void PLUGIN_CALL Unload()
 	// Delete the server instance
 	SAFE_DELETE(pServer);
 
-	logprintf("FCNPC Unloaded.");
+	logprintf("[FCNPC] Info: Plugin unloaded.");
 }
 // Natives table
 AMX_NATIVE_INFO PluginNatives[] = {
