@@ -13,6 +13,7 @@
 extern CServer     *pServer;
 extern CNetGame    *pNetGame;
 
+// native FCNPC_Create(const name[]);
 cell AMX_NATIVE_CALL CNatives::FCNPC_Create(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_Create");
@@ -24,6 +25,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_Create(AMX *amx, cell *params)
 	return pServer->GetPlayerManager()->AddPlayer(szName);
 }
 
+// native FCNPC_Destroy(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_Destroy(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_Destroy");
@@ -41,6 +43,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_Destroy(AMX *amx, cell *params)
 	return pServer->GetPlayerManager()->DeletePlayer(wNpcId);
 }
 
+// native FCNPC_Spawn(npcid, skinid, Float:x, Float:y, Float:z);
 cell AMX_NATIVE_CALL CNatives::FCNPC_Spawn(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(5, "FCNPC_Spawn");
@@ -62,6 +65,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_Spawn(AMX *amx, cell *params)
 	return pPlayerData->Spawn(iSkin);
 }
 
+// native FCNPC_Respawn(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_Respawn(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_Respawn");
@@ -77,6 +81,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_Respawn(AMX *amx, cell *params)
 	return pPlayerData->Respawn();
 }
 
+// native bool:FCNPC_IsSpawned(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsSpawned(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_IsSpawned");
@@ -92,6 +97,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsSpawned(AMX *amx, cell *params)
 	return pPlayerData->IsSpawned();
 }
 
+// native FCNPC_Kill(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_Kill(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_Kill");
@@ -107,6 +113,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_Kill(AMX *amx, cell *params)
 	return pPlayerData->Kill(INVALID_PLAYER_ID, 255);
 }
 
+// native bool:FCNPC_IsDead(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsDead(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_IsDead");
@@ -122,6 +129,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsDead(AMX *amx, cell *params)
 	return pPlayerData->GetState() == PLAYER_STATE_WASTED;
 }
 
+// native bool:FCNPC_IsValid(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsValid(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_IsValid");
@@ -131,6 +139,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsValid(AMX *amx, cell *params)
 	return pServer->GetPlayerManager()->IsNpcConnected(wNpcId);
 }
 
+// native bool:FCNPC_IsStreamedIn(npcid, forplayerid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsStreamedIn(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_IsStreamedIn");
@@ -154,6 +163,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsStreamedIn(AMX *amx, cell *params)
 	return pPlayerData->IsStreamedIn(wForPlayerId);
 }
 
+// native bool:FCNPC_IsStreamedInForAnyone(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsStreamedInForAnyone(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_IsStreamedInForAnyone");
@@ -208,6 +218,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetValidArray(AMX *amx, cell *params)
 	return iCount;
 }
 
+// native FCNPC_SetPosition(npcid, Float:x, Float:y, Float:z);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetPosition(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(4, "FCNPC_SetPosition");
@@ -227,6 +238,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetPosition(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_GivePosition(npcid, Float:x, Float:y, Float:z);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GivePosition(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(4, "FCNPC_GivePosition");
@@ -248,6 +260,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GivePosition(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_GetPosition(npcid, &Float:x, &Float:y, &Float:z);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetPosition(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(4, "FCNPC_GetPosition");
@@ -290,6 +303,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetPosition(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_SetAngle(npcid, Float:angle);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetAngle(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_SetAngle");
@@ -309,7 +323,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetAngle(AMX *amx, cell *params)
 	return 1;
 }
 
-// native FCNPC_GiveAngle(npcid, Float:angle);
+// native Float:FCNPC_GiveAngle(npcid, Float:angle);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GiveAngle(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_GiveAngle");
@@ -331,7 +345,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GiveAngle(AMX *amx, cell *params)
 	return amx_ftoc(fNewAngle);
 }
 
-// native FCNPC_SetAngleToPos(npcid, Float:X, Float:Y);
+// native FCNPC_SetAngleToPos(npcid, Float:x, Float:y);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetAngleToPos(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(3, "FCNPC_SetAngleToPos");
@@ -386,6 +400,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetAngleToPlayer(AMX *amx, cell *params)
 	return 1;
 }
 
+// native Float:FCNPC_GetAngle(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetAngle(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_GetAngle");
@@ -405,6 +420,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetAngle(AMX *amx, cell *params)
 	return amx_ftoc(fAngle);
 }
 
+// native FCNPC_SetInterior(npcid, interiorid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetInterior(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_SetInterior");
@@ -424,6 +440,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetInterior(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_GetInterior(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetInterior(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_GetInterior");
@@ -441,6 +458,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetInterior(AMX *amx, cell *params)
 	return pPlayerData->GetInterior();
 }
 
+// native FCNPC_SetVirtualWorld(npcid, worldid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetVirtualWorld(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_SetVirtualWorld");
@@ -460,6 +478,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVirtualWorld(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_GetVirtualWorld(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetVirtualWorld(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_GetVirtualWorld");
@@ -477,6 +496,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVirtualWorld(AMX *amx, cell *params)
 	return pPlayerData->GetVirtualWorld();
 }
 
+// native FCNPC_SetQuaternion(npcid, Float:w, Float:x, Float:y, Float:z);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetQuaternion(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(5, "FCNPC_SetQuaternion");
@@ -502,6 +522,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetQuaternion(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_GiveQuaternion(npcid, Float:w, Float:x, Float:y, Float:z);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GiveQuaternion(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(5, "FCNPC_GiveQuaternion");
@@ -538,6 +559,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GiveQuaternion(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_GetQuaternion(npcid, &Float:w, &Float:x, &Float:y, &Float:z);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetQuaternion(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(5, "FCNPC_GetQuaternion");
@@ -587,6 +609,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetQuaternion(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_SetVelocity(npcid, Float:x, Float:y, Float:z, bool:update_pos = false);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetVelocity(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(5, "FCNPC_SetVelocity");
@@ -607,7 +630,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVelocity(AMX *amx, cell *params)
 	return 1;
 }
 
-// native FCNPC_GiveVelocity(npcid, Float:x, Float:y, Float:z);
+// native FCNPC_GiveVelocity(npcid, Float:x, Float:y, Float:z, bool:update_pos = false);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GiveVelocity(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(5, "FCNPC_GiveVelocity");
@@ -630,6 +653,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GiveVelocity(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_GetVelocity(npcid, &Float:x, &Float:y, &Float:z);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetVelocity(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(4, "FCNPC_GetVelocity");
@@ -711,6 +735,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetSpeed(AMX *amx, cell *params)
 	return amx_ftoc(fSpeed);
 }
 
+// native FCNPC_SetHealth(npcid, Float:health);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetHealth(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_SetHealth");
@@ -752,6 +777,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GiveHealth(AMX *amx, cell *params)
 	return amx_ftoc(fNewHealth);
 }
 
+// native Float:FCNPC_GetHealth(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetHealth(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_GetHealth");
@@ -771,6 +797,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetHealth(AMX *amx, cell *params)
 	return amx_ftoc(fHealth);
 }
 
+// native FCNPC_SetArmour(npcid, Float:armour);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetArmour(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_SetArmour");
@@ -790,7 +817,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetArmour(AMX *amx, cell *params)
 	return 1;
 }
 
-// native FCNPC_GiveArmour(npcid, Float:armour);
+// native Float:FCNPC_GiveArmour(npcid, Float:armour);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GiveArmour(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_GiveArmour");
@@ -812,6 +839,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GiveArmour(AMX *amx, cell *params)
 	return amx_ftoc(fNewArmour);
 }
 
+// native Float:FCNPC_GetArmour(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetArmour(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_GetArmour");
@@ -851,7 +879,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetInvulnerable(AMX *amx, cell *params)
 	return 1;
 }
 
-// native FCNPC_IsInvulnerable(npcid);
+// native bool:FCNPC_IsInvulnerable(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsInvulnerable(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_IsInvulnerable");
@@ -869,6 +897,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsInvulnerable(AMX *amx, cell *params)
 	return pPlayerData->IsInvulnerable();
 }
 
+// native FCNPC_SetSkin(npcid, skinid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetSkin(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_SetSkin");
@@ -888,6 +917,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetSkin(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_GetSkin(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetSkin(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_GetSkin");
@@ -906,6 +936,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetSkin(AMX *amx, cell *params)
 }
 
 #ifdef SAMP_03DL
+// native FCNPC_GetCustomSkin(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetCustomSkin(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_GetCustomSkin");
@@ -924,6 +955,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetCustomSkin(AMX *amx, cell *params)
 }
 #endif
 
+// native FCNPC_SetKeys(npcid, ud_analog, lr_analog, keys);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetKeys(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(4, "FCNPC_SetKeys");
@@ -945,6 +977,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetKeys(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_GetKeys(npcid, &ud_analog, &lr_analog, &keys);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetKeys(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(4, "FCNPC_GetKeys");
@@ -986,6 +1019,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetKeys(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_SetSpecialAction(npcid, actionid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetSpecialAction(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_SetSpecialAction");
@@ -1005,6 +1039,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetSpecialAction(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_GetSpecialAction(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetSpecialAction(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_GetSpecialAction");
@@ -1048,7 +1083,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetAnimation(AMX *amx, cell *params)
 	return 1;
 }
 
-// native FCNPC_SetAnimationByName(npcid, name[], Float:fDelta = 4.1, loop = 0, lockx = 1, locky = 1, freeze = 0, time = 1);
+// native FCNPC_SetAnimationByName(npcid, const name[], Float:fDelta = 4.1, loop = 0, lockx = 1, locky = 1, freeze = 0, time = 1);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetAnimationByName(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(8, "FCNPC_SetAnimationByName");
@@ -1094,7 +1129,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ResetAnimation(AMX *amx, cell *params)
 	return 1;
 }
 
-// native FCNPC_ApplyAnimation(npcid, animlib[], animname[], Float:fDelta = 4.1, loop = 0, lockx = 1, locky = 1, freeze = 0, time = 1);
+// native FCNPC_ApplyAnimation(npcid, const animlib[], const animname[], Float:fDelta = 4.1, loop = 0, lockx = 1, locky = 1, freeze = 0, time = 1);
 cell AMX_NATIVE_CALL CNatives::FCNPC_ApplyAnimation(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(9, "FCNPC_ApplyAnimation");
@@ -1238,7 +1273,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetFightingStyle(AMX *amx, cell *params)
 	return pPlayerData->GetFightingStyle();
 }
 
-// native FCNPC_GoTo(npcid, Float:x, Float : y, Float : z, type = FCNPC_MOVE_TYPE_AUTO, Float: speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, pathfinding = FCNPC_MOVE_PATHFINDING_AUTO, Float : radius = 0.0, bool : setangle = true, Float : dist_offset = 0.0, stopdelay = 250);
+// native FCNPC_GoTo(npcid, Float:x, Float:y, Float:z, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, pathfinding = FCNPC_MOVE_PATHFINDING_AUTO, Float:radius = 0.0, bool:set_angle = true, Float:min_distance = 0.0, stop_delay = 250);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GoTo(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(12, "FCNPC_GoTo");
@@ -1266,7 +1301,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GoTo(AMX *amx, cell *params)
 	return pPlayerData->GoTo(vecPoint, iType, iMode, iPathfinding, fRadius, bSetAngle, fSpeed, fDistOffset, dwStopDelay);
 }
 
-// native FCNPC_GoToPlayer(npcid, playereid, type, Float:speed, mode = FCNPC_MOVE_MODE_AUTO, pathfinding = FCNPC_MOVE_PATHFINDING_AUTO, Float:radius = 0.0, bool:setangle = true, Float:dist_offset = 0.0, Float:dist_check = 1.5, stopdelay = 250);
+// native FCNPC_GoToPlayer(npcid, playerid, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, pathfinding = FCNPC_MOVE_PATHFINDING_AUTO, Float:radius = 0.0, bool:set_angle = true, Float:min_distance = 0.0, Float:dist_check = 1.5, stop_delay = 250);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GoToPlayer(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(11, "FCNPC_GoToPlayer");
@@ -1298,6 +1333,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GoToPlayer(AMX *amx, cell *params)
 	return pPlayerData->GoToPlayer(wPlayerId, iType, iMode, iPathfinding, fRadius, bSetAngle, fSpeed, fDistOffset, fDistCheck, dwStopDelay);
 }
 
+// native FCNPC_Stop(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_Stop(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_Stop");
@@ -1316,6 +1352,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_Stop(AMX *amx, cell *params)
 	return 1;
 }
 
+// native bool:FCNPC_IsMoving(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsMoving(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_IsMoving");
@@ -1333,7 +1370,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsMoving(AMX *amx, cell *params)
 	return pPlayerData->IsMoving();
 }
 
-// native FCNPC_IsMovingAtPlayer(npcid, playerid);
+// native bool:FCNPC_IsMovingAtPlayer(npcid, playerid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsMovingAtPlayer(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_IsMovingAtPlayer");
@@ -1399,6 +1436,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetDestinationPoint(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_SetWeapon(npcid, weaponid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeapon(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_SetWeapon");
@@ -1418,6 +1456,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeapon(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_GetWeapon(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeapon(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_GetWeapon");
@@ -1435,6 +1474,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeapon(AMX *amx, cell *params)
 	return pPlayerData->GetWeapon();
 }
 
+// native FCNPC_SetAmmo(npcid, ammo);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetAmmo(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_SetAmmo");
@@ -1475,6 +1515,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GiveAmmo(AMX *amx, cell *params)
 	return wNewAmmo;
 }
 
+// native FCNPC_GetAmmo(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetAmmo(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_GetAmmo");
@@ -1551,6 +1592,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetAmmoInClip(AMX *amx, cell *params)
 	return pPlayerData->GetAmmoInClip();
 }
 
+// native FCNPC_SetWeaponSkillLevel(npcid, skill, level);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponSkillLevel(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(3, "FCNPC_SetWeaponSkillLevel");
@@ -1575,6 +1617,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponSkillLevel(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_GiveWeaponSkillLevel(npcid, skill, level);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GiveWeaponSkillLevel(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(3, "FCNPC_GiveWeaponSkillLevel");
@@ -1600,6 +1643,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GiveWeaponSkillLevel(AMX *amx, cell *params
 	return wNewLevel;
 }
 
+// native FCNPC_GetWeaponSkillLevel(npcid, skill);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponSkillLevel(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_GetWeaponSkillLevel");
@@ -1618,7 +1662,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponSkillLevel(AMX *amx, cell *params)
 	return pPlayerData->GetWeaponSkill(dwSkill);
 }
 
-// native FCNPC_SetWeaponState(npcid, weaponstate);
+// native FCNPC_SetWeaponState(npcid, weapon_state);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetWeaponState(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_SetWeaponState");
@@ -2007,6 +2051,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetWeaponDefaultInfo(AMX *amx, cell *params
 	return 1;
 }
 
+// native FCNPC_AimAt(npcid, Float:x, Float:y, Float:z, bool:shoot = false, shoot_delay = -1, bool:set_angle = true, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0, between_check_mode = FCNPC_ENTITY_MODE_AUTO, between_check_flags = FCNPC_ENTITY_CHECK_ALL);
 cell AMX_NATIVE_CALL CNatives::FCNPC_AimAt(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(12, "FCNPC_AimAt");
@@ -2047,6 +2092,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAt(AMX *amx, cell *params)
 	return 0;
 }
 
+// native FCNPC_AimAtPlayer(npcid, playerid, bool:shoot = false, shoot_delay = -1, bool:set_angle = true, Float:offset_x = 0.0, Float:offset_y = 0.0, Float:offset_z = 0.0, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0, between_check_mode = FCNPC_ENTITY_MODE_AUTO, between_check_flags = FCNPC_ENTITY_CHECK_ALL);
 cell AMX_NATIVE_CALL CNatives::FCNPC_AimAtPlayer(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(13, "FCNPC_AimAtPlayer");
@@ -2089,6 +2135,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_AimAtPlayer(AMX *amx, cell *params)
 	return 0;
 }
 
+// native FCNPC_StopAim(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_StopAim(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_StopAim");
@@ -2107,7 +2154,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StopAim(AMX *amx, cell *params)
 	return 1;
 }
 
-// native FCNPC_MeleeAttack(npcid, delay = -1, bool:fightstyle = true);
+// native FCNPC_MeleeAttack(npcid, delay = -1, bool:fighting_style = false);
 cell AMX_NATIVE_CALL CNatives::FCNPC_MeleeAttack(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(3, "FCNPC_MeleeAttack");
@@ -2127,6 +2174,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_MeleeAttack(AMX *amx, cell *params)
 	return pPlayerData->MeleeAttack(iTime, bUseFightstyle);
 }
 
+// native FCNPC_StopAttack(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_StopAttack(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_StopAttack");
@@ -2145,7 +2193,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StopAttack(AMX *amx, cell *params)
 	return 1;
 }
 
-// native FCNPC_IsAttacking(npcid);
+// native bool:FCNPC_IsAttacking(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsAttacking(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_IsAttacking");
@@ -2163,6 +2211,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsAttacking(AMX *amx, cell *params)
 	return pPlayerData->IsAttacking();
 }
 
+// native bool:FCNPC_IsAiming(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsAiming(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_IsAiming");
@@ -2180,7 +2229,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsAiming(AMX *amx, cell *params)
 	return pPlayerData->IsAiming();
 }
 
-// native FCNPC_IsAimingAtPlayer(npcid, playerid);
+// native bool:FCNPC_IsAimingAtPlayer(npcid, playerid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsAimingAtPlayer(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_IsAimingAtPlayer");
@@ -2221,6 +2270,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetAimingPlayer(AMX *amx, cell *params)
 	return pPlayerData->GetAimingPlayer();
 }
 
+// native bool:FCNPC_IsShooting(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsShooting(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_IsShooting");
@@ -2238,6 +2288,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsShooting(AMX *amx, cell *params)
 	return pPlayerData->IsShooting();
 }
 
+// native bool:FCNPC_IsReloading(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsReloading(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_IsReloading");
@@ -2304,6 +2355,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetClosestEntityInBetween(AMX *amx, cell *p
 	return 1;
 }
 
+// native FCNPC_EnterVehicle(npcid, vehicleid, seatid, type = FCNPC_MOVE_TYPE_WALK);
 cell AMX_NATIVE_CALL CNatives::FCNPC_EnterVehicle(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(4, "FCNPC_EnterVehicle");
@@ -2329,6 +2381,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_EnterVehicle(AMX *amx, cell *params)
 	return pPlayerData->EnterVehicle(wVehicleId, byteSeatId, iType);
 }
 
+// native FCNPC_ExitVehicle(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_ExitVehicle(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_ExitVehicle");
@@ -2346,6 +2399,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ExitVehicle(AMX *amx, cell *params)
 	return pPlayerData->ExitVehicle();
 }
 
+// native FCNPC_PutInVehicle(npcid, vehicleid, seatid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_PutInVehicle(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(3, "FCNPC_PutInVehicle");
@@ -2370,6 +2424,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_PutInVehicle(AMX *amx, cell *params)
 	return pPlayerData->PutInVehicle(wVehicleId, byteSeatId);
 }
 
+// native FCNPC_RemoveFromVehicle(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_RemoveFromVehicle(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_RemoveFromVehicle");
@@ -2393,6 +2448,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_RemoveFromVehicle(AMX *amx, cell *params)
 	return pPlayerData->RemoveFromVehicle();
 }
 
+// native FCNPC_GetVehicleID(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleID(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_GetVehicleID");
@@ -2410,6 +2466,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleID(AMX *amx, cell *params)
 	return pPlayerData->GetVehicleId();
 }
 
+// native FCNPC_GetVehicleSeat(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleSeat(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_GetVehicleSeat");
@@ -2456,7 +2513,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_UseVehicleSiren(AMX *amx, cell *params)
 	return 1;
 }
 
-// native FCNPC_IsVehicleSirenUsed(npcid);
+// native bool:FCNPC_IsVehicleSirenUsed(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsVehicleSirenUsed(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_IsVehicleSirenUsed");
@@ -2605,7 +2662,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleGearState(AMX *amx, cell *params)
 	return pPlayerData->GetVehicleGearState();
 }
 
-// native FCNPC_SetSurfingOffsets(npcid, Float:fX, Float:fY, Float:fZ);
+// native FCNPC_SetSurfingOffsets(npcid, Float:x, Float:y, Float:z);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetSurfingOffsets(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(4, "FCNPC_SetSurfingOffsets");
@@ -2625,7 +2682,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetSurfingOffsets(AMX *amx, cell *params)
 	return 1;
 }
 
-// native FCNPC_GiveSurfingOffsets(npcid, Float:fX, Float:fY, Float:fZ);
+// native FCNPC_GiveSurfingOffsets(npcid, Float:x, Float:y, Float:z);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GiveSurfingOffsets(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(4, "FCNPC_GiveSurfingOffsets");
@@ -2647,7 +2704,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GiveSurfingOffsets(AMX *amx, cell *params)
 	return 1;
 }
 
-// native FCNPC_GetSurfingOffsets(npcid, &Float:fX, &Float:fY, &Float:fZ);
+// native FCNPC_GetSurfingOffsets(npcid, &Float:x, &Float:y, &Float:z);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetSurfingOffsets(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(4, "FCNPC_GetSurfingOffsets");
@@ -2845,7 +2902,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_UseReloading(AMX *amx, cell *params)
 	return 1;
 }
 
-// native FCNPC_IsReloadingUsed(npcid);
+// native bool:FCNPC_IsReloadingUsed(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsReloadingUsed(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_IsReloadingUsed");
@@ -2883,7 +2940,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_UseInfiniteAmmo(AMX *amx, cell *params)
 	return 1;
 }
 
-// native FCNPC_IsInfiniteAmmoUsed(npcid);
+// native bool:FCNPC_IsInfiniteAmmoUsed(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsInfiniteAmmoUsed(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_IsInfiniteAmmoUsed");
@@ -2901,7 +2958,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsInfiniteAmmoUsed(AMX *amx, cell *params)
 	return pPlayerData->HasInfiniteAmmo();
 }
 
-// native FCNPC_StartPlayingPlayback(npcid, file[] = "", recordid = FCNPC_INVALID_RECORD_ID, bool:auto_unload = false, Float : delta_x = 0.0, Float : delta_y = 0.0, Float : delta_z = 0.0, Float : delta_qw = 0.0, Float : delta_qx = 0.0, Float : delta_qy = 0.0, Float : delta_qz = 0.0);
+// native FCNPC_StartPlayingPlayback(npcid, const file[] = "", recordid = FCNPC_INVALID_RECORD_ID, bool:auto_unload = false, Float:delta_x = 0.0, Float:delta_y  = 0.0, Float:delta_z  = 0.0, Float:delta_qw = 0.0, Float:delta_qx = 0.0, Float:delta_qy = 0.0, Float:delta_qz = 0.0);
 cell AMX_NATIVE_CALL CNatives::FCNPC_StartPlayingPlayback(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(11, "FCNPC_StartPlayingPlayback");
@@ -2938,6 +2995,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StartPlayingPlayback(AMX *amx, cell *params
 	return bSuccess;
 }
 
+// native FCNPC_StopPlayingPlayback(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_StopPlayingPlayback(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_StopPlayingPlayback");
@@ -2956,6 +3014,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StopPlayingPlayback(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_PausePlayingPlayback(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_PausePlayingPlayback(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_PausePlayingPlayback");
@@ -2974,6 +3033,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_PausePlayingPlayback(AMX *amx, cell *params
 	return 1;
 }
 
+// native FCNPC_ResumePlayingPlayback(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_ResumePlayingPlayback(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_ResumePlayingPlayback");
@@ -2992,7 +3052,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ResumePlayingPlayback(AMX *amx, cell *param
 	return 1;
 }
 
-// native FCNPC_LoadPlayingPlayback(file[]);
+// native FCNPC_LoadPlayingPlayback(const file[]);
 cell AMX_NATIVE_CALL CNatives::FCNPC_LoadPlayingPlayback(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_LoadPlayingPlayback");
@@ -3010,7 +3070,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_LoadPlayingPlayback(AMX *amx, cell *params)
 	return pServer->GetRecordManager()->Load(szFile);
 }
 
-// native FCNPC_UnloadPlayingPlayback(playbackid);
+// native FCNPC_UnloadPlayingPlayback(recordid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_UnloadPlayingPlayback(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_UnloadPlayingPlayback");
@@ -3027,7 +3087,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_UnloadPlayingPlayback(AMX *amx, cell *param
 	return !!pServer->GetRecordManager()->Unload(iRecordId);
 }
 
-// native FCNPC_SetPlayingPlaybackPath(npcid, path[]);
+// native FCNPC_SetPlayingPlaybackPath(npcid, const path[]);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetPlayingPlaybackPath(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_SetPlayingPlaybackPath");
@@ -3078,6 +3138,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetPlayingPlaybackPath(AMX *amx, cell *para
 	return 1;
 }
 
+// native FCNPC_GetPluginVersion(version[], const size = sizeof(version));
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetPluginVersion(AMX *amx, cell *params)
 {
 	cell *pAddress = NULL;
@@ -3091,6 +3152,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetPluginVersion(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_SetUpdateRate(rate);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetUpdateRate(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_SetUpdateRate");
@@ -3106,11 +3168,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetUpdateRate(AMX *amx, cell *params)
 	return pServer->SetUpdateRate(static_cast<DWORD>(iRate));
 }
 
+// native FCNPC_GetUpdateRate();
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetUpdateRate(AMX *amx, cell *params)
 {
 	return pServer->GetUpdateRate();
 }
 
+// native FCNPC_SetTickRate(rate);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetTickRate(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_SetUpdateRate");
@@ -3122,11 +3186,13 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetTickRate(AMX *amx, cell *params)
 	return pServer->SetTickRate(iRate);
 }
 
+// native FCNPC_GetTickRate();
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetTickRate(AMX *amx, cell *params)
 {
 	return pServer->GetTickRate();
 }
 
+// native FCNPC_OpenNode(nodeid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_OpenNode(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_OpenNode");
@@ -3138,6 +3204,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_OpenNode(AMX *amx, cell *params)
 	return pServer->GetNodeManager()->OpenNode(iNodeId);
 }
 
+// native FCNPC_CloseNode(nodeid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_CloseNode(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_CloseNode");
@@ -3150,6 +3217,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_CloseNode(AMX *amx, cell *params)
 	return 1;
 }
 
+// native bool:FCNPC_IsNodeOpen(nodeid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsNodeOpen(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_IsNodeOpen");
@@ -3161,6 +3229,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsNodeOpen(AMX *amx, cell *params)
 	return pServer->GetNodeManager()->IsNodeOpen(iNodeId);
 }
 
+// native FCNPC_GetNodeType(nodeid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetNodeType(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_GetNodeType");
@@ -3177,6 +3246,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetNodeType(AMX *amx, cell *params)
 	return pServer->GetNodeManager()->GetAt(iNodeId)->GetNodeType();
 }
 
+// native FCNPC_GetNodePointCount(nodeid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetNodePointCount(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_GetNodePointCount");
@@ -3193,6 +3263,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetNodePointCount(AMX *amx, cell *params)
 	return pServer->GetNodeManager()->GetAt(iNodeId)->GetNodesNumber();
 }
 
+// native FCNPC_GetNodePointPosition(nodeid, &Float:x, &Float:y, &Float:z);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetNodePointPosition(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(4, "FCNPC_GetNodePointPosition");
@@ -3234,6 +3305,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetNodePointPosition(AMX *amx, cell *params
 	return 1;
 }
 
+// native FCNPC_SetNodePoint(nodeid, pointid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetNodePoint(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_SetNodePoint");
@@ -3252,6 +3324,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetNodePoint(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_GetNodeInfo(nodeid, &vehnodes, &pednodes, &navinode);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetNodeInfo(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(4, "FCNPC_GetNodeInfo");
@@ -3292,7 +3365,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetNodeInfo(AMX *amx, cell *params)
 	return 1;
 }
 
-// native FCNPC_PlayNode(npcid, nodeid, move_type = MOVE_TYPE_AUTO, Float:speed = MOVE_SPEED_AUTO, mode = MOVE_MODE_AUTO, Float:radius = 0.0, bool:setangle = true);
+// native FCNPC_PlayNode(npcid, nodeid, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, Float:radius = 0.0, bool:set_angle = true);
 cell AMX_NATIVE_CALL CNatives::FCNPC_PlayNode(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(7, "FCNPC_PlayNode");
@@ -3321,6 +3394,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_PlayNode(AMX *amx, cell *params)
 	return pPlayerData->PlayNode(iNodeId, iMoveType, iMode, fRadius, bSetAngle, fSpeed);
 }
 
+// native FCNPC_StopPlayingNode(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_StopPlayingNode(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_StopPlayingNode");
@@ -3339,6 +3413,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_StopPlayingNode(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_PausePlayingNode(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_PausePlayingNode(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_PausePlayingNode");
@@ -3357,6 +3432,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_PausePlayingNode(AMX *amx, cell *params)
 	return 1;
 }
 
+// native FCNPC_ResumePlayingNode(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_ResumePlayingNode(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_ResumelayingNode");
@@ -3375,7 +3451,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ResumePlayingNode(AMX *amx, cell *params)
 	return 1;
 }
 
-// native FCNPC_IsPlayingNode(npcid);
+// native bool:FCNPC_IsPlayingNode(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsPlayingNode(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_IsPlayingNode");
@@ -3393,7 +3469,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsPlayingNode(AMX *amx, cell *params)
 	return pPlayerData->IsPlayingNode();
 }
 
-// native FCNPC_IsPlayingNodePaused(npcid);
+// native bool:FCNPC_IsPlayingNodePaused(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsPlayingNodePaused(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_IsPlayingNodePaused");
@@ -3411,7 +3487,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsPlayingNodePaused(AMX *amx, cell *params)
 	return pPlayerData->IsPlayingNodePaused();
 }
 
-// native FCNPC_UseMoveMode(mode, bool:use = true)
+// native FCNPC_UseMoveMode(mode, bool:use = true);
 cell AMX_NATIVE_CALL CNatives::FCNPC_UseMoveMode(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_UseMoveMode");
@@ -3429,7 +3505,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_UseMoveMode(AMX *amx, cell *params)
 	return 0;
 }
 
-// native FCNPC_IsMoveModeUsed(mode)
+// native bool:FCNPC_IsMoveModeUsed(mode);
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsMoveModeUsed(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_IsMoveModeUsed");
@@ -3442,7 +3518,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsMoveModeUsed(AMX *amx, cell *params)
 }
 
 
-// native FCNPC_UseMovePathfinding(pathfinding, bool:use = true)
+// native FCNPC_UseMovePathfinding(pathfinding, bool:use = true);
 cell AMX_NATIVE_CALL CNatives::FCNPC_UseMovePathfinding(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_UseMovePathfinding");
@@ -3460,7 +3536,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_UseMovePathfinding(AMX *amx, cell *params)
 	return 0;
 }
 
-// native FCNPC_IsMovePathfindingUsed(pathfinding)
+// native bool:FCNPC_IsMovePathfindingUsed(pathfinding);
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsMovePathfindingUsed(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_IsMovePathfindingUsed");
@@ -3472,7 +3548,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsMovePathfindingUsed(AMX *amx, cell *param
 	return pServer->IsMovePathfindingEnabled(iMovePathfinding);
 }
 
-// native FCNPC_TriggerWeaponShot(npcid, weaponid, hittype, hitid, Float:x, Float:y, Float:z, bool:ishit = true, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0, mode, checkInBetween);
+// native FCNPC_TriggerWeaponShot(npcid, weaponid, hittype, hitid, Float:x, Float:y, Float:z, bool:is_hit = true, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0, between_check_mode = FCNPC_ENTITY_MODE_AUTO, between_check_flags = FCNPC_ENTITY_CHECK_ALL);
 cell AMX_NATIVE_CALL CNatives::FCNPC_TriggerWeaponShot(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(13, "FCNPC_TriggerWeaponShot");
@@ -3515,7 +3591,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_DestroyMovePath(AMX *amx, cell *params)
 	return pServer->GetMovePath()->Destroy(iPathId);
 }
 
-// native FCNPC_IsValidMovePath(pathid);
+// native bool:FCNPC_IsValidMovePath(pathid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsValidMovePath(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_IsValidMovePath");
@@ -3614,7 +3690,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_RemovePointFromMovePath(AMX *amx, cell *par
 	return pServer->GetMovePath()->RemovePoint(iPathId, iPointId);
 }
 
-// native FCNPC_IsValidMovePathPoint(pathid, pointid);
+// native bool:FCNPC_IsValidMovePathPoint(pathid, pointid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsValidMovePathPoint(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "FCNPC_IsValidMovePathPoint");
@@ -3670,7 +3746,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetNumberMovePathPoint(AMX *amx, cell *para
 	return pServer->GetMovePath()->GetPoints(iPathId)->size();
 }
 
-// native FCNPC_GoByMovePath(npcid, pathid, pointid = 0, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = MOVE_MODE_AUTO, pathfinding = FCNPC_MOVE_PATHFINDING_AUTO, Float : radius = 0.0, bool : setangle = true, Float : dist_offset = 0.0);
+// native FCNPC_GoByMovePath(npcid, pathid, pointid = 0, type = FCNPC_MOVE_TYPE_AUTO, Float:speed = FCNPC_MOVE_SPEED_AUTO, mode = FCNPC_MOVE_MODE_AUTO, pathfinding = FCNPC_MOVE_PATHFINDING_AUTO, Float:radius = 0.0, bool:set_angle = true, Float:min_distance = 0.0);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GoByMovePath(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(10, "FCNPC_GoByMovePath");
@@ -3754,7 +3830,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetMinHeightPosCall(AMX *amx, cell *params)
 	return 1;
 }
 
-// native FCNPC_GetMinHeightPosCall(npcid);
+// native Float:FCNPC_GetMinHeightPosCall(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetMinHeightPosCall(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "FCNPC_GetMinHeightPosCall");
@@ -3786,7 +3862,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_UseCrashLog(AMX *amx, cell *params)
 	return 1;
 }
 
-// native FCNPC_IsCrashLogUsed();
+// native bool:FCNPC_IsCrashLogUsed();
 cell AMX_NATIVE_CALL CNatives::FCNPC_IsCrashLogUsed(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(0, "FCNPC_IsCrashLogUsed");
