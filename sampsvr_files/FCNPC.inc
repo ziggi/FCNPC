@@ -173,7 +173,7 @@ native FCNPC_GetAmmoInClip(npcid);
 native FCNPC_SetWeaponSkillLevel(npcid, skill, level);
 native FCNPC_GiveWeaponSkillLevel(npcid, skill, level);
 native FCNPC_GetWeaponSkillLevel(npcid, skill);
-native FCNPC_SetWeaponState(npcid, weaponstate);
+native FCNPC_SetWeaponState(npcid, weapon_state);
 native FCNPC_GetWeaponState(npcid);
 
 native FCNPC_SetWeaponReloadTime(npcid, weaponid, time);
