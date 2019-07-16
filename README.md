@@ -267,7 +267,7 @@ native FCNPC_GetDestinationPoint(npcid, &Float:x, &Float:y, &Float:z);
 native FCNPC_AimAt(npcid, Float:x, Float:y, Float:z, bool:shoot = false, shoot_delay = -1, bool:set_angle = true, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0, between_check_mode = FCNPC_ENTITY_MODE_AUTO, between_check_flags = FCNPC_ENTITY_CHECK_ALL);
 native FCNPC_AimAtPlayer(npcid, playerid, bool:shoot = false, shoot_delay = -1, bool:set_angle = true, Float:offset_x = 0.0, Float:offset_y = 0.0, Float:offset_z = 0.0, Float:offset_from_x = 0.0, Float:offset_from_y = 0.0, Float:offset_from_z = 0.0, between_check_mode = FCNPC_ENTITY_MODE_AUTO, between_check_flags = FCNPC_ENTITY_CHECK_ALL);
 native FCNPC_StopAim(npcid);
-native FCNPC_MeleeAttack(npcid, delay = -1, bool:fightstyle = false);
+native FCNPC_MeleeAttack(npcid, delay = -1, bool:fighting_style = false);
 native FCNPC_StopAttack(npcid);
 native bool:FCNPC_IsAttacking(npcid);
 native bool:FCNPC_IsAiming(npcid);

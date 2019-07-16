@@ -477,7 +477,7 @@ stock BG_Melee(playerid, slot)
 	SetPVarInt(npcid, "bg_last_weapon", FCNPC_GetWeapon(npcid));
 	FCNPC_SetWeapon(npcid, 0);
 
-	FCNPC_MeleeAttack(npcid, .fightstyle = true);
+	FCNPC_MeleeAttack(npcid, .fighting_style = true);
 }
 
 stock BG_MeleeStop(playerid, slot)
