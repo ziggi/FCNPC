@@ -293,6 +293,8 @@ native FCNPC_SetVehicleHydraThrusters(npcid, direction);
 native FCNPC_GetVehicleHydraThrusters(npcid);
 native FCNPC_SetVehicleGearState(npcid, gear_state);
 native FCNPC_GetVehicleGearState(npcid);
+native FCNPC_SetVehicleTrainSpeed(npcid, Float:speed);
+native Float:FCNPC_GetVehicleTrainSpeed(npcid);
 
 native FCNPC_SetSurfingOffsets(npcid, Float:x, Float:y, Float:z);
 native FCNPC_GiveSurfingOffsets(npcid, Float:x, Float:y, Float:z);
