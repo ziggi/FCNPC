@@ -3295,13 +3295,15 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetUpdateRate(AMX *amx, cell *params)
 // native FCNPC_GetUpdateRate();
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetUpdateRate(AMX *amx, cell *params)
 {
+	CHECK_PARAMS(0, "FCNPC_GetUpdateRate");
+
 	return pServer->GetUpdateRate();
 }
 
 // native FCNPC_SetTickRate(rate);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetTickRate(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "FCNPC_SetUpdateRate");
+	CHECK_PARAMS(1, "FCNPC_SetTickRate");
 
 	// Get the params
 	int iRate = static_cast<int>(params[1]);
@@ -3313,6 +3315,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetTickRate(AMX *amx, cell *params)
 // native FCNPC_GetTickRate();
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetTickRate(AMX *amx, cell *params)
 {
+	CHECK_PARAMS(0, "FCNPC_GetTickRate");
+	
 	return pServer->GetTickRate();
 }
 
@@ -3559,7 +3563,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_PausePlayingNode(AMX *amx, cell *params)
 // native FCNPC_ResumePlayingNode(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_ResumePlayingNode(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "FCNPC_ResumelayingNode");
+	CHECK_PARAMS(1, "FCNPC_ResumePlayingNode");
 
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);
