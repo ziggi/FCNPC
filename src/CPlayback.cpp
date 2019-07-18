@@ -166,7 +166,7 @@ bool CPlayback::Process(CPlayerData *pPlayerData)
 			if (CVehicleInfo::IsAHydra(static_cast<WORD>(pVehicle->customSpawn.iModelID))) {
 				pPlayerData->SetVehicleHydraThrusters(vehicleSyncData.wHydraReactorAngle[0]);
 			} else if (CVehicleInfo::IsATrainPart(static_cast<WORD>(pVehicle->customSpawn.iModelID))) {
-				pPlayerData->SetTrainSpeed(vehicleSyncData.fTrainSpeed);
+				pPlayerData->SetVehicleTrainSpeed(vehicleSyncData.fTrainSpeed);
 			}
 
 			pPlayerData->SetVehicleSync(&vehicleSyncData);

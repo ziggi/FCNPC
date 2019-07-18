@@ -20,6 +20,7 @@ public:
 	static bool IsATrainLoco(WORD wModelId);
 	static bool IsATrainPart(WORD wModelId);
 	static bool IsAHydra(WORD wModelId);
+	static bool IsAPlane(WORD wModelId);
 };
 
 #endif
