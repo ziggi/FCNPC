@@ -59,8 +59,8 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_byteSeatToEnter = 0;
 	m_wHitId = INVALID_PLAYER_ID;
 	m_byteHitType = BULLET_HIT_TYPE_NONE;
-	m_iBetweenCheckMode = FCNPC_ENTITY_MODE_NONE;
-	m_byteBetweenCheckFlags = FCNPC_ENTITY_CHECK_NONE;
+	m_iBetweenCheckMode = ENTITY_MODE_NONE;
+	m_byteBetweenCheckFlags = ENTITY_CHECK_NONE;
 	m_vecSurfing = CVector();
 	m_wSurfingInfo = 0;
 	m_pWeaponInfo = new CWeaponInfo();
@@ -1946,8 +1946,8 @@ void CPlayerData::StopAim()
 	m_wHitId = INVALID_PLAYER_ID;
 	m_bAimSetAngle = false;
 	m_byteHitType = BULLET_HIT_TYPE_NONE;
-	m_iBetweenCheckMode = FCNPC_ENTITY_MODE_NONE;
-	m_byteBetweenCheckFlags = FCNPC_ENTITY_CHECK_NONE;
+	m_iBetweenCheckMode = ENTITY_MODE_NONE;
+	m_byteBetweenCheckFlags = ENTITY_CHECK_NONE;
 	// Reset keys
 	SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys & ~(KEY_AIM | KEY_FIRE));
 }

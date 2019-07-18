@@ -52,21 +52,21 @@ extern logprintf_t          logprintf;
 #define UPDATE_STATE_PASSENGER  3
 
 // Check in between shot mode
-#define FCNPC_ENTITY_MODE_AUTO			(-1)
-#define FCNPC_ENTITY_MODE_NONE			(0)
-#define FCNPC_ENTITY_MODE_COLANDREAS	(1)
+#define ENTITY_MODE_AUTO			(-1)
+#define ENTITY_MODE_NONE			(0)
+#define ENTITY_MODE_COLANDREAS		(1)
 
 // Check in between shot (type BYTE suffices)
-#define FCNPC_ENTITY_CHECK_NONE           (0)
-#define FCNPC_ENTITY_CHECK_PLAYER         (1)
-#define FCNPC_ENTITY_CHECK_NPC            (2)
-#define FCNPC_ENTITY_CHECK_ACTOR          (4)
-#define FCNPC_ENTITY_CHECK_VEHICLE        (8)
-#define FCNPC_ENTITY_CHECK_OBJECT         (16)
-#define FCNPC_ENTITY_CHECK_POBJECT_ORIG   (32)
-#define FCNPC_ENTITY_CHECK_POBJECT_TARG   (64)
-#define FCNPC_ENTITY_CHECK_MAP            (128)
-#define FCNPC_ENTITY_CHECK_ALL            (255)
+#define ENTITY_CHECK_NONE           (0)
+#define ENTITY_CHECK_PLAYER         (1)
+#define ENTITY_CHECK_NPC            (2)
+#define ENTITY_CHECK_ACTOR          (4)
+#define ENTITY_CHECK_VEHICLE        (8)
+#define ENTITY_CHECK_OBJECT         (16)
+#define ENTITY_CHECK_POBJECT_ORIG   (32)
+#define ENTITY_CHECK_POBJECT_TARG   (64)
+#define ENTITY_CHECK_MAP            (128)
+#define ENTITY_CHECK_ALL            (255)
 
 // Movement type
 #define MOVE_TYPE_AUTO      -1
