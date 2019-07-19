@@ -71,3 +71,10 @@ bool CVehicleInfo::IsAHydra(WORD wModelId)
 {
 	return wModelId == 520;
 }
+
+bool CVehicleInfo::IsAPlane(WORD wModelId)
+{
+	return wModelId == 592 || wModelId == 577 || wModelId == 511 || wModelId == 512 || wModelId == 593
+		|| wModelId == 520 || wModelId == 553 || wModelId == 476 || wModelId == 519 || wModelId == 513
+		|| wModelId == 460;
+}

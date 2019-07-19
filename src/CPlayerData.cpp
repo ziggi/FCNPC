@@ -59,8 +59,8 @@ CPlayerData::CPlayerData(WORD playerId, char *szName)
 	m_byteSeatToEnter = 0;
 	m_wHitId = INVALID_PLAYER_ID;
 	m_byteHitType = BULLET_HIT_TYPE_NONE;
-	m_iBetweenCheckMode = FCNPC_ENTITY_MODE_NONE;
-	m_byteBetweenCheckFlags = FCNPC_ENTITY_CHECK_NONE;
+	m_iBetweenCheckMode = ENTITY_MODE_NONE;
+	m_byteBetweenCheckFlags = ENTITY_CHECK_NONE;
 	m_vecSurfing = CVector();
 	m_wSurfingInfo = 0;
 	m_pWeaponInfo = new CWeaponInfo();
@@ -1787,7 +1787,7 @@ void CPlayerData::StopMoving()
 	m_iMovePathfinding = MOVE_PATHFINDING_AUTO;
 	// Reset the player data
 	SetVelocity(CVector(0.0f, 0.0f, 0.0f));
-	SetTrainSpeed(0.0f);
+	SetVehicleTrainSpeed(0.0f);
 	if (GetState() == PLAYER_STATE_DRIVER) {
 		SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys & ~KEY_SPRINT);
 	} else {
@@ -1946,8 +1946,8 @@ void CPlayerData::StopAim()
 	m_wHitId = INVALID_PLAYER_ID;
 	m_bAimSetAngle = false;
 	m_byteHitType = BULLET_HIT_TYPE_NONE;
-	m_iBetweenCheckMode = FCNPC_ENTITY_MODE_NONE;
-	m_byteBetweenCheckFlags = FCNPC_ENTITY_CHECK_NONE;
+	m_iBetweenCheckMode = ENTITY_MODE_NONE;
+	m_byteBetweenCheckFlags = ENTITY_CHECK_NONE;
 	// Reset keys
 	SetKeys(m_pPlayer->wUDAnalog, m_pPlayer->wLRAnalog, m_pPlayer->dwKeys & ~(KEY_AIM | KEY_FIRE));
 }
@@ -2331,16 +2331,6 @@ WORD CPlayerData::GetVehicleHydraThrusters()
 	return m_wHydraThrustAngle[0];
 }
 
-void CPlayerData::SetTrainSpeed(float fTrainSpeed)
-{
-	m_fTrainSpeed = fTrainSpeed;
-}
-
-float CPlayerData::GetTrainSpeed()
-{
-	return m_fTrainSpeed;
-}
-
 void CPlayerData::SetVehicleGearState(BYTE byteGearState)
 {
 	m_byteGearState = byteGearState;
@@ -2349,6 +2339,24 @@ void CPlayerData::SetVehicleGearState(BYTE byteGearState)
 BYTE CPlayerData::GetVehicleGearState()
 {
 	return m_byteGearState;
+}
+
+void CPlayerData::SetVehicleTrainSpeed(float fTrainSpeed)
+{
+	// Validate the speed (values higher than abs(1.0f) derail the train in single player)
+	if (fTrainSpeed < -1.0f) {
+		fTrainSpeed = -1.0f;
+	}
+	else if (fTrainSpeed > 1.0f) {
+		fTrainSpeed = 1.0f;
+	}
+
+	m_fTrainSpeed = fTrainSpeed;
+}
+
+float CPlayerData::GetVehicleTrainSpeed()
+{
+	return m_fTrainSpeed;
 }
 
 void CPlayerData::SetSurfingOffsets(const CVector &vecOffsets)
@@ -2458,7 +2466,7 @@ void CPlayerData::StopPlayingPlayback()
 	// Reset the player data
 	SetVelocity(CVector(0.0f, 0.0f, 0.0f));
 	SetKeys(KEY_NONE, KEY_NONE, KEY_NONE);
-	SetTrainSpeed(0.0f);
+	SetVehicleTrainSpeed(0.0f);
 	// Reset the Playing flag
 	m_bPlaying = false;
 	// Call the playback finish callback

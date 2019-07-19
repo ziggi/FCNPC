@@ -295,7 +295,7 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 	}
 
 	// If something is in between the origin and the target (we currently don't handle checking beyond the target, even when missing with leftover range)
-	BYTE byteClosestEntityType = FCNPC_ENTITY_CHECK_NONE;
+	BYTE byteClosestEntityType = ENTITY_CHECK_NONE;
 	WORD wPlayerObjectOwnerId = INVALID_PLAYER_ID;
 	CVector vecHitMap = bulletSyncDataTarget.vecHitTarget;
 	float fRange = CWeaponInfo::GetDefaultInfo(bulletSyncDataTarget.byteWeaponID).fRange;
@@ -306,24 +306,24 @@ void CFunctions::PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE
 		// logprintf("SOMETHING IN BETWEEN SHOOTER AND TARGET");
 		bulletSyncDataTarget.wHitID = wClosestEntity;
 		switch (byteClosestEntityType) {
-			case FCNPC_ENTITY_CHECK_PLAYER:
-			case FCNPC_ENTITY_CHECK_NPC:
+			case ENTITY_CHECK_PLAYER:
+			case ENTITY_CHECK_NPC:
 				bulletSyncDataTarget.byteHitType = BULLET_HIT_TYPE_PLAYER;
 				break;
-			case FCNPC_ENTITY_CHECK_ACTOR:
+			case ENTITY_CHECK_ACTOR:
 				bulletSyncDataTarget.byteHitType = BULLET_HIT_TYPE_NONE;
 				break;
-			case FCNPC_ENTITY_CHECK_VEHICLE:
+			case ENTITY_CHECK_VEHICLE:
 				bulletSyncDataTarget.byteHitType = BULLET_HIT_TYPE_VEHICLE;
 				break;
-			case FCNPC_ENTITY_CHECK_OBJECT:
+			case ENTITY_CHECK_OBJECT:
 				bulletSyncDataTarget.byteHitType = BULLET_HIT_TYPE_OBJECT;
 				break;
-			case FCNPC_ENTITY_CHECK_POBJECT_ORIG:
-			case FCNPC_ENTITY_CHECK_POBJECT_TARG:
+			case ENTITY_CHECK_POBJECT_ORIG:
+			case ENTITY_CHECK_POBJECT_TARG:
 				bulletSyncDataTarget.byteHitType = BULLET_HIT_TYPE_PLAYER_OBJECT;
 				break;
-			case FCNPC_ENTITY_CHECK_MAP:
+			case ENTITY_CHECK_MAP:
 				bulletSyncDataTarget.byteHitType = BULLET_HIT_TYPE_NONE;
 				break;
 			default:
@@ -461,15 +461,15 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 {
 	WORD wClosestEntity = 0xFFFF;
 	float fClosestEntityDistance = 0.0;
-	byteEntityType = FCNPC_ENTITY_CHECK_NONE;
+	byteEntityType = ENTITY_CHECK_NONE;
 
 	// Check if a player is in between the origin and the target
 	WORD wClosestPlayer = INVALID_PLAYER_ID;
-	if (byteBetweenCheckFlags & FCNPC_ENTITY_CHECK_PLAYER) {
+	if (byteBetweenCheckFlags & ENTITY_CHECK_PLAYER) {
 		float fClosestPlayerDistance = 0.0;
 		wClosestPlayer = GetClosestPlayerInBetween(vecHitOrigin, vecHitTarget, fRange, fClosestPlayerDistance, wPlayerId, wTargetId);
 		if (wClosestPlayer != INVALID_PLAYER_ID && (wClosestEntity == 0xFFFF || fClosestPlayerDistance < fClosestEntityDistance)) {
-			byteEntityType = FCNPC_ENTITY_CHECK_PLAYER;
+			byteEntityType = ENTITY_CHECK_PLAYER;
 			fClosestEntityDistance = fClosestPlayerDistance;
 			wClosestEntity = wClosestPlayer;
 		}
@@ -477,68 +477,68 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 
 	// Check if an NPC is in between the origin and the target
 	WORD wClosestNPC = INVALID_PLAYER_ID;
-	if (byteBetweenCheckFlags & FCNPC_ENTITY_CHECK_NPC) {
+	if (byteBetweenCheckFlags & ENTITY_CHECK_NPC) {
 		float fClosestNPCDistance = 0.0;
 		wClosestNPC = GetClosestNPCInBetween(vecHitOrigin, vecHitTarget, fRange, fClosestNPCDistance, wPlayerId, wTargetId);
 		if (wClosestNPC != INVALID_PLAYER_ID && (wClosestEntity == 0xFFFF || fClosestNPCDistance < fClosestEntityDistance)) {
-			byteEntityType = FCNPC_ENTITY_CHECK_NPC;
+			byteEntityType = ENTITY_CHECK_NPC;
 			fClosestEntityDistance = fClosestNPCDistance;
 			wClosestEntity = wClosestNPC;
 		}
 	}
 
 	// Check if an actor is in between the origin and the target
-	if (byteBetweenCheckFlags & FCNPC_ENTITY_CHECK_ACTOR) {
+	if (byteBetweenCheckFlags & ENTITY_CHECK_ACTOR) {
 		float fClosestActorDistance = 0.0;
 		WORD wClosestActor = GetClosestActorInBetween(vecHitOrigin, vecHitTarget, fRange, fClosestActorDistance);
 		if (wClosestActor != INVALID_ACTOR_ID && (wClosestEntity == 0xFFFF || fClosestActorDistance < fClosestEntityDistance)) {
-			byteEntityType = FCNPC_ENTITY_CHECK_ACTOR;
+			byteEntityType = ENTITY_CHECK_ACTOR;
 			fClosestEntityDistance = fClosestActorDistance;
 			wClosestEntity = wClosestActor;
 		}
 	}
 
 	// Check if a vehicle is in between the origin and the target
-	if (byteBetweenCheckFlags & FCNPC_ENTITY_CHECK_VEHICLE) {
+	if (byteBetweenCheckFlags & ENTITY_CHECK_VEHICLE) {
 		float fClosestVehicleDistance = 0.0;
 		WORD wClosestVehicle = GetClosestVehicleInBetween(vecHitOrigin, vecHitTarget, fRange, fClosestVehicleDistance);
 		if (wClosestVehicle != INVALID_VEHICLE_ID && (wClosestEntity == 0xFFFF || fClosestVehicleDistance < fClosestEntityDistance)) {
-			byteEntityType = FCNPC_ENTITY_CHECK_VEHICLE;
+			byteEntityType = ENTITY_CHECK_VEHICLE;
 			fClosestEntityDistance = fClosestVehicleDistance;
 			wClosestEntity = wClosestVehicle;
 		}
 	}
 
 	// Check if an object is in between the origin and the target
-	if (byteBetweenCheckFlags & FCNPC_ENTITY_CHECK_OBJECT) {
+	if (byteBetweenCheckFlags & ENTITY_CHECK_OBJECT) {
 		float fClosestObjectDistance = 0.0;
 		WORD wClosestObject = GetClosestObjectInBetween(vecHitOrigin, vecHitTarget, fRange, fClosestObjectDistance, iMode);
 		if (wClosestObject != INVALID_OBJECT_ID && (wClosestEntity == 0xFFFF || fClosestObjectDistance < fClosestEntityDistance)) {
-			byteEntityType = FCNPC_ENTITY_CHECK_OBJECT;
+			byteEntityType = ENTITY_CHECK_OBJECT;
 			fClosestEntityDistance = fClosestObjectDistance;
 			wClosestEntity = wClosestObject;
 		}
 	}
 
 	// Check if a player object of the shooter is in between the origin and the target
-	if (byteBetweenCheckFlags & FCNPC_ENTITY_CHECK_POBJECT_ORIG) {
+	if (byteBetweenCheckFlags & ENTITY_CHECK_POBJECT_ORIG) {
 		float fClosestPlayerObjectDistance = 0.0;
 		WORD wClosestPlayerObject = GetClosestPlayerObjectInBetween(vecHitOrigin, vecHitTarget, fRange, fClosestPlayerObjectDistance, wPlayerId, iMode);
 		if (wClosestPlayerObject != INVALID_OBJECT_ID && (wClosestEntity == 0xFFFF || fClosestPlayerObjectDistance < fClosestEntityDistance)) {
-			byteEntityType = FCNPC_ENTITY_CHECK_POBJECT_ORIG;
+			byteEntityType = ENTITY_CHECK_POBJECT_ORIG;
 			wPlayerObjectOwnerId = wPlayerId;
 			fClosestEntityDistance = fClosestPlayerObjectDistance;
 			wClosestEntity = wClosestPlayerObject;
 		}
 	}
 
-	if (byteBetweenCheckFlags & FCNPC_ENTITY_CHECK_POBJECT_TARG) { // One flag for 3 checks
+	if (byteBetweenCheckFlags & ENTITY_CHECK_POBJECT_TARG) { // One flag for 3 checks
 		// Check if a player object of the target is in between the origin and the target
 		if (wTargetId != INVALID_PLAYER_ID) {
 			float fClosestPlayerObjectDistance = 0.0;
 			WORD wClosestPlayerObject = GetClosestPlayerObjectInBetween(vecHitOrigin, vecHitTarget, fRange, fClosestPlayerObjectDistance, wTargetId, iMode);
 			if (wClosestPlayerObject != INVALID_OBJECT_ID && (wClosestEntity == 0xFFFF || fClosestPlayerObjectDistance < fClosestEntityDistance)) {
-				byteEntityType = FCNPC_ENTITY_CHECK_POBJECT_TARG;
+				byteEntityType = ENTITY_CHECK_POBJECT_TARG;
 				wPlayerObjectOwnerId = wTargetId;
 				fClosestEntityDistance = fClosestPlayerObjectDistance;
 				wClosestEntity = wClosestPlayerObject;
@@ -550,7 +550,7 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 			float fClosestPlayerObjectDistance = 0.0;
 			WORD wClosestPlayerObject = GetClosestPlayerObjectInBetween(vecHitOrigin, vecHitTarget, fRange, fClosestPlayerObjectDistance, wClosestPlayer, iMode);
 			if (wClosestPlayerObject != INVALID_OBJECT_ID && (wClosestEntity == 0xFFFF || fClosestPlayerObjectDistance < fClosestEntityDistance)) {
-				byteEntityType = FCNPC_ENTITY_CHECK_POBJECT_TARG;
+				byteEntityType = ENTITY_CHECK_POBJECT_TARG;
 				wPlayerObjectOwnerId = wClosestPlayer;
 				fClosestEntityDistance = fClosestPlayerObjectDistance;
 				wClosestEntity = wClosestPlayerObject;
@@ -562,7 +562,7 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 			float fClosestPlayerObjectDistance = 0.0;
 			WORD wClosestPlayerObject = GetClosestPlayerObjectInBetween(vecHitOrigin, vecHitTarget, fRange, fClosestPlayerObjectDistance, wClosestNPC, iMode);
 			if (wClosestPlayerObject != INVALID_OBJECT_ID && (wClosestEntity == 0xFFFF || fClosestPlayerObjectDistance < fClosestEntityDistance)) {
-				byteEntityType = FCNPC_ENTITY_CHECK_POBJECT_TARG;
+				byteEntityType = ENTITY_CHECK_POBJECT_TARG;
 				wPlayerObjectOwnerId = wClosestNPC;
 				fClosestEntityDistance = fClosestPlayerObjectDistance;
 				wClosestEntity = wClosestPlayerObject;
@@ -571,11 +571,11 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 	}
 
 	// Check if a map point is in between the origin and the target
-	if (byteBetweenCheckFlags & FCNPC_ENTITY_CHECK_MAP) {
+	if (byteBetweenCheckFlags & ENTITY_CHECK_MAP) {
 		float fClosestMapPointDistance = 0.0;
 		WORD wClosestMapPoint = GetClosestMapPointInBetween(vecHitOrigin, vecHitTarget, fRange, fClosestMapPointDistance, vecHitMap, iMode);
 		if (wClosestMapPoint != 0 && (wClosestEntity == 0xFFFF || fClosestMapPointDistance < fClosestEntityDistance)) {
-			byteEntityType = FCNPC_ENTITY_CHECK_MAP;
+			byteEntityType = ENTITY_CHECK_MAP;
 			fClosestEntityDistance = fClosestMapPointDistance;
 			wClosestEntity = MAX_ACTORS + 1;
 		}
@@ -722,7 +722,7 @@ WORD CFunctions::GetClosestObjectInBetween(const CVector &vecHitOrigin, const CV
 
 	// Use ColAndreas when enabled
 	bool colCanSeparateMapAndCustomObjects = false;
-	if (iMode == FCNPC_ENTITY_MODE_COLANDREAS && colDataLoaded && colCanSeparateMapAndCustomObjects) {
+	if (iMode == ENTITY_MODE_COLANDREAS && colDataLoaded && colCanSeparateMapAndCustomObjects) {
 		// Even though bullets can penetrate water and still deal damage, we can't check for points beyond water
 		// Check for global objects only, not for custom objects or map points
 		// - Currently this is not supported, since ColAndreas can't distinguish between the map and global/custom objects
@@ -770,7 +770,7 @@ WORD CFunctions::GetClosestPlayerObjectInBetween(const CVector &vecHitOrigin, co
 
 	// Use ColAndreas when enabled
 	bool colCanSeparateMapAndCustomObjects = false;
-	if (iMode == FCNPC_ENTITY_MODE_COLANDREAS && colDataLoaded && colCanSeparateMapAndCustomObjects) {
+	if (iMode == ENTITY_MODE_COLANDREAS && colDataLoaded && colCanSeparateMapAndCustomObjects) {
 		// Even though bullets can penetrate water and still deal damage, we can't check for points beyond water
 		// Check for custom objects only, not for global objects or map points
 		// - Currently this is not supported, since ColAndreas can't distinguish between the map and global/custom objects
@@ -812,7 +812,7 @@ WORD CFunctions::GetClosestMapPointInBetween(const CVector &vecHitOrigin, const 
 	WORD wClosestMapPoint = 0;
 
 	// Use ColAndreas when enabled
-	if (iMode == FCNPC_ENTITY_MODE_COLANDREAS && colDataLoaded) {
+	if (iMode == ENTITY_MODE_COLANDREAS && colDataLoaded) {
 		// Even though bullets can penetrate water and still deal damage, we can't check for points beyond water
 		// Check for map points only, not for global objects or custom objects
 		// - Currently this function checks for all of the above, since ColAndreas can't distinguish between the map and global/custom objects

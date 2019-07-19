@@ -2397,6 +2397,11 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_ExitVehicle(AMX *amx, cell *params)
 		return 0;
 	}
 
+	// Make sure the player is in a vehicle
+	if (pPlayerData->GetVehicleId() == INVALID_VEHICLE_ID) {
+		return 0;
+	}
+
 	// Make the player exit the vehicle
 	return pPlayerData->ExitVehicle();
 }
@@ -2422,7 +2427,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_PutInVehicle(AMX *amx, cell *params)
 		return 0;
 	}
 
-	// Make the player enter the vehicle
+	// Put the player in the vehicle
 	return pPlayerData->PutInVehicle(wVehicleId, byteSeatId);
 }
 
@@ -2440,13 +2445,18 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_RemoveFromVehicle(AMX *amx, cell *params)
 		return 0;
 	}
 
+	// Make sure the player is in a vehicle
+	// if (pPlayerData->GetVehicleId() == INVALID_VEHICLE_ID) {
+	// 	return 0;
+	// }
+
 	// Validate the player state
 	int iState = pPlayerData->GetState();
 	if (iState != PLAYER_STATE_DRIVER && iState != PLAYER_STATE_PASSENGER) {
 		return 0;
 	}
 
-	// Make the player exit the vehicle
+	// Remove the player from the vehicle
 	return pPlayerData->RemoveFromVehicle();
 }
 
@@ -2464,7 +2474,12 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleID(AMX *amx, cell *params)
 		return INVALID_VEHICLE_ID;
 	}
 
-	// Make the player exit the vehicle
+	// Make sure the player is in a vehicle
+	if (pPlayerData->GetVehicleId() == INVALID_VEHICLE_ID) {
+		return INVALID_VEHICLE_ID;
+	}
+
+	// Get the vehicle ID
 	return pPlayerData->GetVehicleId();
 }
 
@@ -2479,14 +2494,15 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleSeat(AMX *amx, cell *params)
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
-		return 0;
+		return 128;
 	}
 
-	// Make the player exit the vehicle
+	// Make sure the player is in a vehicle
 	if (pPlayerData->GetVehicleId() == INVALID_VEHICLE_ID) {
 		return 128;
 	}
 
+	// Get the vehicle seat
 	return pPlayerData->GetSeatId();
 }
 
@@ -2505,12 +2521,12 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_UseVehicleSiren(AMX *amx, cell *params)
 		return 0;
 	}
 
-	// Make sure the player is in vehicle
+	// Make sure the player is in a vehicle
 	if (pPlayerData->GetVehicleId() == INVALID_VEHICLE_ID) {
 		return 0;
 	}
 
-	// Change siren state
+	// Change the vehicle siren state
 	pPlayerData->SetVehicleSiren(bSiren);
 	return 1;
 }
@@ -2529,12 +2545,12 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_IsVehicleSirenUsed(AMX *amx, cell *params)
 		return 0;
 	}
 
-	// Make sure the player is in vehicle
+	// Make sure the player is in a vehicle
 	if (pPlayerData->GetVehicleId() == INVALID_VEHICLE_ID) {
 		return 0;
 	}
 
-	// Return siren state
+	// Get the vehicle siren state
 	return pPlayerData->IsVehicleSiren();
 }
 
@@ -2553,12 +2569,12 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVehicleHealth(AMX *amx, cell *params)
 		return 0;
 	}
 
-	// Make sure the player is in vehicle
+	// Make sure the player is in a vehicle
 	if (pPlayerData->GetVehicleId() == INVALID_VEHICLE_ID) {
 		return 0;
 	}
 
-	// Change vehicle health
+	// Change the vehicle health
 	pPlayerData->SetVehicleHealth(fHealth);
 	return 1;
 }
@@ -2578,7 +2594,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleHealth(AMX *amx, cell *params)
 		return amx_ftoc(fHealth);
 	}
 
-	// Make sure the player is in vehicle
+	// Make sure the player is in a vehicle
 	if (pPlayerData->GetVehicleId() == INVALID_VEHICLE_ID) {
 		return amx_ftoc(fHealth);
 	}
@@ -2603,7 +2619,18 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVehicleHydraThrusters(AMX *amx, cell *pa
 		return 0;
 	}
 
-	// Change vehicle hydra thrusters
+	// Make sure the player is in a vehicle
+	if (pPlayerData->GetVehicleId() == INVALID_VEHICLE_ID) {
+		return 0;
+	}
+
+	// Make sure the vehicle is a hydra
+	CVehicle *pVehicle = pPlayerData->GetVehicle();
+	if (!pVehicle || !CVehicleInfo::IsAHydra(static_cast<WORD>(pVehicle->customSpawn.iModelID))) {
+		return 0;
+	}
+
+	// Change the vehicle hydra thrusters
 	pPlayerData->SetVehicleHydraThrusters(wDirection);
 	return 1;
 }
@@ -2619,6 +2646,17 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleHydraThrusters(AMX *amx, cell *pa
 	// Make sure the player is valid
 	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
 	if (!pPlayerData) {
+		return 0;
+	}
+
+	// Make sure the player is in a vehicle
+	if (pPlayerData->GetVehicleId() == INVALID_VEHICLE_ID) {
+		return 0;
+	}
+
+	// Make sure the vehicle is a hydra
+	CVehicle *pVehicle = pPlayerData->GetVehicle();
+	if (!pVehicle || !CVehicleInfo::IsAHydra(static_cast<WORD>(pVehicle->customSpawn.iModelID))) {
 		return 0;
 	}
 
@@ -2641,7 +2679,18 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetVehicleGearState(AMX *amx, cell *params)
 		return 0;
 	}
 
-	// Change vehicle hydra thrusters
+	// Make sure the player is in a vehicle
+	if (pPlayerData->GetVehicleId() == INVALID_VEHICLE_ID) {
+		return 0;
+	}
+
+	// Make sure the vehicle is a plane
+	CVehicle *pVehicle = pPlayerData->GetVehicle();
+	if (!pVehicle || !CVehicleInfo::IsAPlane(static_cast<WORD>(pVehicle->customSpawn.iModelID))) {
+		return 0;
+	}
+
+	// Change the vehicle gear state
 	pPlayerData->SetVehicleGearState(byteState);
 	return 1;
 }
@@ -2660,8 +2709,81 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleGearState(AMX *amx, cell *params)
 		return 0;
 	}
 
-	// Get the vehicle hydra thrusters
+	// Make sure the player is in a vehicle
+	if (pPlayerData->GetVehicleId() == INVALID_VEHICLE_ID) {
+		return 0;
+	}
+
+	// Make sure the vehicle is a plane
+	CVehicle *pVehicle = pPlayerData->GetVehicle();
+	if (!pVehicle || !CVehicleInfo::IsAPlane(static_cast<WORD>(pVehicle->customSpawn.iModelID))) {
+		return 0;
+	}
+
+	// Get the vehicle gear state
 	return pPlayerData->GetVehicleGearState();
+}
+
+// native FCNPC_SetVehicleTrainSpeed(npcid, Float:speed);
+cell AMX_NATIVE_CALL CNatives::FCNPC_SetVehicleTrainSpeed(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "FCNPC_SetVehicleTrainSpeed");
+
+	// Get params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+	float fSpeed = amx_ctof(params[2]);
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return 0;
+	}
+
+	// Make sure the player is in a vehicle
+	if (pPlayerData->GetVehicleId() == INVALID_VEHICLE_ID) {
+		return 0;
+	}
+
+	// Make sure the vehicle is a train
+	CVehicle *pVehicle = pPlayerData->GetVehicle();
+	if (!pVehicle || !CVehicleInfo::IsATrainPart(static_cast<WORD>(pVehicle->customSpawn.iModelID))) {
+		return 0;
+	}
+
+	// Change the vehicle train speed
+	pPlayerData->SetVehicleTrainSpeed(fSpeed);
+	return 1;
+}
+
+// native Float:FCNPC_GetVehicleTrainSpeed(npcid);
+cell AMX_NATIVE_CALL CNatives::FCNPC_GetVehicleTrainSpeed(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "FCNPC_GetVehicleTrainSpeed");
+
+	// Get params
+	WORD wNpcId = static_cast<WORD>(params[1]);
+	float fSpeed = 0.0f;
+
+	// Make sure the player is valid
+	CPlayerData *pPlayerData = pServer->GetPlayerManager()->GetAt(wNpcId);
+	if (!pPlayerData) {
+		return amx_ftoc(fSpeed);
+	}
+
+	// Make sure the player is in a vehicle
+	if (pPlayerData->GetVehicleId() == INVALID_VEHICLE_ID) {
+		return amx_ftoc(fSpeed);
+	}
+
+	// Make sure the vehicle is a train
+	CVehicle *pVehicle = pPlayerData->GetVehicle();
+	if (!pVehicle || !CVehicleInfo::IsATrainPart(static_cast<WORD>(pVehicle->customSpawn.iModelID))) {
+		return amx_ftoc(fSpeed);
+	}
+
+	// Get the vehicle train speed
+	fSpeed = pPlayerData->GetVehicleTrainSpeed();
+	return amx_ftoc(fSpeed);
 }
 
 // native FCNPC_SetSurfingOffsets(npcid, Float:x, Float:y, Float:z);
@@ -3173,13 +3295,15 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetUpdateRate(AMX *amx, cell *params)
 // native FCNPC_GetUpdateRate();
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetUpdateRate(AMX *amx, cell *params)
 {
+	CHECK_PARAMS(0, "FCNPC_GetUpdateRate");
+
 	return pServer->GetUpdateRate();
 }
 
 // native FCNPC_SetTickRate(rate);
 cell AMX_NATIVE_CALL CNatives::FCNPC_SetTickRate(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "FCNPC_SetUpdateRate");
+	CHECK_PARAMS(1, "FCNPC_SetTickRate");
 
 	// Get the params
 	int iRate = static_cast<int>(params[1]);
@@ -3191,6 +3315,8 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_SetTickRate(AMX *amx, cell *params)
 // native FCNPC_GetTickRate();
 cell AMX_NATIVE_CALL CNatives::FCNPC_GetTickRate(AMX *amx, cell *params)
 {
+	CHECK_PARAMS(0, "FCNPC_GetTickRate");
+	
 	return pServer->GetTickRate();
 }
 
@@ -3437,7 +3563,7 @@ cell AMX_NATIVE_CALL CNatives::FCNPC_PausePlayingNode(AMX *amx, cell *params)
 // native FCNPC_ResumePlayingNode(npcid);
 cell AMX_NATIVE_CALL CNatives::FCNPC_ResumePlayingNode(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "FCNPC_ResumelayingNode");
+	CHECK_PARAMS(1, "FCNPC_ResumePlayingNode");
 
 	// Get the params
 	WORD wNpcId = static_cast<WORD>(params[1]);

@@ -181,10 +181,10 @@ public:
 	float GetVehicleHealth();
 	void SetVehicleHydraThrusters(WORD wDirection);
 	WORD GetVehicleHydraThrusters();
-	void SetTrainSpeed(float fTrainSpeed);
-	float GetTrainSpeed();
 	void SetVehicleGearState(BYTE byteGearState);
 	BYTE GetVehicleGearState();
+	void SetVehicleTrainSpeed(float fTrainSpeed);
+	float GetVehicleTrainSpeed();
 
 	void SetSurfingOffsets(const CVector &vecOffsets);
 	void GetSurfingOffsets(CVector *vecOffsets);

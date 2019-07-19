@@ -161,6 +161,8 @@ public:
 	static cell AMX_NATIVE_CALL FCNPC_GetVehicleHydraThrusters(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_SetVehicleGearState(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GetVehicleGearState(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_SetVehicleTrainSpeed(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL FCNPC_GetVehicleTrainSpeed(AMX *amx, cell *params);
 
 	static cell AMX_NATIVE_CALL FCNPC_SetSurfingOffsets(AMX *amx, cell *params);
 	static cell AMX_NATIVE_CALL FCNPC_GiveSurfingOffsets(AMX *amx, cell *params);
