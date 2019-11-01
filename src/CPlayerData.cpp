@@ -2382,7 +2382,6 @@ int CPlayerData::GetSurfingVehicle()
 void CPlayerData::SetSurfingObject(WORD wObjectId)
 {
 	m_wSurfingInfo = MAX_VEHICLES + wObjectId;
-	pNetGame->pObjectPool->bObjectSlotState[wObjectId] = true;
 }
 
 int CPlayerData::GetSurfingObject()
@@ -2415,12 +2414,6 @@ int CPlayerData::GetSurfingPlayerObject()
 
 void CPlayerData::StopSurfing()
 {
-	WORD wObjectId = m_wSurfingInfo - MAX_VEHICLES;
-	if (wObjectId > 0 && wObjectId < MAX_OBJECTS) {
-		pNetGame->pObjectPool->bObjectSlotState[wObjectId] = false;
-		pNetGame->pObjectPool->bPlayerObjectSlotState[m_wPlayerId][wObjectId] = false;
-	}
-
 	m_wSurfingInfo = 0;
 	m_vecSurfing = CVector(0.0f, 0.0f, 0.0f);
 }
