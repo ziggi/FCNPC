@@ -10,20 +10,25 @@ ColAndreasWorld::ColAndreasWorld()
 	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
 	removedManager = new RemovedBuildingManager();
 	objectManager = new ObjectManager();
-	mapWaterMesh = NULL;
 }
 
 // ColAndreas closed
 ColAndreasWorld::~ColAndreasWorld()
 {
-	delete objectManager;
-	delete removedManager;
+	if (objectManager != NULL)
+		delete removedManager;
+
+	if (removedManager != NULL)
+		delete removedManager;
+
 	delete dynamicsWorld;
 	delete solver;
 	delete dispatcher;
 	delete collisionConfiguration;
 	delete broadphase;
-	delete mapWaterMesh;
+
+	if (mapWaterMesh != NULL)
+		delete mapWaterMesh;
 }
 
 btScalar ColAndreasWorld::getDist3D(const btVector3& c1, const btVector3& c2)
@@ -34,7 +39,7 @@ btScalar ColAndreasWorld::getDist3D(const btVector3& c1, const btVector3& c2)
 	return sqrt((btScalar)(dx * dx + dy * dy + dz * dz));
 }
 
-// Converts GTA rotations to quaternion
+	// Converts GTA rotations to quaternion
 void ColAndreasWorld::EulerToQuat(btVector3& rotation, btQuaternion& result)
 {
 	rotation.setX(rotation.getX() * DEG_TO_RAD);
@@ -47,28 +52,29 @@ void ColAndreasWorld::EulerToQuat(btVector3& rotation, btQuaternion& result)
 	btScalar s2 = sin(rotation.getX() / 2);
 	btScalar c3 = cos(rotation.getZ() / 2);
 	btScalar s3 = sin(rotation.getZ() / 2);
-	btScalar c1c2 = c1 * c2;
-	btScalar s1s2 = s1 * s2;
-	result.setW(c1c2*c3 - s1s2 * s3);
-	result.setZ(c1c2*s3 + s1s2 * c3);
-	result.setY(s1*c2*c3 + c1 * s2*s3);
-	result.setX(c1*s2*c3 - s1 * c2*s3);
+	btScalar c1c2 = c1*c2;
+	btScalar s1s2 = s1*s2;
+	result.setW((c1c2*c3 - s1s2*s3));
+	result.setZ(c1c2*s3 + s1s2*c3);
+	result.setY(s1*c2*c3 + c1*s2*s3);
+	result.setX(c1*s2*c3 - s1*c2*s3);
 }
 
 void ColAndreasWorld::QuatToEuler(btQuaternion& rotation, btVector3& result)
 {
-	result.setY((-asin(2 * ((rotation.getX() * rotation.getZ()) + (rotation.getW() * rotation.getY()))) * RADIAN_TO_DEG));
-	result.setX((atan2(2 * ((rotation.getY() * rotation.getZ()) + (rotation.getW() * rotation.getX())), (rotation.getW() * rotation.getW()) - (rotation.getX() * rotation.getX()) - (rotation.getY() * rotation.getY()) + (rotation.getZ() * rotation.getZ())) * RADIAN_TO_DEG));
-	result.setZ((-atan2(2 * ((rotation.getX() * rotation.getY()) + (rotation.getW() * rotation.getZ())), (rotation.getW() * rotation.getW()) + (rotation.getX() * rotation.getX()) - (rotation.getY() * rotation.getY()) - (rotation.getZ() * rotation.getZ())) * RADIAN_TO_DEG));
+	result.setY((-asin(2 * ((rotation.getX() * rotation.getZ()) + (rotation.getW() * rotation.getY()))) * RADIAN_TO_DEG) );
+	result.setX((atan2(2 * ((rotation.getY() * rotation.getZ()) + (rotation.getW() * rotation.getX())), (rotation.getW() * rotation.getW()) - (rotation.getX() * rotation.getX()) - (rotation.getY() * rotation.getY()) + (rotation.getZ() * rotation.getZ())) * RADIAN_TO_DEG) );
+	result.setZ((-atan2(2 * ((rotation.getX() * rotation.getY()) + (rotation.getW() * rotation.getZ())), (rotation.getW() * rotation.getW()) + (rotation.getX() * rotation.getX()) - (rotation.getY() * rotation.getY()) - (rotation.getZ() * rotation.getZ())) * RADIAN_TO_DEG) );
 }
 
-int ColAndreasWorld::performRayTest(const btVector3& Start, const btVector3& End, btVector3& Result, uint16_t& model)
+int ColAndreasWorld::performRayTest(const btVector3& Start, const btVector3& End, btVector3& Result, int32_t& model)
 {
 	btCollisionWorld::ClosestRayResultCallback RayCallback(Start, End);
 
 	dynamicsWorld->rayTest(Start, End, RayCallback);
 
-	if (RayCallback.hasHit()) {
+	if (RayCallback.hasHit())
+	{
 		Result = RayCallback.m_hitPointWorld;
 		model = RayCallback.m_collisionObject->getUserIndex();
 		return 1;
@@ -82,12 +88,15 @@ int ColAndreasWorld::performRayTestExtraID(const btVector3& Start, const btVecto
 
 	dynamicsWorld->rayTest(Start, End, RayCallback);
 
-	if (RayCallback.hasHit()) {
+	if (RayCallback.hasHit())
+	{
 		Result = RayCallback.m_hitPointWorld;
-		if (type >= 0 && type < 10) {
+		if(type >= 0 && type < 10)
+		{
 			ColAndreasObjectTracker* tracker = (ColAndreasObjectTracker*)RayCallback.m_collisionObject->getUserPointer();
 			data = tracker->extraData[type];
-		} else
+		}
+		else
 			data = -1;
 		return 1;
 	}
@@ -100,12 +109,16 @@ int ColAndreasWorld::performRayTestID(const btVector3& Start, const btVector3& E
 
 	dynamicsWorld->rayTest(Start, End, RayCallback);
 
-	if (RayCallback.hasHit()) {
+	if (RayCallback.hasHit())
+	{
 		Result = RayCallback.m_hitPointWorld;
 		ColAndreasObjectTracker* tracker = (ColAndreasObjectTracker*)RayCallback.m_collisionObject->getUserPointer();
-		if (tracker) {
+		if(tracker)
+		{
 			index = tracker->realIndex;
-		} else {
+		}
+		else
+		{
 			index = -1;
 		}
 		return 1;
@@ -113,13 +126,14 @@ int ColAndreasWorld::performRayTestID(const btVector3& Start, const btVector3& E
 	return 0;
 }
 
-int ColAndreasWorld::performRayTestEx(const btVector3& Start, const btVector3& End, btVector3& Result, btQuaternion& Rotation, btVector3& Position, uint16_t& model)
+int ColAndreasWorld::performRayTestEx(const btVector3& Start, const btVector3& End, btVector3& Result, btQuaternion& Rotation, btVector3& Position, int32_t& model)
 {
 	btCollisionWorld::ClosestRayResultCallback RayCallback(Start, End);
 
 	dynamicsWorld->rayTest(Start, End, RayCallback);
 
-	if (RayCallback.hasHit()) {
+	if (RayCallback.hasHit())
+	{
 		Result = RayCallback.m_hitPointWorld;
 		model = RayCallback.m_collisionObject->getUserIndex();
 		Rotation = RayCallback.m_collisionObject->getWorldTransform().getRotation();
@@ -130,13 +144,14 @@ int ColAndreasWorld::performRayTestEx(const btVector3& Start, const btVector3& E
 }
 
 
-int ColAndreasWorld::performRayTestAngle(const btVector3& Start, const btVector3& End, btVector3& Result, btScalar& RX, btScalar& RY, btScalar& RZ, uint16_t& model)
+int ColAndreasWorld::performRayTestAngle(const btVector3& Start, const btVector3& End, btVector3& Result, btScalar& RX, btScalar& RY, btScalar& RZ, int32_t& model)
 {
 	btCollisionWorld::ClosestRayResultCallback RayCallback(Start, End);
 
 	dynamicsWorld->rayTest(Start, End, RayCallback);
 
-	if (RayCallback.hasHit()) {
+	if (RayCallback.hasHit())
+	{
 		btVector3 Rotation = RayCallback.m_hitNormalWorld;
 		RX = -(asin(Rotation.getY())*RADIAN_TO_DEG);
 		RY = asin(Rotation.getX())*RADIAN_TO_DEG;
@@ -149,15 +164,16 @@ int ColAndreasWorld::performRayTestAngle(const btVector3& Start, const btVector3
 	return 0;
 }
 
-int ColAndreasWorld::performRayTestAngleEx(const btVector3& Start, const btVector3& End, btVector3& Result, btScalar& RX, btScalar& RY, btScalar& RZ, btQuaternion& Rotation, btVector3& Position, uint16_t& model)
+int ColAndreasWorld::performRayTestAngleEx(const btVector3& Start, const btVector3& End, btVector3& Result, btScalar& RX, btScalar& RY, btScalar& RZ, btQuaternion& Rotation, btVector3& Position, int32_t& model)
 {
 	btCollisionWorld::ClosestRayResultCallback RayCallback(Start, End);
 
 	dynamicsWorld->rayTest(Start, End, RayCallback);
 
-	if (RayCallback.hasHit()) {
+	if (RayCallback.hasHit())
+	{
 		btVector3 Normal = RayCallback.m_hitNormalWorld;
-
+		
 
 		RX = -(asin(Normal.getY())*RADIAN_TO_DEG);
 		RY = asin(Normal.getX())*RADIAN_TO_DEG;
@@ -182,9 +198,12 @@ int ColAndreasWorld::performRayTestAll(const btVector3& Start, const btVector3& 
 	dynamicsWorld->rayTest(Start, End, RayCallback);
 
 
-	if (RayCallback.hasHit()) {
-		if (RayCallback.m_hitPointWorld.size() <= size) {
-			for (int i = 0; i < RayCallback.m_hitPointWorld.size(); i++) {
+	if (RayCallback.hasHit())
+	{
+		if (RayCallback.m_hitPointWorld.size() <= size)
+		{
+			for (int i = 0; i < RayCallback.m_hitPointWorld.size(); i++)
+			{
 				ModelIDs[i] = RayCallback.m_collisionObjects[i]->getUserIndex();
 
 			}
@@ -197,13 +216,14 @@ int ColAndreasWorld::performRayTestAll(const btVector3& Start, const btVector3& 
 }
 
 // Return reflection vector
-int ColAndreasWorld::performRayTestReflection(const btVector3& Start, const btVector3& End, btVector3& Position, btVector3& Result, uint16_t& model)
+int ColAndreasWorld::performRayTestReflection(const btVector3& Start, const btVector3& End, btVector3& Position, btVector3& Result, int32_t& model)
 {
 	btCollisionWorld::ClosestRayResultCallback RayCallback(Start, End);
 
 	dynamicsWorld->rayTest(Start, End, RayCallback);
 
-	if (RayCallback.hasHit()) {
+	if (RayCallback.hasHit())
+	{
 		Position = RayCallback.m_hitPointWorld;
 		model = RayCallback.m_collisionObject->getUserIndex();
 
@@ -212,20 +232,21 @@ int ColAndreasWorld::performRayTestReflection(const btVector3& Start, const btVe
 		btScalar Magnitude = this->getDist3D(Start, Position);
 		btVector3 UVector = (Position - Start) / btVector3(Magnitude, Magnitude, Magnitude);
 		Result = UVector - 2 * UVector.dot(Normal) * Normal;
-
+		
 		return 1;
 	}
 	return 0;
 }
 
 
-int ColAndreasWorld::performRayTestNormal(const btVector3& Start, const btVector3& End, btVector3& Result, btVector3& Normal, uint16_t& model)
+int ColAndreasWorld::performRayTestNormal(const btVector3& Start, const btVector3& End, btVector3& Result, btVector3& Normal, int32_t& model)
 {
 	btCollisionWorld::ClosestRayResultCallback RayCallback(Start, End);
 
 	dynamicsWorld->rayTest(Start, End, RayCallback);
 
-	if (RayCallback.hasHit()) {
+	if (RayCallback.hasHit())
+	{
 		Normal = RayCallback.m_hitNormalWorld;
 		Result = RayCallback.m_hitPointWorld;
 		model = RayCallback.m_collisionObject->getUserIndex();
@@ -234,20 +255,20 @@ int ColAndreasWorld::performRayTestNormal(const btVector3& Start, const btVector
 	return 0;
 }
 
-int ColAndreasWorld::performContactTest(uint16_t modelid, btVector3& objectPos, btQuaternion& objectRot)
+int ColAndreasWorld::performContactTest(int32_t modelid, btVector3& objectPos, btQuaternion& objectRot)
 {
 	ContactCollisionSensor callback;
-
+	
 	uint16_t colindex = ModelRef[modelid];
 	btDefaultMotionState* colMapObjectPosition = new btDefaultMotionState(btTransform(objectRot, objectPos));
 	btRigidBody::btRigidBodyConstructionInfo meshRigidBodyCI(0, colMapObjectPosition, colConvex[colindex], btVector3(0, 0, 0));
 	btRigidBody* colMapRigidBody = new btRigidBody(meshRigidBodyCI);
-
+	
 	dynamicsWorld->contactTest(colMapRigidBody, callback);
-
+	
 	delete colMapRigidBody->getMotionState();
 	delete colMapRigidBody;
-
+	
 	return callback.collided;
 }
 
@@ -260,19 +281,22 @@ void ColAndreasWorld::colandreasInitMap()
 	InitCollisionMap(this->dynamicsWorld, this->removedManager);
 }
 
-int ColAndreasWorld::createColAndreasMapObject(uint16_t addtomanager, uint16_t modelid, const btQuaternion& objectRot, const btVector3& objectPos)
+uint16_t ColAndreasWorld::createColAndreasMapObject(uint16_t addtomanager, int32_t modelid, const btQuaternion& objectRot, const btVector3& objectPos)
 {
-	if (addtomanager) {
-		return this->objectManager->addObjectManager(new ColAndreasMapObject(modelid, objectRot, objectPos, this->dynamicsWorld));
+	ColAndreasMapObject* mapObject = new ColAndreasMapObject(modelid, objectRot, objectPos, this->dynamicsWorld);
+	if (addtomanager)
+	{
+		uint16_t index = 0;
+		return this->objectManager->addObjectManager(mapObject);
 	}
 	return -1;
 }
 
-uint16_t ColAndreasWorld::getModelRef(uint16_t model)
+uint16_t ColAndreasWorld::getModelRef(int32_t model)
 {
 	return GetModelRef(model);
 }
-
+ 		 
 void ColAndreasWorld::setMyExtraID(uint16_t index, int type, int data)
 {
 	objectManager->setExtraID(index, type, data);
@@ -285,7 +309,8 @@ int ColAndreasWorld::getMyExtraID(uint16_t index, int type)
 
 bool ColAndreasWorld::loadCollisionData()
 {
-	if (LoadCollisionData(this->dynamicsWorld)) {
+	if (LoadCollisionData(this->dynamicsWorld))
+	{
 		return true;
 	}
 	return false;

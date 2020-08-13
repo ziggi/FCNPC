@@ -10,6 +10,8 @@
 
 #include "Main.hpp"
 #include "CAddress.hpp"
+#include "vendor/MapAndreas/natives.h"
+#include "vendor/ColAndreas/Natives.h"
 
 // Globals
 logprintf_t  logprintf;
@@ -30,7 +32,7 @@ char         szSampVersion[64];
 // ColAndreas stuff
 bool colInit = false;
 bool colDataLoaded = false;
-ColAndreasWorld *gCollisionWorld;
+ColAndreasWorld *collisionWorld;
 
 PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports()
 {
@@ -348,12 +350,14 @@ AMX_NATIVE_INFO PluginNatives[] = {
 	{ "CA_RayCastReflectionVector", ColAndreasNatives::CA_RayCastReflectionVector },
 	{ "CA_RayCastLineNormal", ColAndreasNatives::CA_RayCastLineNormal },
 	{ "CA_ContactTest", ColAndreasNatives::CA_ContactTest },
+	{ "CA_LoadFromDff", ColAndreasNatives::CA_LoadFromDff },
 	{ "CA_CreateObject", ColAndreasNatives::CA_CreateObject },
 	{ "CA_DestroyObject", ColAndreasNatives::CA_DestroyObject },
 	{ "CA_IsValidObject", ColAndreasNatives::CA_IsValidObject },
 	{ "CA_EulerToQuat", ColAndreasNatives::CA_EulerToQuat },
 	{ "CA_QuatToEuler", ColAndreasNatives::CA_QuatToEuler },
 	{ "CA_RemoveBuilding", ColAndreasNatives::CA_RemoveBuilding },
+	{ "CA_RestoreBuilding", ColAndreasNatives::CA_RestoreBuilding },
 	{ "CA_SetObjectPos", ColAndreasNatives::CA_SetObjectPos },
 	{ "CA_SetObjectRot", ColAndreasNatives::CA_SetObjectRot },
 	{ "CA_GetModelBoundingSphere", ColAndreasNatives::CA_GetModelBoundingSphere },

@@ -1,11 +1,15 @@
 #ifndef COLANDREASDATABASEREADER_H_INCLUDED
 #define COLANDREASDATABASEREADER_H_INCLUDED
 
-#include <cstdint>
+#include <stdint.h>
 #include <iostream>
 #include <string>
 #include <fstream>
 #include <cstring>
+#include <vector>
+#include <map>
+
+using namespace std;
 
 /*
 Binary file format
@@ -74,6 +78,7 @@ typedef struct {
 typedef struct
 {
 	uint16_t Modelid;
+	int16_t CustomModelid;
 
 	//define our counts
 	uint16_t SphereCount;
@@ -105,12 +110,13 @@ pass a refrence to the collisionmodel and itemplacment array's. The function wil
 returns a boolean true if function suceeded, otherwise false.
 */
 
-bool ReadColandreasDatabaseFile(const std::string &FileLocation);
-extern CollisionModelstructure* CollisionModels;
+bool ReadColandreasDatabaseFile(std::string FileLocation);
+extern std::map<uint16_t, CollisionModelstructure> CollisionModels;
 extern ItemPlacementstructure* ModelPlacements;
+extern std::vector<ItemPlacementstructure*> RemovedGameObjects;
 extern uint16_t ModelCount;
 extern uint32_t IPLCount;
-extern uint16_t ModelRef[20000];
+extern std::map<int32_t, uint16_t> ModelRef;
 
 #endif 
 

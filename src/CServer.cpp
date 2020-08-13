@@ -111,8 +111,8 @@ BYTE CServer::Initialize(AMX *pAMX)
 
 	// Create the ColAndreas instance
 	m_pColAndreas = new ColAndreasWorld;
-	gCollisionWorld = m_pColAndreas;
-	if (gCollisionWorld->loadCollisionData()) {
+	collisionWorld = m_pColAndreas;
+	if (collisionWorld->loadCollisionData()) {
 		logprintf("Loaded collision data.");
 		colDataLoaded = true;
 	} else {
