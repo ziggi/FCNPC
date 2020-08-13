@@ -1,5 +1,5 @@
+#include "Main.hpp"
 #include "ColAndreasDatabaseReader.h"
-#include "ColAndreasCommon.h"
 
 std::map<uint16_t, CollisionModelstructure> CollisionModels;
 ItemPlacementstructure* ModelPlacements;

@@ -16,8 +16,6 @@ struct removeBuildingData
 	float r_Z;
 	float r_Radius;
 };
-
-static uint16_t colindex = 0;
  		 
 // Data structure to track in-game objects with respect to their colindex
 struct ColAndreasObjectTracker

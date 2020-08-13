@@ -1,3 +1,4 @@
+#include "Main.hpp"
 #include "ColObject.h"
 #include "WaterArray.h"
 #include "DynamicWorld.h"
@@ -97,7 +98,7 @@ bool LoadCollisionData(btDynamicsWorld* collisionWorld)
 
 ColAndreasMapObject::ColAndreasMapObject(int32_t modelid, const btQuaternion& objectRot, const btVector3& objectPos, btDynamicsWorld* world)
 {
-	colindex = ModelRef[modelid];
+	uint16_t colindex = ModelRef[modelid];
 
 	collisionWorld = world;
 
