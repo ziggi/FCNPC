@@ -19,7 +19,7 @@ set (CMAKE_MINSIZEREL_POSTFIX "")
 set (LIBRARY_GROUP "lib\\")
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-	add_definitions (-DWIN32 -D_WIN32 -D__STDC__ -DSYSTEM_NAME="Windows")
+	add_definitions (-DWINDOWS_IGNORE_PACKING_MISMATCH -DWIN32 -D_WIN32 -D__STDC__ -DSYSTEM_NAME="Windows")
 
 	# *.def
 	file (GLOB EXPORTS_SRC
