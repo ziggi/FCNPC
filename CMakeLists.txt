@@ -21,6 +21,12 @@ set (LIBRARY_GROUP "lib\\")
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	add_definitions (-DWINDOWS_IGNORE_PACKING_MISMATCH -DWIN32 -D_WIN32 -D__STDC__ -DSYSTEM_NAME="Windows")
 
+	# check if it is being generated for Win32 arch
+	if(NOT CMAKE_GENERATOR_PLATFORM STREQUAL "Win32")
+            message(FATAL_ERROR "Please enforce x86 ARCH with \"-A Win32\" flag.\n\texample: \"cmake .. -A Win32\"")
+        endif()
+            
+
 	# *.def
 	file (GLOB EXPORTS_SRC
 		${CMAKE_CURRENT_SOURCE_DIR}/src/Exports.def
