@@ -29,7 +29,7 @@ Note the use of the `--recursive` argument, because this repository contains sub
 Building
 --------
 To build the project you can use [Visual Studio](https://www.visualstudio.com/). To generate the project you can use [CMake](https://cmake.org/).<br />
-On Windows, execute the following commands. This example is for Visual Studio 16 2019:
+On Windows, execute the following commands:
 ```bash
 cd FCNPC
 mkdir build
