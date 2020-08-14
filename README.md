@@ -34,7 +34,7 @@ On Windows, execute the following commands. This example is for Visual Studio 16
 cd FCNPC
 mkdir build
 cd build
-cmake .. -G "Visual Studio 16 2019"
+cmake .. -A Win32
 ```
 
 On Linux, execute the following commands:
