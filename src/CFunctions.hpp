@@ -67,7 +67,7 @@ public:
 	static void PlayerShoot(WORD wPlayerId, WORD wHitId, BYTE byteHitType, BYTE byteWeaponId, const CVector &vecPoint, const CVector &vecOffsetFrom, bool bIsHit, int iMode, BYTE byteBetweenCheckFlags);
 	static WORD GetClosestEntityInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, float fRange, int iMode, BYTE byteBetweenCheckFlags, WORD wPlayerId, WORD wTargetId, BYTE &byteEntityType, WORD &wPlayerObjectOwnerId, CVector &vecHitMap);
 
-	static WORD RayCastLine(const CVector &vecStart, const CVector &vecEnd, CVector *vecResult);
+	static int32_t RayCastLine(const CVector &vecStart, const CVector &vecEnd, CVector *vecResult);
 
 	// Functions
 	static ClientJoin_RPC_t                 pfn__ClientJoin_RPC;
@@ -91,7 +91,7 @@ private:
 	static WORD GetClosestVehicleInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, float fRange, float &fDistance);
 	static WORD GetClosestObjectInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, float fRange, float &fDistance, int iMode);
 	static WORD GetClosestPlayerObjectInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, float fRange, float &fDistance, WORD wOwnerId, int iMode);
-	static WORD GetClosestMapPointInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, float fRange, float &fDistance, CVector &vecHitMap, int iMode);
+	static int32_t GetClosestMapPointInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, float fRange, float &fDistance, CVector &vecHitMap, int iMode);
 
 };
 

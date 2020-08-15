@@ -573,8 +573,8 @@ WORD CFunctions::GetClosestEntityInBetween(const CVector &vecHitOrigin, const CV
 	// Check if a map point is in between the origin and the target
 	if (byteBetweenCheckFlags & ENTITY_CHECK_MAP) {
 		float fClosestMapPointDistance = 0.0;
-		WORD wClosestMapPoint = GetClosestMapPointInBetween(vecHitOrigin, vecHitTarget, fRange, fClosestMapPointDistance, vecHitMap, iMode);
-		if (wClosestMapPoint != 0 && (wClosestEntity == 0xFFFF || fClosestMapPointDistance < fClosestEntityDistance)) {
+		int32_t iClosestMapPoint = GetClosestMapPointInBetween(vecHitOrigin, vecHitTarget, fRange, fClosestMapPointDistance, vecHitMap, iMode);
+		if (iClosestMapPoint != 0 && (wClosestEntity == 0xFFFF || fClosestMapPointDistance < fClosestEntityDistance)) {
 			byteEntityType = ENTITY_CHECK_MAP;
 			fClosestEntityDistance = fClosestMapPointDistance;
 			wClosestEntity = MAX_ACTORS + 1;
@@ -807,9 +807,9 @@ WORD CFunctions::GetClosestPlayerObjectInBetween(const CVector &vecHitOrigin, co
 	return wClosestPlayerObject;
 }
 
-WORD CFunctions::GetClosestMapPointInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, float fRange, float &fDistance, CVector &vecHitMap, int iMode)
+int32_t CFunctions::GetClosestMapPointInBetween(const CVector &vecHitOrigin, const CVector &vecHitTarget, float fRange, float &fDistance, CVector &vecHitMap, int iMode)
 {
-	WORD wClosestMapPoint = 0;
+	int32_t iClosestMapPoint = 0;
 
 	// Use ColAndreas when enabled
 	if (iMode == ENTITY_MODE_COLANDREAS && colDataLoaded) {
@@ -825,29 +825,29 @@ WORD CFunctions::GetClosestMapPointInBetween(const CVector &vecHitOrigin, const 
 		vecHitNewTarget.fZ = vecHitOrigin.fZ + (vecHitTarget.fZ - vecHitOrigin.fZ) / fTargetDistance * fRange;
 
 		// Is a map point on the ray
-		wClosestMapPoint = CFunctions::RayCastLine(vecHitOrigin, vecHitNewTarget, &vecHitMap);
-		if (wClosestMapPoint != 0) {
+		iClosestMapPoint = CFunctions::RayCastLine(vecHitOrigin, vecHitNewTarget, &vecHitMap);
+		if (iClosestMapPoint != 0) {
 			fDistance = CMath::GetDistanceBetween3DPoints(vecHitOrigin, vecHitMap);
 		}
 	}
 
-	return wClosestMapPoint;
+	return iClosestMapPoint;
 }
 
 
-WORD CFunctions::RayCastLine(const CVector &vecStart, const CVector &vecEnd, CVector *vecResult)
+int32_t CFunctions::RayCastLine(const CVector &vecStart, const CVector &vecEnd, CVector *vecResult)
 {
 	btVector3 Start = btVector3(btScalar(vecStart.fX + 0.00001), btScalar(vecStart.fY + 0.00001), btScalar(vecStart.fZ + 0.00001));
 	btVector3 End = btVector3(btScalar(vecEnd.fX), btScalar(vecEnd.fY), btScalar(vecEnd.fZ));
 	btVector3 Result;
-	WORD wModel = 0;
+	int32_t iModel = 0;
 
-	if (pServer->GetColAndreas()->performRayTest(Start, End, Result, wModel)) {
+	if (pServer->GetColAndreas()->performRayTest(Start, End, Result, iModel)) {
 		vecResult->fX = Result.getX();
 		vecResult->fY = Result.getY();
 		vecResult->fZ = Result.getZ();
 
-		return wModel;
+		return iModel;
 	}
 
 	return 0;

@@ -8,6 +8,7 @@
 //----------------------------------------------------------
 
 #include "Main.hpp"
+#include "vendor/MapAndreas/natives.h"
 
 CMapAndreas MapAndreas;
 
