@@ -1,7 +1,7 @@
 #ifndef _INCL_LODARRAY
 #define _INCL_LODARRAY
 
-#include "Main.hpp"
+#include "ColAndreasCommon.h"
 
 const uint16_t LodReference[20000] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

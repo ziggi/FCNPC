@@ -15,7 +15,7 @@ before_build:
     mkdir build
     cd build
     cmake --version
-    cmake ..
+    cmake .. -A Win32
 
 build:
   project: build\FCNPC.sln

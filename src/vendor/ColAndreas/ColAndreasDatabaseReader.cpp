@@ -1,24 +1,27 @@
-#include "ColAndreasDatabaseReader.h"
 #include "Main.hpp"
+#include "ColAndreasDatabaseReader.h"
 
-CollisionModelstructure* CollisionModels;
+std::map<uint16_t, CollisionModelstructure> CollisionModels;
 ItemPlacementstructure* ModelPlacements;
-
+std::vector<ItemPlacementstructure*> RemovedGameObjects;
 uint16_t ModelCount = 0;
 uint32_t IPLCount = 0;
-uint16_t ModelRef[20000];
+std::map<int32_t, uint16_t> ModelRef;
 
 void DeleteCollisionData()
 {
-	delete CollisionModels;
+	CollisionModels.clear();
 	delete ModelPlacements;
 }
 
-bool ReadColandreasDatabaseFile(const std::string &FileLocation)
+bool ReadColandreasDatabaseFile(std::string FileLocation)
 {
 	bool returnValue = false;
-	
-	std::ifstream ColAndreasBinaryfile(FileLocation, std::ios::in | std::ios::binary);
+
+	ifstream ColAndreasBinaryfile;
+
+	ColAndreasBinaryfile.open(FileLocation, ios::in | ios::binary);
+
 	if (ColAndreasBinaryfile.is_open()) {
 		ColAndreasBinaryfile.seekg(0, ColAndreasBinaryfile.end);
 		int length = static_cast<int>(ColAndreasBinaryfile.tellg());
@@ -46,7 +49,6 @@ bool ReadColandreasDatabaseFile(const std::string &FileLocation)
 				GetBytes(buffer, IPLCount, FileIndex, 4);
 
 				if (ModelCount > 0) {
-					CollisionModels = new CollisionModelstructure[ModelCount];
 
 					for (uint16_t i = 0; i < ModelCount; i++) {
 						GetBytes(buffer, CollisionModels[i].Modelid, FileIndex, 2);
@@ -92,13 +94,18 @@ bool ReadColandreasDatabaseFile(const std::string &FileLocation)
 				}
 
 				// Set model ref default values
-				for (uint16_t i = 0; i < sizeof(ModelRef) / sizeof(uint16_t); i++)
+				for (int i = 0; i < 20000; i++)
+				{
+					ModelRef[i] = 65535;
+				}
+
+				for (int i = -1000; i > -30000; i--)
 				{
 					ModelRef[i] = 65535;
 				}
 
 				// Initialize model reference
-				for (uint16_t i = 0; i < ModelCount; i++)
+				for (int i = 0; i < ModelCount; i++)
 				{
 					ModelRef[CollisionModels[i].Modelid] = i;
 				}
@@ -115,6 +122,5 @@ bool ReadColandreasDatabaseFile(const std::string &FileLocation)
 		delete [] buffer;
 	}
 	ColAndreasBinaryfile.close();
-	
 	return returnValue;
 }
