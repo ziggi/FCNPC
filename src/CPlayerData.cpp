@@ -1706,7 +1706,7 @@ bool CPlayerData::GoToPlayer(WORD wPlayerId, int iType, int iMode, int iPathfind
 
 bool CPlayerData::GoByMovePath(int iPathId, int iPointId, int iType, int iMode, int iPathfinding, float fRadius, bool bSetAngle, float fSpeed, float fDistOffset)
 {
-	CVector *vecPos = pServer->GetMovePath()->GetPoint(iPathId, 0);
+	CVector *vecPos = pServer->GetMovePath()->GetPoint(iPathId, iPointId);
 	if (GoTo(*vecPos, iType, iMode, iPathfinding, fRadius, bSetAngle, fSpeed, fDistOffset)) {
 		m_iMovePath = iPathId;
 		m_iMovePoint = iPointId;
