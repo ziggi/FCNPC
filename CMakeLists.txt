@@ -7,8 +7,8 @@ endif ()
 project (FCNPC)
 
 # Definintions
-set (INCLUDE_VERSION 200)
-set (PLUGIN_VERSION "2.0.0")
+set (INCLUDE_VERSION 202)
+set (PLUGIN_VERSION "2.0.2")
 add_definitions (-DPLUGIN_VERSION="${PLUGIN_VERSION}" -DINCLUDE_VERSION=${INCLUDE_VERSION})
 
 set (CMAKE_SHARED_LIBRARY_PREFIX "")
@@ -25,7 +25,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	if(NOT CMAKE_GENERATOR_PLATFORM STREQUAL "Win32")
             message(FATAL_ERROR "Please enforce x86 ARCH with \"-A Win32\" flag.\n\texample: \"cmake .. -A Win32\"")
         endif()
-            
+
 
 	# *.def
 	file (GLOB EXPORTS_SRC
