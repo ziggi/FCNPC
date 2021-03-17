@@ -13,7 +13,7 @@
 
 enum {
 	ERROR_NO,
-	ERROR_INCLUDE_VERSION
+	// for future
 };
 
 class CUtils
