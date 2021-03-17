@@ -372,14 +372,46 @@ AMX_NATIVE_INFO PluginNatives[] = {
 
 PLUGIN_EXPORT int PLUGIN_CALL AmxLoad(AMX *pAMX)
 {
+	// Check for native usage
+	AMX_HEADER* pAmxHeader = reinterpret_cast<AMX_HEADER*>(pAMX->base);
+	AMX_FUNCSTUBNT* pAmxNativeTable = reinterpret_cast<AMX_FUNCSTUBNT*>(pAMX->base + pAmxHeader->natives);
+	char* szName;
+	bool bIsHaveNatives = false;
+	int iNativesCount;
+	amx_NumNatives(pAMX, &iNativesCount);
+
+	for (int i = 0; i < iNativesCount; i++) {
+		szName = reinterpret_cast<char*>(pAMX->base + pAmxNativeTable[i].nameofs);
+		if (strstr(szName, "FCNPC_") != NULL) {
+			bIsHaveNatives = true;
+			break;
+		}
+	}
+
+	// Check include version
+	if (bIsHaveNatives) {
+		int iIncludeVersion = 0;
+		cell cellIndex;
+		if (!amx_FindPubVar(pAMX, "FCNPC_IncludeVersion", &cellIndex)) {
+			cell* pAddress = NULL;
+			if (!amx_GetAddr(pAMX, cellIndex, &pAddress)) {
+				iIncludeVersion = *pAddress;
+			}
+		}
+		if (iIncludeVersion != INCLUDE_VERSION) {
+			logprintf("[FCNPC] Error: Script initialization failed. Include file version does not match plugin version.");
+			exit(0);
+		}
+	}
+
+	// Initialize the server
 	if (!bServerInit) {
-		// Initialize the server
-		BYTE byteError = pServer->Initialize(pAMX);
+		BYTE byteError = pServer->Initialize();
 		if (byteError != ERROR_NO) {
 			// Get the error
 			char szError[64];
 			CUtils::GetPluginError(byteError, szError, sizeof(szError));
-			logprintf("[FCNPC] Error: Script initialization failed. %s.", szError);
+			logprintf("[FCNPC] Error: Initialization failed. %s.", szError);
 			exit(0);
 		}
 		// Initialize the starting tick

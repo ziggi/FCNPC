@@ -32,15 +32,14 @@
 
 void CUtils::GetPluginError(BYTE byteError, char *szError, size_t sSize)
 {
+	/*
 	switch (byteError) {
-		case ERROR_INCLUDE_VERSION:
-			strlcpy(szError, "Include file version does not match plugin version", sSize);
-			break;
-
 		default:
 			strlcpy(szError, "", sSize);
 			break;
 	}
+	*/
+	// for future
 }
 
 void CUtils::UnProtect(DWORD dwAddress, size_t sSize)

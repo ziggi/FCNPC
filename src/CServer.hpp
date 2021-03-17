@@ -30,7 +30,7 @@ public:
 	CServer(eSAMPVersion version);
 	~CServer();
 
-	BYTE Initialize(AMX *pAMX);
+	BYTE Initialize();
 	void Process();
 
 	CPlayerManager *GetPlayerManager();
