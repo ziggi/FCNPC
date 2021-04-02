@@ -58,10 +58,8 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 		case SAMP_VERSION_037_R2:
 			FUNC_CPlayerPool__DeletePlayer = 0x466570;
 			FUNC_CPlayer__Kill = 0x484620;
-			// R2: 0x484c70 | R3: 0x484c72
-			FUNC_CPlayer__EnterVehicle = CUtils::FindPattern("\xEC\x1C\x01\x00\x00\x53\x55\x56\x8B\xF1\x57\x8D\x4C\x24\x18", "xxxxxxxxxxxxxxx") - 0x14;
-			// R2: 0x484d90 | R3: 0x484f52
-			FUNC_CPlayer__ExitVehicle = CUtils::FindPattern("\xEC\x18\x01\x00\x00\x56\x8B\xF1\x57\x8B\xBC\x24\x30\x01\x00\x00\x8D\x4C\x24", "xxxxxxxxxxxxxxxxxxx") - 0x14;
+			FUNC_CPlayer__EnterVehicle = 0x484c70;
+			FUNC_CPlayer__ExitVehicle = 0x484d90;
 			FUNC_CPlayer__SpawnForWorld = 0x486d30;
 			FUNC_GetVehicleModelInfo = 0x488240;
 			FUNC_CConsole__GetIntVariable = 0x48b5b0;
@@ -145,8 +143,8 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 			// Functions
 			FUNC_CPlayerPool__DeletePlayer = CUtils::FindPattern("\x8B\x44\x24\x10\x64\x89\x25\x00\x00\x00\x00\x81\xEC\x20\x01\x00\x00\x66\x3D\xE8\x03\x53", "xxxxxxxxxxxxxxxxxxxxxx") - 0xE;
 			FUNC_CPlayer__Kill = CUtils::FindPattern("\xB6\x9C\x24\x38\x01\x00\x00\x66\x8B\xAC\x24\x3C", "xxxxxxxxxxxx") - 0x3F;
-			FUNC_CPlayer__EnterVehicle = CUtils::FindPattern("\xEC\x1C\x01\x00\x00\x53\x55\x56\x8B\xF1\x57\x8D\x4C\x24\x18", "xxxxxxxxxxxxxxx") - 0x14;
-			FUNC_CPlayer__ExitVehicle = CUtils::FindPattern("\xEC\x18\x01\x00\x00\x56\x8B\xF1\x57\x8B\xBC\x24\x30\x01\x00\x00\x8D\x4C\x24", "xxxxxxxxxxxxxxxxxxx") - 0x14;
+			FUNC_CPlayer__EnterVehicle = CUtils::FindPattern("\xEC\x1C\x01\x00\x00\x53\x55\x56\x8B\xF1\x57\x8D\x4C\x24\x18", "xxxxxxxxxxxxxxx") - 0x16;
+			FUNC_CPlayer__ExitVehicle = CUtils::FindPattern("\xEC\x18\x01\x00\x00\x53\x56\x8B\xF1\x57\x8D\x4C\x24\x10\xE8\xE7\x8A\xFC\xFF\x8B", "xxxxxxxxxxxxxxxxxxxx") - 0x16;
 			FUNC_CPlayer__SpawnForWorld = CUtils::FindPattern("\x83\x3B\x00\x74\x08\x57\x8B\xCE", "xxxxxxxx") - 0x33;
 			FUNC_GetVehicleModelInfo = CUtils::FindPattern("\x8B\x44\x24\x04\x3D\x90\x01\x00\x00\x0F\x8C\x83\x00\x00\x00\x3D\x63\x02\x00\x00\x7F\x7C", "xxxxxxxxxxxxxxxxxxxxxx");
 			FUNC_CConsole__GetIntVariable = CUtils::FindPattern("\x85\xC0\x74\x0D\x83\x38\x01\x75\x08\x8B\x48\x08\x8B\x01", "xxxxxxxxxxxxxx") - 0x0A;
