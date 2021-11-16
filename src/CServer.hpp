@@ -69,7 +69,6 @@ private:
 	CPlayerManager *m_pPlayerDataManager;
 	CNodeManager *m_pNodeManager;
 	CRecordManager *m_pRecordManager;
-	CMapAndreas *m_pMapAndreas;
 	ColAndreasWorld *m_pColAndreas;
 	CMovePath *m_pMovePath;
 	DWORD m_dwUpdateRate;

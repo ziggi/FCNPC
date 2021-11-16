@@ -24,7 +24,6 @@ CServer::CServer(eSAMPVersion version)
 	m_pNodeManager = NULL;
 	m_pMovePath = NULL;
 	m_pRecordManager = NULL;
-	m_pMapAndreas = NULL;
 	m_pColAndreas = NULL;
 	// Initialize the update rate
 	m_dwUpdateRate = DEFAULT_UPDATE_RATE;
@@ -49,7 +48,6 @@ CServer::~CServer()
 	SAFE_DELETE(m_pNodeManager);
 	SAFE_DELETE(m_pMovePath);
 	SAFE_DELETE(m_pRecordManager);
-	SAFE_DELETE(m_pMapAndreas);
 	SAFE_DELETE(m_pColAndreas);
 }
 
@@ -74,9 +72,6 @@ BYTE CServer::Initialize()
 
 	// Create the record instance
 	m_pRecordManager = new CRecordManager;
-
-	// Create the MapAndreas instance
-	m_pMapAndreas = new CMapAndreas;
 
 	// Create the ColAndreas instance
 	m_pColAndreas = new ColAndreasWorld;
@@ -132,9 +127,11 @@ CRecordManager *CServer::GetRecordManager()
 	return m_pRecordManager;
 }
 
+extern CMapAndreas MapAndreas;
+
 CMapAndreas *CServer::GetMapAndreas()
 {
-	return m_pMapAndreas;
+	return &MapAndreas;
 }
 
 ColAndreasWorld *CServer::GetColAndreas()
