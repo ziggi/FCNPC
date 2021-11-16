@@ -1051,12 +1051,12 @@ void CPlayerData::UpdateHeightPos(CVector *pvecPosition)
 	}
 
 	if (iMoveMode != MOVE_MODE_NONE) {
-		if (m_fMinHeightPos < 0.0f) {
-			pvecPosition->fZ = fNewZ;
-		} else if (m_fMinHeightPos <= std::abs(fNewZ - pvecPosition->fZ)) {
+		if (m_fMinHeightPos >= 0.0f && m_fMinHeightPos <= std::abs(fNewZ - pvecPosition->fZ)) {
 			if (CCallbackManager::OnChangeHeightPos(m_wPlayerId, fNewZ, pvecPosition->fZ)) {
 				pvecPosition->fZ = fNewZ;
 			}
+		} else {
+			pvecPosition->fZ = fNewZ;
 		}
 	}
 }
