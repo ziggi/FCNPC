@@ -7,14 +7,30 @@
             "name": "^FCNPC-(.+).zip$",
             "platform": "linux",
             "archive": true,
+            "version": "0.3.7",
             "plugins": ["plugins/FCNPC.so"]
         },
         {
             "name": "^FCNPC-(.+).zip$",
             "platform": "windows",
             "archive": true,
+            "version": "0.3.7",
             "plugins": ["plugins/FCNPC.dll"]
-        }
+        },
+        {
+            "name": "^FCNPC-(.+).zip$",
+            "platform": "linux",
+            "archive": true,
+            "version": "0.3.DL",
+            "plugins": ["plugins/FCNPC-DL.so"]
+        },
+        {
+            "name": "^FCNPC-(.+).zip$",
+            "platform": "windows",
+            "archive": true,
+            "version": "0.3.DL",
+            "plugins": ["plugins/FCNPC-DL.dll"]
+        }        
     ],
     "runtime": {
         "plugins": ["ziggi/FCNPC"]
