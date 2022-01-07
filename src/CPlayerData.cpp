@@ -994,8 +994,10 @@ void CPlayerData::SetPosition(const CVector &vecPosition)
 	if (GetState() == PLAYER_STATE_DRIVER && m_pPlayer->wVehicleId != INVALID_VEHICLE_ID) {
 		// Get the player vehicle interface
 		CVehicle *pVehicle = GetVehicle();
-		// Get the player vehicle position
-		pVehicle->vecPosition = vecPosition;
+		if (pVehicle) {
+			// Get the player vehicle position
+			pVehicle->vecPosition = vecPosition;
+		}
 	}
 	// Set the player position
 	m_pPlayer->vecPosition = vecPosition;
@@ -1006,10 +1008,12 @@ void CPlayerData::GetPosition(CVector *pvecPosition)
 	// Check the player state
 	if ((GetState() == PLAYER_STATE_DRIVER || GetState() == PLAYER_STATE_PASSENGER) && m_pPlayer->wVehicleId != INVALID_VEHICLE_ID) {
 		CVehicle *pVehicle = GetVehicle();
-		*pvecPosition = pServer->GetVehiclePos(pVehicle);
-	} else {
-		*pvecPosition = m_pPlayer->vecPosition;
+		if (pVehicle) {
+			*pvecPosition = pServer->GetVehiclePos(pVehicle);
+			return;
+		}
 	}
+	*pvecPosition = m_pPlayer->vecPosition;
 }
 
 void CPlayerData::UpdateHeightPos(CVector *pvecPosition)
@@ -1067,10 +1071,12 @@ void CPlayerData::SetQuaternion(float *fQuaternion)
 	if (GetState() == PLAYER_STATE_DRIVER && m_pPlayer->wVehicleId != INVALID_VEHICLE_ID) {
 		// get vehicle interface
 		CVehicle *pVehicle = GetVehicle();
-		// update matrix
-		CMath::GetMatrixFromQuaternion(fQuaternion, &pVehicle->vehMatrix);
-		// update sync data
-		memcpy(m_pPlayer->vehicleSyncData.fQuaternion, fQuaternion, 4 * sizeof(float));
+		if (pVehicle) {
+			// update matrix
+			CMath::GetMatrixFromQuaternion(fQuaternion, &pVehicle->vehMatrix);
+			// update sync data
+			memcpy(m_pPlayer->vehicleSyncData.fQuaternion, fQuaternion, 4 * sizeof(float));
+		}
 	}
 	// Set the player quaternion
 	memcpy(m_pPlayer->syncData.fQuaternion, fQuaternion, 4 * sizeof(float));
@@ -1082,12 +1088,14 @@ void CPlayerData::GetQuaternion(float *fQuaternion)
 	if ((GetState() == PLAYER_STATE_DRIVER || GetState() == PLAYER_STATE_PASSENGER) && m_pPlayer->wVehicleId != INVALID_VEHICLE_ID) {
 		// Get the player vehicle interface
 		CVehicle *pVehicle = GetVehicle();
-		// Get the player vehicle quaternion
-		CMath::GetQuaternionFromMatrix(pVehicle->vehMatrix, fQuaternion);
-	} else {
-		// Get the player quaternion
-		memcpy(fQuaternion, m_pPlayer->syncData.fQuaternion, 4 * sizeof(float));
+		if (pVehicle) {
+			// Get the player vehicle quaternion
+			CMath::GetQuaternionFromMatrix(pVehicle->vehMatrix, fQuaternion);
+			return;
+		}
 	}
+	// Get the player quaternion
+	memcpy(fQuaternion, m_pPlayer->syncData.fQuaternion, 4 * sizeof(float));
 }
 
 void CPlayerData::SetAngle(float fAngle)
