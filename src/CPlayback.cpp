@@ -61,17 +61,19 @@ bool CPlayback::Initialize(const CVector &vecPoint, float *fQuaternion)
 	if (vecPoint != CVector()) {
 		int iSize = static_cast<int>(m_recordData.v_dwTime.size());
 
-		if (m_recordData.iPlaybackType == PLAYBACK_TYPE_DRIVER) {
-			CVector vecPointOffset = m_recordData.v_vehicleSyncData[0].vecPosition - vecPoint;
+		if (iSize) {
+			if(m_recordData.iPlaybackType == PLAYBACK_TYPE_DRIVER) {
+				CVector vecPointOffset = m_recordData.v_vehicleSyncData[0].vecPosition - vecPoint;
 
-			for (int i = 0; i < iSize; i++) {
-				m_recordData.v_vehicleSyncData[i].vecPosition -= vecPointOffset;
-			}
-		} else if (m_recordData.iPlaybackType == PLAYBACK_TYPE_ONFOOT) {
-			CVector vecPointOffset = m_recordData.v_playerSyncData[0].vecPosition - vecPoint;
+				for(int i = 0; i < iSize; i++) {
+					m_recordData.v_vehicleSyncData[i].vecPosition -= vecPointOffset;
+				}
+			} else if(m_recordData.iPlaybackType == PLAYBACK_TYPE_ONFOOT) {
+				CVector vecPointOffset = m_recordData.v_playerSyncData[0].vecPosition - vecPoint;
 
-			for (int i = 0; i < iSize; i++) {
-				m_recordData.v_playerSyncData[i].vecPosition -= vecPointOffset;
+				for(int i = 0; i < iSize; i++) {
+					m_recordData.v_playerSyncData[i].vecPosition -= vecPointOffset;
+				}
 			}
 		}
 	}
@@ -79,41 +81,43 @@ bool CPlayback::Initialize(const CVector &vecPoint, float *fQuaternion)
 	if (fQuaternion) {
 		int iSize = static_cast<int>(m_recordData.v_dwTime.size());
 
-		if (m_recordData.iPlaybackType == PLAYBACK_TYPE_DRIVER) {
-			CVehicleSyncData vehicleSyncData = m_recordData.v_vehicleSyncData[0];
+		if (iSize) {
+			if (m_recordData.iPlaybackType == PLAYBACK_TYPE_DRIVER) {
+				CVehicleSyncData vehicleSyncData = m_recordData.v_vehicleSyncData[0];
 
-			float fQuaternionOffset[4] = {
-				vehicleSyncData.fQuaternion[0] - fQuaternion[0],
-				vehicleSyncData.fQuaternion[1] - fQuaternion[1],
-				vehicleSyncData.fQuaternion[2] - fQuaternion[2],
-				vehicleSyncData.fQuaternion[3] - fQuaternion[3],
-			};
+				float fQuaternionOffset[4] = {
+					vehicleSyncData.fQuaternion[0] - fQuaternion[0],
+					vehicleSyncData.fQuaternion[1] - fQuaternion[1],
+					vehicleSyncData.fQuaternion[2] - fQuaternion[2],
+					vehicleSyncData.fQuaternion[3] - fQuaternion[3],
+				};
 
-			for (int i = 0; i < iSize; i++) {
-				vehicleSyncData = m_recordData.v_vehicleSyncData[i];
+				for (int i = 0; i < iSize; i++) {
+					vehicleSyncData = m_recordData.v_vehicleSyncData[i];
 
-				vehicleSyncData.fQuaternion[0] -= fQuaternionOffset[0];
-				vehicleSyncData.fQuaternion[1] -= fQuaternionOffset[1];
-				vehicleSyncData.fQuaternion[2] -= fQuaternionOffset[2];
-				vehicleSyncData.fQuaternion[3] -= fQuaternionOffset[3];
-			}
-		} else if (m_recordData.iPlaybackType == PLAYBACK_TYPE_ONFOOT) {
-			CSyncData playerSyncData = m_recordData.v_playerSyncData[0];
+					vehicleSyncData.fQuaternion[0] -= fQuaternionOffset[0];
+					vehicleSyncData.fQuaternion[1] -= fQuaternionOffset[1];
+					vehicleSyncData.fQuaternion[2] -= fQuaternionOffset[2];
+					vehicleSyncData.fQuaternion[3] -= fQuaternionOffset[3];
+				}
+			} else if (m_recordData.iPlaybackType == PLAYBACK_TYPE_ONFOOT) {
+				CSyncData playerSyncData = m_recordData.v_playerSyncData[0];
 
-			float fQuaternionOffset[4] = {
-				playerSyncData.fQuaternion[0] - fQuaternion[0],
-				playerSyncData.fQuaternion[1] - fQuaternion[1],
-				playerSyncData.fQuaternion[2] - fQuaternion[2],
-				playerSyncData.fQuaternion[3] - fQuaternion[3],
-			};
+				float fQuaternionOffset[4] = {
+					playerSyncData.fQuaternion[0] - fQuaternion[0],
+					playerSyncData.fQuaternion[1] - fQuaternion[1],
+					playerSyncData.fQuaternion[2] - fQuaternion[2],
+					playerSyncData.fQuaternion[3] - fQuaternion[3],
+				};
 
-			for (int i = 0; i < iSize; i++) {
-				playerSyncData = m_recordData.v_playerSyncData[i];
+				for (int i = 0; i < iSize; i++) {
+					playerSyncData = m_recordData.v_playerSyncData[i];
 
-				playerSyncData.fQuaternion[0] -= fQuaternionOffset[0];
-				playerSyncData.fQuaternion[1] -= fQuaternionOffset[1];
-				playerSyncData.fQuaternion[2] -= fQuaternionOffset[2];
-				playerSyncData.fQuaternion[3] -= fQuaternionOffset[3];
+					playerSyncData.fQuaternion[0] -= fQuaternionOffset[0];
+					playerSyncData.fQuaternion[1] -= fQuaternionOffset[1];
+					playerSyncData.fQuaternion[2] -= fQuaternionOffset[2];
+					playerSyncData.fQuaternion[3] -= fQuaternionOffset[3];
+				}
 			}
 		}
 	}
