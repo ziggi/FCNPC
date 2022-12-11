@@ -828,7 +828,10 @@ void CPlayerData::Process()
 		if (m_wSurfingInfo != 0) {
 			WORD wVehicleId = m_wSurfingInfo;
 			if (wVehicleId > 0 && wVehicleId < MAX_VEHICLES) { //-V560
-				m_pPlayer->vecPosition = pNetGame->pVehiclePool->pVehicle[wVehicleId]->vecPosition + m_vecSurfing;
+				CVehicle *pVehicle = pNetGame->pVehiclePool->pVehicle[wVehicleId];
+				if (pVehicle) {
+					m_pPlayer->vecPosition = pVehicle->vecPosition + m_vecSurfing;
+				}
 			} else {
 				WORD wObjectId = m_wSurfingInfo - MAX_VEHICLES;
 				if (wObjectId > 0 && wObjectId < MAX_OBJECTS) {
