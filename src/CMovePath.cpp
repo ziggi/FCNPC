@@ -87,6 +87,11 @@ bool CMovePath::IsPointValid(int iPathId, int iPointId)
 
 CVector *CMovePath::GetPoint(int iPathId, int iPointId)
 {
+	if(iPathId == INVALID_MOVEPATH_ID)
+	{
+		return NULL;
+	}
+	
 	if (!IsPointValid(iPathId, iPointId)) {
 		return NULL;
 	}
