@@ -175,17 +175,23 @@ void CAddress::Initialize(eSAMPVersion sampVersion)
 #elif defined(LINUX)
 	switch (sampVersion) {
 		case SAMP_VERSION_037_R2:
-			FUNC_CPlayerPool__DeletePlayer = 0x80d0a90;
-			FUNC_CPlayer__Kill = 0x80cb220;
-			FUNC_CPlayer__EnterVehicle = 0x80cc1c0;
-			FUNC_CPlayer__ExitVehicle = 0x80cc340;
-			FUNC_CPlayer__SpawnForWorld = 0x80ccfc0;
-			// FUNC_GetVehicleModelInfo = 0x80d5d30; // R2-2: 0x80d5e00
+			// R2: 0x80d0a90 | R3: 0x80d0ac0
+			FUNC_CPlayerPool__DeletePlayer = CUtils::FindPattern("\x55\x89\xE5\x81\xEC\x68\x01\x00\x00\x89\x5D\xF4\x0F\xB7\x5D\x0C\x0F\xB6\x45\x10\x89\x7D\xFC\x8B\x7D\x08\x66\x81\xFB\xE7\x03\x89", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+			// R2: 0x80cb220 | R3: 0x80cb250
+			FUNC_CPlayer__Kill = CUtils::FindPattern("\x55\x89\xE5\x81\xEC\x68\x01\x00\x00\x0F\xB6\x45\x0C\x89\x7D\xFC\x8B\x7D\x08\x8D\x95\xC8\xFE\xFF\xFF\x89\x75\xF8\x89\x5D\xF4\x88", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+			// R2: 0x80cc1c0 | R3: 0x80cc1f0
+			FUNC_CPlayer__EnterVehicle = CUtils::FindPattern("\x55\x89\xE5\x81\xEC\x68\x01\x00\x00\x89\x5D\xF4\x8B\x45\x08\x0F\xB6\x5D\x10\x89\x75\xF8\x89\x7D\xFC\x8D\xBD\xC8\xFE\xFF\xFF\x0F", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+			// R2: 0x80cc340 | R3: 0x80cc370
+			FUNC_CPlayer__ExitVehicle = CUtils::FindPattern("\x55\x89\xE5\x81\xEC\x68\x01\x00\x00\x89\x5D\xF4\x89\x75\xF8\x8D\xB5\xC8\xFE\xFF\xFF\x0F\xB7\x5D\x0C\x89\x7D\xFC\x8B\x7D\x08\x89", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+			// R2: 0x80ccfc0 | R3: 0x80ccff0
+			FUNC_CPlayer__SpawnForWorld = CUtils::FindPattern("\x55\x89\xE5\x56\x53\x83\xEC\x10\x8B\x75\x08\xA1\xBC\xB5\x1C\x08\x8B\x9E\x2B\x2C\x00\x00\x8B\x50\x08\x85\xDB\x75\x07\x83\xC4\x10", "xxxxxxxxxxxx??xxxxxxxxxxxxxxxxxx");
+			// R2: 0x80d5d30 | R2-2: 0x80d5e00 | R3: 0x80d5e90
 			FUNC_GetVehicleModelInfo = CUtils::FindPattern("\x55\x89\xE5\x57\x8B\x45\x08\x8B\x4D\x0C\x2D\x90\x01\x00\x00\x3D\xD3\x00\x00\x00", "xxxxxxxxxxxxxxxxxxxx");
 			FUNC_CConsole__GetIntVariable = 0x80a0070;
-			FUNC_ClientJoin_RPC = 0x80b0030;
+			// R2: 0x80b0030 | R3: 0x80b0060
+			FUNC_ClientJoin_RPC = CUtils::FindPattern("\x55\x89\xE5\x81\xEC\xC8\x03\x00\x00\x89\x5D\xF4\x8B\x4D\x08\x89\x75\xF8\x89\x7D\xFC\x8B\x31\x8B\x59\x04\x85\xF6\x0F\x94\xC2\x85", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 
-			// VAR_ServerAuthentication = 0x81aa8a8; // R2-2: 0x81ab8ec
+			// R2: 0x81aa8a8 | R2-2: 0x81ab8ec | R3: 0x81ab9ac
 			VAR_ServerAuthentication = *(DWORD *)(CUtils::FindPattern("\x8B\x85\x7C\xFC\xFF\xFF\x35", "xxxxxxx") + 13);
 			VAR_NetVersion = 0xfd9;
 
