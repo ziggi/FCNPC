@@ -48,6 +48,7 @@ public:
 	static std::queue<AMX *> m_vAmxLoadQueue;
 
 	enum Callbacks {
+		FCNPC_OnInit,
 		FCNPC_OnCreate,
 		FCNPC_OnDestroy,
 		FCNPC_OnSpawn,

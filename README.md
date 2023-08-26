@@ -109,6 +109,7 @@ Constants
 Callbacks
 ---------
 ```Pawn
+forward FCNPC_OnInit();
 forward FCNPC_OnCreate(npcid);
 forward FCNPC_OnDestroy(npcid);
 forward FCNPC_OnSpawn(npcid);

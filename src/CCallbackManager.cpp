@@ -15,6 +15,7 @@ std::vector<AMX *> CCallbackManager::m_vAmx;
 std::map<AMX *, std::vector<int>> CCallbackManager::m_mapCallbacks;
 std::queue<AMX *> CCallbackManager::m_vAmxLoadQueue;
 std::array<char *, CCallbackManager::Callbacks::CallbacksCount> CCallbackManager::m_aCallbackNames = {
+	(char *)"FCNPC_OnInit",
 	(char *)"FCNPC_OnCreate",
 	(char *)"FCNPC_OnDestroy",
 	(char *)"FCNPC_OnSpawn",
@@ -56,6 +57,11 @@ void CCallbackManager::Init()
 
 		if (vIndexes.size() > 0) {
 			m_mapCallbacks[pAmx] = vIndexes;
+
+			int iIndex = vIndexes.at(FCNPC_OnInit);
+			if (iIndex != 0) {
+				amx_Exec(pAmx, NULL, iIndex);
+			}
 		}
 		m_vAmxLoadQueue.pop();
 	}

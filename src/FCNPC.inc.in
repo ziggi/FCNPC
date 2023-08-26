@@ -67,6 +67,7 @@ public FCNPC_IncludeVersion = FCNPC_INCLUDE_VERSION;
 #define FCNPC_INVALID_RECORD_ID    (-1)
 
 // Callbacks
+forward FCNPC_OnInit();
 forward FCNPC_OnCreate(npcid);
 forward FCNPC_OnDestroy(npcid);
 forward FCNPC_OnSpawn(npcid);
