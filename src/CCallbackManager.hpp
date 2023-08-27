@@ -46,6 +46,7 @@ public:
 
 	static std::vector<AMX *> m_vAmx;
 	static std::queue<AMX *> m_vAmxLoadQueue;
+	static std::queue<AMX *> m_vAmxInitQueue;
 
 	enum Callbacks {
 		FCNPC_OnInit,
