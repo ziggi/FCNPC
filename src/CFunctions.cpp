@@ -30,7 +30,7 @@ RakNet__GetIndexFromPlayerID_t  CFunctions::pfn__RakNet__GetIndexFromPlayerID = 
 void CFunctions::Initialize()
 {
 #ifdef SAMP_03DL
-	pArtInfo = *reinterpret_cast<CArtInfo**>(CAddress::VAR_ArtInfo);
+	pArtInfo = reinterpret_cast<CArtInfo*>(CAddress::VAR_ArtInfo);
 #endif
 
 	// Initialize function pointers
