@@ -24,6 +24,7 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots or videos to help explain your problem.
 
 **Versions:**
+ - OS: [e.g. Debian 10]
  - SA-MP version: [e.g. 0.3.7 R3]
  - FCNPC version: [e.g. 2.0.9]
 
