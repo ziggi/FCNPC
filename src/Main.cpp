@@ -122,8 +122,6 @@ PLUGIN_EXPORT void PLUGIN_CALL Unload()
 {
 	// Reset the unintizalized flag
 	bServerInit = false;
-	// Delete the server instance
-	SAFE_DELETE(pServer);
 
 	logprintf("[FCNPC] Info: Plugin unloaded.");
 }
