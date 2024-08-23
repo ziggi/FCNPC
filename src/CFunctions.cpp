@@ -30,7 +30,7 @@ RakNet__GetIndexFromPlayerID_t  CFunctions::pfn__RakNet__GetIndexFromPlayerID = 
 void CFunctions::Initialize()
 {
 #ifdef SAMP_03DL
-	pArtInfo = reinterpret_cast<CArtInfo*>(CAddress::VAR_ArtInfo);
+	pArtInfo = *reinterpret_cast<CArtInfo**>(CAddress::VAR_ArtInfo);
 #endif
 
 	// Initialize function pointers
@@ -163,7 +163,7 @@ WORD CFunctions::GetMaxNPC()
 #ifdef SAMP_03DL
 int CFunctions::GetSkinBaseID(DWORD dwSkinId)
 {
-	if (pArtInfo->artList.dwCapacity == 0) {
+	if (!pArtInfo || pArtInfo->artList.dwCapacity == 0) {
 		return -1;
 	}
 
