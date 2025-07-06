@@ -10,9 +10,16 @@ This is a fork of the [original repository](https://github.com/OrMisicL/FCNPC) b
 
 If you encounter a bug or a crash, create an issue in the [issues section](../../issues) with your **crashlog** and your **Pawn script**.
 
-For more elaborate discussions see the [forum thread](http://forum.sa-mp.com/showthread.php?t=428066) *(isn't working now, but we hope)*, or the [Russian forum thread](http://forum.sa-mp.com/showthread.php?t=602965).
+For more elaborate discussions see the [forum thread](http://forum.sa-mp.com/showthread.php?t=428066) *(it was deleted)*, or the [Russian forum thread](https://sampforum.blast.hk/showthread.php?tid=602965) *(archive)*.
 
 See the [wiki](../../wiki) for documentation.
+
+Pathfinding
+-----------
+
+A pathfinding [was planned](https://github.com/ziggi/FCNPC/issues/8) for the 2.0 version of the plugin, but this version was released without this feature.
+
+So at the moment, pathfinding can only be implemented using third-party plugins.
 
 MapAndreas and ColAndreas support
 ---------------------------------
